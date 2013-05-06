@@ -9,9 +9,9 @@ package com.egf.db.core.define.column;
 
 /**
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
-public class NotNull extends ColumnDefine{
+public interface NotNull extends ColumnDefine{
 
 }

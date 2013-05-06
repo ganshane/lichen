@@ -6,13 +6,13 @@
  */
 package com.egf.db.core.define.column;
 
-import com.egf.db.core.define.Define;
 
 /**
  * @author fangj
  * @version $Revision:  1.0 $
  * @since 1.0
  */
-public class ColumnDefine extends Define{
+public interface ColumnDefine{
 
+	
 }

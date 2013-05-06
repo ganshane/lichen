@@ -4,19 +4,16 @@
  * file: $Id: org.eclipse.jdt.ui.prefs,BlobDefine.java,fangj Exp$
  * created at:上午10:24:46
  */
-package com.egf.db.core.define.column.type;
+package com.egf.db.core.define.column.types;
 
 import com.egf.db.core.define.ColumnType;
 
-
-
-
 /**
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
-public class Blob extends ColumnType{
+public interface Blob extends ColumnType{
 	
 	
 

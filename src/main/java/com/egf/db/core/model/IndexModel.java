@@ -10,7 +10,7 @@ package com.egf.db.core.model;
  * 索引模型
  * 
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
 public class IndexModel {

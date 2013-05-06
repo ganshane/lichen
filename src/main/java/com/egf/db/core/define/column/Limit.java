@@ -8,13 +8,10 @@ package com.egf.db.core.define.column;
 
 /**
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
-public class Limit extends ColumnDefine{
+public interface Limit extends ColumnDefine{
 	
-	public Limit(int length){
-		this.length=length;
-	}
 
 }

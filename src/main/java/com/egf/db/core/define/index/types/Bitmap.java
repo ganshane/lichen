@@ -4,16 +4,16 @@
  * file: $Id: org.eclipse.jdt.ui.prefs,BitmapDefine.java,fangj Exp$
  * created at:上午10:48:56
  */
-package com.egf.db.core.define.index.type;
+package com.egf.db.core.define.index.types;
 
 import com.egf.db.core.define.IndexType;
 
 
 /**
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
-public class Bitmap extends IndexType{
+public interface Bitmap extends IndexType{
 
 }

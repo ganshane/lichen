@@ -4,20 +4,16 @@
  * file: $Id: org.eclipse.jdt.ui.prefs,Varchar2Define.java,fangj Exp$
  * created at:上午10:13:00
  */
-package com.egf.db.core.define.column.type;
+package com.egf.db.core.define.column.types;
 
 import com.egf.db.core.define.ColumnType;
 
 
-
 /**
  * @author fangj
- * @version $Revision: 1.0  $
+ * @version $Revision: 2.0  $
  * @since 1.0
  */
-public class Varchar2 extends ColumnType {
+public interface Varchar2  extends ColumnType{
 	
-	public Varchar2(int length){
-		this.length=length;
-	}
 }

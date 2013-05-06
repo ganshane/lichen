@@ -4,12 +4,12 @@
  * file: $Id: org.eclipse.jdt.ui.prefs,Migration.java,fangj Exp$
  * created at:下午12:40:37
  */
-package com.egf.db.migration;
+package com.egf.db.services;
 
 /**
  * 数据库迁移接口
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
 public interface Migration {

@@ -10,9 +10,9 @@ import com.egf.db.core.define.Define;
 
 /**
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
-public class Index extends Define{
+public interface Index extends Define{
 
 }

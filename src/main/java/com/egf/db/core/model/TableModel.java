@@ -6,15 +6,15 @@
  */
 package com.egf.db.core.model;
 
-import com.egf.db.core.define.Comment;
 import com.egf.db.core.define.column.ColumnDefine;
+import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Limit;
 
 
 /**
  * 表模型
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
 public class TableModel {

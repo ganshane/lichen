@@ -4,16 +4,17 @@
  * file: $Id: org.eclipse.jdt.ui.prefs,ClobDefine.java,fangj Exp$
  * created at:上午10:34:13
  */
-package com.egf.db.core.define.column.type;
+package com.egf.db.core.define.column.types;
 
 import com.egf.db.core.define.ColumnType;
 
 
+
 /**
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
-public class Clob extends ColumnType{
+public interface Clob extends ColumnType{
 
 }

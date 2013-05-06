@@ -8,27 +8,11 @@ package com.egf.db.core.define;
 
 /**
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
-public class Define {
+public interface Define {
 
-	protected int length;
-
-	protected String name;
-
-	protected String comment;
-
-	protected String getName() {
-		return name;
-	}
-
-	protected String getComment() {
-		return comment;
-	}
-
-	protected int getLength() {
-		return length;
-	}
+	
 
 }

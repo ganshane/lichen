@@ -4,7 +4,7 @@
  * file: $Id: org.eclipse.jdt.ui.prefs,UniqueDefine.java,fangj Exp$
  * created at:下午06:05:43
  */
-package com.egf.db.core.define.index.type;
+package com.egf.db.core.define.index.types;
 
 import com.egf.db.core.define.IndexType;
 
@@ -12,9 +12,9 @@ import com.egf.db.core.define.IndexType;
 
 /**
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
-public class Unique extends IndexType{
+public interface Unique extends IndexType{
 
 }

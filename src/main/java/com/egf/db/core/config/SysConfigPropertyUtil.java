@@ -25,7 +25,7 @@ import com.egf.db.utils.StringUtils;
 /**
  * 读取系统配置文件
  * @author 方杰
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
 public class SysConfigPropertyUtil {

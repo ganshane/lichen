@@ -6,17 +6,12 @@
  */
 package com.egf.db.core.define.name;
 
-import com.egf.db.core.define.Define;
 
 /**
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
-public class ColumnName extends Define{
-
-	public ColumnName(String name) {
-		this.name=name;
-	}
-
+public interface ColumnName extends NameDefine{
+	
 }

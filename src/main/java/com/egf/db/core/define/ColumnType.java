@@ -8,9 +8,11 @@ package com.egf.db.core.define;
 
 /**
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
-public class ColumnType extends Define{
+public interface ColumnType{
+	
+	public String getColumnType();
 
 }
