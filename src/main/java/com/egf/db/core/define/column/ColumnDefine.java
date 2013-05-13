@@ -13,6 +13,5 @@ package com.egf.db.core.define.column;
  * @since 1.0
  */
 public interface ColumnDefine{
-
 	
 }

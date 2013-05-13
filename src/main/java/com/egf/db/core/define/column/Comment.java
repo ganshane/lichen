@@ -12,7 +12,7 @@ package com.egf.db.core.define.column;
  * @version $Revision: 2.0 $
  * @since 1.0
  */
-public interface Comment extends ColumnDefine{
+public interface Comment{
 	
 		
 }

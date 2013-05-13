@@ -11,6 +11,8 @@ package com.egf.db.core.define;
  * @version $Revision: 2.0 $
  * @since 1.0
  */
-public interface IndexType extends Define{
-
+public interface IndexType extends Define {
+	
+	public String getIndexType();
+	
 }

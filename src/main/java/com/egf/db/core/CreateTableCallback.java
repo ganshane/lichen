@@ -1,9 +1,10 @@
 package com.egf.db.core;
 
-import com.egf.db.core.model.TableModel;
+import com.egf.db.core.model.Table;
+
 
 
 public interface CreateTableCallback{
 
-	public void doCreateAction(TableModel t);
+	public  void doCreateAction(Table t);
 }

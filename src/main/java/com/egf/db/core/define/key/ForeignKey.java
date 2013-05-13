@@ -4,7 +4,8 @@
  * file: $Id: org.eclipse.jdt.ui.prefs,ForeignKeyDefine.java,fangj Exp$
  * created at:下午06:05:11
  */
-package com.egf.db.core.define.column;
+package com.egf.db.core.define.key;
+
 
 
 
@@ -13,6 +14,6 @@ package com.egf.db.core.define.column;
  * @version $Revision: 2.0 $
  * @since 1.0
  */
-public interface ForeignKey extends ColumnDefine{
+public interface ForeignKey extends KeyDefine{
 
 }
