@@ -24,4 +24,8 @@ class CommentImpl implements Comment{
 	public CommentImpl(String comment){
 		this.comment=comment;
 	}
+	
+	public String out() {
+		return this.getComment();
+	}
 }

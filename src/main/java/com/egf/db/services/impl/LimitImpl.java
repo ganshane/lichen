@@ -24,4 +24,8 @@ class LimitImpl implements Limit {
 	public LimitImpl(int length){
 		this.length=length;
 	}
+
+	public String out() {
+		return String.valueOf(this.getLimit());
+	}
 }

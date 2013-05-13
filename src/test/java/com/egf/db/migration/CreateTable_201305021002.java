@@ -8,6 +8,8 @@ package com.egf.db.migration;
 
 import org.junit.Test;
 
+import com.egf.db.core.CreateTableCallback;
+import com.egf.db.core.model.Table;
 import com.egf.db.services.impl.AbstractMigration;
 
 /**
@@ -19,8 +21,21 @@ public class CreateTable_201305021002 extends AbstractMigration {
 
 	@Test
 	public void up() {
-		//增加列	
-		addColumn(Table("table"), Column("c"),Varchar2(2),Comment("test"));
+		//创建表
+		createTable(TableName("test"), Comment("test注释"), new CreateTableCallback() {
+			public void doCreateAction(Table t) {
+				t.varchar2("xm", Limit(10),NOTNULL,Comment("dd"));
+				t.blob("pic");
+				t.number("xm",Limit(10),NOTNULL);
+				t.varchar2("xx",Limit(20),Comment("dd"));
+			}
+		});
+		//增加列
+		addColumn(TableName("table"), ColumnName("c"),Varchar2(2),NOTNULL,Comment("test"));
+		addColumn(TableName("ss"), ColumnName(""), Number(0), Comment("test"));
+		addIndex(TableName("test"), IndexName("test"), ColumnName("name"),ColumnName("dd"));
+		//创建索引
+	
 	}
 
 	public void down() {

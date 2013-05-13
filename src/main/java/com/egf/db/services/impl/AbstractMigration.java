@@ -8,8 +8,11 @@ package com.egf.db.services.impl;
 
 import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Limit;
+import com.egf.db.core.define.column.NotNull;
+import com.egf.db.core.define.column.Unique;
 import com.egf.db.core.define.column.types.Varchar2;
 import com.egf.db.core.define.name.ColumnName;
+import com.egf.db.core.define.name.IndexName;
 import com.egf.db.core.define.name.TableName;
 import com.egf.db.services.DatabaseService;
 import com.egf.db.services.Migration;
@@ -23,13 +26,19 @@ import com.egf.db.services.Migration;
  */
 public abstract class AbstractMigration extends DatabaseServiceImpl implements Migration,DatabaseService{
 	
+	protected final static Unique UNIQUE=new UniqueImpl();
+	
+	protected final static NotNull NOTNULL=new NotNullImpl();
 
-	protected static TableName Table(String name) {
+	protected static TableName TableName(String name) {
 		return new TableNameImpl(name);
 	}
 	
+	protected static IndexName IndexName(String name) {
+		return new IndexNameImpl(name);
+	}
 	
-	protected static ColumnName Column(String name) {
+	protected static ColumnName ColumnName(String name) {
 		return new ColumnNameImpl(name);
 	}
 
@@ -45,5 +54,9 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 		return new Varchar2Impl(length);
 	}
 
+	
+	protected static com.egf.db.core.define.column.types.Number Number(int length) {
+		return new NumberImpl(length);
+	}
 
 }

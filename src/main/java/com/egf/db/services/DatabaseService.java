@@ -9,8 +9,8 @@ package com.egf.db.services;
 import com.egf.db.core.CreateTableCallback;
 import com.egf.db.core.define.ColumnType;
 import com.egf.db.core.define.IndexType;
-import com.egf.db.core.define.column.ColumnDefine;
 import com.egf.db.core.define.column.Comment;
+import com.egf.db.core.define.column.NullOrNotNull;
 import com.egf.db.core.define.name.ColumnName;
 import com.egf.db.core.define.name.IndexName;
 import com.egf.db.core.define.name.TableName;
@@ -23,33 +23,43 @@ import com.egf.db.core.define.name.TableName;
  */
 public interface DatabaseService {
 	
-	public void createTable(TableName table,Comment comment, CreateTableCallback callback);
+	public void createTable(TableName tableName,Comment comment, CreateTableCallback callback);
 	
-	public void createTable(TableName table, CreateTableCallback callback);
+	public void createTable(TableName tableName, CreateTableCallback callback);
 	
-	public void addColumn(TableName table,ColumnName column,ColumnType columnType,ColumnDefine ... defines);
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType);
 	
-	public void addIndex(TableName table,IndexName index, ColumnName ... columnName);
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NullOrNotNull nullOrNotNull);
 	
-	public void addIndex(TableName table,IndexName index,IndexType indexType, ColumnName ...Column);
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Comment comment);
 	
-	public void addPrimaryKey(String name,TableName table,ColumnName ... Column);
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NullOrNotNull nullOrNotNull,Comment comment);
 	
-	public void addForeignKey(String name,TableName table,ColumnName ... Column);
+	public void addComment(TableName tableName,ColumnName columnName,Comment comment);
 	
-	public void addUnique(String name,TableName table,ColumnName ... Column);
+	public void updateComment(TableName tableName,ColumnName columnName,Comment comment);
+	
+	public void addIndex(TableName tableName,IndexName indexName, ColumnName ... columnName);
+	
+	public void addIndex(TableName tableName,IndexName indexName,IndexType indexType, ColumnName ...columnName);
+	
+	public void addPrimaryKey(String name,TableName tableName,ColumnName ... columnName);
+	
+	public void addForeignKey(String name,TableName tableName,ColumnName ... columnName);
+	
+	public void addUnique(String name,TableName tableName,ColumnName ... columnName);
 	
 	public void dropTable(String name);
 	
 	public void dropIndex(String name);
 	
-	public void dropColumn(String name);
+	public void dropColumn(TableName tableName,ColumnName columnName);
 	
-	public void dropPrimaryKey(String name);
+	public void dropPrimaryKey(TableName tableName,String name);
 	
-	public void dropForeignKey(String name);
+	public void dropForeignKey(TableName tableName,String name);
 	
-	public void dropUnique(String name);
+	public void dropUnique(TableName tableName,String name);
 
 	
 }

@@ -13,7 +13,7 @@ import com.egf.db.core.define.column.types.Varchar2;
  * @version $Revision: 2.0 $
  * @since 1.0
  */
-public class Varchar2Impl implements Varchar2 {
+class Varchar2Impl implements Varchar2 {
 	private int length;
 	
 	public Varchar2Impl(int length){
