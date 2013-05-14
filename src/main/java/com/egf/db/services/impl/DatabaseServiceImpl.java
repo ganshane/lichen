@@ -168,7 +168,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String sql=generate.AddColumn(tn, cn, type);
 		String dsql=generate.addDefault(tn, cn, value);
 		String csql=generate.addComment(tn, cn, c);
-		logger.info(sql+"\n"+csql+"\n"+dsql);
+		logger.info(sql+"\n"+dsql+"\n"+csql);
 	}
 
 
@@ -186,7 +186,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String sql=generate.AddColumn(tn, cn, type,nullOrNot);
 		String dsql=generate.addDefault(tn, cn, value);
 		String csql=generate.addComment(tn, cn, c);
-		logger.info(sql+"\n"+csql+"\n"+dsql);
+		logger.info(sql+"\n"+dsql+"\n"+csql);
 		
 	}
 
