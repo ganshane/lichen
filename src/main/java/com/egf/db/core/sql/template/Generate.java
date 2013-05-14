@@ -17,6 +17,8 @@ public interface Generate {
 	
 	public String AddColumn(String tableName,String name,String columnType,String nullOrNotNull);
 	
+	public String addDefault(String tableName,String columnName,String value);
+	
 	public String addComment(String tableName,String columnName,String comment);
 	
 	public String AddConstraint(String tableName,String name,String type,String ...columnNames);

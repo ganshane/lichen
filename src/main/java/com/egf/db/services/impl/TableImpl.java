@@ -18,10 +18,14 @@ import com.egf.db.core.model.Table;
  */
 class TableImpl implements Table {
 	
-	private StringBuffer sb=new StringBuffer();
+	private StringBuffer columns=new StringBuffer();
+	
+	private StringBuffer comments=new StringBuffer();
 
 	public void blob(String name, Comment comment) {
 		// TODO Auto-generated method stub
+		columns.append(name);
+		columns.append("bolb");
 		
 	}
 

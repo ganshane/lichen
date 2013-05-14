@@ -74,4 +74,9 @@ public class GenerateImpl implements Generate{
 		return sql;
 	}
 
+	public String addDefault(String tableName, String columnName, String value) {
+		String sql=String.format("alter table %s modify %s default '%s';", tableName,columnName,value);
+		return sql;
+	}
+
 }

@@ -14,6 +14,7 @@ import com.egf.db.core.CreateTableCallback;
 import com.egf.db.core.define.ColumnType;
 import com.egf.db.core.define.IndexType;
 import com.egf.db.core.define.column.Comment;
+import com.egf.db.core.define.column.Default;
 import com.egf.db.core.define.column.NullOrNotNull;
 import com.egf.db.core.define.name.ColumnName;
 import com.egf.db.core.define.name.IndexName;
@@ -108,6 +109,86 @@ class DatabaseServiceImpl implements DatabaseService{
 		logger.info(sql+"\n"+csql);
 	}
 
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft) {
+		TableNameImpl tableImpl=(TableNameImpl)tableName;
+		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
+		DefaultImpl deftImpl=(DefaultImpl)deft;
+		String tn=tableImpl.getName();
+		String cn=columnImpl.getName();
+		String type=columnType.getColumnType();
+		String value=deftImpl.getValue();
+		String sql=generate.AddColumn(tn, cn, type);
+		String dsql=generate.addDefault(tn, cn, value);
+		logger.info(sql+"\n"+dsql);
+	}
+
+	
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull) {
+		TableNameImpl tableImpl=(TableNameImpl)tableName;
+		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
+		DefaultImpl deftImpl=(DefaultImpl)deft;
+		String tn=tableImpl.getName();
+		String cn=columnImpl.getName();
+		String type=columnType.getColumnType();
+		String nullOrNot=nullOrNotNull.out();
+		String value=deftImpl.getValue();
+		String sql=generate.AddColumn(tn, cn, type,nullOrNot);
+		String dsql=generate.addDefault(tn, cn, value);
+		logger.info(sql+"\n"+dsql);
+		
+	}
+
+
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, Comment comment) {
+		TableNameImpl tableImpl=(TableNameImpl)tableName;
+		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
+		CommentImpl commentImpl=(CommentImpl)comment;
+		DefaultImpl deftImpl=(DefaultImpl)deft;
+		String tn=tableImpl.getName();
+		String cn=columnImpl.getName();
+		String c=commentImpl.getComment();
+		String type=columnType.getColumnType();
+		String value=deftImpl.getValue();
+		String sql=generate.AddColumn(tn, cn, type);
+		String dsql=generate.addDefault(tn, cn, value);
+		String csql=generate.addComment(tn, cn, c);
+		logger.info(sql+"\n"+csql+"\n"+dsql);
+	}
+
+
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull,Comment comment) {
+		TableNameImpl tableImpl=(TableNameImpl)tableName;
+		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
+		CommentImpl commentImpl=(CommentImpl)comment;
+		DefaultImpl deftImpl=(DefaultImpl)deft;
+		String tn=tableImpl.getName();
+		String cn=columnImpl.getName();
+		String c=commentImpl.getComment();
+		String type=columnType.getColumnType();
+		String nullOrNot=nullOrNotNull.out();
+		String value=deftImpl.getValue();
+		String sql=generate.AddColumn(tn, cn, type,nullOrNot);
+		String dsql=generate.addDefault(tn, cn, value);
+		String csql=generate.addComment(tn, cn, c);
+		logger.info(sql+"\n"+csql+"\n"+dsql);
+		
+	}
+
+	public void addDefault(TableName tableName, ColumnName columnName,Default deft) {
+		TableNameImpl tableImpl=(TableNameImpl)tableName;
+		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
+		DefaultImpl deftImpl=(DefaultImpl)deft;
+		String tn=tableImpl.getName();
+		String cn=columnImpl.getName();
+		String value=deftImpl.getValue();
+		String sql=generate.addDefault(tn, cn, value);
+		logger.info(sql);
+	}
+
+	
+	public void updateDefault(TableName tableName, ColumnName columnName,Default deft) {
+		addDefault(tableName, columnName, deft);
+	}
 	
 	public void addIndex(TableName tableName, IndexName IndexName,ColumnName... columnName) {
 		String[] columnNames=new String[columnName.length];
@@ -229,6 +310,7 @@ class DatabaseServiceImpl implements DatabaseService{
 	    String sql=generate.dropConstraint(tn, name);
 	    return sql;
 	}
+
 	
 
 }

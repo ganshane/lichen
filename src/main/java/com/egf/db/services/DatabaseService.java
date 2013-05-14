@@ -10,6 +10,7 @@ import com.egf.db.core.CreateTableCallback;
 import com.egf.db.core.define.ColumnType;
 import com.egf.db.core.define.IndexType;
 import com.egf.db.core.define.column.Comment;
+import com.egf.db.core.define.column.Default;
 import com.egf.db.core.define.column.NullOrNotNull;
 import com.egf.db.core.define.name.ColumnName;
 import com.egf.db.core.define.name.IndexName;
@@ -29,15 +30,27 @@ public interface DatabaseService {
 	
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType);
 	
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft);
+	
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NullOrNotNull nullOrNotNull);
+	
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NullOrNotNull nullOrNotNull);
 	
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Comment comment);
 	
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,Comment comment);
+	
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NullOrNotNull nullOrNotNull,Comment comment);
+	
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NullOrNotNull nullOrNotNull,Comment comment);
 	
 	public void addComment(TableName tableName,ColumnName columnName,Comment comment);
 	
 	public void updateComment(TableName tableName,ColumnName columnName,Comment comment);
+	
+	public void addDefault(TableName tableName,ColumnName columnName,Default deft);
+	
+	public void updateDefault(TableName tableName,ColumnName columnName,Default deft);
 	
 	public void addIndex(TableName tableName,IndexName indexName, ColumnName ... columnName);
 	
