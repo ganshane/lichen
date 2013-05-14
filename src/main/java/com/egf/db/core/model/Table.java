@@ -44,19 +44,19 @@ public interface Table {
 	
 	public void blob(String name,Comment comment);
 	
-	public void number(String name,Limit limit,NullOrNotNull nullOrNotNull);
+	public void number(String name,NullOrNotNull nullOrNotNull);
 	
-	public void number(String name,Limit limit);
+	public void number(String name);
 	
-	public void number(String name,Limit limit,NullOrNotNull nullOrNotNull,Comment comment);
+	public void number(String name,NullOrNotNull nullOrNotNull,Comment comment);
 	
 	public void number(String name,Comment comment);
 	
-	public void number(String name,Limit limit,Default deft, NullOrNotNull nullOrNotNull);
+	public void number(String name,Default deft, NullOrNotNull nullOrNotNull);
 	
-	public void number(String name,Limit limit,Default deft);
+	public void number(String name,Default deft);
 	
-	public void number(String name,Limit limit,Default deft,NullOrNotNull nullOrNotNull,Comment comment);
+	public void number(String name,Default deft,NullOrNotNull nullOrNotNull,Comment comment);
 	
 	public void number(String name,Default deft,Comment comment);
 }

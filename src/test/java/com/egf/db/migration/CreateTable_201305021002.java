@@ -26,7 +26,7 @@ public class CreateTable_201305021002 extends AbstractMigration {
 			public void doCreateAction(Table t) {
 				t.varchar2("xm", Limit(10),NOTNULL,Comment("dd"));
 				t.blob("pic");
-				t.number("xm",Limit(10),NOTNULL);
+				t.number("xm",NOTNULL);
 				t.varchar2("xx",Limit(20),Comment("dd"));
 			}
 		});

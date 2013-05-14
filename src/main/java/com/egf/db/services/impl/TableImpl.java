@@ -24,110 +24,288 @@ class TableImpl implements Table {
 	private StringBuffer comments=new StringBuffer();
 
 	public void blob(String name, Comment comment) {
-		// TODO Auto-generated method stub
-		
+		CommentImpl commentImpl=(CommentImpl)comment;
+		columns.append(name);
+		columns.append(" ");
+		columns.append("bolb");
+		columns.append(",");
+		columns.append("\n");
+		addComment(name, commentImpl.getComment());
 	}
 
 	public void blob(String name, NullOrNotNull nullOrNotNull, Comment comment) {
-		// TODO Auto-generated method stub
-		
+		CommentImpl commentImpl=(CommentImpl)comment;
+		String nullOrNot=nullOrNotNull.out();
+		columns.append(name);
+		columns.append(" ");
+		columns.append("bolb");
+		columns.append(" ");
+		columns.append(nullOrNot);
+		columns.append(",");
+		columns.append("\n");
+		addComment(name, commentImpl.getComment());
 	}
 
 	public void blob(String name, NullOrNotNull nullOrNotNull) {
-		// TODO Auto-generated method stub
-		
+		String nullOrNot=nullOrNotNull.out();
+		columns.append(name);
+		columns.append(" ");
+		columns.append("bolb");
+		columns.append(" ");
+		columns.append(nullOrNot);
+		columns.append(",");
+		columns.append("\n");
 	}
 
 	public void blob(String name) {
-		// TODO Auto-generated method stub
-		
+		columns.append(name);
+		columns.append(" ");
+		columns.append("bolb");
+		columns.append(",");
+		columns.append("\n");
 	}
 
 	public void number(String name, Comment comment) {
-		// TODO Auto-generated method stub
-		
+		CommentImpl commentImpl=(CommentImpl)comment;
+		columns.append(name);
+		columns.append(" ");
+		columns.append("number");
+		columns.append(",");
+		columns.append("\n");
+		addComment(name, commentImpl.getComment());
 	}
 
 	public void number(String name, Default deft, Comment comment) {
-		// TODO Auto-generated method stub
+		DefaultImpl defaultImpl=(DefaultImpl)deft;
+		CommentImpl commentImpl=(CommentImpl)comment;
+		columns.append(name);
+		columns.append(" ");
+		columns.append("number");
+		columns.append(" ");
+		columns.append("default");
+		columns.append(" ");
+		columns.append(defaultImpl.getValue());
+		columns.append(",");
+		columns.append("\n");
+		addComment(name, commentImpl.getComment());
+	}
+
+	public void number(String name,Default deft,NullOrNotNull nullOrNotNull, Comment comment) {
+		DefaultImpl defaultImpl=(DefaultImpl)deft;
+		CommentImpl commentImpl=(CommentImpl)comment;
+		String nullOrNot=nullOrNotNull.out();
+		columns.append(name);
+		columns.append(" ");
+		columns.append("number");
+		columns.append(" ");
+		columns.append("default");
+		columns.append(" ");
+		columns.append(defaultImpl.getValue());
+		columns.append(" ");
+		columns.append(nullOrNot);
+		columns.append(",");
+		columns.append("\n");
+		addComment(name, commentImpl.getComment());
+	}
+
+	public void number(String name,Default deft,NullOrNotNull nullOrNotNull) {
+		DefaultImpl defaultImpl=(DefaultImpl)deft;
+		String nullOrNot=nullOrNotNull.out();
+		columns.append(name);
+		columns.append(" ");
+		columns.append("number");
+		columns.append(" ");
+		columns.append("default");
+		columns.append(" ");
+		columns.append(defaultImpl.getValue());
+		columns.append(" ");
+		columns.append(nullOrNot);
+		columns.append(",");
+		columns.append("\n");
+	}
+
+	public void number(String name, Default deft) {
+		DefaultImpl defaultImpl=(DefaultImpl)deft;;
+		columns.append(name);
+		columns.append(" ");
+		columns.append("number");
+		columns.append(" ");
+		columns.append("default");
+		columns.append(" ");
+		columns.append(defaultImpl.getValue());
+		columns.append(",");
+		columns.append("\n");
 		
 	}
 
-	public void number(String name, Limit limit, Default deft,
-			NullOrNotNull nullOrNotNull, Comment comment) {
-		// TODO Auto-generated method stub
-		
+	public void number(String name, NullOrNotNull nullOrNotNull,Comment comment) {
+		String nullOrNot=nullOrNotNull.out();
+		CommentImpl commentImpl=(CommentImpl)comment;
+		columns.append(name);
+		columns.append(" ");
+		columns.append("number");
+		columns.append(" ");
+		columns.append(nullOrNot);
+		columns.append(",");
+		columns.append("\n");
+		addComment(name, commentImpl.getComment());
 	}
 
-	public void number(String name, Limit limit, Default deft,
-			NullOrNotNull nullOrNotNull) {
-		// TODO Auto-generated method stub
-		
+	public void number(String name,NullOrNotNull nullOrNotNull) {
+		String nullOrNot=nullOrNotNull.out();
+		columns.append(name);
+		columns.append(" ");
+		columns.append("number");
+		columns.append(" ");
+		columns.append(nullOrNot);
+		columns.append(",");
+		columns.append("\n");
 	}
 
-	public void number(String name, Limit limit, Default deft) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void number(String name, Limit limit, NullOrNotNull nullOrNotNull,
-			Comment comment) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void number(String name, Limit limit, NullOrNotNull nullOrNotNull) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void number(String name, Limit limit) {
-		// TODO Auto-generated method stub
-		
+	public void number(String name) {
+		columns.append(name);
+		columns.append(" ");
+		columns.append("number");
+		columns.append(",");
+		columns.append("\n");
 	}
 
 	public void varchar2(String name, Limit limit, Comment comment) {
-		// TODO Auto-generated method stub
-		
+		LimitImpl limitImpl=(LimitImpl)limit;
+		CommentImpl commentImpl=(CommentImpl)comment;
+		columns.append(name);
+		columns.append(" ");
+		columns.append("varchar2(");
+		columns.append(limitImpl.getLimit());
+		columns.append(")");
+		columns.append(",");
+		columns.append("\n");
+		addComment(name, commentImpl.getComment());
 	}
 
 	public void varchar2(String name, Limit limit, Default deft, Comment comment) {
-		// TODO Auto-generated method stub
-		
+		LimitImpl limitImpl=(LimitImpl)limit;
+		DefaultImpl defaultImpl=(DefaultImpl)deft;
+		CommentImpl commentImpl=(CommentImpl)comment;
+		String value=defaultImpl.getValue();
+		columns.append(name);
+		columns.append(" ");
+		columns.append("varchar2(");
+		columns.append(limitImpl.getLimit());
+		columns.append(")");
+		columns.append(" ");
+		columns.append("default");
+		columns.append(" ");
+		columns.append(value);
+		columns.append(",");
+		columns.append("\n");
+		addComment(name, commentImpl.getComment());
 	}
 
-	public void varchar2(String name, Limit limit, Default deft,
-			NullOrNotNull nullOrNotNull, Comment comment) {
-		// TODO Auto-generated method stub
-		
+	public void varchar2(String name, Limit limit, Default deft,NullOrNotNull nullOrNotNull, Comment comment) {
+		LimitImpl limitImpl=(LimitImpl)limit;
+		DefaultImpl defaultImpl=(DefaultImpl)deft;
+		CommentImpl commentImpl=(CommentImpl)comment;
+		String nullOrNot=nullOrNotNull.out();
+		String value=defaultImpl.getValue();
+		columns.append(name);
+		columns.append(" ");
+		columns.append("varchar2(");
+		columns.append(limitImpl.getLimit());
+		columns.append(")");
+		columns.append(" ");
+		columns.append("default");
+		columns.append(" ");
+		columns.append(value);
+		columns.append(" ");
+		columns.append(nullOrNot);
+		columns.append(",");
+		columns.append("\n");
+		addComment(name, commentImpl.getComment());
 	}
 
-	public void varchar2(String name, Limit limit, Default deft,
-			NullOrNotNull nullOrNotNull) {
-		// TODO Auto-generated method stub
-		
+	public void varchar2(String name, Limit limit, Default deft,NullOrNotNull nullOrNotNull) {
+		LimitImpl limitImpl=(LimitImpl)limit;
+		DefaultImpl defaultImpl=(DefaultImpl)deft;
+		String nullOrNot=nullOrNotNull.out();
+		String value=defaultImpl.getValue();
+		columns.append(name);
+		columns.append(" ");
+		columns.append("varchar2(");
+		columns.append(limitImpl.getLimit());
+		columns.append(")");
+		columns.append(" ");
+		columns.append("default");
+		columns.append(" ");
+		columns.append(value);
+		columns.append(" ");
+		columns.append(nullOrNot);
+		columns.append(",");
+		columns.append("\n");
 	}
 
 	public void varchar2(String name, Limit limit, Default deft) {
-		// TODO Auto-generated method stub
-		
+		LimitImpl limitImpl=(LimitImpl)limit;
+		DefaultImpl defaultImpl=(DefaultImpl)deft;
+		String value=defaultImpl.getValue();
+		columns.append(name);
+		columns.append(" ");
+		columns.append("varchar2(");
+		columns.append(limitImpl.getLimit());
+		columns.append(")");
+		columns.append(" ");
+		columns.append("default");
+		columns.append(" ");
+		columns.append(value);
+		columns.append(",");
+		columns.append("\n");
 	}
 
-	public void varchar2(String name, Limit limit, NullOrNotNull nullOrNotNull,
-			Comment comment) {
-		// TODO Auto-generated method stub
-		
+	public void varchar2(String name, Limit limit, NullOrNotNull nullOrNotNull,Comment comment) {
+		LimitImpl limitImpl=(LimitImpl)limit;
+		CommentImpl commentImpl=(CommentImpl)comment;
+		String nullOrNot=nullOrNotNull.out();
+		columns.append(name);
+		columns.append(" ");
+		columns.append("varchar2(");
+		columns.append(limitImpl.getLimit());
+		columns.append(")");
+		columns.append(" ");
+		columns.append(nullOrNot);
+		columns.append(",");
+		columns.append("\n");
+		addComment(name, commentImpl.getComment());
 	}
 
 	public void varchar2(String name, Limit limit, NullOrNotNull nullOrNotNull) {
-		// TODO Auto-generated method stub
+		LimitImpl limitImpl=(LimitImpl)limit;
+		String nullOrNot=nullOrNotNull.out();
+		columns.append(name);
+		columns.append(" ");
+		columns.append("varchar2(");
+		columns.append(limitImpl.getLimit());
+		columns.append(")");
+		columns.append(" ");
+		columns.append(nullOrNot);
+		columns.append(",");
+		columns.append("\n");
 		
 	}
 
 	public void varchar2(String name, Limit limit) {
-		// TODO Auto-generated method stub
-		
+		LimitImpl limitImpl=(LimitImpl)limit;
+		columns.append(name);
+		columns.append(" ");
+		columns.append("varchar2(");
+		columns.append(limitImpl.getLimit());
+		columns.append(")");
+		columns.append(",");
+		columns.append("\n");
 	}
 
+	
+	private void addComment(String columnName,String comment){
+		comments.append(String.format("comment on column TN.%s is '%s';\n",columnName, comment));
+	}
 
 }
