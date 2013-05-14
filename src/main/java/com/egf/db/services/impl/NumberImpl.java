@@ -15,22 +15,8 @@ import com.egf.db.core.define.column.types.Number;
  */
 class NumberImpl implements Number{
 
-	private int length;
-	
-	public NumberImpl(int length){
-		this.length=length;
-	}
-
-	public int getLength() {
-		return length;
-	}
-	
 	public String getColumnType() {
-		if(this.length==0){
 			return "number";
-		}else{
-			return "number("+length+")";
-		}
 	}
 
 }

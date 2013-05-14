@@ -32,7 +32,7 @@ public class CreateTable_201305021002 extends AbstractMigration {
 		});
 		//增加列
 		addColumn(TableName("table"), ColumnName("c"),Varchar2(2),NOTNULL,Comment("test"));
-		addColumn(TableName("ss"), ColumnName(""), Number(0), Comment("test"));
+		addColumn(TableName("ss"), ColumnName("dd"), NUMBER, Comment("test"));
 		addIndex(TableName("test"), IndexName("test"), ColumnName("name"),ColumnName("dd"));
 		//创建索引
 	

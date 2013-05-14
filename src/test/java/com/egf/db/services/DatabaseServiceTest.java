@@ -6,9 +6,6 @@
  */
 package com.egf.db.services;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
 
 /**
  * @author fangj

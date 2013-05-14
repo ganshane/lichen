@@ -29,6 +29,8 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 	protected final static Unique UNIQUE=new UniqueImpl();
 	
 	protected final static NotNull NOTNULL=new NotNullImpl();
+	
+	protected final static com.egf.db.core.define.column.types.Number NUMBER=new NumberImpl();
 
 	protected static TableName TableName(String name) {
 		return new TableNameImpl(name);
@@ -54,11 +56,6 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 		return new Varchar2Impl(length);
 	}
 
-	
-	protected static com.egf.db.core.define.column.types.Number Number(int length) {
-		return new NumberImpl(length);
-	}
-	
 	protected static com.egf.db.core.define.column.Default Default(String value) {
 		return new DefaultImpl(value);
 	}
