@@ -58,5 +58,9 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 	protected static com.egf.db.core.define.column.types.Number Number(int length) {
 		return new NumberImpl(length);
 	}
+	
+	protected static com.egf.db.core.define.column.Default Default(String value) {
+		return new DefaultImpl(value);
+	}
 
 }

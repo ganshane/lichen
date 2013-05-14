@@ -7,6 +7,7 @@
 package com.egf.db.services.impl;
 
 import com.egf.db.core.define.column.Comment;
+import com.egf.db.core.define.column.Default;
 import com.egf.db.core.define.column.Limit;
 import com.egf.db.core.define.column.NullOrNotNull;
 import com.egf.db.core.model.Table;
@@ -24,8 +25,6 @@ class TableImpl implements Table {
 
 	public void blob(String name, Comment comment) {
 		// TODO Auto-generated method stub
-		columns.append(name);
-		columns.append("bolb");
 		
 	}
 
@@ -45,6 +44,28 @@ class TableImpl implements Table {
 	}
 
 	public void number(String name, Comment comment) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void number(String name, Default deft, Comment comment) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void number(String name, Limit limit, Default deft,
+			NullOrNotNull nullOrNotNull, Comment comment) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void number(String name, Limit limit, Default deft,
+			NullOrNotNull nullOrNotNull) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void number(String name, Limit limit, Default deft) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -70,6 +91,28 @@ class TableImpl implements Table {
 		
 	}
 
+	public void varchar2(String name, Limit limit, Default deft, Comment comment) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void varchar2(String name, Limit limit, Default deft,
+			NullOrNotNull nullOrNotNull, Comment comment) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void varchar2(String name, Limit limit, Default deft,
+			NullOrNotNull nullOrNotNull) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void varchar2(String name, Limit limit, Default deft) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void varchar2(String name, Limit limit, NullOrNotNull nullOrNotNull,
 			Comment comment) {
 		// TODO Auto-generated method stub
@@ -85,9 +128,6 @@ class TableImpl implements Table {
 		// TODO Auto-generated method stub
 		
 	}
-
-	
-	
 
 
 }

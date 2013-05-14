@@ -13,7 +13,7 @@ import com.egf.db.core.define.column.Default;
  * @version $Revision: 1.0 $
  * @since 1.0
  */
-public class DefaultImpl implements Default {
+class DefaultImpl implements Default {
 	private String value;
 
 	public String getValue() {

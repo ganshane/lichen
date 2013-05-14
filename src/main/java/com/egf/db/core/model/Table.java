@@ -7,6 +7,7 @@
 package com.egf.db.core.model;
 
 import com.egf.db.core.define.column.Comment;
+import com.egf.db.core.define.column.Default;
 import com.egf.db.core.define.column.Limit;
 import com.egf.db.core.define.column.NullOrNotNull;
 
@@ -27,7 +28,13 @@ public interface Table {
 	
 	public void varchar2(String name,Limit limit);
 	
+	public void varchar2(String name,Limit limit,Default deft,NullOrNotNull nullOrNotNull);
 	
+	public void varchar2(String name,Limit limit,Default deft,NullOrNotNull nullOrNotNull,Comment comment);
+	
+	public void varchar2(String name,Limit limit,Default deft,Comment comment);
+	
+	public void varchar2(String name,Limit limit,Default deft);
 	
 	public void blob(String name,NullOrNotNull nullOrNotNull);
 	
@@ -37,8 +44,6 @@ public interface Table {
 	
 	public void blob(String name,Comment comment);
 	
-	
-	
 	public void number(String name,Limit limit,NullOrNotNull nullOrNotNull);
 	
 	public void number(String name,Limit limit);
@@ -47,4 +52,11 @@ public interface Table {
 	
 	public void number(String name,Comment comment);
 	
+	public void number(String name,Limit limit,Default deft, NullOrNotNull nullOrNotNull);
+	
+	public void number(String name,Limit limit,Default deft);
+	
+	public void number(String name,Limit limit,Default deft,NullOrNotNull nullOrNotNull,Comment comment);
+	
+	public void number(String name,Default deft,Comment comment);
 }
