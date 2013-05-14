@@ -48,16 +48,32 @@ class DatabaseServiceImpl implements DatabaseService{
 	
 	public void createTable(TableName tableName, Comment comment,CreateTableCallback callback) {
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
+		CommentImpl commentImpl=(CommentImpl)comment;
 		String tn=tableImpl.getName();
 		TableImpl tmi=new TableImpl();
 		//进行回调操作
 		callback.doCreateAction(tmi);
-		
+		StringBuffer columns=tmi.columns;
+		columns=columns.delete(columns.length()-2, columns.length());
+		String sql=String.format("create table %s (\n%s\n);", tn,columns.toString());
+		String tableComment=String.format("comment on table %s is '%s';\n", tn,commentImpl.getComment());
+		String commentsSql=tmi.comments.toString();
+		commentsSql=commentsSql.replaceAll("TN", tn);
+		logger.info(sql+"\n"+tableComment+commentsSql.toString());
 	}
 	
 	public void createTable(TableName tableName, CreateTableCallback callback) {
-		// TODO Auto-generated method stub
-		
+		TableNameImpl tableImpl=(TableNameImpl)tableName;
+		String tn=tableImpl.getName();
+		TableImpl tmi=new TableImpl();
+		//进行回调操作
+		callback.doCreateAction(tmi);
+		StringBuffer columns=tmi.columns;
+		columns=columns.delete(columns.length()-2, columns.length());
+		String sql=String.format("create table %s (\n%s\n);", tn,columns.toString());
+		String commentsSql=tmi.comments.toString();
+		commentsSql=commentsSql.replaceAll("TN", tn);
+		logger.info(sql+"\n"+commentsSql.toString());
 	}
 	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType) {

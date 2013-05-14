@@ -10,6 +10,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.egf.db.core.CreateTableCallback;
+import com.egf.db.core.model.Table;
 import com.egf.db.services.DatabaseService;
 
 /**
@@ -26,7 +28,14 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddColumn() {
-		
+		service.createTable(new TableNameImpl("test"),new CommentImpl("表注释"), new CreateTableCallback() {
+			public void doCreateAction(Table t) {
+				t.varchar2("xm",new LimitImpl(10),new NotNullImpl(),new CommentImpl("dd"));
+				t.blob("pic");
+				t.number("xm",new NotNullImpl());
+				t.varchar2("xx",new LimitImpl(20),new CommentImpl("dd"));
+			}
+		});
 	}
 
 }

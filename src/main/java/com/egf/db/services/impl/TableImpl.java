@@ -19,9 +19,9 @@ import com.egf.db.core.model.Table;
  */
 class TableImpl implements Table {
 	
-	private StringBuffer columns=new StringBuffer();
+	public StringBuffer columns=new StringBuffer();
 	
-	private StringBuffer comments=new StringBuffer();
+	public StringBuffer comments=new StringBuffer();
 
 	public void blob(String name, Comment comment) {
 		CommentImpl commentImpl=(CommentImpl)comment;
