@@ -24,18 +24,19 @@ public class CreateTable_201305021002 extends AbstractMigration {
 		//创建表
 		createTable(TableName("test"), Comment("test注释"), new CreateTableCallback() {
 			public void doCreateAction(Table t) {
+				t.number("id");
 				t.varchar2("xm", Limit(10),NOTNULL,Comment("dd"));
 				t.blob("pic");
-				t.number("xm",NOTNULL);
 				t.varchar2("xx",Limit(20),Comment("dd"));
 			}
 		});
 		//增加列
-		addColumn(TableName("table"), ColumnName("c"),Varchar2(2),NOTNULL,Comment("test"));
+		addColumn(TableName("test"), ColumnName("c"),Varchar2(2),NOTNULL,Comment("test"));
 		addColumn(TableName("ss"), ColumnName("dd"), NUMBER, Comment("test"));
-		addIndex(TableName("test"), IndexName("test"), ColumnName("name"),ColumnName("dd"));
 		//创建索引
-	
+		addIndex(TableName("test"), IndexName("test"), ColumnName("name"),ColumnName("dd"));
+		//增加主键
+		addPrimaryKey("test", TableName("test"), ColumnName("id"));
 	}
 
 	public void down() {
