@@ -59,6 +59,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String tableComment=String.format("comment on table %s is '%s';\n", tn,commentImpl.getComment());
 		String commentsSql=tmi.comments.toString();
 		commentsSql=commentsSql.replaceAll("TN", tn);
+		jdbcService.execute(sql+"\n"+tableComment+commentsSql.toString(), connection);
 		logger.info(sql+"\n"+tableComment+commentsSql.toString());
 	}
 	
@@ -326,7 +327,5 @@ class DatabaseServiceImpl implements DatabaseService{
 	    String sql=generate.dropConstraint(tn, name);
 	    return sql;
 	}
-
-	
 
 }
