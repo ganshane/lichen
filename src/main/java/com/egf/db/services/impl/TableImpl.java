@@ -27,7 +27,7 @@ class TableImpl implements Table {
 		CommentImpl commentImpl=(CommentImpl)comment;
 		columns.append(name);
 		columns.append(" ");
-		columns.append("bolb");
+		columns.append("blob");
 		columns.append(",");
 		columns.append("\n");
 		addComment(name, commentImpl.getComment());
@@ -38,7 +38,7 @@ class TableImpl implements Table {
 		String nullOrNot=nullOrNotNull.out();
 		columns.append(name);
 		columns.append(" ");
-		columns.append("bolb");
+		columns.append("blob");
 		columns.append(" ");
 		columns.append(nullOrNot);
 		columns.append(",");
@@ -50,7 +50,7 @@ class TableImpl implements Table {
 		String nullOrNot=nullOrNotNull.out();
 		columns.append(name);
 		columns.append(" ");
-		columns.append("bolb");
+		columns.append("blob");
 		columns.append(" ");
 		columns.append(nullOrNot);
 		columns.append(",");
@@ -60,7 +60,7 @@ class TableImpl implements Table {
 	public void blob(String name) {
 		columns.append(name);
 		columns.append(" ");
-		columns.append("bolb");
+		columns.append("blob");
 		columns.append(",");
 		columns.append("\n");
 	}
