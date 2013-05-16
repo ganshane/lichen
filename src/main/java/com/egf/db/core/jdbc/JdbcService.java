@@ -7,6 +7,7 @@
 package com.egf.db.core.jdbc;
 
 import java.sql.Connection;
+import java.util.List;
 
 /**
  * jdbc service 接口
@@ -56,5 +57,11 @@ public interface JdbcService {
 	 *            参数
 	 */
 	public void execute(String sql, Connection conn, final Object[] params);
+	
+	
+	public List<Object[]> find(String sql);
+	
+	
+	public List<Object[]> find(String sql,Object[] params);
 
 }
