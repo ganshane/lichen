@@ -23,8 +23,7 @@ import org.apache.log4j.Logger;
  */
 public class JdbcServiceImpl implements JdbcService {
 
-	private static final Logger logger = Logger
-			.getLogger(JdbcServiceImpl.class);
+	private static final Logger logger = Logger.getLogger(JdbcServiceImpl.class);
 
 	public void autoCommitExecute(String sql) {
 		autoCommitExecute(sql, new Object[0]);
