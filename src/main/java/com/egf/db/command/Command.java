@@ -11,9 +11,9 @@ package com.egf.db.command;
  * @version $Revision: 2.0 $
  * @since 1.0
  */
-public interface Commond {
+public interface Command {
 
-	public void up();
+	public void up(String pack);
 
 	/**
 	 * 回滚到指定版本
