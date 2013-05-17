@@ -46,6 +46,12 @@ public class StringUtils {
 		return true;
 	}
 
+	/**
+	 * 获取数组以特定字符合并成字符串
+	 * @param array 数组
+	 * @param split 分隔符
+	 * @return
+	 */
 	public static String getUnionStringArray(String[] array,String split) {
 		StringBuffer sb = new StringBuffer();
 		for (String s : array) {

@@ -19,6 +19,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
+ * file tools
  * @author fangj
  * @version $Revision: 1.0 $
  * @since 1.0
@@ -98,7 +99,6 @@ public class FileUtils {
 							}
 						}
 					} catch (IOException e) {
-						// log.error("在扫描用户定义视图时从jar包获取文件出错");
 						e.printStackTrace();
 					}
 				}
