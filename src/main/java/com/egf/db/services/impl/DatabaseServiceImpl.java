@@ -60,7 +60,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String tableComment=String.format("comment on table %s is '%s';\n", tn,commentImpl.getComment());
 		String commentsSql=tmi.comments.toString();
 		commentsSql=commentsSql.replaceAll("TN", tn);
-		logger.info(sql+"\n"+tableComment+commentsSql.toString());
+		logger.info("\n"+sql+"\n"+tableComment+commentsSql.toString());
 		jdbcService.execute(sql+"\n"+tableComment+commentsSql.toString());
 	}
 	
@@ -75,7 +75,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String sql=String.format("create table %s (\n%s\n);", tn,columns.toString());
 		String commentsSql=tmi.comments.toString();
 		commentsSql=commentsSql.replaceAll("TN", tn);
-		logger.info(sql+"\n"+commentsSql.toString());
+		logger.info("\n"+sql+"\n"+commentsSql.toString());
 		jdbcService.execute(sql+"\n"+commentsSql.toString());
 	}
 	
@@ -86,7 +86,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String cn=columnImpl.getName();
 		String type=columnType.getColumnType();
 		String sql=generate.AddColumn(tn, cn, type);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
@@ -99,7 +99,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String type=columnType.getColumnType();
 		String nullorNot=nullOrNotNull.out();
 		String sql=generate.AddColumn(tn, cn, type,nullorNot);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
@@ -113,7 +113,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String c=commentImpl.getComment();
 		String sql=generate.AddColumn(tn, cn, type);
 		String csql=generate.addComment(tn, cn, c);
-		logger.info(sql+"\n"+csql);
+		logger.info("\n"+sql+"\n"+csql);
 		jdbcService.execute(sql+"\n"+csql);
 	}
 	
@@ -128,7 +128,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String c=commentImpl.getComment();
 		String sql=generate.AddColumn(tn, cn, type,nullOrNot);
 		String csql=generate.addComment(tn, cn, c);
-		logger.info(sql+"\n"+csql);
+		logger.info("\n"+sql+"\n"+csql);
 		jdbcService.execute(sql+"\n"+csql);
 	}
 
@@ -142,7 +142,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String value=deftImpl.getValue();
 		String sql=generate.AddColumn(tn, cn, type);
 		String dsql=generate.addDefault(tn, cn, value);
-		logger.info(sql+"\n"+dsql);
+		logger.info("\n"+sql+"\n"+dsql);
 		jdbcService.execute(sql+"\n"+dsql);
 	}
 
@@ -158,7 +158,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String value=deftImpl.getValue();
 		String sql=generate.AddColumn(tn, cn, type,nullOrNot);
 		String dsql=generate.addDefault(tn, cn, value);
-		logger.info(sql+"\n"+dsql);
+		logger.info("\n"+sql+"\n"+dsql);
 		jdbcService.execute(sql+"\n"+dsql);
 	}
 
@@ -176,7 +176,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String sql=generate.AddColumn(tn, cn, type);
 		String dsql=generate.addDefault(tn, cn, value);
 		String csql=generate.addComment(tn, cn, c);
-		logger.info(sql+"\n"+dsql+"\n"+csql);
+		logger.info("\n"+sql+"\n"+dsql+"\n"+csql);
 		jdbcService.execute(sql+"\n"+dsql+"\n"+csql);
 	}
 
@@ -195,7 +195,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String sql=generate.AddColumn(tn, cn, type,nullOrNot);
 		String dsql=generate.addDefault(tn, cn, value);
 		String csql=generate.addComment(tn, cn, c);
-		logger.info(sql+"\n"+dsql+"\n"+csql);
+		logger.info("\n"+sql+"\n"+dsql+"\n"+csql);
 		jdbcService.execute(sql+"\n"+dsql+"\n"+csql);
 	}
 	
@@ -206,7 +206,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String cn=columnImpl.getName();
 		String columnType=jdbcService.getColumnTypeName(tn, cn);
 		String sql=generate.addColumnNullOrNot(tn, cn,columnType, NOT_NULL);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
@@ -216,7 +216,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String tn=tableImpl.getName();
 		String cn=columnImpl.getName();
 		String sql=generate.addColumnNull(tn, cn, NULL);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
@@ -228,7 +228,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String cn=columnImpl.getName();
 		String value=deftImpl.getValue();
 		String sql=generate.addDefault(tn, cn, value);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
@@ -249,7 +249,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		}
 		GenerateImpl gi=new GenerateImpl();
 		String sql=gi.addIndex(tn, in, columnNames);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
@@ -265,7 +265,7 @@ class DatabaseServiceImpl implements DatabaseService{
 			columnNames[i]=columnImpl.getName();
 		}
 		String sql=generate.addIndex(tn,in,type,columnNames);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
@@ -275,7 +275,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		for (ColumnName cn : columnName) {
 			this.addColumnNotNull(tableName, cn);
 		}
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 	
@@ -287,13 +287,13 @@ class DatabaseServiceImpl implements DatabaseService{
 
 	public void addUnique(String name, TableName tableName, ColumnName... columnName) throws SQLException{
 		String sql=addKey(name, tableName, UNIQUE_KEY, columnName);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
 	public void dropTable(String name) throws SQLException{
 		String sql=generate.dropTalbe(name);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 	
@@ -303,25 +303,25 @@ class DatabaseServiceImpl implements DatabaseService{
 		String tn=tableImpl.getName();
 		String cn=columnImpl.getName();
 		String sql=generate.dropColumn(tn, cn);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
 	public void dropIndex(String name) throws SQLException{
 	    String sql=	generate.dropIndex(name);
-	    logger.info(sql);
+	    logger.info("\n"+sql);
 	    jdbcService.execute(sql);
 	}
 	
 	public void dropForeignKey(TableName tableName,String name) throws SQLException{
 		String sql=dropKey(tableName, name);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
 	public void dropPrimaryKey(TableName tableName,String name) throws SQLException{
 		String sql=dropKey(tableName, name);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
@@ -329,7 +329,7 @@ class DatabaseServiceImpl implements DatabaseService{
 
 	public void dropUnique(TableName tableName,String name) throws SQLException{
 		String sql=dropKey(tableName, name);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
@@ -342,7 +342,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String cn=columnImpl.getName();
 		String c=commentImpl.getComment();
 		String sql=generate.addComment(tn, cn, c);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 	
