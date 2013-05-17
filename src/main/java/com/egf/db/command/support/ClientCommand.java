@@ -6,20 +6,12 @@
  */
 package com.egf.db.command.support;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Set;
-
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
 
 import org.apache.log4j.Logger;
 
 import com.egf.db.command.Command;
-import com.egf.db.core.jdbc.JdbcService;
-import com.egf.db.core.jdbc.JdbcServiceImpl;
 import com.egf.db.services.impl.AbstractMigration;
 import com.egf.db.utils.FileUtils;
 
@@ -28,44 +20,37 @@ import com.egf.db.utils.FileUtils;
  * @version $Revision: 2.0 $
  * @since 1.0
  */
-public class ClientCommand implements Command{
-	
-	Logger logger=Logger.getLogger(ClientCommand.class);
-	
-	JdbcService jdbcService=new JdbcServiceImpl();
-	
+public class ClientCommand implements Command {
+
+	Logger logger = Logger.getLogger(ClientCommand.class);
+
 	public void up(String pack) {
-		Enhancer en= new Enhancer();
-		Set<Class<?>> classList=FileUtils.getDbScriptClasses(pack);
-		for (Class cls : classList) {
+		AbstractMigration am = null;
+		Set<Class<?>> classList = FileUtils.getDbScriptClasses(pack);
+		for (Class<?> cls : classList) {
+			logger.info(cls.getName() + " script start run...");
 			try {
-				en.setSuperclass(cls);
-				en.setCallback(new MethodInterceptor() {
-					public Object intercept(Object obj, Method method, Object[] args,MethodProxy proxy) throws Throwable {
-						return proxy.invokeSuper(obj, args);
-					}
-				});
-				AbstractMigration am=(AbstractMigration)en.create();
-				am.up();
-				//获取连接对象
-				Class<?> cl= Class.forName("com.egf.db.services.impl.DatabaseServiceImpl");
-				Field field = cl.getDeclaredField("connection");
-				field.setAccessible(true);
-				Connection connection =  (Connection) field.get(cl);
-				connection.commit();
+				am = (AbstractMigration) cls.newInstance();
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} 
+			try {
+				am.up();
+			} catch (SQLException e) {
+				try {
+					am.down();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+				e.printStackTrace();
+				break;
 			}
 		}
 	}
-	
+
 	public void down(String version) {
 		// TODO Auto-generated method stub
-		
-	}
 
-	
-	
+	}
 
 }

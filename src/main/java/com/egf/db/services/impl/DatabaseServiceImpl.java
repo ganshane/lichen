@@ -6,7 +6,7 @@
  */
 package com.egf.db.services.impl;
 
-import java.sql.Connection;
+import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 
@@ -19,7 +19,6 @@ import com.egf.db.core.define.column.NullOrNotNull;
 import com.egf.db.core.define.name.ColumnName;
 import com.egf.db.core.define.name.IndexName;
 import com.egf.db.core.define.name.TableName;
-import com.egf.db.core.jdbc.DBConnectionManager;
 import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
 import com.egf.db.core.sql.template.Generate;
@@ -40,13 +39,15 @@ class DatabaseServiceImpl implements DatabaseService{
 	
 	private final String UNIQUE_KEY="unique";
 	
-	private JdbcService jdbcService=new JdbcServiceImpl();
+	private final String NULL="null";
 	
-	private static Connection connection=DBConnectionManager.getConnection();
+	private final String NOT_NULL="not null";
+	
+	private JdbcService jdbcService=new JdbcServiceImpl();
 	
 	private Generate generate=new GenerateImpl();
 	
-	public void createTable(TableName tableName, Comment comment,CreateTableCallback callback) {
+	public void createTable(TableName tableName, Comment comment,CreateTableCallback callback)throws SQLException {
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		CommentImpl commentImpl=(CommentImpl)comment;
 		String tn=tableImpl.getName();
@@ -59,11 +60,11 @@ class DatabaseServiceImpl implements DatabaseService{
 		String tableComment=String.format("comment on table %s is '%s';\n", tn,commentImpl.getComment());
 		String commentsSql=tmi.comments.toString();
 		commentsSql=commentsSql.replaceAll("TN", tn);
-		jdbcService.execute(sql+"\n"+tableComment+commentsSql.toString(), connection);
+		jdbcService.execute(sql+"\n"+tableComment+commentsSql.toString());
 		logger.info(sql+"\n"+tableComment+commentsSql.toString());
 	}
 	
-	public void createTable(TableName tableName, CreateTableCallback callback) {
+	public void createTable(TableName tableName, CreateTableCallback callback) throws SQLException{
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		String tn=tableImpl.getName();
 		TableImpl tmi=new TableImpl();
@@ -74,23 +75,23 @@ class DatabaseServiceImpl implements DatabaseService{
 		String sql=String.format("create table %s (\n%s\n);", tn,columns.toString());
 		String commentsSql=tmi.comments.toString();
 		commentsSql=commentsSql.replaceAll("TN", tn);
-		jdbcService.execute(sql+"\n"+commentsSql.toString(), connection);
+		jdbcService.execute(sql+"\n"+commentsSql.toString());
 		logger.info(sql+"\n"+commentsSql.toString());
 	}
 	
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType) {
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType) throws SQLException{
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
 		String tn=tableImpl.getName();
 		String cn=columnImpl.getName();
 		String type=columnType.getColumnType();
 		String sql=generate.AddColumn(tn, cn, type);
-		jdbcService.execute(sql, connection);
+		jdbcService.execute(sql);
 		logger.info(sql);
 	}
 
 	
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NullOrNotNull nullOrNotNull) {
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NullOrNotNull nullOrNotNull) throws SQLException{
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
 		String tn=tableImpl.getName();
@@ -98,11 +99,11 @@ class DatabaseServiceImpl implements DatabaseService{
 		String type=columnType.getColumnType();
 		String nullorNot=nullOrNotNull.out();
 		String sql=generate.AddColumn(tn, cn, type,nullorNot);
-		jdbcService.execute(sql, connection);
+		jdbcService.execute(sql);
 		logger.info(sql);
 	}
 
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Comment comment) {
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Comment comment) throws SQLException{
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
 		CommentImpl commentImpl=(CommentImpl)comment;
@@ -112,11 +113,11 @@ class DatabaseServiceImpl implements DatabaseService{
 		String c=commentImpl.getComment();
 		String sql=generate.AddColumn(tn, cn, type);
 		String csql=generate.addComment(tn, cn, c);
-		jdbcService.execute(sql+"\n"+csql, connection);
+		jdbcService.execute(sql+"\n"+csql);
 		logger.info(sql+"\n"+csql);
 	}
 	
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NullOrNotNull nullOrNotNull, Comment comment) {
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NullOrNotNull nullOrNotNull, Comment comment) throws SQLException{
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
 		CommentImpl commentImpl=(CommentImpl)comment;
@@ -127,11 +128,11 @@ class DatabaseServiceImpl implements DatabaseService{
 		String c=commentImpl.getComment();
 		String sql=generate.AddColumn(tn, cn, type,nullOrNot);
 		String csql=generate.addComment(tn, cn, c);
-		jdbcService.execute(sql+"\n"+csql, connection);
+		jdbcService.execute(sql+"\n"+csql);
 		logger.info(sql+"\n"+csql);
 	}
 
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft) {
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft) throws SQLException{
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
 		DefaultImpl deftImpl=(DefaultImpl)deft;
@@ -141,12 +142,12 @@ class DatabaseServiceImpl implements DatabaseService{
 		String value=deftImpl.getValue();
 		String sql=generate.AddColumn(tn, cn, type);
 		String dsql=generate.addDefault(tn, cn, value);
-		jdbcService.execute(sql+"\n"+dsql, connection);
+		jdbcService.execute(sql+"\n"+dsql);
 		logger.info(sql+"\n"+dsql);
 	}
 
 	
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull) {
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull) throws SQLException{
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
 		DefaultImpl deftImpl=(DefaultImpl)deft;
@@ -157,12 +158,12 @@ class DatabaseServiceImpl implements DatabaseService{
 		String value=deftImpl.getValue();
 		String sql=generate.AddColumn(tn, cn, type,nullOrNot);
 		String dsql=generate.addDefault(tn, cn, value);
-		jdbcService.execute(sql+"\n"+dsql, connection);
+		jdbcService.execute(sql+"\n"+dsql);
 		logger.info(sql+"\n"+dsql);
 	}
 
 
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, Comment comment) {
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, Comment comment) throws SQLException{
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
 		CommentImpl commentImpl=(CommentImpl)comment;
@@ -175,12 +176,12 @@ class DatabaseServiceImpl implements DatabaseService{
 		String sql=generate.AddColumn(tn, cn, type);
 		String dsql=generate.addDefault(tn, cn, value);
 		String csql=generate.addComment(tn, cn, c);
-		jdbcService.execute(sql+"\n"+dsql+"\n"+csql, connection);
+		jdbcService.execute(sql+"\n"+dsql+"\n"+csql);
 		logger.info(sql+"\n"+dsql+"\n"+csql);
 	}
 
 
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull,Comment comment) {
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull,Comment comment) throws SQLException{
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
 		CommentImpl commentImpl=(CommentImpl)comment;
@@ -194,11 +195,32 @@ class DatabaseServiceImpl implements DatabaseService{
 		String sql=generate.AddColumn(tn, cn, type,nullOrNot);
 		String dsql=generate.addDefault(tn, cn, value);
 		String csql=generate.addComment(tn, cn, c);
-		jdbcService.execute(sql+"\n"+dsql+"\n"+csql, connection);
+		jdbcService.execute(sql+"\n"+dsql+"\n"+csql);
 		logger.info(sql+"\n"+dsql+"\n"+csql);
 	}
+	
+	public void addColumnNotNull(TableName tableName, ColumnName columnName) throws SQLException{
+		TableNameImpl tableImpl=(TableNameImpl)tableName;
+		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
+		String tn=tableImpl.getName();
+		String cn=columnImpl.getName();
+		String columnType=jdbcService.getColumnTypeName(tn, cn);
+		String sql=generate.addColumnNullOrNot(tn, cn,columnType, NOT_NULL);
+		jdbcService.execute(sql);
+		logger.info(sql);
+	}
 
-	public void addDefault(TableName tableName, ColumnName columnName,Default deft) {
+	public void addColumnNull(TableName tableName, ColumnName columnName) throws SQLException{
+		TableNameImpl tableImpl=(TableNameImpl)tableName;
+		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
+		String tn=tableImpl.getName();
+		String cn=columnImpl.getName();
+		String sql=generate.addColumnNull(tn, cn, NULL);
+		jdbcService.execute(sql);
+		logger.info(sql);
+	}
+
+	public void addDefault(TableName tableName, ColumnName columnName,Default deft) throws SQLException{
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
 		DefaultImpl deftImpl=(DefaultImpl)deft;
@@ -206,16 +228,16 @@ class DatabaseServiceImpl implements DatabaseService{
 		String cn=columnImpl.getName();
 		String value=deftImpl.getValue();
 		String sql=generate.addDefault(tn, cn, value);
-		jdbcService.execute(sql, connection);
+		jdbcService.execute(sql);
 		logger.info(sql);
 	}
 
 	
-	public void updateDefault(TableName tableName, ColumnName columnName,Default deft) {
+	public void updateDefault(TableName tableName, ColumnName columnName,Default deft) throws SQLException{
 		addDefault(tableName, columnName, deft);
 	}
 	
-	public void addIndex(TableName tableName, IndexName IndexName,ColumnName... columnName) {
+	public void addIndex(TableName tableName, IndexName IndexName,ColumnName... columnName) throws SQLException{
 		String[] columnNames=new String[columnName.length];
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		IndexNameImpl indexImpl=(IndexNameImpl)IndexName;
@@ -227,11 +249,11 @@ class DatabaseServiceImpl implements DatabaseService{
 		}
 		GenerateImpl gi=new GenerateImpl();
 		String sql=gi.addIndex(tn, in, columnNames);
-		jdbcService.execute(sql, connection);
+		jdbcService.execute(sql);
 		logger.info(sql);
 	}
 
-	public void addIndex(TableName tableName, IndexName IndexName, IndexType indexType,ColumnName... columnName) {
+	public void addIndex(TableName tableName, IndexName IndexName, IndexType indexType,ColumnName... columnName) throws SQLException{
 		String[] columnNames=new String[columnName.length];
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		IndexNameImpl indexImpl=(IndexNameImpl)IndexName;
@@ -243,74 +265,78 @@ class DatabaseServiceImpl implements DatabaseService{
 			columnNames[i]=columnImpl.getName();
 		}
 		String sql=generate.addIndex(tn,in,type,columnNames);
-		jdbcService.execute(sql, connection);
+		jdbcService.execute(sql);
 		logger.info(sql);
 		
 	}
 
-	public void addPrimaryKey(String name, TableName tableName,ColumnName... columnName) {
+	public void addPrimaryKey(String name, TableName tableName,ColumnName... columnName) throws SQLException{
 		String sql=addKey(name, tableName, PRIMARY_KEY, columnName);
-		jdbcService.execute(sql, connection);
+		//修正主键不能为空
+		for (ColumnName cn : columnName) {
+			this.addColumnNotNull(tableName, cn);
+		}
+		jdbcService.execute(sql);
 		logger.info(sql);
 	}
 	
-	public void addForeignKey(String name, TableName tableName,ColumnName... columnName) {
+	public void addForeignKey(String name, TableName tableName,ColumnName... columnName) throws SQLException{
 		String sql=addKey(name, tableName, FOREIGN_KEY, columnName);
-		jdbcService.execute(sql, connection);
+		jdbcService.execute(sql);
 		logger.info(sql);
 	}
 
-	public void addUnique(String name, TableName tableName, ColumnName... columnName) {
+	public void addUnique(String name, TableName tableName, ColumnName... columnName) throws SQLException{
 		String sql=addKey(name, tableName, UNIQUE_KEY, columnName);
-		jdbcService.execute(sql, connection);
+		jdbcService.execute(sql);
 		logger.info(sql);
 	}
 
-	public void dropTable(String name) {
+	public void dropTable(String name) throws SQLException{
 		String sql=generate.dropTalbe(name);
-		jdbcService.execute(sql, connection);
+		jdbcService.execute(sql);
 		logger.info(sql);
 	}
 	
-	public void dropColumn(TableName tableName,ColumnName columnName) {
+	public void dropColumn(TableName tableName,ColumnName columnName) throws SQLException{
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
 		String tn=tableImpl.getName();
 		String cn=columnImpl.getName();
 		String sql=generate.dropColumn(tn, cn);
-		jdbcService.execute(sql, connection);
+		jdbcService.execute(sql);
 		logger.info(sql);
 		
 	}
 
-	public void dropIndex(String name) {
+	public void dropIndex(String name) throws SQLException{
 	    String sql=	generate.dropIndex(name);
-	    jdbcService.execute(sql, connection);
+	    jdbcService.execute(sql);
 		logger.info(sql);
 	}
 	
-	public void dropForeignKey(TableName tableName,String name) {
+	public void dropForeignKey(TableName tableName,String name) throws SQLException{
 		String sql=dropKey(tableName, name);
-		jdbcService.execute(sql, connection);
+		jdbcService.execute(sql);
 		logger.info(sql);
 	}
 
-	public void dropPrimaryKey(TableName tableName,String name) {
+	public void dropPrimaryKey(TableName tableName,String name) throws SQLException{
 		String sql=dropKey(tableName, name);
-		jdbcService.execute(sql, connection);
-		logger.info(sql);
-	}
-
-	
-
-	public void dropUnique(TableName tableName,String name) {
-		String sql=dropKey(tableName, name);
-		jdbcService.execute(sql, connection);
+		jdbcService.execute(sql);
 		logger.info(sql);
 	}
 
 	
-	public void addComment(TableName tableName, ColumnName columnName,Comment comment) {
+
+	public void dropUnique(TableName tableName,String name) throws SQLException{
+		String sql=dropKey(tableName, name);
+		jdbcService.execute(sql);
+		logger.info(sql);
+	}
+
+	
+	public void addComment(TableName tableName, ColumnName columnName,Comment comment) throws SQLException{
 		TableNameImpl tableImpl=(TableNameImpl)tableName;
 		ColumnNameImpl columnImpl=(ColumnNameImpl)columnName;
 		CommentImpl commentImpl=(CommentImpl)comment;
@@ -318,12 +344,12 @@ class DatabaseServiceImpl implements DatabaseService{
 		String cn=columnImpl.getName();
 		String c=commentImpl.getComment();
 		String sql=generate.addComment(tn, cn, c);
-		jdbcService.execute(sql, connection);
+		jdbcService.execute(sql);
 		logger.info(sql);
 	}
 	
 	
-	public void updateComment(TableName tableName, ColumnName columnName,Comment comment) {
+	public void updateComment(TableName tableName, ColumnName columnName,Comment comment) throws SQLException{
 		addComment(tableName, columnName, comment);
 	}
 

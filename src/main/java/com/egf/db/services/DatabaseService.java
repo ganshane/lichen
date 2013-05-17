@@ -6,6 +6,8 @@
  */
 package com.egf.db.services;
 
+import java.sql.SQLException;
+
 import com.egf.db.core.CreateTableCallback;
 import com.egf.db.core.define.ColumnType;
 import com.egf.db.core.define.IndexType;
@@ -24,55 +26,59 @@ import com.egf.db.core.define.name.TableName;
  */
 public interface DatabaseService {
 	
-	public void createTable(TableName tableName,Comment comment, CreateTableCallback callback);
+	public void createTable(TableName tableName,Comment comment, CreateTableCallback callback) throws SQLException;
 	
-	public void createTable(TableName tableName, CreateTableCallback callback);
+	public void createTable(TableName tableName, CreateTableCallback callback) throws SQLException;
 	
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType);
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType) throws SQLException;
 	
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft);
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft) throws SQLException;
 	
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NullOrNotNull nullOrNotNull);
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NullOrNotNull nullOrNotNull) throws SQLException;
 	
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NullOrNotNull nullOrNotNull);
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NullOrNotNull nullOrNotNull) throws SQLException;
 	
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Comment comment);
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Comment comment)throws SQLException;
 	
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,Comment comment);
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,Comment comment) throws SQLException;
 	
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NullOrNotNull nullOrNotNull,Comment comment);
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NullOrNotNull nullOrNotNull,Comment comment)throws SQLException;
 	
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NullOrNotNull nullOrNotNull,Comment comment);
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NullOrNotNull nullOrNotNull,Comment comment) throws SQLException;
 	
-	public void addComment(TableName tableName,ColumnName columnName,Comment comment);
+	public void addComment(TableName tableName,ColumnName columnName,Comment comment) throws SQLException;
 	
-	public void updateComment(TableName tableName,ColumnName columnName,Comment comment);
+	public void addColumnNotNull(TableName tableName,ColumnName columnName) throws SQLException;
 	
-	public void addDefault(TableName tableName,ColumnName columnName,Default deft);
+	public void addColumnNull(TableName tableName,ColumnName columnName) throws SQLException;
 	
-	public void updateDefault(TableName tableName,ColumnName columnName,Default deft);
+	public void updateComment(TableName tableName,ColumnName columnName,Comment comment) throws SQLException;
 	
-	public void addIndex(TableName tableName,IndexName indexName, ColumnName ... columnName);
+	public void addDefault(TableName tableName,ColumnName columnName,Default deft) throws SQLException;
 	
-	public void addIndex(TableName tableName,IndexName indexName,IndexType indexType, ColumnName ...columnName);
+	public void updateDefault(TableName tableName,ColumnName columnName,Default deft) throws SQLException;
 	
-	public void addPrimaryKey(String name,TableName tableName,ColumnName ... columnName);
+	public void addIndex(TableName tableName,IndexName indexName, ColumnName ... columnName) throws SQLException;
 	
-	public void addForeignKey(String name,TableName tableName,ColumnName ... columnName);
+	public void addIndex(TableName tableName,IndexName indexName,IndexType indexType, ColumnName ...columnName) throws SQLException;
 	
-	public void addUnique(String name,TableName tableName,ColumnName ... columnName);
+	public void addPrimaryKey(String name,TableName tableName,ColumnName ... columnName) throws SQLException;
 	
-	public void dropTable(String name);
+	public void addForeignKey(String name,TableName tableName,ColumnName ... columnName) throws SQLException;
 	
-	public void dropIndex(String name);
+	public void addUnique(String name,TableName tableName,ColumnName ... columnName) throws SQLException;
 	
-	public void dropColumn(TableName tableName,ColumnName columnName);
+	public void dropTable(String name) throws SQLException;
 	
-	public void dropPrimaryKey(TableName tableName,String name);
+	public void dropIndex(String name) throws SQLException;
 	
-	public void dropForeignKey(TableName tableName,String name);
+	public void dropColumn(TableName tableName,ColumnName columnName) throws SQLException;
 	
-	public void dropUnique(TableName tableName,String name);
+	public void dropPrimaryKey(TableName tableName,String name) throws SQLException;
+	
+	public void dropForeignKey(TableName tableName,String name) throws SQLException;
+	
+	public void dropUnique(TableName tableName,String name) throws SQLException;
 
 	
 }

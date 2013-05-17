@@ -25,11 +25,11 @@ public class JdbcServiceImpl implements JdbcService {
 
 	private static final Logger logger = Logger.getLogger(JdbcServiceImpl.class);
 
-	public void autoCommitExecute(String sql) {
-		autoCommitExecute(sql, new Object[0]);
+	public void execute(String sql)throws SQLException{
+		execute(sql, new Object[0]);
 	}
 
-	public void autoCommitExecute(String sql, final Object[] params) {
+	public void execute(String sql, final Object[] params) throws SQLException{
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -40,14 +40,15 @@ public class JdbcServiceImpl implements JdbcService {
 			}
 			pstmt.execute();
 			conn.commit();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			try {
 				conn.rollback();
+				e.printStackTrace();
 			} catch (SQLException e1) {
-				logger.error(e1.getStackTrace());
+				logger.error(e1.getMessage());
 				e1.printStackTrace();
 			}
-			logger.error(e.getStackTrace());
+			throw new SQLException();
 		} finally {
 			if (pstmt != null) {
 				try {
@@ -63,34 +64,6 @@ public class JdbcServiceImpl implements JdbcService {
 				} catch (SQLException e) {
 					logger.error(e.getMessage());
 					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	public void execute(String sql, Connection conn) {
-		execute(sql, conn, new Object[0]);
-	}
-
-	public void execute(String sql, Connection conn, final Object[] params) {
-		PreparedStatement pstmt = null;
-		try {
-			conn.setAutoCommit(false);
-			pstmt = conn.prepareStatement(sql);
-			for (int i = 0; i < params.length; i++) {
-				pstmt.setObject(i, params[i]);
-			}
-			pstmt.execute();
-		} catch (Exception e) {
-			e.printStackTrace();
-			logger.error(e.getMessage());
-		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-					logger.error(e.getMessage());
 				}
 			}
 		}
@@ -121,13 +94,8 @@ public class JdbcServiceImpl implements JdbcService {
 				list.add(objs);
 			}
 		} catch (Exception e) {
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				logger.error(e1.getStackTrace());
-				e1.printStackTrace();
-			}
-			logger.error(e.getStackTrace());
+			logger.error(e.getMessage());
+			e.printStackTrace();
 		} finally {
 			if (pstmt != null) {
 				try {
@@ -148,4 +116,44 @@ public class JdbcServiceImpl implements JdbcService {
 		}
 		return list;
 	}
+
+	
+	public String getColumnTypeName(String tableName, String columnName) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = DBConnectionManager.getConnection();
+			pstmt = conn.prepareStatement("select "+columnName+" from "+tableName+" where 1=2");
+			ResultSet rs = pstmt.executeQuery();
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int cc = rsmd.getColumnCount();
+			for(int i = 0; i <cc; i++) {  
+				  if(rsmd.getColumnName(i + 1).equals(columnName.toUpperCase())){
+					  return rsmd.getColumnTypeName(i + 1);
+				  }
+			    }  
+
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		} finally {
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					logger.error(e.getMessage());
+					e.printStackTrace();
+				}
+			}
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					logger.error(e.getMessage());
+					e.printStackTrace();
+				}
+			}
+		}
+		return null;
+	}
+	
 }

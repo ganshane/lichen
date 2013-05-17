@@ -6,6 +6,8 @@
  */
 package com.egf.db.services;
 
+import java.sql.SQLException;
+
 /**
  * 数据库迁移接口
  * @author fangj
@@ -14,8 +16,8 @@ package com.egf.db.services;
  */
 public interface Migration {
 	
-	public void up();
+	public void up() throws SQLException;
 	
-	public void down();
+	public void down() throws SQLException;
 
 }

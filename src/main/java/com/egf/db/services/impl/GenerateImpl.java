@@ -79,4 +79,14 @@ public class GenerateImpl implements Generate{
 		return sql;
 	}
 
+	
+	public String addColumnNullOrNot(String tableName, String columnName,String columnType,String nullOrNot) {
+		String sql=String.format("alter table %s modify %s %s %s;", tableName,columnName,columnType,nullOrNot);
+		return sql;
+	}
+
+	public String addColumnNull(String tableName, String columnName,String nullOrNot) {
+		String sql=String.format("alter table %s modify %s %s;", tableName,columnName,nullOrNot);
+		return sql;
+	}
 }

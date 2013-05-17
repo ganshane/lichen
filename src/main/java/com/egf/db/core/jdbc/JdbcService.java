@@ -6,7 +6,7 @@
  */
 package com.egf.db.core.jdbc;
 
-import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -24,7 +24,7 @@ public interface JdbcService {
 	 * @param sql
 	 *            sql语句
 	 */
-	public void autoCommitExecute(String sql);
+	public void execute(String sql) throws SQLException;
 
 	/**
 	 * 自动提交执行sql语句
@@ -34,34 +34,14 @@ public interface JdbcService {
 	 * @param params
 	 *            参数
 	 */
-	public void autoCommitExecute(String sql, Object[] params);
-
-	/**
-	 * 传入数据库连接的sql执行方法
-	 * 
-	 * @param sql
-	 *            sql语句
-	 * @param conn
-	 *            数据库连接
-	 */
-	public void execute(String sql, Connection conn);
-
-	/**
-	 * 传入数据库连接的sql执行方法
-	 * 
-	 * @param sql
-	 *            sql语句
-	 * @param conn
-	 *            数据库连接
-	 * @param params
-	 *            参数
-	 */
-	public void execute(String sql, Connection conn, final Object[] params);
-	
+	public void execute(String sql, Object[] params) throws SQLException;
 	
 	public List<Object[]> find(String sql);
 	
 	
 	public List<Object[]> find(String sql,Object[] params);
+	
+	
+	public String getColumnTypeName(String tableName,String columnName);
 
 }

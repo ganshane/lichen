@@ -6,8 +6,6 @@
  */
 package com.egf.db.command.support;
 
-import java.lang.reflect.Field;
-import java.sql.Connection;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -35,13 +33,7 @@ public class ClientCommandTest {
 	public void testUp() throws Exception{
 		Command command=new ClientCommand();
 		command.up("com.egf.db.migration");
-		//获取连接对象
-		Class<?> cl= Class.forName("com.egf.db.services.impl.DatabaseServiceImpl");
-		Field field = cl.getDeclaredField("connection");
-		field.setAccessible(true);
-		Connection connection =  (Connection) field.get(cl);
-		jdbcService.execute("insert into test(id,xm,xx) values(1,'aa','121')", connection);
-		connection.commit();
+		jdbcService.execute("insert into test(id,xm,xx) values(1,'aa','121')");
 		//查询
 		List<Object[]>  list=jdbcService.find("select * from test");
 		logger.debug("list 大小:"+list.size());
