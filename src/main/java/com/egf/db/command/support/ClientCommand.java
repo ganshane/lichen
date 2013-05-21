@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 
 import com.egf.db.command.Command;
 import com.egf.db.services.impl.AbstractMigration;
-import com.egf.db.utils.FileUtils;
 
 /**
  * @author fangj
@@ -26,9 +25,10 @@ public class ClientCommand implements Command {
 
 	public void up(String pack) {
 		AbstractMigration am = null;
-		Set<Class<?>> classList = FileUtils.getDbScriptClasses(pack);
-		for (Class<?> cls : classList) {
-			logger.info(cls.getName() + " script start run...");
+		Set<Class<?>> classSet = DbScriptFileClassFind.getDbScriptClasses(pack);
+		//安文件时间先后排序
+		for (Class<?> cls : classSet) {
+			logger.info("\n"+cls.getName() + " up script start run...");
 			try {
 				am = (AbstractMigration) cls.newInstance();
 			} catch (Exception e) {
@@ -38,6 +38,7 @@ public class ClientCommand implements Command {
 				am.up();
 			} catch (SQLException e) {
 				try {
+					logger.info("\n"+cls.getName() + " down script start run...");
 					am.down();
 				} catch (SQLException e1) {
 					e1.printStackTrace();

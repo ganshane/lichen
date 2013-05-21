@@ -1,10 +1,10 @@
 /*		
- * Copyright 2013-5-16 The EGF Co., Ltd. 
+ * Copyright 2013-5-21 The EGF Co., Ltd. 
  * site: http://www.egfit.com
- * file: $Id: org.eclipse.jdt.ui.prefs,FileUtils.java,fangj Exp$
- * created at:下午05:04:18
+ * file: $Id: org.eclipse.jdt.ui.prefs,DbScriptFileFind.java,fangj Exp$
+ * created at:上午10:40:04
  */
-package com.egf.db.utils;
+package com.egf.db.command.support;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -12,29 +12,46 @@ import java.io.IOException;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * file tools
+ * 数据库脚本class查找
+ * 
  * @author fangj
  * @version $Revision: 1.0 $
  * @since 1.0
  */
-public class FileUtils {
+class DbScriptFileClassFind {
 
 	/**
 	 * 从包package中获取所有的Class
 	 * 
 	 * @param pack
+	 *            包名
 	 * @return
 	 */
 	public static Set<Class<?>> getDbScriptClasses(String pack) {
 		// 第一个class类的集合
-		Set<Class<?>> classes = new LinkedHashSet<Class<?>>();
+		Set<Class<?>> classes = new TreeSet<Class<?>>(new Comparator<Object>() {
+			public int compare(Object o1, Object o2) {
+				Class<?> cls1 = (Class<?>) o1;
+				Class<?> cls2 = (Class<?>) o2;
+				String time1 = cls1.getName().split("_")[1];
+				String time2 = cls2.getName().split("_")[1];
+				if (time1.compareTo(time2) <0) {
+					return -1;
+				} else if (time1.compareTo(time2)==0) {
+					return 0;
+				} else {
+					return 1;
+				}
+			}
+		});
 		// 是否循环迭代
 		boolean recursive = true;
 		// 获取包的名字 并进行替换
@@ -58,15 +75,15 @@ public class FileUtils {
 					findAndAddClassesInPackageByFile(packageName, filePath,recursive, classes);
 				} else if ("jar".equals(protocol)) {
 					// 如果是jar包文件定义一个JarFile
-					JarFile jar;
+					JarFile jar=null;
 					try {
-						//获取jar
+						// 获取jar
 						jar = ((JarURLConnection) url.openConnection()).getJarFile();
 						// 从此jar包 得到一个枚举类
 						Enumeration<JarEntry> entries = jar.entries();
 						// 同样的进行循环迭代
 						while (entries.hasMoreElements()) {
-							//获取jar里的一个实体 可以是目录 和一些jar包里的其他文件 如META-INF等文件
+							// 获取jar里的一个实体 可以是目录 和一些jar包里的其他文件 如META-INF等文件
 							JarEntry entry = entries.nextElement();
 							String name = entry.getName();
 							// 如果是以/开头的
@@ -79,13 +96,12 @@ public class FileUtils {
 								int idx = name.lastIndexOf('/');
 								// 如果以"/"结尾 是一个包
 								if (idx != -1) {
-									// 获取包名 把"/"替换成"."
 									packageName = name.substring(idx).replace('/', '.');
 								}
 								// 如果可以迭代下去 并且是一个包
 								if ((idx != -1) || recursive) {
 									// 如果是一个.class文件 而且不是目录
-									if (name.endsWith(".class")&&!entry.isDirectory()) {
+									if (name.endsWith(".class")&& !entry.isDirectory()) {
 										// 去掉后面的".class" 获取真正的类名
 										String className = name.substring(packageName.length() + 1, name.length() - 6);
 										try {
@@ -128,7 +144,7 @@ public class FileUtils {
 		File[] dirfiles = dir.listFiles(new FileFilter() {
 			// 自定义过滤规则 如果可以循环(包含子目录) 或则是以.class结尾的文件(编译好的java类文件)
 			public boolean accept(File file) {
-				return (recursive && file.isDirectory())||(file.getName().endsWith(".class")&&!file.getName().contains("$")&&file.getName().contains("_"));
+				return (recursive && file.isDirectory())|| (file.getName().endsWith(".class")&& !file.getName().contains("$") && file.getName().contains("_"));
 			}
 		});
 		// 循环所有文件
