@@ -28,10 +28,10 @@ public class GenerateImplTest {
 	 */
 	@Test
 	public void testAddConstraint() {
-		String sql=generate.AddConstraint("dtxx.test", "aa", "unique", "cl1","cl2");
+		String sql=generate.addConstraint("dtxx.test", "aa", "unique", "cl1","cl2");
 		assertEquals("alter table dtxx.test add constraint aa unique (cl1,cl2);", sql);
 		
-		String sql2=generate.AddConstraint("test", "aa", "unique", "cl1");
+		String sql2=generate.addConstraint("test", "aa", "unique", "cl1");
 		assertEquals("alter table test add constraint aa unique (cl1);", sql2);
 	}
 
@@ -61,7 +61,7 @@ public class GenerateImplTest {
 	 */
 	@Test
 	public void testAddColumnStringStringString() {
-		String sql=generate.AddColumn("test", "cl1", "varchar2(10)");
+		String sql=generate.addColumn("test", "cl1", "varchar2(10)");
 		assertEquals("alter table test add cl1 varchar2(10);", sql);
 	}
 
@@ -70,13 +70,11 @@ public class GenerateImplTest {
 	 */
 	@Test
 	public void testAddColumnStringStringStringString() {
-		String sql=generate.AddColumn("test", "cl1", "number", "not null");
+		String sql=generate.addColumn("test", "cl1", "number", "not null");
 		assertEquals("alter table test add cl1 number not null;", sql);
 		
-		String sql2=generate.AddColumn("test", "cl1", "number");
+		String sql2=generate.addColumn("test", "cl1", "number");
 		assertEquals("alter table test add cl1 number;", sql2);
-		
-		
 	}
 
 	/**
