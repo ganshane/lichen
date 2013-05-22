@@ -7,10 +7,15 @@
 package com.egf.db.core.define.column;
 
 /**
+ * 注释接口
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
 public interface Default extends ColumnDefine{
-
+	/**
+	 * 获取默认值
+	 * @return
+	 */
+	public String getValue();
 }

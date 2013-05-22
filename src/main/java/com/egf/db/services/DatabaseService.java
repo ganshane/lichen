@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import com.egf.db.core.CreateTableCallback;
 import com.egf.db.core.define.ColumnType;
 import com.egf.db.core.define.IndexType;
+import com.egf.db.core.define.column.ColumnDefine;
 import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Default;
 import com.egf.db.core.define.column.NullOrNotNull;
@@ -31,6 +32,15 @@ public interface DatabaseService {
 	public void createTable(TableName tableName, CreateTableCallback callback) throws SQLException;
 	
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType) throws SQLException;
+	
+	/**
+	 * 添加列
+	 * @param tableName 表名
+	 * @param columnName 列名
+	 * @param columnType 列类型
+	 * @param define 列定义(Default,NullOrNotNull,Comment)
+	 */
+	public void addColumn(TableName tableName,ColumnName columnName,ColumnType columnType,ColumnDefine  ... define) throws SQLException;
 	
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft) throws SQLException;
 	

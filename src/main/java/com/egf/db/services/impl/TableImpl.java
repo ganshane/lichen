@@ -6,6 +6,8 @@
  */
 package com.egf.db.services.impl;
 
+import com.egf.db.core.define.ColumnType;
+import com.egf.db.core.define.column.ColumnDefine;
 import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Default;
 import com.egf.db.core.define.column.Limit;
@@ -13,6 +15,7 @@ import com.egf.db.core.define.column.NullOrNotNull;
 import com.egf.db.core.model.Table;
 
 /**
+ * table定义实现
  * @author fangj
  * @version $Revision: 1.0 $
  * @since 1.0
@@ -24,288 +27,136 @@ class TableImpl implements Table {
 	public StringBuffer comments=new StringBuffer();
 
 	public void blob(String name, Comment comment) {
-		CommentImpl commentImpl=(CommentImpl)comment;
-		columns.append(name);
-		columns.append(" ");
-		columns.append("blob");
-		columns.append(",");
-		columns.append("\n");
-		addComment(name, commentImpl.getComment());
+		appendColumn(name, new BlobImpl(), null, null, comment);
 	}
 
 	public void blob(String name, NullOrNotNull nullOrNotNull, Comment comment) {
-		CommentImpl commentImpl=(CommentImpl)comment;
-		String nullOrNot=nullOrNotNull.out();
-		columns.append(name);
-		columns.append(" ");
-		columns.append("blob");
-		columns.append(" ");
-		columns.append(nullOrNot);
-		columns.append(",");
-		columns.append("\n");
-		addComment(name, commentImpl.getComment());
+		appendColumn(name, new BlobImpl(), nullOrNotNull, null, comment);
 	}
 
 	public void blob(String name, NullOrNotNull nullOrNotNull) {
-		String nullOrNot=nullOrNotNull.out();
-		columns.append(name);
-		columns.append(" ");
-		columns.append("blob");
-		columns.append(" ");
-		columns.append(nullOrNot);
-		columns.append(",");
-		columns.append("\n");
+		appendColumn(name, new BlobImpl(), nullOrNotNull, null, null);
 	}
 
 	public void blob(String name) {
-		columns.append(name);
-		columns.append(" ");
-		columns.append("blob");
-		columns.append(",");
-		columns.append("\n");
+		appendColumn(name, new BlobImpl(), null, null, null);
 	}
 
 	public void number(String name, Comment comment) {
-		CommentImpl commentImpl=(CommentImpl)comment;
-		columns.append(name);
-		columns.append(" ");
-		columns.append("number");
-		columns.append(",");
-		columns.append("\n");
-		addComment(name, commentImpl.getComment());
+		appendColumn(name, new NumberImpl(), null, null, comment);
 	}
 
 	public void number(String name, Default deft, Comment comment) {
-		DefaultImpl defaultImpl=(DefaultImpl)deft;
-		CommentImpl commentImpl=(CommentImpl)comment;
-		columns.append(name);
-		columns.append(" ");
-		columns.append("number");
-		columns.append(" ");
-		columns.append("default");
-		columns.append(" ");
-		columns.append(defaultImpl.getValue());
-		columns.append(",");
-		columns.append("\n");
-		addComment(name, commentImpl.getComment());
+		appendColumn(name, new NumberImpl(), null, deft, null);
 	}
 
 	public void number(String name,Default deft,NullOrNotNull nullOrNotNull, Comment comment) {
-		DefaultImpl defaultImpl=(DefaultImpl)deft;
-		CommentImpl commentImpl=(CommentImpl)comment;
-		String nullOrNot=nullOrNotNull.out();
-		columns.append(name);
-		columns.append(" ");
-		columns.append("number");
-		columns.append(" ");
-		columns.append("default");
-		columns.append(" ");
-		columns.append(defaultImpl.getValue());
-		columns.append(" ");
-		columns.append(nullOrNot);
-		columns.append(",");
-		columns.append("\n");
-		addComment(name, commentImpl.getComment());
+		appendColumn(name, new NumberImpl(), nullOrNotNull, deft, comment);
 	}
 
 	public void number(String name,Default deft,NullOrNotNull nullOrNotNull) {
-		DefaultImpl defaultImpl=(DefaultImpl)deft;
-		String nullOrNot=nullOrNotNull.out();
-		columns.append(name);
-		columns.append(" ");
-		columns.append("number");
-		columns.append(" ");
-		columns.append("default");
-		columns.append(" ");
-		columns.append(defaultImpl.getValue());
-		columns.append(" ");
-		columns.append(nullOrNot);
-		columns.append(",");
-		columns.append("\n");
+		appendColumn(name, new NumberImpl(), nullOrNotNull, deft, null);
 	}
 
 	public void number(String name, Default deft) {
-		DefaultImpl defaultImpl=(DefaultImpl)deft;;
-		columns.append(name);
-		columns.append(" ");
-		columns.append("number");
-		columns.append(" ");
-		columns.append("default");
-		columns.append(" ");
-		columns.append(defaultImpl.getValue());
-		columns.append(",");
-		columns.append("\n");
+		appendColumn(name, new NumberImpl(), null, deft, null);
 		
 	}
 
 	public void number(String name, NullOrNotNull nullOrNotNull,Comment comment) {
-		String nullOrNot=nullOrNotNull.out();
-		CommentImpl commentImpl=(CommentImpl)comment;
-		columns.append(name);
-		columns.append(" ");
-		columns.append("number");
-		columns.append(" ");
-		columns.append(nullOrNot);
-		columns.append(",");
-		columns.append("\n");
-		addComment(name, commentImpl.getComment());
+		appendColumn(name, new NumberImpl(), nullOrNotNull, null, comment);
 	}
 
 	public void number(String name,NullOrNotNull nullOrNotNull) {
-		String nullOrNot=nullOrNotNull.out();
-		columns.append(name);
-		columns.append(" ");
-		columns.append("number");
-		columns.append(" ");
-		columns.append(nullOrNot);
-		columns.append(",");
-		columns.append("\n");
+		appendColumn(name, new NumberImpl(), nullOrNotNull, null, null);
 	}
 
 	public void number(String name) {
-		columns.append(name);
-		columns.append(" ");
-		columns.append("number");
-		columns.append(",");
-		columns.append("\n");
+		appendColumn(name, new NumberImpl(), null, null, null);
 	}
 
 	public void varchar2(String name, Limit limit, Comment comment) {
-		LimitImpl limitImpl=(LimitImpl)limit;
-		CommentImpl commentImpl=(CommentImpl)comment;
-		columns.append(name);
-		columns.append(" ");
-		columns.append("varchar2(");
-		columns.append(limitImpl.getLimit());
-		columns.append(")");
-		columns.append(",");
-		columns.append("\n");
-		addComment(name, commentImpl.getComment());
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), null, null, comment);
 	}
 
 	public void varchar2(String name, Limit limit, Default deft, Comment comment) {
-		LimitImpl limitImpl=(LimitImpl)limit;
-		DefaultImpl defaultImpl=(DefaultImpl)deft;
-		CommentImpl commentImpl=(CommentImpl)comment;
-		String value=defaultImpl.getValue();
-		columns.append(name);
-		columns.append(" ");
-		columns.append("varchar2(");
-		columns.append(limitImpl.getLimit());
-		columns.append(")");
-		columns.append(" ");
-		columns.append("default");
-		columns.append(" ");
-		columns.append(value);
-		columns.append(",");
-		columns.append("\n");
-		addComment(name, commentImpl.getComment());
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), null, deft, comment);
 	}
 
 	public void varchar2(String name, Limit limit, Default deft,NullOrNotNull nullOrNotNull, Comment comment) {
-		LimitImpl limitImpl=(LimitImpl)limit;
-		DefaultImpl defaultImpl=(DefaultImpl)deft;
-		CommentImpl commentImpl=(CommentImpl)comment;
-		String nullOrNot=nullOrNotNull.out();
-		String value=defaultImpl.getValue();
-		columns.append(name);
-		columns.append(" ");
-		columns.append("varchar2(");
-		columns.append(limitImpl.getLimit());
-		columns.append(")");
-		columns.append(" ");
-		columns.append("default");
-		columns.append(" ");
-		columns.append(value);
-		columns.append(" ");
-		columns.append(nullOrNot);
-		columns.append(",");
-		columns.append("\n");
-		addComment(name, commentImpl.getComment());
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, deft, comment);
 	}
 
 	public void varchar2(String name, Limit limit, Default deft,NullOrNotNull nullOrNotNull) {
-		LimitImpl limitImpl=(LimitImpl)limit;
-		DefaultImpl defaultImpl=(DefaultImpl)deft;
-		String nullOrNot=nullOrNotNull.out();
-		String value=defaultImpl.getValue();
-		columns.append(name);
-		columns.append(" ");
-		columns.append("varchar2(");
-		columns.append(limitImpl.getLimit());
-		columns.append(")");
-		columns.append(" ");
-		columns.append("default");
-		columns.append(" ");
-		columns.append(value);
-		columns.append(" ");
-		columns.append(nullOrNot);
-		columns.append(",");
-		columns.append("\n");
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, deft, null);
 	}
 
 	public void varchar2(String name, Limit limit, Default deft) {
-		LimitImpl limitImpl=(LimitImpl)limit;
-		DefaultImpl defaultImpl=(DefaultImpl)deft;
-		String value=defaultImpl.getValue();
-		columns.append(name);
-		columns.append(" ");
-		columns.append("varchar2(");
-		columns.append(limitImpl.getLimit());
-		columns.append(")");
-		columns.append(" ");
-		columns.append("default");
-		columns.append(" ");
-		columns.append(value);
-		columns.append(",");
-		columns.append("\n");
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), null, deft, null);
 	}
 
 	public void varchar2(String name, Limit limit, NullOrNotNull nullOrNotNull,Comment comment) {
-		LimitImpl limitImpl=(LimitImpl)limit;
-		CommentImpl commentImpl=(CommentImpl)comment;
-		String nullOrNot=nullOrNotNull.out();
-		columns.append(name);
-		columns.append(" ");
-		columns.append("varchar2(");
-		columns.append(limitImpl.getLimit());
-		columns.append(")");
-		columns.append(" ");
-		columns.append(nullOrNot);
-		columns.append(",");
-		columns.append("\n");
-		addComment(name, commentImpl.getComment());
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, null, comment);
 	}
 
 	public void varchar2(String name, Limit limit, NullOrNotNull nullOrNotNull) {
-		LimitImpl limitImpl=(LimitImpl)limit;
-		String nullOrNot=nullOrNotNull.out();
-		columns.append(name);
-		columns.append(" ");
-		columns.append("varchar2(");
-		columns.append(limitImpl.getLimit());
-		columns.append(")");
-		columns.append(" ");
-		columns.append(nullOrNot);
-		columns.append(",");
-		columns.append("\n");
-		
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, null, null);
 	}
 
 	public void varchar2(String name, Limit limit) {
-		LimitImpl limitImpl=(LimitImpl)limit;
-		columns.append(name);
-		columns.append(" ");
-		columns.append("varchar2(");
-		columns.append(limitImpl.getLimit());
-		columns.append(")");
-		columns.append(",");
-		columns.append("\n");
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), null, null, null);
 	}
 
 	
 	private void addComment(String columnName,String comment){
 		comments.append(String.format("comment on column TN.%s is '%s';\n",columnName, comment));
 	}
-
+	
+	public void varchar2(String name, Limit limit, ColumnDefine... define) {
+		NullOrNotNull nullOrNotNull=null;
+		Default deft=null;
+		Comment comment=null;
+		for (ColumnDefine columnDefine : define) {
+			if(columnDefine instanceof NullOrNotNull){
+				nullOrNotNull=(NullOrNotNull) columnDefine;
+			}else if(columnDefine instanceof Default){
+				deft=(Default) columnDefine;
+			}else if(columnDefine instanceof Comment){
+				comment=(Comment)columnDefine;
+			}
+		}
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, deft, comment);
+	}
+	
+	/**
+	 * 添加列
+	 * @param name 名称
+	 * @param columnType 列类型接口
+	 * @param nullOrNotNull 非空接口
+	 * @param deft 默认接口
+	 * @param comment 注释接口
+	 */
+	private void appendColumn(String name,ColumnType columnType,NullOrNotNull nullOrNotNull, Default deft,Comment comment){
+		String type=columnType.getColumnType();
+		columns.append(name);
+		columns.append(" ");
+		columns.append(type);
+		if(deft!=null){
+			String deftValue=deft.getValue();
+			columns.append(" ");
+			columns.append("default");
+			columns.append(" ");
+			columns.append(deftValue);
+		}
+		if(nullOrNotNull!=null){
+			String nullOrNot=nullOrNotNull.out();
+			columns.append(" ");
+			columns.append(nullOrNot);
+		}if(comment!=null){
+			String c=comment.getComment();
+			addComment(name, c);
+		}
+		columns.append(",");
+		columns.append("\n");
+	}
 }

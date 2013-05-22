@@ -8,11 +8,17 @@ package com.egf.db.core.define.column;
 
 
 /**
+ * 注释接口
  * @author fangj
  * @version $Revision: 2.0 $
  * @since 1.0
  */
-public interface Comment{
+public interface Comment extends ColumnDefine{
 	
+	/**
+	 * 获取注释
+	 * @return
+	 */
+	public String getComment(); 
 		
 }

@@ -15,7 +15,6 @@ import com.egf.db.core.define.column.Unique;
  */
 class UniqueImpl implements Unique {
 
-	
 	public String out() {
 		return "unique";
 	}

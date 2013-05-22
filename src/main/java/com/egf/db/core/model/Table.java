@@ -6,6 +6,7 @@
  */
 package com.egf.db.core.model;
 
+import com.egf.db.core.define.column.ColumnDefine;
 import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Default;
 import com.egf.db.core.define.column.Limit;
@@ -35,6 +36,14 @@ public interface Table {
 	public void varchar2(String name,Limit limit,Default deft,Comment comment);
 	
 	public void varchar2(String name,Limit limit,Default deft);
+	
+	/**
+	 * varchar2类型
+	 * @param name 字段名称
+	 * @param limit 长度
+	 * @param define 其他字段特性定义(NullOrNotNull,Default,Comment)
+	 */
+	public void varchar2(String name,Limit limit, ColumnDefine ... define);
 	
 	public void blob(String name,NullOrNotNull nullOrNotNull);
 	

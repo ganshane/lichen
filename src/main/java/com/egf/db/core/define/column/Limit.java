@@ -7,11 +7,16 @@
 package com.egf.db.core.define.column;
 
 /**
+ * 限制长度接口
  * @author fangj
  * @version $Revision: 2.0 $
  * @since 1.0
  */
 public interface Limit{
+	/**
+	 * 获取长度
+	 * @return
+	 */
+	public int getLimit();
 	
-
 }

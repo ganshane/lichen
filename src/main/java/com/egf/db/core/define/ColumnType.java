@@ -7,12 +7,17 @@
 package com.egf.db.core.define;
 
 /**
+ * 列类型接口
  * @author fangj
  * @version $Revision: 2.0 $
  * @since 1.0
  */
 public interface ColumnType{
 	
+	/**
+	 * 返回列的类型
+	 * @return
+	 */
 	public String getColumnType();
 
 }

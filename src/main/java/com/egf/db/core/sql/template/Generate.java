@@ -19,7 +19,7 @@ public interface Generate {
 	
 	public String addColumnNullOrNot(String tableName,String columnName,String columnType,String nullOrNot);
 	
-	public String addColumnNull(String tableName, String columnName,String nullOrNot);
+	public String addColumnNull(String tableName, String columnName,String nul);
 	
 	public String addDefault(String tableName,String columnName,String value);
 	
