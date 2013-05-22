@@ -31,6 +31,13 @@ public interface DatabaseService {
 	
 	public void createTable(TableName tableName, CreateTableCallback callback) throws SQLException;
 	
+	/**
+	 * 添加列
+	 * @param tableName 表名
+	 * @param columnName 列名
+	 * @param columnType 列类型
+	 * @throws SQLException 
+	 */
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType) throws SQLException;
 	
 	/**
@@ -39,21 +46,83 @@ public interface DatabaseService {
 	 * @param columnName 列名
 	 * @param columnType 列类型
 	 * @param define 列定义(Default,NullOrNotNull,Comment)
+	 * @throws SQLException
 	 */
 	public void addColumn(TableName tableName,ColumnName columnName,ColumnType columnType,ColumnDefine  ... define) throws SQLException;
 	
+	/**
+	 *  添加列
+	 * @param tableName 表名
+	 * @param columnName 列名
+	 * @param columnType  列类型
+	 * @param deft	默认值
+	 * @throws SQLException
+	 */
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft) throws SQLException;
 	
+	/**
+	 * 添加列
+	 * @param tableName 表名
+	 * @param columnName 列名
+	 * @param columnType 列类型
+	 * @param nullOrNotNull 是否可为空
+	 * @throws SQLException
+	 */
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NullOrNotNull nullOrNotNull) throws SQLException;
 	
+	/**
+	 *  添加列
+	 * @param tableName 表名
+	 * @param columnName 列名
+	 * @param columnType 列类型
+	 * @param deft 默认值
+	 * @param nullOrNotNull 是否可为空
+	 * @throws SQLException
+	 */
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NullOrNotNull nullOrNotNull) throws SQLException;
 	
+	/**
+	 *  添加列
+	 * @param tableName 表名
+	 * @param columnName 列名
+	 * @param columnType 列类型
+	 * @param comment 注释
+	 * @throws SQLException
+	 */
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Comment comment)throws SQLException;
 	
+	/**
+	 * 添加列
+	 * @param tableName 表名
+	 * @param columnName 列名
+	 * @param columnType 列类型
+	 * @param deft 默认值
+	 * @param comment 注释
+	 * @throws SQLException
+	 */
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,Comment comment) throws SQLException;
 	
+	/**
+	 * 添加列
+	 * @param tableName 表名
+	 * @param columnName 列名
+	 * @param columnType 列类型
+	 * @param nullOrNotNull 是否可为空
+	 * @param comment 注释
+	 * @throws SQLException
+	 */
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NullOrNotNull nullOrNotNull,Comment comment)throws SQLException;
 	
+	/**
+	 * 添加列
+	 * @param tableName 表名
+	 * @param columnName 列名
+	 * @param columnType 列类型
+	 * @param deft 默认值
+	 * @param nullOrNotNull 是否可为空
+	 * @param comment 注释
+	 * @throws SQLException
+	 */
 	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NullOrNotNull nullOrNotNull,Comment comment) throws SQLException;
 	
 	public void addComment(TableName tableName,ColumnName columnName,Comment comment) throws SQLException;
@@ -82,6 +151,12 @@ public interface DatabaseService {
 	
 	public void dropIndex(String name) throws SQLException;
 	
+	/**
+	 * 删除列
+	 * @param tableName 表名
+	 * @param columnName 列名
+	 * @throws SQLException
+	 */
 	public void dropColumn(TableName tableName,ColumnName columnName) throws SQLException;
 	
 	public void dropPrimaryKey(TableName tableName,String name) throws SQLException;

@@ -50,12 +50,15 @@ class DatabaseServiceImpl implements DatabaseService{
 	
 	public void createTable(TableName tableName, Comment comment,CreateTableCallback callback)throws SQLException {
 		TableImpl tmi=new TableImpl();
+		String tableComment=null;
 		//进行回调操作
 		callback.doCreateAction(tmi);
 		StringBuffer columns=tmi.columns;
 		columns=columns.delete(columns.length()-2, columns.length());
 		String sql=String.format("create table %s (\n%s\n);", tableName.getName(),columns.toString());
-		String tableComment=String.format("comment on table %s is '%s';\n", tableName.getName(),comment.getComment());
+		if(comment!=null){
+			tableComment=String.format("comment on table %s is '%s';\n", tableName.getName(),comment.getComment());
+		}
 		String commentsSql=tmi.comments.toString();
 		commentsSql=commentsSql.replaceAll("TN", tableName.getName());
 		logger.info("\n"+sql+"\n"+tableComment+commentsSql.toString());
@@ -63,22 +66,12 @@ class DatabaseServiceImpl implements DatabaseService{
 	}
 	
 	public void createTable(TableName tableName, CreateTableCallback callback) throws SQLException{
-		TableImpl tmi=new TableImpl();
-		//进行回调操作
-		callback.doCreateAction(tmi);
-		StringBuffer columns=tmi.columns;
-		columns=columns.delete(columns.length()-2, columns.length());
-		String sql=String.format("create table %s (\n%s\n);", tableName.getName(),columns.toString());
-		String commentsSql=tmi.comments.toString();
-		commentsSql=commentsSql.replaceAll("TN", tableName.getName());
-		logger.info("\n"+sql+"\n"+commentsSql.toString());
-		jdbcService.execute(sql+"\n"+commentsSql.toString());
+		createTable(tableName, null, callback);
 	}
 	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType) throws SQLException{
 		this.addColumn(tableName, columnName, columnType, null,null, null);
 	}
-
 	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NullOrNotNull nullOrNotNull) throws SQLException{
 		this.addColumn(tableName, columnName, columnType, nullOrNotNull,null, null);
@@ -96,16 +89,13 @@ class DatabaseServiceImpl implements DatabaseService{
 		this.addColumn(tableName, columnName, columnType, null,deft, null);
 	}
 
-	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull) throws SQLException{
 		this.addColumn(tableName, columnName, columnType, nullOrNotNull,deft, null);
 	}
 
-
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, Comment comment) throws SQLException{
 		this.addColumn(tableName, columnName, columnType, null,deft, comment);
 	}
-
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull,Comment comment) throws SQLException{
 		this.addColumn(tableName, columnName, columnType);
@@ -170,29 +160,24 @@ class DatabaseServiceImpl implements DatabaseService{
 	}
 	
 	public void addIndex(TableName tableName, IndexName IndexName,ColumnName... columnName) throws SQLException{
-		String[] columnNames=new String[columnName.length];
-		String tn=tableName.getName();
-		String in=IndexName.getName();
-		for (int i=0;i<columnName.length;i++) {
-			ColumnNameImpl columnImpl=(ColumnNameImpl)columnName[i];
-			columnNames[i]=columnImpl.getName();
-		}
-		GenerateImpl gi=new GenerateImpl();
-		String sql=gi.addIndex(tn, in, columnNames);
-		logger.info("\n"+sql);
-		jdbcService.execute(sql);
+		addIndex(tableName, IndexName, null, columnName);
 	}
 
 	public void addIndex(TableName tableName, IndexName IndexName, IndexType indexType,ColumnName... columnName) throws SQLException{
 		String[] columnNames=new String[columnName.length];
 		String tn=tableName.getName();
 		String in=IndexName.getName();
+		String sql=null;
 		String type=indexType.getIndexType();
 		for (int i=0;i<columnName.length;i++) {
 			ColumnNameImpl columnImpl=(ColumnNameImpl)columnName[i];
 			columnNames[i]=columnImpl.getName();
 		}
-		String sql=generate.addIndex(tn,in,type,columnNames);
+		if(indexType!=null){
+			sql=generate.addIndex(tn,in,type,columnNames);
+		}else {
+			sql=generate.addIndex(tn, in, columnNames);	
+		}
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
