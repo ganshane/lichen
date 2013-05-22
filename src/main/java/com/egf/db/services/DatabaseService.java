@@ -137,8 +137,23 @@ public interface DatabaseService {
 	
 	public void updateDefault(TableName tableName,ColumnName columnName,Default deft) throws SQLException;
 	
+	/**
+	 * 添加索引
+	 * @param tableName 表名
+	 * @param indexName 索引名称
+	 * @param columnName 列名
+	 * @throws SQLException
+	 */
 	public void addIndex(TableName tableName,IndexName indexName, ColumnName ... columnName) throws SQLException;
 	
+	/**
+	 * 添加索引
+	 * @param tableName 表名
+	 * @param indexName 索引名称
+	 * @param indexType 索引类型
+	 * @param columnName 列名
+	 * @throws SQLException
+	 */
 	public void addIndex(TableName tableName,IndexName indexName,IndexType indexType, ColumnName ...columnName) throws SQLException;
 	
 	public void addPrimaryKey(String name,TableName tableName,ColumnName ... columnName) throws SQLException;
@@ -149,6 +164,11 @@ public interface DatabaseService {
 	
 	public void dropTable(String name) throws SQLException;
 	
+	/**
+	 * 删除索引
+	 * @param name 索引名称
+	 * @throws SQLException
+	 */
 	public void dropIndex(String name) throws SQLException;
 	
 	/**
