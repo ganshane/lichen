@@ -67,5 +67,7 @@ public interface Table {
 	
 	public void number(String name,Default deft,NullOrNotNull nullOrNotNull,Comment comment);
 	
+	public void number(String name,ColumnDefine ... define);
+	
 	public void number(String name,Default deft,Comment comment);
 }

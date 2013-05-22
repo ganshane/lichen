@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import org.junit.Test;
 
 import com.egf.db.core.CreateTableCallback;
+import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.model.Table;
 import com.egf.db.services.DatabaseService;
 
@@ -44,6 +45,15 @@ public class DatabaseServiceImplTest {
 		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("test"), new Varchar2Impl(2));
 	}
 
+	@Test
+	public void testAddColumn2() throws SQLException{
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("sex"), new Varchar2Impl(2),new CommentImpl("性别"));
+	}
+	
+	@Test
+	public void testAddColumn3() throws SQLException{
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("default"), new Varchar2Impl(2),new CommentImpl("性别"),new DefaultImpl("默认值"));
+	}
 	
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeDefault() throws SQLException{

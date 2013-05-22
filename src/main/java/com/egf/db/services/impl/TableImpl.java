@@ -27,60 +27,65 @@ class TableImpl implements Table {
 	public StringBuffer comments=new StringBuffer();
 
 	public void blob(String name, Comment comment) {
-		appendColumn(name, new BlobImpl(), null, null, comment);
+		appendColumn(name, new BlobImpl(), comment);
 	}
 
 	public void blob(String name, NullOrNotNull nullOrNotNull, Comment comment) {
-		appendColumn(name, new BlobImpl(), nullOrNotNull, null, comment);
+		appendColumn(name, new BlobImpl(), nullOrNotNull,comment);
 	}
 
 	public void blob(String name, NullOrNotNull nullOrNotNull) {
-		appendColumn(name, new BlobImpl(), nullOrNotNull, null, null);
+		appendColumn(name, new BlobImpl(), nullOrNotNull);
 	}
 
 	public void blob(String name) {
-		appendColumn(name, new BlobImpl(), null, null, null);
+		appendColumn(name, new BlobImpl());
 	}
 
 	public void number(String name, Comment comment) {
-		appendColumn(name, new NumberImpl(), null, null, comment);
+		appendColumn(name, new NumberImpl(),comment);
 	}
 
 	public void number(String name, Default deft, Comment comment) {
-		appendColumn(name, new NumberImpl(), null, deft, null);
+		appendColumn(name, new NumberImpl(),deft);
 	}
 
 	public void number(String name,Default deft,NullOrNotNull nullOrNotNull, Comment comment) {
 		appendColumn(name, new NumberImpl(), nullOrNotNull, deft, comment);
 	}
+	
+	public void number(String name, ColumnDefine... define) {
+		appendColumn(name, new NumberImpl(), define);
+		
+	}
 
 	public void number(String name,Default deft,NullOrNotNull nullOrNotNull) {
-		appendColumn(name, new NumberImpl(), nullOrNotNull, deft, null);
+		appendColumn(name, new NumberImpl(), nullOrNotNull, deft);
 	}
 
 	public void number(String name, Default deft) {
-		appendColumn(name, new NumberImpl(), null, deft, null);
+		appendColumn(name, new NumberImpl(),deft);
 		
 	}
 
 	public void number(String name, NullOrNotNull nullOrNotNull,Comment comment) {
-		appendColumn(name, new NumberImpl(), nullOrNotNull, null, comment);
+		appendColumn(name, new NumberImpl(), nullOrNotNull, comment);
 	}
 
 	public void number(String name,NullOrNotNull nullOrNotNull) {
-		appendColumn(name, new NumberImpl(), nullOrNotNull, null, null);
+		appendColumn(name, new NumberImpl(), nullOrNotNull);
 	}
 
 	public void number(String name) {
-		appendColumn(name, new NumberImpl(), null, null, null);
+		appendColumn(name, new NumberImpl());
 	}
 
 	public void varchar2(String name, Limit limit, Comment comment) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), null, null, comment);
+		appendColumn(name, new Varchar2Impl(limit.getLimit()),comment);
 	}
 
 	public void varchar2(String name, Limit limit, Default deft, Comment comment) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), null, deft, comment);
+		appendColumn(name, new Varchar2Impl(limit.getLimit()),deft, comment);
 	}
 
 	public void varchar2(String name, Limit limit, Default deft,NullOrNotNull nullOrNotNull, Comment comment) {
@@ -88,25 +93,24 @@ class TableImpl implements Table {
 	}
 
 	public void varchar2(String name, Limit limit, Default deft,NullOrNotNull nullOrNotNull) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, deft, null);
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, deft);
 	}
 
 	public void varchar2(String name, Limit limit, Default deft) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), null, deft, null);
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), deft);
 	}
 
 	public void varchar2(String name, Limit limit, NullOrNotNull nullOrNotNull,Comment comment) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, null, comment);
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, comment);
 	}
 
 	public void varchar2(String name, Limit limit, NullOrNotNull nullOrNotNull) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, null, null);
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull);
 	}
 
 	public void varchar2(String name, Limit limit) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), null, null, null);
+		appendColumn(name, new Varchar2Impl(limit.getLimit()));
 	}
-
 	
 	private void addComment(String columnName,String comment){
 		comments.append(String.format("comment on column TN.%s is '%s';\n",columnName, comment));
@@ -131,30 +135,35 @@ class TableImpl implements Table {
 	/**
 	 * 添加列
 	 * @param name 名称
-	 * @param columnType 列类型接口
-	 * @param nullOrNotNull 非空接口
-	 * @param deft 默认接口
-	 * @param comment 注释接口
+	 * @param columnType 列类型
+	 * @param define 列定义
 	 */
-	private void appendColumn(String name,ColumnType columnType,NullOrNotNull nullOrNotNull, Default deft,Comment comment){
+	private void appendColumn(String name,ColumnType columnType,ColumnDefine ... define){
 		String type=columnType.getColumnType();
 		columns.append(name);
 		columns.append(" ");
 		columns.append(type);
-		if(deft!=null){
-			String deftValue=deft.getValue();
-			columns.append(" ");
-			columns.append("default");
-			columns.append(" ");
-			columns.append(deftValue);
-		}
-		if(nullOrNotNull!=null){
-			String nullOrNot=nullOrNotNull.out();
-			columns.append(" ");
-			columns.append(nullOrNot);
-		}if(comment!=null){
-			String c=comment.getComment();
-			addComment(name, c);
+		for (ColumnDefine columnDefine : define) {
+			if(columnDefine!=null){
+				if(columnDefine instanceof Default){
+					Default deft=(Default)columnDefine;
+					String deftValue=deft.getValue();
+					columns.append(" ");
+					columns.append("default");
+					columns.append(" ");
+					columns.append(deftValue);
+				}
+				if(columnDefine instanceof NullOrNotNull){
+					NullOrNotNull nullOrNotNull=(NullOrNotNull)columnDefine;
+					String nullOrNot=nullOrNotNull.out();
+					columns.append(" ");
+					columns.append(nullOrNot);
+				}if(columnDefine instanceof Comment){
+					Comment comment=(Comment)columnDefine;
+					String c=comment.getComment();
+					addComment(name, c);
+				}
+			}
 		}
 		columns.append(",");
 		columns.append("\n");

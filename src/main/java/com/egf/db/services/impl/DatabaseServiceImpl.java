@@ -79,27 +79,27 @@ class DatabaseServiceImpl implements DatabaseService{
 	}
 	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NullOrNotNull nullOrNotNull) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, nullOrNotNull,null, null);
+		this.addColumn(tableName, columnName, columnType, nullOrNotNull);
 	}
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Comment comment) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, null,null, comment);
+		this.addColumn(tableName, columnName, columnType,comment);
 	}
 	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NullOrNotNull nullOrNotNull, Comment comment) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, nullOrNotNull,null, comment);
+		this.addColumn(tableName, columnName, columnType, nullOrNotNull, comment);
 	}
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, null,deft, null);
+		this.addColumn(tableName, columnName, columnType,deft);
 	}
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, nullOrNotNull,deft, null);
+		this.addColumn(tableName, columnName, columnType, nullOrNotNull,deft);
 	}
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, Comment comment) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, null,deft, comment);
+		this.addColumn(tableName, columnName, columnType,deft, comment);
 	}
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull,Comment comment) throws SQLException{
@@ -139,12 +139,14 @@ class DatabaseServiceImpl implements DatabaseService{
 		NullOrNotNull nullOrNotNull=null;
 		Comment comment=null;
 		for (ColumnDefine columnDefine : define) {
-			if(columnDefine instanceof Default){
-				deft=(Default)columnDefine;
-			}else if(columnDefine instanceof NullOrNotNull){
-				nullOrNotNull=(NullOrNotNull)columnDefine;
-			}else if (columnDefine instanceof Comment){
-				comment=(Comment)columnDefine;
+			if(columnDefine!=null){
+				if(columnDefine instanceof Default){
+					deft=(Default)columnDefine;
+				}else if(columnDefine instanceof NullOrNotNull){
+					nullOrNotNull=(NullOrNotNull)columnDefine;
+				}else if (columnDefine instanceof Comment){
+					comment=(Comment)columnDefine;
+				}
 			}
 		}
 		this.addColumn(tableName, columnName, columnType, deft, nullOrNotNull, comment);
