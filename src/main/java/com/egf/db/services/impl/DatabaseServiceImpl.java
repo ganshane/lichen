@@ -249,14 +249,11 @@ class DatabaseServiceImpl implements DatabaseService{
 		jdbcService.execute(sql);
 	}
 
-	
-
 	public void dropUnique(TableName tableName,String name) throws SQLException{
 		String sql=dropKey(tableName, name);
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
-
 	
 	public void addComment(TableName tableName, ColumnName columnName,Comment comment) throws SQLException{
 		String tn=tableName.getName();
