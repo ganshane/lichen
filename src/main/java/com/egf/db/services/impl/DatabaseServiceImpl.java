@@ -50,7 +50,7 @@ class DatabaseServiceImpl implements DatabaseService{
 	
 	public void createTable(TableName tableName, Comment comment,CreateTableCallback callback)throws SQLException {
 		TableImpl tmi=new TableImpl();
-		String tableComment=null;
+		String tableComment="";
 		//进行回调操作
 		callback.doCreateAction(tmi);
 		StringBuffer columns=tmi.columns;
@@ -79,27 +79,27 @@ class DatabaseServiceImpl implements DatabaseService{
 	}
 	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NullOrNotNull nullOrNotNull) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, nullOrNotNull);
+		this.addColumn(tableName, columnName, columnType, nullOrNotNull,null, null);
 	}
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Comment comment) throws SQLException{
-		this.addColumn(tableName, columnName, columnType,comment);
+		this.addColumn(tableName, columnName, columnType, null,null, comment);
 	}
 	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NullOrNotNull nullOrNotNull, Comment comment) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, nullOrNotNull, comment);
+		this.addColumn(tableName, columnName, columnType, nullOrNotNull,null, comment);
 	}
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft) throws SQLException{
-		this.addColumn(tableName, columnName, columnType,deft);
+		this.addColumn(tableName, columnName, columnType, null,deft, null);
 	}
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, nullOrNotNull,deft);
+		this.addColumn(tableName, columnName, columnType, nullOrNotNull,deft, null);
 	}
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, Comment comment) throws SQLException{
-		this.addColumn(tableName, columnName, columnType,deft, comment);
+		this.addColumn(tableName, columnName, columnType, null,deft, comment);
 	}
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull,Comment comment) throws SQLException{

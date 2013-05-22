@@ -40,6 +40,19 @@ public class DatabaseServiceImplTest {
 	}
 	
 	@Test
+	public void testCreateTable2() throws SQLException{
+		service.createTable(new TableNameImpl("test2"), new CreateTableCallback() {
+			public void doCreateAction(Table t) {
+				t.number("id");
+				t.varchar2("xm",new LimitImpl(10),new NotNullImpl(),new CommentImpl("dd"));
+				t.blob("pic");
+				t.number("age",new NotNullImpl());
+				t.varchar2("xx",new LimitImpl(20),new CommentImpl("dd"));
+			}
+		});
+	}
+	
+	@Test
 	public void testAddColumn() throws SQLException{
 		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("test"), new Varchar2Impl(2));
 	}
