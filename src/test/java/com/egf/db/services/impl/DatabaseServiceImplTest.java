@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import org.junit.Test;
 
 import com.egf.db.core.CreateTableCallback;
-import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.model.Table;
 import com.egf.db.services.DatabaseService;
 
