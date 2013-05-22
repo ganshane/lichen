@@ -10,7 +10,7 @@ import com.egf.db.core.define.column.ColumnDefine;
 import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Default;
 import com.egf.db.core.define.column.Limit;
-import com.egf.db.core.define.column.NullOrNotNull;
+import com.egf.db.core.define.column.NotNull;
 
 
 /**
@@ -21,17 +21,17 @@ import com.egf.db.core.define.column.NullOrNotNull;
  */
 public interface Table {
 		
-	public void varchar2(String name,Limit limit,NullOrNotNull nullOrNotNull);
+	public void varchar2(String name,Limit limit,NotNull notNull);
 	
-	public void varchar2(String name,Limit limit,NullOrNotNull nullOrNotNull,Comment comment);
+	public void varchar2(String name,Limit limit,NotNull notNull,Comment comment);
 	
 	public void varchar2(String name,Limit limit,Comment comment);
 	
 	public void varchar2(String name,Limit limit);
 	
-	public void varchar2(String name,Limit limit,Default deft,NullOrNotNull nullOrNotNull);
+	public void varchar2(String name,Limit limit,Default deft,NotNull notNull);
 	
-	public void varchar2(String name,Limit limit,Default deft,NullOrNotNull nullOrNotNull,Comment comment);
+	public void varchar2(String name,Limit limit,Default deft,NotNull notNull,Comment comment);
 	
 	public void varchar2(String name,Limit limit,Default deft,Comment comment);
 	
@@ -45,27 +45,27 @@ public interface Table {
 	 */
 	public void varchar2(String name,Limit limit, ColumnDefine ... define);
 	
-	public void blob(String name,NullOrNotNull nullOrNotNull);
+	public void blob(String name,NotNull notNull);
 	
 	public void blob(String name);
 	
-	public void blob(String name,NullOrNotNull nullOrNotNull,Comment comment);
+	public void blob(String name,NotNull notNull,Comment comment);
 	
 	public void blob(String name,Comment comment);
 	
-	public void number(String name,NullOrNotNull nullOrNotNull);
+	public void number(String name,NotNull notNull);
 	
 	public void number(String name);
 	
-	public void number(String name,NullOrNotNull nullOrNotNull,Comment comment);
+	public void number(String name,NotNull notNull,Comment comment);
 	
 	public void number(String name,Comment comment);
 	
-	public void number(String name,Default deft, NullOrNotNull nullOrNotNull);
+	public void number(String name,Default deft, NotNull notNull);
 	
 	public void number(String name,Default deft);
 	
-	public void number(String name,Default deft,NullOrNotNull nullOrNotNull,Comment comment);
+	public void number(String name,Default deft,NotNull notNull,Comment comment);
 	
 	public void number(String name,ColumnDefine ... define);
 	

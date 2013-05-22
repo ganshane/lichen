@@ -7,10 +7,15 @@
 package com.egf.db.services.impl;
 
 import java.sql.SQLException;
+import java.util.List;
+
+import junit.framework.Assert;
 
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import com.egf.db.core.CreateTableCallback;
+import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.model.Table;
 import com.egf.db.services.DatabaseService;
 
@@ -21,7 +26,7 @@ import com.egf.db.services.DatabaseService;
  */
 public class DatabaseServiceImplTest {
 	
-	DatabaseService service=new DatabaseServiceImpl();
+	DatabaseServiceImpl service=new DatabaseServiceImpl();
 
 	/**
 	 * Test method for {@link com.egf.db.services.impl.DatabaseServiceImpl#addColumn(com.egf.db.core.define.name.TableName, com.egf.db.core.define.name.ColumnName, com.egf.db.core.define.ColumnType, com.egf.db.core.define.column.ColumnDefine[])}.
@@ -54,7 +59,49 @@ public class DatabaseServiceImplTest {
 	
 	@Test
 	public void testAddColumn() throws SQLException{
+		/*
+		service.setJdbcService(new JdbcService(){
+
+			public void execute(String sql) throws SQLException {
+				Assert.assertEquals("xxx", sql);
+				
+			}
+
+			public void execute(String sql, Object[] params)
+					throws SQLException {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public List<Object[]> find(String sql) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public List<Object[]> find(String sql, Object[] params) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public String getColumnTypeName(String tableName, String columnName) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public String[] getTablePK(String tableName) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+		});
+		*/
+		JdbcService jdbcService = Mockito.mock(JdbcService.class);
+		service.setJdbcService(jdbcService);
+		
 		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("test"), new Varchar2Impl(2));
+		
+		
+		Mockito.verify(jdbcService).execute("alter table test add test varchar2(2);");
 	}
 
 	@Test

@@ -12,6 +12,8 @@ package com.egf.db.core.define.column;
  * @version $Revision: 2.0 $
  * @since 1.0
  */
-public interface NotNull extends NullOrNotNull{
-
+public interface NotNull extends ColumnDefine{
+	
+	public String out();
+	
 }

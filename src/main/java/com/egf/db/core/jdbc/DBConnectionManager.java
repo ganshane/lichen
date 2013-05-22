@@ -6,15 +6,12 @@
  */
 package com.egf.db.core.jdbc;
 
-import java.beans.PropertyVetoException;
 import java.sql.Connection;
-import java.sql.SQLException;
+import java.sql.DriverManager;
 
 import org.apache.log4j.Logger;
 
 import com.egf.db.core.config.SysConfigPropertyUtil;
-import com.egf.db.utils.StringUtils;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 /**
  * 数据库连接类
@@ -27,61 +24,29 @@ public class DBConnectionManager {
 
 	private static final Logger logger = Logger.getLogger(DBConnectionManager.class);
 
-	private static ComboPooledDataSource cpds;
+	private static String driver;
+	private static String url;
+	private static String dbUser;
+	private static String dbPassword;
 
-	private static void init() {
+	public static void getParam() {
 		SysConfigPropertyUtil dbScpu = SysConfigPropertyUtil.getInstance("jdbc.properties");
-		final String driver = dbScpu.getPropertyValue("jdbc.driverClass");
-		final String url = dbScpu.getPropertyValue("jdbc.jdbcUrl");
-		final String user = dbScpu.getPropertyValue("jdbc.user");
-		final String password = dbScpu.getPropertyValue("jdbc.password");
-
-		final int minPoolSize = StringUtils.isBlank(dbScpu.getPropertyValue("c3p0.minPoolSize")) ? 20 : Integer.parseInt(dbScpu.getPropertyValue("c3p0.minPoolSize"));
-		final int maxPoolSize = StringUtils.isBlank(dbScpu.getPropertyValue("c3p0.maxPoolSize")) ? 100 : Integer.parseInt(dbScpu.getPropertyValue("c3p0.maxPoolSize"));
-		final int initialPoolSize = StringUtils.isBlank(dbScpu.getPropertyValue("c3p0.initialPoolSize")) ? 100 : Integer.parseInt(dbScpu.getPropertyValue("c3p0.initialPoolSize"));
-		final int acquireIncrement = StringUtils.isBlank(dbScpu.getPropertyValue("c3p0.acquireIncrement")) ? 5 : Integer.parseInt(dbScpu.getPropertyValue("c3p0.acquireIncrement"));
-		final int maxIdleTime = StringUtils.isBlank(dbScpu.getPropertyValue("c3p0.maxIdleTime")) ? 60 : Integer.parseInt(dbScpu.getPropertyValue("c3p0.maxIdleTime"));
-		final boolean connectionValidate = StringUtils.isBlank(dbScpu.getPropertyValue("c3p0.connectionValidate")) ? false : Boolean.getBoolean(dbScpu.getPropertyValue("c3p0.maxIdleTime"));
-
-		try {
-			cpds=new ComboPooledDataSource();
-			cpds.setDriverClass(driver);
-		} catch (PropertyVetoException e) {
-			logger.error("数据库初始化连接出错:" + e.getMessage());
-			e.printStackTrace();
-		}
-		cpds.setJdbcUrl(url);
-		cpds.setUser(user);
-		cpds.setPassword(password);
-		cpds.setInitialPoolSize(initialPoolSize);
-		cpds.setMinPoolSize(minPoolSize);
-		cpds.setMaxPoolSize(maxPoolSize);
-		cpds.setAcquireIncrement(acquireIncrement);
-		cpds.setIdleConnectionTestPeriod(maxIdleTime);
-		cpds.setTestConnectionOnCheckout(connectionValidate);
+		driver = dbScpu.getPropertyValue("jdbc.driverClass");
+		url = dbScpu.getPropertyValue("jdbc.jdbcUrl");
+		dbUser = dbScpu.getPropertyValue("jdbc.user");
+		dbPassword = dbScpu.getPropertyValue("jdbc.password");
 	}
 
 	public static Connection getConnection() {
-		Connection connection = null;
+		Connection conn = null;
 		try {
-			if (cpds == null) {
-				init();
-			}
-			connection = cpds.getConnection();
-		} catch (SQLException ex) {
-			ex.printStackTrace();
+			Class.forName(driver);
+			conn = DriverManager.getConnection(url, dbUser, dbPassword);
+		} catch (Exception e) {
+			logger.error("数据连接异常:" + e.getMessage());
+			e.printStackTrace();
 		}
-		return connection;
-	}
-
-	public static void release() {
-		try {
-			if (cpds != null) {
-				cpds.close();
-			}
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		return conn;
 	}
 
 }

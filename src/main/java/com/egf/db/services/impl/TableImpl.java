@@ -11,13 +11,13 @@ import com.egf.db.core.define.column.ColumnDefine;
 import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Default;
 import com.egf.db.core.define.column.Limit;
-import com.egf.db.core.define.column.NullOrNotNull;
+import com.egf.db.core.define.column.NotNull;
 import com.egf.db.core.model.Table;
 
 /**
  * table定义实现
  * @author fangj
- * @version $Revision: 1.0 $
+ * @version $Revision: 2.0 $
  * @since 1.0
  */
 class TableImpl implements Table {
@@ -30,12 +30,12 @@ class TableImpl implements Table {
 		appendColumn(name, new BlobImpl(), comment);
 	}
 
-	public void blob(String name, NullOrNotNull nullOrNotNull, Comment comment) {
-		appendColumn(name, new BlobImpl(), nullOrNotNull,comment);
+	public void blob(String name, NotNull notNull, Comment comment) {
+		appendColumn(name, new BlobImpl(), notNull,comment);
 	}
 
-	public void blob(String name, NullOrNotNull nullOrNotNull) {
-		appendColumn(name, new BlobImpl(), nullOrNotNull);
+	public void blob(String name, NotNull notNull) {
+		appendColumn(name, new BlobImpl(), notNull);
 	}
 
 	public void blob(String name) {
@@ -50,8 +50,8 @@ class TableImpl implements Table {
 		appendColumn(name, new NumberImpl(),deft);
 	}
 
-	public void number(String name,Default deft,NullOrNotNull nullOrNotNull, Comment comment) {
-		appendColumn(name, new NumberImpl(), nullOrNotNull, deft, comment);
+	public void number(String name,Default deft,NotNull notNull, Comment comment) {
+		appendColumn(name, new NumberImpl(), notNull, deft, comment);
 	}
 	
 	public void number(String name, ColumnDefine... define) {
@@ -59,8 +59,8 @@ class TableImpl implements Table {
 		
 	}
 
-	public void number(String name,Default deft,NullOrNotNull nullOrNotNull) {
-		appendColumn(name, new NumberImpl(), nullOrNotNull, deft);
+	public void number(String name,Default deft,NotNull notNull) {
+		appendColumn(name, new NumberImpl(), notNull, deft);
 	}
 
 	public void number(String name, Default deft) {
@@ -68,12 +68,12 @@ class TableImpl implements Table {
 		
 	}
 
-	public void number(String name, NullOrNotNull nullOrNotNull,Comment comment) {
-		appendColumn(name, new NumberImpl(), nullOrNotNull, comment);
+	public void number(String name, NotNull notNull,Comment comment) {
+		appendColumn(name, new NumberImpl(), notNull, comment);
 	}
 
-	public void number(String name,NullOrNotNull nullOrNotNull) {
-		appendColumn(name, new NumberImpl(), nullOrNotNull);
+	public void number(String name,NotNull notNull) {
+		appendColumn(name, new NumberImpl(), notNull);
 	}
 
 	public void number(String name) {
@@ -88,24 +88,24 @@ class TableImpl implements Table {
 		appendColumn(name, new Varchar2Impl(limit.getLimit()),deft, comment);
 	}
 
-	public void varchar2(String name, Limit limit, Default deft,NullOrNotNull nullOrNotNull, Comment comment) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, deft, comment);
+	public void varchar2(String name, Limit limit, Default deft,NotNull notNull, Comment comment) {
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), notNull, deft, comment);
 	}
 
-	public void varchar2(String name, Limit limit, Default deft,NullOrNotNull nullOrNotNull) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, deft);
+	public void varchar2(String name, Limit limit, Default deft,NotNull notNull) {
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), notNull, deft);
 	}
 
 	public void varchar2(String name, Limit limit, Default deft) {
 		appendColumn(name, new Varchar2Impl(limit.getLimit()), deft);
 	}
 
-	public void varchar2(String name, Limit limit, NullOrNotNull nullOrNotNull,Comment comment) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, comment);
+	public void varchar2(String name, Limit limit, NotNull notNull,Comment comment) {
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), notNull, comment);
 	}
 
-	public void varchar2(String name, Limit limit, NullOrNotNull nullOrNotNull) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull);
+	public void varchar2(String name, Limit limit, NotNull notNull) {
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), notNull);
 	}
 
 	public void varchar2(String name, Limit limit) {
@@ -117,19 +117,19 @@ class TableImpl implements Table {
 	}
 	
 	public void varchar2(String name, Limit limit, ColumnDefine... define) {
-		NullOrNotNull nullOrNotNull=null;
+		NotNull notNull=null;
 		Default deft=null;
 		Comment comment=null;
 		for (ColumnDefine columnDefine : define) {
-			if(columnDefine instanceof NullOrNotNull){
-				nullOrNotNull=(NullOrNotNull) columnDefine;
+			if(columnDefine instanceof NotNull){
+				notNull=(NotNull) columnDefine;
 			}else if(columnDefine instanceof Default){
 				deft=(Default) columnDefine;
 			}else if(columnDefine instanceof Comment){
 				comment=(Comment)columnDefine;
 			}
 		}
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), nullOrNotNull, deft, comment);
+		appendColumn(name, new Varchar2Impl(limit.getLimit()), notNull, deft, comment);
 	}
 	
 	/**
@@ -153,9 +153,9 @@ class TableImpl implements Table {
 					columns.append(" ");
 					columns.append(deftValue);
 				}
-				if(columnDefine instanceof NullOrNotNull){
-					NullOrNotNull nullOrNotNull=(NullOrNotNull)columnDefine;
-					String nullOrNot=nullOrNotNull.out();
+				if(columnDefine instanceof NotNull){
+					NotNull notNull=(NotNull)columnDefine;
+					String nullOrNot=notNull.out();
 					columns.append(" ");
 					columns.append(nullOrNot);
 				}if(columnDefine instanceof Comment){
@@ -168,4 +168,5 @@ class TableImpl implements Table {
 		columns.append(",");
 		columns.append("\n");
 	}
+
 }

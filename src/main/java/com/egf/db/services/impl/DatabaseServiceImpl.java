@@ -16,7 +16,7 @@ import com.egf.db.core.define.IndexType;
 import com.egf.db.core.define.column.ColumnDefine;
 import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Default;
-import com.egf.db.core.define.column.NullOrNotNull;
+import com.egf.db.core.define.column.NotNull;
 import com.egf.db.core.define.name.ColumnName;
 import com.egf.db.core.define.name.IndexName;
 import com.egf.db.core.define.name.TableName;
@@ -48,6 +48,11 @@ class DatabaseServiceImpl implements DatabaseService{
 	
 	private Generate generate=new GenerateImpl();
 	
+	//仅仅用来测试
+	void setJdbcService(JdbcService jdbcService){
+		this.jdbcService = jdbcService;
+	}
+	
 	public void createTable(TableName tableName, Comment comment,CreateTableCallback callback)throws SQLException {
 		TableImpl tmi=new TableImpl();
 		String tableComment="";
@@ -78,34 +83,34 @@ class DatabaseServiceImpl implements DatabaseService{
 		jdbcService.execute(sql);
 	}
 	
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NullOrNotNull nullOrNotNull) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, nullOrNotNull,null, null);
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NotNull notNull) throws SQLException{
+		this.addColumn(tableName, columnName, columnType, notNull,null, null);
 	}
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Comment comment) throws SQLException{
 		this.addColumn(tableName, columnName, columnType, null,null, comment);
 	}
 	
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NullOrNotNull nullOrNotNull, Comment comment) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, nullOrNotNull,null, comment);
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NotNull notNull, Comment comment) throws SQLException{
+		this.addColumn(tableName, columnName, columnType, notNull,null, comment);
 	}
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft) throws SQLException{
 		this.addColumn(tableName, columnName, columnType, null,deft, null);
 	}
 
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, nullOrNotNull,deft, null);
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NotNull notNull) throws SQLException{
+		this.addColumn(tableName, columnName, columnType, notNull,deft, null);
 	}
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, Comment comment) throws SQLException{
 		this.addColumn(tableName, columnName, columnType, null,deft, comment);
 	}
 
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NullOrNotNull nullOrNotNull,Comment comment) throws SQLException{
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NotNull notNull,Comment comment) throws SQLException{
 		this.addColumn(tableName, columnName, columnType);
-		if(nullOrNotNull!=null){
-			if("not null".equals(nullOrNotNull.out())){
+		if(notNull!=null){
+			if("not null".equals(notNull.out())){
 				this.addColumnNotNull(tableName, columnName);
 			}else{
 				this.addColumnNull(tableName, columnName);
@@ -136,20 +141,20 @@ class DatabaseServiceImpl implements DatabaseService{
 
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, ColumnDefine... define) throws SQLException{
 		Default deft=null;
-		NullOrNotNull nullOrNotNull=null;
+		NotNull notNull=null;
 		Comment comment=null;
 		for (ColumnDefine columnDefine : define) {
 			if(columnDefine!=null){
 				if(columnDefine instanceof Default){
 					deft=(Default)columnDefine;
-				}else if(columnDefine instanceof NullOrNotNull){
-					nullOrNotNull=(NullOrNotNull)columnDefine;
+				}else if(columnDefine instanceof NotNull){
+					notNull=(NotNull)columnDefine;
 				}else if (columnDefine instanceof Comment){
 					comment=(Comment)columnDefine;
 				}
 			}
 		}
-		this.addColumn(tableName, columnName, columnType, deft, nullOrNotNull, comment);
+		this.addColumn(tableName, columnName, columnType, deft, notNull, comment);
 	}
 	
 	public void addDefault(TableName tableName, ColumnName columnName,Default deft) throws SQLException{

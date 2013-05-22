@@ -14,7 +14,7 @@ import com.egf.db.core.define.IndexType;
 import com.egf.db.core.define.column.ColumnDefine;
 import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Default;
-import com.egf.db.core.define.column.NullOrNotNull;
+import com.egf.db.core.define.column.NotNull;
 import com.egf.db.core.define.name.ColumnName;
 import com.egf.db.core.define.name.IndexName;
 import com.egf.db.core.define.name.TableName;
@@ -68,7 +68,7 @@ public interface DatabaseService {
 	 * @param nullOrNotNull 是否可为空
 	 * @throws SQLException
 	 */
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NullOrNotNull nullOrNotNull) throws SQLException;
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NotNull notNull) throws SQLException;
 	
 	/**
 	 *  添加列
@@ -79,7 +79,7 @@ public interface DatabaseService {
 	 * @param nullOrNotNull 是否可为空
 	 * @throws SQLException
 	 */
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NullOrNotNull nullOrNotNull) throws SQLException;
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NotNull notNull) throws SQLException;
 	
 	/**
 	 *  添加列
@@ -111,7 +111,7 @@ public interface DatabaseService {
 	 * @param comment 注释
 	 * @throws SQLException
 	 */
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NullOrNotNull nullOrNotNull,Comment comment)throws SQLException;
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NotNull notNull,Comment comment)throws SQLException;
 	
 	/**
 	 * 添加列
@@ -123,7 +123,7 @@ public interface DatabaseService {
 	 * @param comment 注释
 	 * @throws SQLException
 	 */
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NullOrNotNull nullOrNotNull,Comment comment) throws SQLException;
+	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NotNull notNull,Comment comment) throws SQLException;
 	
 	public void addComment(TableName tableName,ColumnName columnName,Comment comment) throws SQLException;
 	

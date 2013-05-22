@@ -26,13 +26,15 @@ public class JdbcServiceImpl implements JdbcService {
 
 	private static final Logger logger = Logger.getLogger(JdbcServiceImpl.class);
 
+	private Connection conn = null;
+	
+	private PreparedStatement pstmt = null;
+	
 	public void execute(String sql)throws SQLException{
 		execute(sql, new Object[0]);
 	}
 
 	public void execute(String sql, final Object[] params) throws SQLException{
-		Connection conn = null;
-		PreparedStatement pstmt = null;
 		try {
 			conn = DBConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -51,22 +53,7 @@ public class JdbcServiceImpl implements JdbcService {
 			}
 			throw new SQLException();
 		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					logger.error(e.getMessage());
-					e.printStackTrace();
-				}
-			}
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					logger.error(e.getMessage());
-					e.printStackTrace();
-				}
-			}
+			close();
 		}
 	}
 
@@ -98,22 +85,7 @@ public class JdbcServiceImpl implements JdbcService {
 			logger.error(e.getMessage());
 			e.printStackTrace();
 		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					logger.error(e.getMessage());
-					e.printStackTrace();
-				}
-			}
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					logger.error(e.getMessage());
-					e.printStackTrace();
-				}
-			}
+			close();
 		}
 		return list;
 	}
@@ -136,23 +108,9 @@ public class JdbcServiceImpl implements JdbcService {
 
 		} catch (Exception e) {
 			logger.error(e.getMessage());
+			e.printStackTrace();
 		} finally {
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					logger.error(e.getMessage());
-					e.printStackTrace();
-				}
-			}
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					logger.error(e.getMessage());
-					e.printStackTrace();
-				}
-			}
+			close();
 		}
 		return null;
 	}
@@ -174,25 +132,31 @@ public class JdbcServiceImpl implements JdbcService {
 	        if (tempPK.length() < 1) {   
 	          resultArray = null;   
 	        }   
-	    } catch(SQLException sqle) {   
-	       logger.error(sqle);   
+	    } catch(SQLException e) {   
+	       logger.error(e.getMessage()); 
+	       e.printStackTrace();
 	    } finally {   
-	       if (rs != null) {   
-	          try{   
-	            rs.close();   
-	          } catch(SQLException sqle) {   
-	            logger.error(sqle);   
-	          }   
-	       }   
-	       if (conn != null) {   
-	    	   try {
-					conn.close();
-				} catch (SQLException e) {
-					logger.error(e.getMessage());
-					e.printStackTrace();
-				}
-	       }   
+	    	close();
 	    }   
 	    return resultArray; 
+	}
+	
+	private  void close(){
+		if (pstmt != null) {
+			try {
+				pstmt.close();
+			} catch (SQLException e) {
+				logger.error(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		if (conn != null) {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				logger.error(e.getMessage());
+				e.printStackTrace();
+			}
+		}
 	}
 }

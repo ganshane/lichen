@@ -20,32 +20,27 @@ public interface JdbcService {
 
 	/**
 	 * 自动提交执行sql语句
-	 * 
-	 * @param sql
-	 *            sql语句
+	 * @param sql sql语句
 	 */
 	public void execute(String sql) throws SQLException;
 
 	/**
 	 * 自动提交执行sql语句
-	 * 
-	 * @param sql
-	 *            ql语句
-	 * @param params
-	 *            参数
+	 * @param sql sql语句
+	 * @param params 参数
 	 */
 	public void execute(String sql, Object[] params) throws SQLException;
 	
 	
 	/**
-	 * 查询
+	 * sql查询
 	 * @param sql sql语句
 	 * @return
 	 */
 	public List<Object[]> find(String sql);
 	
 	/**
-	 * 查询
+	 * sql查询
 	 * @param sql sql语句
 	 * @param params 参数
 	 * @return
