@@ -37,13 +37,6 @@ public class ClientCommand implements Command {
 			try {
 				am.up();
 			} catch (SQLException e) {
-				try {
-					logger.info("\n"+cls.getName() + " down script start run...");
-					am.down();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-				e.printStackTrace();
 				break;
 			}
 		}
