@@ -13,19 +13,21 @@ package com.egf.db.core.sql.template;
  */
 public interface Generate {
 	
-	public String AddColumn(String tableName,String name,String columnType);
+	public String addColumn(String tableName,String name,String columnType);
 	
-	public String AddColumn(String tableName,String name,String columnType,String nullOrNotNull);
+	public String addColumn(String tableName,String name,String columnType,String nullOrNotNull);
 	
 	public String addColumnNullOrNot(String tableName,String columnName,String columnType,String nullOrNot);
 	
 	public String addColumnNull(String tableName, String columnName,String nul);
 	
-	public String addDefault(String tableName,String columnName,String value);
+	public String addDefault(String tableName,String columnName,String columnType,String value);
 	
 	public String addComment(String tableName,String columnName,String comment);
 	
-	public String AddConstraint(String tableName,String name,String type,String ...columnNames);
+	public String addConstraint(String tableName,String name,String type,String ...columnNames);
+	
+	public String addForeignKey(String tableName, String name,String referencesTable, String referencesColumn, String... columnName);
 	
 	public String addIndex(String tableName,String indexName,String... columnName);
 	

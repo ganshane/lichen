@@ -7,6 +7,7 @@
 package com.egf.db.core.jdbc;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -156,4 +157,42 @@ public class JdbcServiceImpl implements JdbcService {
 		return null;
 	}
 	
+	public String[] getTablePK(String tableName) {
+		String[] resultArray = null;   
+		Connection conn = null;   
+	    DatabaseMetaData dbmd = null;   
+	    ResultSet rs = null;   
+	    try {   
+	        conn=DBConnectionManager.getConnection();   
+	        dbmd=conn.getMetaData();   
+	        rs=dbmd.getPrimaryKeys(null, null, tableName);   
+	        String tempPK = "";   
+	        while (rs.next())  {   
+	           tempPK = rs.getString("COLUMN_NAME") + ",";   
+	        }   
+	        resultArray = tempPK.split(",");   
+	        if (tempPK.length() < 1) {   
+	          resultArray = null;   
+	        }   
+	    } catch(SQLException sqle) {   
+	       logger.error(sqle);   
+	    } finally {   
+	       if (rs != null) {   
+	          try{   
+	            rs.close();   
+	          } catch(SQLException sqle) {   
+	            logger.error(sqle);   
+	          }   
+	       }   
+	       if (conn != null) {   
+	    	   try {
+					conn.close();
+				} catch (SQLException e) {
+					logger.error(e.getMessage());
+					e.printStackTrace();
+				}
+	       }   
+	    }   
+	    return resultArray; 
+	}
 }

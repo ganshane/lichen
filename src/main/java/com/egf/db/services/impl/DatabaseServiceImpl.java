@@ -70,7 +70,12 @@ class DatabaseServiceImpl implements DatabaseService{
 	}
 	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, null,null, null);
+		String tn=tableName.getName();
+		String cn=columnName.getName();
+		String type=columnType.getColumnType();
+		String sql=generate.addColumn(tn, cn, type);
+		logger.info("\n"+sql);
+		jdbcService.execute(sql);
 	}
 	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NullOrNotNull nullOrNotNull) throws SQLException{
@@ -149,7 +154,8 @@ class DatabaseServiceImpl implements DatabaseService{
 		String tn=tableName.getName();
 		String cn=columnName.getName();
 		String value=deft.getValue();
-		String sql=generate.addDefault(tn, cn, value);
+		String columnType=jdbcService.getColumnTypeName(tn, cn);
+		String sql=generate.addDefault(tn, cn,columnType, value);
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
@@ -168,12 +174,12 @@ class DatabaseServiceImpl implements DatabaseService{
 		String tn=tableName.getName();
 		String in=IndexName.getName();
 		String sql=null;
-		String type=indexType.getIndexType();
 		for (int i=0;i<columnName.length;i++) {
 			ColumnNameImpl columnImpl=(ColumnNameImpl)columnName[i];
 			columnNames[i]=columnImpl.getName();
 		}
 		if(indexType!=null){
+			String type=indexType.getIndexType();
 			sql=generate.addIndex(tn,in,type,columnNames);
 		}else {
 			sql=generate.addIndex(tn, in, columnNames);	
@@ -183,7 +189,7 @@ class DatabaseServiceImpl implements DatabaseService{
 	}
 
 	public void addPrimaryKey(String name, TableName tableName,ColumnName... columnName) throws SQLException{
-		String sql=addKey(name, tableName, PRIMARY_KEY, columnName);
+		String sql=addKey(name, tableName,null, PRIMARY_KEY, columnName);
 		//修正主键不能为空
 		for (ColumnName cn : columnName) {
 			this.addColumnNotNull(tableName, cn);
@@ -192,14 +198,14 @@ class DatabaseServiceImpl implements DatabaseService{
 		jdbcService.execute(sql);
 	}
 	
-	public void addForeignKey(String name, TableName tableName,ColumnName... columnName) throws SQLException{
-		String sql=addKey(name, tableName, FOREIGN_KEY, columnName);
+	public void addForeignKey(String name, TableName tableName,TableName refTableName,ColumnName... columnName) throws SQLException{
+		String sql=addKey(name, tableName,refTableName,FOREIGN_KEY, columnName);
 		logger.info(sql);
 		jdbcService.execute(sql);
 	}
 
 	public void addUnique(String name, TableName tableName, ColumnName... columnName) throws SQLException{
-		String sql=addKey(name, tableName, UNIQUE_KEY, columnName);
+		String sql=addKey(name, tableName,null,UNIQUE_KEY, columnName);
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
@@ -259,14 +265,20 @@ class DatabaseServiceImpl implements DatabaseService{
 		addComment(tableName, columnName, comment);
 	}
 
-	private String addKey(String name, TableName tableName,String keyType,ColumnName... columnName){
+	private String addKey(String name, TableName tableName,TableName refTableName, String keyType,ColumnName... columnName){
 		String[] columnNames=new String[columnName.length];
+		String sql=null;
 		String tn=tableName.getName();
 		for (int i=0;i<columnName.length;i++) {
 			ColumnNameImpl columnImpl=(ColumnNameImpl)columnName[i];
 			columnNames[i]=columnImpl.getName();
 		}
-		String sql=generate.AddConstraint(tn, name, keyType, columnNames);
+		if(refTableName!=null){
+			//查询主键对应的列
+			generate.addForeignKey(tn, name, refTableName.getName(), null, columnNames);
+		}else{
+			sql=generate.addConstraint(tn, name, keyType, columnNames);
+		}
 		return sql;
 	}
 	

@@ -36,12 +36,35 @@ public interface JdbcService {
 	 */
 	public void execute(String sql, Object[] params) throws SQLException;
 	
+	
+	/**
+	 * 查询
+	 * @param sql sql语句
+	 * @return
+	 */
 	public List<Object[]> find(String sql);
 	
-	
+	/**
+	 * 查询
+	 * @param sql sql语句
+	 * @param params 参数
+	 * @return
+	 */
 	public List<Object[]> find(String sql,Object[] params);
 	
-	
+	/**
+	 * 获取列的类型
+	 * @param tableName  表名
+	 * @param columnName 列名
+	 * @return
+	 */
 	public String getColumnTypeName(String tableName,String columnName);
+	
+	/**
+	 * 获取表的主键
+	 * @param tableName
+	 * @return
+	 */
+	public String[] getTablePK(String tableName);
 
 }

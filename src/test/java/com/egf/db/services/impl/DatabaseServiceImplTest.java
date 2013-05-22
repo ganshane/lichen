@@ -30,9 +30,10 @@ public class DatabaseServiceImplTest {
 	public void testCreateTable() throws SQLException{
 		service.createTable(new TableNameImpl("test"),new CommentImpl("表注释"), new CreateTableCallback() {
 			public void doCreateAction(Table t) {
+				t.number("id");
 				t.varchar2("xm",new LimitImpl(10),new NotNullImpl(),new CommentImpl("dd"));
 				t.blob("pic");
-				t.number("xm",new NotNullImpl());
+				t.number("age",new NotNullImpl());
 				t.varchar2("xx",new LimitImpl(20),new CommentImpl("dd"));
 			}
 		});
@@ -46,31 +47,31 @@ public class DatabaseServiceImplTest {
 	
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeDefault() throws SQLException{
-		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("test"), new Varchar2Impl(2), new CommentImpl("test"));
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("aa"), new Varchar2Impl(2), new CommentImpl("test"));
 	}
 
 	
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeNullOrNotNull() throws SQLException{
-		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("test"), new Varchar2Impl(2),  new DefaultImpl("test"));
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("bb"), new Varchar2Impl(2),  new DefaultImpl("test"));
 	}
 
 	
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeDefaultNullOrNotNull() throws SQLException{
-		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("test"), new Varchar2Impl(2), new NotNullImpl());
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("cc"), new Varchar2Impl(2), new NotNullImpl());
 	}
 
 	
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeComment() throws SQLException{
-		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("test"), new Varchar2Impl(2),  new DefaultImpl("test"), new CommentImpl("test"));
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("dd"), new Varchar2Impl(2),  new DefaultImpl("test"), new CommentImpl("test"));
 	}
 
 	
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeDefaultComment() throws SQLException{
-		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("test"), new Varchar2Impl(2),new DefaultImpl("test"), new NotNullImpl());
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("ee"), new Varchar2Impl(2),new DefaultImpl("test"), new NotNullImpl());
 	}
 
 	/**
@@ -78,7 +79,7 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeNullOrNotNullComment() throws SQLException{
-		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("test"), new Varchar2Impl(2),  new NotNullImpl(), new CommentImpl("test"));
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("ff"), new Varchar2Impl(2),  new NotNullImpl(), new CommentImpl("test"));
 	}
 
 	/**
@@ -86,7 +87,7 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeDefaultNullOrNotNullComment() throws SQLException{
-		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("test"), new Varchar2Impl(2), new DefaultImpl("test"), new NotNullImpl(), new CommentImpl("test"));
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("gg"), new Varchar2Impl(2), new DefaultImpl("test"), new NotNullImpl(), new CommentImpl("test"));
 	}
 
 	/**
@@ -94,7 +95,7 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddComment() throws SQLException{
-		service.addComment(new TableNameImpl("test"), new ColumnNameImpl("test"), new CommentImpl("test"));
+		service.addComment(new TableNameImpl("test"), new ColumnNameImpl("aa"), new CommentImpl("test"));
 	}
 
 	/**
@@ -102,7 +103,7 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testUpdateComment() throws SQLException{
-		service.addComment(new TableNameImpl("test"), new ColumnNameImpl("test"), new CommentImpl("aa"));
+		service.addComment(new TableNameImpl("test"), new ColumnNameImpl("bb"), new CommentImpl("aa"));
 	}
 
 	/**
@@ -110,7 +111,7 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddDefault() throws SQLException{
-		service.addDefault(new TableNameImpl("test"), new ColumnNameImpl("test"), new DefaultImpl("test"));
+		service.addDefault(new TableNameImpl("test"), new ColumnNameImpl("cc"), new DefaultImpl("test"));
 	}
 
 	/**
@@ -118,7 +119,7 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testUpdateDefault() throws SQLException{
-		service.addDefault(new TableNameImpl("test"), new ColumnNameImpl("test"), new DefaultImpl("dddd"));
+		service.addDefault(new TableNameImpl("test"), new ColumnNameImpl("dd"), new DefaultImpl("dddd"));
 	}
 
 	/**
@@ -126,7 +127,7 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddIndexTableNameIndexNameColumnNameArray()throws SQLException {
-		service.addIndex(new TableNameImpl("test"), new IndexNameImpl("index"), new ColumnNameImpl("test"),new ColumnNameImpl("dd"));
+		service.addIndex(new TableNameImpl("test"), new IndexNameImpl("index"), new ColumnNameImpl("aa"),new ColumnNameImpl("dd"));
 	}
 
 	/**
@@ -134,7 +135,7 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddIndexTableNameIndexNameIndexTypeColumnNameArray() throws SQLException{
-		service.addIndex(new TableNameImpl("test"), new IndexNameImpl("index"), new IndexUniqueImpl(), new ColumnNameImpl("cl1"));
+		service.addIndex(new TableNameImpl("test"), new IndexNameImpl("index2"), new IndexUniqueImpl(), new ColumnNameImpl("bb"));
 	}
 
 	/**
@@ -142,39 +143,26 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddPrimaryKey() throws SQLException{
-		service.addPrimaryKey("aa", new TableNameImpl("dd"), new ColumnNameImpl("dd"));
+		service.addPrimaryKey("pk", new TableNameImpl("test"), new ColumnNameImpl("id"));
 	}
 
-	/**
-	 * Test method for {@link com.egf.db.services.DatabaseService#addForeignKey(java.lang.String, com.egf.db.core.define.name.TableName, com.egf.db.core.define.name.ColumnName[])}.
-	 */
-	@Test
-	public void testAddForeignKey() throws SQLException{
-		service.addForeignKey("aa", new TableNameImpl("dd"), new ColumnNameImpl("dd"));
-	}
 
 	/**
 	 * Test method for {@link com.egf.db.services.DatabaseService#addUnique(java.lang.String, com.egf.db.core.define.name.TableName, com.egf.db.core.define.name.ColumnName[])}.
 	 */
 	@Test
 	public void testAddUnique() throws SQLException{
-		service.addUnique("aa", new TableNameImpl("dd"), new ColumnNameImpl("dd"));
+		service.addUnique("u1", new TableNameImpl("test"), new ColumnNameImpl("xx"));
 	}
 
-	/**
-	 * Test method for {@link com.egf.db.services.DatabaseService#dropTable(java.lang.String)}.
-	 */
-	@Test
-	public void testDropTable() throws SQLException{
-		service.dropTable("test");
-	}
+	
 
 	/**
 	 * Test method for {@link com.egf.db.services.DatabaseService#dropIndex(java.lang.String)}.
 	 */
 	@Test
 	public void testDropIndex() throws SQLException{
-		service.dropIndex("test");
+		service.dropIndex("index2");
 	}
 
 	/**
@@ -182,7 +170,7 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testDropColumn() throws SQLException{
-		service.dropColumn(new TableNameImpl("dd"), new ColumnNameImpl("ddd"));
+		service.dropColumn(new TableNameImpl("test"), new ColumnNameImpl("age"));
 	}
 
 	/**
@@ -190,23 +178,23 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testDropPrimaryKey() throws SQLException{
-		service.dropPrimaryKey(new TableNameImpl("dd"), "dd");
+		service.dropPrimaryKey(new TableNameImpl("test"), "pk");
 	}
 
-	/**
-	 * Test method for {@link com.egf.db.services.DatabaseService#dropForeignKey(com.egf.db.core.define.name.TableName, java.lang.String)}.
-	 */
-	@Test
-	public void testDropForeignKey() throws SQLException{
-		service.dropForeignKey(new TableNameImpl("dd"), "dd");
-	}
-
+	
 	/**
 	 * Test method for {@link com.egf.db.services.DatabaseService#dropUnique(com.egf.db.core.define.name.TableName, java.lang.String)}.
 	 */
 	@Test
 	public void testDropUnique() throws SQLException{
-		service.dropUnique(new TableNameImpl("dd"), "dd");
+		service.dropUnique(new TableNameImpl("test"), "u1");
 	}
 	
+	/**
+	 * Test method for {@link com.egf.db.services.DatabaseService#dropTable(java.lang.String)}.
+	 */
+	@Test
+	public void testDropTable() throws SQLException{
+		service.dropTable("test");
+	}
 }

@@ -158,7 +158,7 @@ public interface DatabaseService {
 	
 	public void addPrimaryKey(String name,TableName tableName,ColumnName ... columnName) throws SQLException;
 	
-	public void addForeignKey(String name,TableName tableName,ColumnName ... columnName) throws SQLException;
+	public void addForeignKey(String name,TableName tableName,TableName refTableName,ColumnName ... columnName) throws SQLException;
 	
 	public void addUnique(String name,TableName tableName,ColumnName ... columnName) throws SQLException;
 	
