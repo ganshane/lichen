@@ -36,7 +36,7 @@ class DbScriptFileClassFind {
 	 * @return
 	 */
 	public static Set<Class<?>> getDbScriptClasses(String pack) {
-		// 第一个class类的集合
+		// class类的集合
 		Set<Class<?>> classes = new TreeSet<Class<?>>(new Comparator<Object>() {
 			public int compare(Object o1, Object o2) {
 				Class<?> cls1 = (Class<?>) o1;
