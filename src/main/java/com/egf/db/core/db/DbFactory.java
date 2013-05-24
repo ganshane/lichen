@@ -14,21 +14,27 @@ import com.egf.db.core.config.SysConfigPropertyUtil;
  * @version $Revision: 1.0 $
  * @since 1.0
  */
-public class DbFactory{
+public class DbFactory {
 
-	private static SysConfigPropertyUtil scpu=SysConfigPropertyUtil.getInstance(DbConstant.JDBC_PROPERTIES);
-	
-	private DbFactory(){}
-	
+	private static SysConfigPropertyUtil scpu = SysConfigPropertyUtil.getInstance(DbConstant.JDBC_PROPERTIES);
+
+	private DbFactory() {}
+
 	public static DbInterface getDb() {
-		String driverClass=scpu.getPropertyValue(DbConstant.JDBC_DRIVER_CLASS);
-		if(DbConstant.ORACLE_DRIVER_CLASS.equals(driverClass)){
-			return new DbOracleImpl();
-		}else if(DbConstant.H2_DRIVER_CLASS.equals(driverClass)){
+		String driverClass = scpu.getPropertyValue(DbConstant.JDBC_DRIVER_CLASS);
+		if (driverClass == null) {
 			return new DbH2Impl();
-		}else{
-			//默认oracle
-			return new DbH2Impl();
+		} else {
+			if (DbConstant.ORACLE_DRIVER_CLASS.equals(driverClass)) {
+				return new DbOracleImpl();
+			} else if (DbConstant.H2_DRIVER_CLASS.equals(driverClass)) {
+				return new DbH2Impl();
+			} else if (DbConstant.MTSQL_DRIVER_CLASS.equals(driverClass)) {
+				return new DbMysqlImpl();
+			} else {
+				// 默认H2数据库
+				return new DbH2Impl();
+			}
 		}
 	}
 
