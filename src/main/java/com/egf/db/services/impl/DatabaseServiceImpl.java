@@ -11,6 +11,8 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
 import com.egf.db.core.CreateTableCallback;
+import com.egf.db.core.db.DbFactory;
+import com.egf.db.core.db.DbInterface;
 import com.egf.db.core.define.ColumnType;
 import com.egf.db.core.define.IndexType;
 import com.egf.db.core.define.column.ColumnDefine;
@@ -24,6 +26,7 @@ import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
 import com.egf.db.core.sql.template.Generate;
 import com.egf.db.services.DatabaseService;
+import com.egf.db.utils.StringUtils;
 
 /**
  * @author fangj
@@ -243,8 +246,11 @@ class DatabaseServiceImpl implements DatabaseService{
 		jdbcService.execute(sql);
 	}
 
-	public void dropPrimaryKey(TableName tableName,String name) throws SQLException{
-		String sql=dropKey(tableName, name);
+	public void dropPrimaryKey(TableName tableName) throws SQLException{
+		//查询表对应的主键名称
+		DbInterface di=DbFactory.getDb();
+		String pkName=di.getPrimaryKeyName(tableName.getName());
+		String sql=dropKey(tableName, pkName);
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
@@ -278,8 +284,11 @@ class DatabaseServiceImpl implements DatabaseService{
 			columnNames[i]=columnImpl.getName();
 		}
 		if(refTableName!=null){
-			//查询主键对应的列
-			generate.addForeignKey(tn, name, refTableName.getName(), null, columnNames);
+			//获取主键对应的列
+			DbInterface di=DbFactory.getDb();
+			String[] referencesColumns=di.getPrimaryKeyColumn(refTableName.getName());
+			String referencesColumn=StringUtils.getUnionStringArray(referencesColumns, ",");
+			generate.addForeignKey(tn, name, refTableName.getName(), referencesColumn, columnNames);
 		}else{
 			sql=generate.addConstraint(tn, name, keyType, columnNames);
 		}

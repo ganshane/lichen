@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 
 import org.apache.log4j.Logger;
 
+import com.egf.db.core.DbConstant;
 import com.egf.db.core.config.SysConfigPropertyUtil;
 
 /**
@@ -30,11 +31,11 @@ public class DBConnectionManager {
 	private static String dbPassword;
 
 	public static void getParam() {
-		SysConfigPropertyUtil dbScpu = SysConfigPropertyUtil.getInstance("jdbc.properties");
-		driver = dbScpu.getPropertyValue("jdbc.driverClass");
-		url = dbScpu.getPropertyValue("jdbc.jdbcUrl");
-		dbUser = dbScpu.getPropertyValue("jdbc.user");
-		dbPassword = dbScpu.getPropertyValue("jdbc.password");
+		SysConfigPropertyUtil dbScpu = SysConfigPropertyUtil.getInstance(DbConstant.JDBC_PROPERTIES);
+		driver = dbScpu.getPropertyValue(DbConstant.JDBC_DRIVER_CLASS);
+		url = dbScpu.getPropertyValue(DbConstant.JDBC_JDBCURL);
+		dbUser = dbScpu.getPropertyValue(DbConstant.JDBC_USER);
+		dbPassword = dbScpu.getPropertyValue(DbConstant.JDBC_PASSWORD);
 	}
 
 	public static Connection getConnection() {

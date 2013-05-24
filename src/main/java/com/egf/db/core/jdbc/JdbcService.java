@@ -37,7 +37,7 @@ public interface JdbcService {
 	 * @param sql sql语句
 	 * @return
 	 */
-	public List<Object[]> find(String sql);
+	public List<?> find(String sql);
 	
 	/**
 	 * sql查询
@@ -45,7 +45,7 @@ public interface JdbcService {
 	 * @param params 参数
 	 * @return
 	 */
-	public List<Object[]> find(String sql,Object[] params);
+	public List<?> find(String sql,Object[] params);
 	
 	/**
 	 * 获取列的类型
@@ -54,12 +54,5 @@ public interface JdbcService {
 	 * @return
 	 */
 	public String getColumnTypeName(String tableName,String columnName);
-	
-	/**
-	 * 获取表的主键
-	 * @param tableName
-	 * @return
-	 */
-	public String[] getTablePK(String tableName);
 
 }

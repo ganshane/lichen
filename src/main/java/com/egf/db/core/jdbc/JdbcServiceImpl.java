@@ -115,32 +115,6 @@ public class JdbcServiceImpl implements JdbcService {
 		return null;
 	}
 	
-	public String[] getTablePK(String tableName) {
-		String[] resultArray = null;   
-		Connection conn = null;   
-	    DatabaseMetaData dbmd = null;   
-	    ResultSet rs = null;   
-	    try {   
-	        conn=DBConnectionManager.getConnection();   
-	        dbmd=conn.getMetaData();   
-	        rs=dbmd.getPrimaryKeys(null, null, tableName);   
-	        String tempPK = "";   
-	        while (rs.next())  {   
-	           tempPK = rs.getString("COLUMN_NAME") + ",";   
-	        }   
-	        resultArray = tempPK.split(",");   
-	        if (tempPK.length() < 1) {   
-	          resultArray = null;   
-	        }   
-	    } catch(SQLException e) {   
-	       logger.error(e.getMessage()); 
-	       e.printStackTrace();
-	    } finally {   
-	    	close();
-	    }   
-	    return resultArray; 
-	}
-	
 	private  void close(){
 		if (pstmt != null) {
 			try {

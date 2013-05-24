@@ -7,9 +7,6 @@
 package com.egf.db.services.impl;
 
 import java.sql.SQLException;
-import java.util.List;
-
-import junit.framework.Assert;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -17,7 +14,6 @@ import org.mockito.Mockito;
 import com.egf.db.core.CreateTableCallback;
 import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.model.Table;
-import com.egf.db.services.DatabaseService;
 
 /**
  * @author fangj
@@ -59,42 +55,6 @@ public class DatabaseServiceImplTest {
 	
 	@Test
 	public void testAddColumn() throws SQLException{
-		/*
-		service.setJdbcService(new JdbcService(){
-
-			public void execute(String sql) throws SQLException {
-				Assert.assertEquals("xxx", sql);
-				
-			}
-
-			public void execute(String sql, Object[] params)
-					throws SQLException {
-				// TODO Auto-generated method stub
-				
-			}
-
-			public List<Object[]> find(String sql) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public List<Object[]> find(String sql, Object[] params) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public String getColumnTypeName(String tableName, String columnName) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public String[] getTablePK(String tableName) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-			
-		});
-		*/
 		JdbcService jdbcService = Mockito.mock(JdbcService.class);
 		service.setJdbcService(jdbcService);
 		
@@ -247,7 +207,7 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testDropPrimaryKey() throws SQLException{
-		service.dropPrimaryKey(new TableNameImpl("test"), "pk");
+		service.dropPrimaryKey(new TableNameImpl("test"));
 	}
 
 	
