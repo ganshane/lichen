@@ -24,8 +24,8 @@ public class DbOracleImpl implements DbInterface {
 	private final static String PRIMARY_KEY="P";
 	
 	public String[] getPrimaryKeyColumn(String tableName) {
-		String sql="select column_name from user_cons_columns where constraint_name = (select constraint_name from user_constraints  where table_name = ? and constraint_type = ?)";
-		List<Object[]> list=(List<Object[]>) jdbcService.find(sql, new String[]{tableName,PRIMARY_KEY});
+		String sql="select column_name from all_cons_columns where owner =? and constraint_name = (select constraint_name from all_constraints where owner=? and table_name = ? and constraint_type = ?)";
+		List<Object[]> list=(List<Object[]>) jdbcService.find(sql, new String[]{tableName.split("\\.")[0].toUpperCase(),tableName.split("\\.")[0].toUpperCase(),tableName.split("\\.")[1].toUpperCase(),PRIMARY_KEY});
 		if(list!=null&&!list.isEmpty()){
 			String[] strings = new String[ list.size()];
 			for (int i = 0; i < list.size(); i++) {
@@ -37,8 +37,8 @@ public class DbOracleImpl implements DbInterface {
 	}
 
 	public String getPrimaryKeyName(String tableName) {
-		String sql="select constraint_name from user_constraints  where table_name = ? and constraint_type = ?";
-		List<Object[]> list=(List<Object[]>) jdbcService.find(sql, new String[]{tableName,PRIMARY_KEY});
+		String sql="select constraint_name from all_constraints where owner = ? and table_name = ? and constraint_type = ?";
+		List<Object[]> list=(List<Object[]>) jdbcService.find(sql, new String[]{tableName.split("\\.")[0].toUpperCase(),tableName.split("\\.")[1].toUpperCase(),PRIMARY_KEY});
 		if(list!=null&&!list.isEmpty()){
 			return (String)list.get(0)[0];
 		}
