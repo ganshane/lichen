@@ -21,11 +21,11 @@ public class DbConstant {
 	/** jdbc驱动常量定义 **/
 	public final static String JDBC_DRIVER_CLASS = "jdbc.driverClass";
 	/** jdbc连接url常量定义 **/
-	public final static String JDBC_JDBCURL = "";
+	public final static String JDBC_JDBCURL = "jdbc.jdbcUrl";
 	/** jdbc连接用户常量定义 **/
-	public final static String JDBC_USER = "";
+	public final static String JDBC_USER = "jdbc.user";
 	/** jdbc连接密码常量定义 **/
-	public final static String JDBC_PASSWORD = "";
+	public final static String JDBC_PASSWORD = "jdbc.password";
 	
 	/**oracle驱动常量定义**/
 	public final static String ORACLE_DRIVER_CLASS = "oracle.jdbc.driver.OracleDriver";

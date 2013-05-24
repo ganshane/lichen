@@ -28,7 +28,7 @@ public class DbFactory{
 			return new DbH2Impl();
 		}else{
 			//默认oracle
-			return new DbOracleImpl();
+			return new DbH2Impl();
 		}
 	}
 

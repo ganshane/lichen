@@ -7,7 +7,6 @@
 package com.egf.db.core.jdbc;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -39,7 +38,7 @@ public class JdbcServiceImpl implements JdbcService {
 			conn = DBConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			for (int i = 0; i < params.length; i++) {
-				pstmt.setObject(i, params[i]);
+				pstmt.setObject(i+1, params[i]);
 			}
 			pstmt.execute();
 			conn.commit();
@@ -69,7 +68,7 @@ public class JdbcServiceImpl implements JdbcService {
 			conn = DBConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
 			for (int i = 0; i < params.length; i++) {
-				pstmt.setObject(i, params[i]);
+				pstmt.setObject(i+1, params[i]);
 			}
 			ResultSet rs = pstmt.executeQuery();
 			ResultSetMetaData rsmd = rs.getMetaData();

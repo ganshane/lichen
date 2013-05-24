@@ -39,6 +39,7 @@ public class DBConnectionManager {
 	}
 
 	public static Connection getConnection() {
+		getParam();
 		Connection conn = null;
 		try {
 			Class.forName(driver);

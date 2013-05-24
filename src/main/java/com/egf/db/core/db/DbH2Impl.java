@@ -12,7 +12,7 @@ import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
 
 /**
- * H2数据实现
+ * H2数据库实现
  * @author fangj
  * @version $Revision: 2.0 $
  * @since 1.0
@@ -20,22 +20,28 @@ import com.egf.db.core.jdbc.JdbcServiceImpl;
 public class DbH2Impl implements DbInterface {
 	
     private JdbcService jdbcService=new JdbcServiceImpl();
-	
+    
+    private final static String PRIMARY_KEY="PRIMARY KEY";
+    
 	public String[] getPrimaryKeyColumn(String tableName) {
-		String sql="select column_name from user_cons_columns where constraint_name = (select constraint_name from user_constraints  where table_name = ? and constraint_type = ?)";
-		List<String> list=(List<String>) jdbcService.find(sql, new String[]{tableName,"P"});
+		String sql="SELECT COLUMN_LIST FROM INFORMATION_SCHEMA.CONSTRAINTS WHERE TABLE_NAME=? AND CONSTRAINT_TYPE=?";
+		List<Object[]> list=(List<Object[]>) jdbcService.find(sql,new String[]{tableName.toUpperCase(),PRIMARY_KEY});
 		if(list!=null&&!list.isEmpty()){
-			return (String[])list.toArray();
+			String[] strings = new String[ list.size()];
+			for (int i = 0; i < list.size(); i++) {
+				strings[i]=(String)list.get(i)[0];
+			}
+			return strings;
 		}
 		return null;
 	}
 
 	
 	public String getPrimaryKeyName(String tableName) {
-		String sql="select constraint_name from user_constraints  where table_name = ? and constraint_type = ?";
-		List<String> list=(List<String>) jdbcService.find(sql, new String[]{tableName,"P"});
+		String sql="SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.CONSTRAINTS WHERE TABLE_NAME=? AND CONSTRAINT_TYPE=?";
+		List<Object[]> list=(List<Object[]>) jdbcService.find(sql, new String[]{tableName.toUpperCase(),PRIMARY_KEY});
 		if(list!=null&&!list.isEmpty()){
-			return list.get(0);
+			return (String)list.get(0)[0];
 		}
 		return null;
 	}
