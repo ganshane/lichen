@@ -6,13 +6,12 @@
  */
 package com.egf.db.core.define.index;
 
-import com.egf.db.core.define.Define;
 
 /**
  * @author fangj
  * @version $Revision: 2.0 $
  * @since 1.0
  */
-public interface Index extends Define{
+public interface Index{
 
 }
