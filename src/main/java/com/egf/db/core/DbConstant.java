@@ -31,6 +31,8 @@ public class DbConstant {
 	public final static String ORACLE_DRIVER_CLASS = "oracle.jdbc.driver.OracleDriver";
 	/**H2驱动常量定义**/
 	public final static String H2_DRIVER_CLASS = "org.h2.Driver";
+	/**mysql驱动常量定义**/
+	public final static String MTSQL_DRIVER_CLASS = "com.mysql.jdbc.Driver";
 	
 
 }
