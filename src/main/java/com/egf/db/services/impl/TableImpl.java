@@ -47,7 +47,7 @@ class TableImpl implements Table {
 	}
 
 	public void number(String name, Default deft, Comment comment) {
-		appendColumn(name, new NumberImpl(),deft);
+		appendColumn(name, new NumberImpl(),deft,comment);
 	}
 
 	public void number(String name,Default deft,NotNull notNull, Comment comment) {
