@@ -16,7 +16,7 @@ import com.egf.db.core.define.index.types.Unique;
 class IndexUniqueImpl implements Unique {
 
 	public String getIndexType() {
-		return "Unique";
+		return "unique";
 	}
 
 }

@@ -23,6 +23,8 @@ public interface Generate {
 	
 	public String addDefault(String tableName,String columnName,String columnType,String value);
 	
+	public String addDefault(String tableName,String columnName,String value);
+	
 	public String addComment(String tableName,String columnName,String comment);
 	
 	public String addConstraint(String tableName,String name,String type,String ...columnNames);

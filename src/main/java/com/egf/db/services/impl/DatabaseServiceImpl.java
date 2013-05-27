@@ -7,10 +7,15 @@
 package com.egf.db.services.impl;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 
 import com.egf.db.core.CreateTableCallback;
+import com.egf.db.core.DbConstant;
+import com.egf.db.core.config.SysConfigPropertyUtil;
 import com.egf.db.core.db.DbFactory;
 import com.egf.db.core.db.DbInterface;
 import com.egf.db.core.define.ColumnType;
@@ -18,7 +23,9 @@ import com.egf.db.core.define.IndexType;
 import com.egf.db.core.define.column.ColumnDefine;
 import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Default;
+import com.egf.db.core.define.column.IsPrimaryKey;
 import com.egf.db.core.define.column.NotNull;
+import com.egf.db.core.define.column.Unique;
 import com.egf.db.core.define.name.ColumnName;
 import com.egf.db.core.define.name.IndexName;
 import com.egf.db.core.define.name.TableName;
@@ -38,6 +45,8 @@ class DatabaseServiceImpl implements DatabaseService{
 	Logger logger=Logger.getLogger(DatabaseServiceImpl.class);
 	
 	private final String PRIMARY_KEY="primary key";
+	
+	private static final String TIME_FORMAT_SHORT = "yyyyMMddHHmmss";
 	
 	private final String FOREIGN_KEY="foreign key";
 	
@@ -78,12 +87,7 @@ class DatabaseServiceImpl implements DatabaseService{
 	}
 	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType) throws SQLException{
-		String tn=tableName.getName();
-		String cn=columnName.getName();
-		String type=columnType.getColumnType();
-		String sql=generate.addColumn(tn, cn, type);
-		logger.info("\n"+sql);
-		jdbcService.execute(sql);
+		this.addColumn(tableName, columnName, columnType,null,null,null,null);
 	}
 	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NotNull notNull) throws SQLException{
@@ -110,26 +114,51 @@ class DatabaseServiceImpl implements DatabaseService{
 		this.addColumn(tableName, columnName, columnType, null,deft, comment);
 	}
 
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NotNull notNull,Comment comment) throws SQLException{
-		this.addColumn(tableName, columnName, columnType);
-		if(notNull!=null){
-			if("not null".equals(notNull.out())){
-				this.addColumnNotNull(tableName, columnName);
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NotNull notNull,Comment comment,Unique unique,IsPrimaryKey isPrimaryKey) throws SQLException{
+		String tn=tableName.getName();
+		String cn=columnName.getName();
+		String type=columnType.getColumnType();
+		String sql=generate.addColumn(tn, cn, type);
+		StringBuffer sb=new StringBuffer(sql);
+		if(deft!=null){
+			sb=sb.delete(sb.length()-1, sb.length());
+			sb.append(" ");
+			String value=deft.getValue();
+			sb.append("default");
+			sb.append(" ");
+			sb.append("'");
+			sb.append(value);
+			sb.append("'");
+			sb.append(";");
+		}if(notNull!=null){
+			sb=sb.delete(sb.length()-1, sb.length());
+			if(NOT_NULL.equals(notNull.out())){
+				 sb.append(" ");
+				 sb.append(NOT_NULL);
+				 sb.append(";");
 			}else{
-				this.addColumnNull(tableName, columnName);
+				sb.append(NULL);
+				sb.append(";");
 			}
-		}if(deft!=null){
-			this.addDefault(tableName, columnName, deft);
 		}if(comment!=null){
-			this.addComment(tableName, columnName, comment);
+			String c=comment.getComment();
+			sb.append("\n"+generate.addComment(tn, cn, c));
+		}if(unique!=null){
+			String uniqueName="unique_"+this.getTimeShortString(new Date());
+			sb.append("\n"+generate.addConstraint(tn, uniqueName, UNIQUE_KEY, cn));
+		}if(isPrimaryKey!=null){
+			String primaryKeyName="pk_"+this.getTimeShortString(new Date());
+			sb.append("\n"+generate.addConstraint(tn, primaryKeyName, PRIMARY_KEY, cn));
 		}
+		logger.info("\n"+sb.toString());
+		jdbcService.execute(sb.toString());
 	}
 	
 	public void addColumnNotNull(TableName tableName, ColumnName columnName) throws SQLException{
 		String tn=tableName.getName();
 		String cn=columnName.getName();
 		String columnType=jdbcService.getColumnTypeName(tn, cn);
-		String sql=generate.addColumnNullOrNot(tn, cn,columnType, NOT_NULL);
+		String sql=modifySql("not_null", tn, cn, columnType, null);
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
@@ -142,10 +171,16 @@ class DatabaseServiceImpl implements DatabaseService{
 		jdbcService.execute(sql);
 	}
 
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NotNull notNull,Comment comment) throws SQLException {
+		this.addColumn(tableName, columnName, columnType, deft,notNull,comment,null,null);
+	}
+	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, ColumnDefine... define) throws SQLException{
 		Default deft=null;
 		NotNull notNull=null;
 		Comment comment=null;
+		Unique unique=null;
+		IsPrimaryKey isPrimaryKey=null;
 		for (ColumnDefine columnDefine : define) {
 			if(columnDefine!=null){
 				if(columnDefine instanceof Default){
@@ -154,10 +189,14 @@ class DatabaseServiceImpl implements DatabaseService{
 					notNull=(NotNull)columnDefine;
 				}else if (columnDefine instanceof Comment){
 					comment=(Comment)columnDefine;
+				}else if(columnDefine instanceof Unique){
+					unique=(Unique)columnDefine;
+				}else if(columnDefine instanceof IsPrimaryKey){
+					isPrimaryKey=(IsPrimaryKey)columnDefine;
 				}
 			}
 		}
-		this.addColumn(tableName, columnName, columnType, deft, notNull, comment);
+		this.addColumn(tableName, columnName, columnType, deft, notNull, comment,unique,isPrimaryKey);
 	}
 	
 	public void addDefault(TableName tableName, ColumnName columnName,Default deft) throws SQLException{
@@ -165,7 +204,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		String cn=columnName.getName();
 		String value=deft.getValue();
 		String columnType=jdbcService.getColumnTypeName(tn, cn);
-		String sql=generate.addDefault(tn, cn,columnType, value);
+		String sql=modifySql("default", tn, cn, columnType, value);
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
@@ -299,6 +338,32 @@ class DatabaseServiceImpl implements DatabaseService{
 		String tn=tableName.getName();
 	    String sql=generate.dropConstraint(tn, name);
 	    return sql;
+	}
+	
+	
+	private String modifySql(String handle,String tn,String cn,String columnType,String value){
+		SysConfigPropertyUtil scpu = SysConfigPropertyUtil.getInstance(DbConstant.JDBC_PROPERTIES);
+		String driverClass = scpu.getPropertyValue(DbConstant.JDBC_DRIVER_CLASS);
+		String sql=null;
+		if(handle.equals("default")){
+			if (DbConstant.H2_DRIVER_CLASS.equals(driverClass)) {
+				 sql=generate.addDefault(tn, cn,columnType, value);
+			} else {
+				sql=generate.addDefault(tn, cn, value);
+			}
+		}else if(handle.equals("not_null")){
+			if (DbConstant.H2_DRIVER_CLASS.equals(driverClass)) {
+				 sql=generate.addColumnNullOrNot(tn, cn,columnType, NOT_NULL);
+			} else {
+				 sql=generate.addColumnNullOrNot(tn, cn,columnType, NULL);
+			}
+		}
+		return sql;
+	}
+	
+	private String getTimeShortString(Date date) {
+		DateFormat fmt = new SimpleDateFormat(TIME_FORMAT_SHORT);
+		return fmt.format(date);
 	}
 	
 }
