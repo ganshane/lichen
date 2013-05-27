@@ -9,12 +9,12 @@ package com.egf.db.core.define.column;
 
 
 
+
 /**
- * 唯一类型接口
  * @author fangj
  * @version $Revision: 2.0 $
  * @since 1.0
  */
-public interface Unique{
-	
+public interface Unique extends ColumnDefine{
+
 }
