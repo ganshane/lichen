@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 
 import com.egf.db.core.CreateTableCallback;
 import com.egf.db.core.jdbc.JdbcService;
+import com.egf.db.core.jdbc.JdbcServiceImpl;
 import com.egf.db.core.model.Table;
 
 /**
@@ -23,12 +24,17 @@ import com.egf.db.core.model.Table;
 public class DatabaseServiceImplTest {
 	
 	DatabaseServiceImpl service=new DatabaseServiceImpl();
+	
+	JdbcService js=new JdbcServiceImpl();
+	
+	JdbcService jdbcService = Mockito.mock(JdbcService.class);
 
 	/**
 	 * Test method for {@link com.egf.db.services.impl.DatabaseServiceImpl#addColumn(com.egf.db.core.define.name.TableName, com.egf.db.core.define.name.ColumnName, com.egf.db.core.define.ColumnType, com.egf.db.core.define.column.ColumnDefine[])}.
 	 */
 	@Test
 	public void testCreateTable() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.createTable(new TableNameImpl("test"),new CommentImpl("表注释"), new CreateTableCallback() {
 			public void doCreateAction(Table t) {
 				t.number("id");
@@ -38,10 +44,23 @@ public class DatabaseServiceImplTest {
 				t.varchar2("xx",new LimitImpl(20),new CommentImpl("dd"));
 			}
 		});
+		StringBuffer sb=new StringBuffer();
+		sb.append("create table test (\n");
+		sb.append("id number,\n");
+		sb.append("xm varchar2(10) not null,\n");
+		sb.append("pic blob,\n");
+		sb.append("age number not null,\n");
+		sb.append("xx varchar2(20)\n");
+		sb.append(");\n");
+		sb.append("comment on table test is '表注释';\n");
+		sb.append("comment on column test.xm is 'dd';\n");
+		sb.append("comment on column test.xx is 'dd';\n");
+		Mockito.verify(jdbcService).execute(sb.toString());
 	}
 	
 	@Test
 	public void testCreateTable2() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.createTable(new TableNameImpl("test2"), new CreateTableCallback() {
 			public void doCreateAction(Table t) {
 				t.number("id");
@@ -51,56 +70,77 @@ public class DatabaseServiceImplTest {
 				t.varchar2("xx",new LimitImpl(20),new CommentImpl("dd"));
 			}
 		});
+		StringBuffer sb=new StringBuffer();
+		sb.append("create table test2 (\n");
+		sb.append("id number,\n");
+		sb.append("xm varchar2(10) not null,\n");
+		sb.append("pic blob,\n");
+		sb.append("age number not null,\n");
+		sb.append("xx varchar2(20)\n");
+		sb.append(");\n");
+		sb.append("comment on column test2.xm is 'dd';\n");
+		sb.append("comment on column test2.xx is 'dd';\n");
+		Mockito.verify(jdbcService).execute(sb.toString());
 	}
 	
 	@Test
 	public void testAddColumn() throws SQLException{
-		JdbcService jdbcService = Mockito.mock(JdbcService.class);
 		service.setJdbcService(jdbcService);
-		
 		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("test"), new Varchar2Impl(2));
-		
-		
 		Mockito.verify(jdbcService).execute("alter table test add test varchar2(2);");
 	}
 
 	@Test
 	public void testAddColumn2() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("sex"), new Varchar2Impl(2),new CommentImpl("性别"));
+		Mockito.verify(jdbcService).execute("alter table test add sex varchar2(2);\ncomment on column test.sex is '性别';");
 	}
 	
 	@Test
 	public void testAddColumn3() throws SQLException{
-		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("default"), new Varchar2Impl(2),new CommentImpl("性别"),new DefaultImpl("默认值"));
+		service.setJdbcService(jdbcService);
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("default"), new Varchar2Impl(8),new CommentImpl("性别"),new DefaultImpl("默认值"));
+		Mockito.verify(jdbcService).execute("alter table test add default varchar2(8) default '默认值';\ncomment on column test.default is '性别';");
 	}
 	
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeDefault() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("aa"), new Varchar2Impl(2), new CommentImpl("test"));
+		Mockito.verify(jdbcService).execute("alter table test add aa varchar2(2);\ncomment on column test.aa is 'test';");
 	}
 
 	
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeNullOrNotNull() throws SQLException{
-		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("bb"), new Varchar2Impl(2),  new DefaultImpl("test"));
+		service.setJdbcService(jdbcService);
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("bb"), new Varchar2Impl(4),  new DefaultImpl("test"));
+		Mockito.verify(jdbcService).execute("alter table test add bb varchar2(4) default 'test';");
 	}
 
 	
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeDefaultNullOrNotNull() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("cc"), new Varchar2Impl(2), new NotNullImpl());
+		Mockito.verify(jdbcService).execute("alter table test add cc varchar2(2) not null;");
 	}
 
 	
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeComment() throws SQLException{
-		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("dd"), new Varchar2Impl(2),  new DefaultImpl("test"), new CommentImpl("test"));
+		service.setJdbcService(jdbcService);
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("dd"), new Varchar2Impl(4),  new DefaultImpl("test"), new CommentImpl("test"));
+		Mockito.verify(jdbcService).execute("alter table test add dd varchar2(4) default 'test';\ncomment on column test.dd is 'test';");
 	}
 
 	
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeDefaultComment() throws SQLException{
-		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("ee"), new Varchar2Impl(2),new DefaultImpl("test"), new NotNullImpl());
+		service.setJdbcService(jdbcService);
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("ee"), new Varchar2Impl(4),new DefaultImpl("test"), new NotNullImpl());
+		Mockito.verify(jdbcService).execute("alter table test add ee varchar2(4) default 'test' not null;");
 	}
 
 	/**
@@ -108,7 +148,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeNullOrNotNullComment() throws SQLException{
-		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("ff"), new Varchar2Impl(2),  new NotNullImpl(), new CommentImpl("test"));
+		service.setJdbcService(jdbcService);
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("ff"), new Varchar2Impl(4),  new NotNullImpl(), new CommentImpl("test"));
+		Mockito.verify(jdbcService).execute("alter table test add ff varchar2(4) not null;\ncomment on column test.ff is 'test';");
 	}
 
 	/**
@@ -116,7 +158,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddColumnTableNameColumnNameColumnTypeDefaultNullOrNotNullComment() throws SQLException{
-		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("gg"), new Varchar2Impl(2), new DefaultImpl("test"), new NotNullImpl(), new CommentImpl("test"));
+		service.setJdbcService(jdbcService);
+		service.addColumn(new TableNameImpl("test"), new ColumnNameImpl("gg"), new Varchar2Impl(4), new DefaultImpl("test"), new NotNullImpl(), new CommentImpl("test"));
+		Mockito.verify(jdbcService).execute("alter table test add gg varchar2(4) default 'test' not null;\ncomment on column test.gg is 'test';");
 	}
 
 	/**
@@ -124,7 +168,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddComment() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.addComment(new TableNameImpl("test"), new ColumnNameImpl("aa"), new CommentImpl("test"));
+		Mockito.verify(jdbcService).execute("comment on column test.aa is 'test';");
 	}
 
 	/**
@@ -132,7 +178,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testUpdateComment() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.addComment(new TableNameImpl("test"), new ColumnNameImpl("bb"), new CommentImpl("aa"));
+		Mockito.verify(jdbcService).execute("comment on column test.bb is 'aa';");
 	}
 
 	/**
@@ -140,7 +188,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddDefault() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.addDefault(new TableNameImpl("test"), new ColumnNameImpl("cc"), new DefaultImpl("test"));
+		Mockito.verify(jdbcService).execute("alter table test modify cc null default 'test';");
 	}
 
 	/**
@@ -148,7 +198,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testUpdateDefault() throws SQLException{
-		service.addDefault(new TableNameImpl("test"), new ColumnNameImpl("dd"), new DefaultImpl("dddd"));
+		service.setJdbcService(jdbcService);
+		service.addDefault(new TableNameImpl("test"), new ColumnNameImpl("xx"), new DefaultImpl("dddd"));
+		Mockito.verify(jdbcService).execute("alter table test modify xx null default 'dddd';");
 	}
 
 	/**
@@ -156,7 +208,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddIndexTableNameIndexNameColumnNameArray()throws SQLException {
+		service.setJdbcService(jdbcService);
 		service.addIndex(new TableNameImpl("test"), new IndexNameImpl("index"), new ColumnNameImpl("aa"),new ColumnNameImpl("dd"));
+		Mockito.verify(jdbcService).execute("create index index on test (aa,dd);");
 	}
 
 	/**
@@ -164,7 +218,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddIndexTableNameIndexNameIndexTypeColumnNameArray() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.addIndex(new TableNameImpl("test"), new IndexNameImpl("index2"), new IndexUniqueImpl(), new ColumnNameImpl("bb"));
+		Mockito.verify(jdbcService).execute("create unique index index2 on test (bb);");
 	}
 
 	/**
@@ -172,7 +228,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddPrimaryKey() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.addPrimaryKey("pk", new TableNameImpl("test"), new ColumnNameImpl("id"));
+		Mockito.verify(jdbcService).execute("alter table test add constraint pk primary key (id)");
 	}
 
 
@@ -181,7 +239,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testAddUnique() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.addUnique("u1", new TableNameImpl("test"), new ColumnNameImpl("xx"));
+		Mockito.verify(jdbcService).execute("alter table test add constraint u1 unique (xx);");
 	}
 
 	
@@ -191,7 +251,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testDropIndex() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.dropIndex("index2");
+		Mockito.verify(jdbcService).execute("drop index index2;");
 	}
 
 	/**
@@ -199,7 +261,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testDropColumn() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.dropColumn(new TableNameImpl("test"), new ColumnNameImpl("age"));
+		Mockito.verify(jdbcService).execute("alter table test drop column age;");
 	}
 
 	/**
@@ -207,7 +271,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testDropPrimaryKey() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.dropPrimaryKey(new TableNameImpl("test"));
+		Mockito.verify(jdbcService).execute("alter table test drop constraint pk;");
 	}
 
 	
@@ -216,7 +282,9 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testDropUnique() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.dropUnique(new TableNameImpl("test"), "u1");
+		Mockito.verify(jdbcService).execute("alter table test drop constraint u1;");
 	}
 	
 	/**
@@ -224,6 +292,8 @@ public class DatabaseServiceImplTest {
 	 */
 	@Test
 	public void testDropTable() throws SQLException{
+		service.setJdbcService(jdbcService);
 		service.dropTable("test");
+		Mockito.verify(jdbcService).execute("drop table test;");
 	}
 }
