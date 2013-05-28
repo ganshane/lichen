@@ -72,12 +72,20 @@ class DatabaseServiceImpl implements DatabaseService{
 		callback.doCreateAction(tmi);
 		StringBuffer columns=tmi.columns;
 		columns=columns.delete(columns.length()-2, columns.length());
-		String sql=String.format("create table %s (\n%s\n);", tableName.getName(),columns.toString());
+		String tn=tableName.getName();
+		if(tn.indexOf(".")!=-1){
+			//创建用户
+			DbInterface di=DbFactory.getDb();
+			String schema=tn.split("\\.")[0];
+			di.createSchema(schema);
+			tn=tn.split("\\.")[1];
+		}
+		String sql=String.format("create table %s (\n%s\n);",tableName.getName(),columns.toString());
 		if(comment!=null){
-			tableComment=String.format("comment on table %s is '%s';\n", tableName.getName(),comment.getComment());
+			tableComment=String.format("comment on table %s is '%s';\n",tn,comment.getComment());
 		}
 		String commentsSql=tmi.comments.toString();
-		commentsSql=commentsSql.replaceAll("TN", tableName.getName());
+		commentsSql=commentsSql.replaceAll("TN", tn);
 		logger.info("\n"+sql+"\n"+tableComment+commentsSql.toString());
 		jdbcService.execute(sql+"\n"+tableComment+commentsSql.toString());
 	}
@@ -342,7 +350,7 @@ class DatabaseServiceImpl implements DatabaseService{
 	
 	
 	private String modifySql(String handle,String tn,String cn,String columnType,String value){
-		SysConfigPropertyUtil scpu = SysConfigPropertyUtil.getInstance(DbConstant.JDBC_PROPERTIES);
+		SysConfigPropertyUtil scpu = SysConfigPropertyUtil.getInstance();
 		String driverClass = scpu.getPropertyValue(DbConstant.JDBC_DRIVER_CLASS);
 		String sql=null;
 		if(handle.equals("default")){
