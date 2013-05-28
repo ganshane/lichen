@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.egf.db.utils.StringUtils;
+
 /**
  * @author fangj
  * @version $Revision: $
@@ -30,7 +32,13 @@ public class JdbcServiceImpl implements JdbcService {
 	private PreparedStatement pstmt = null;
 	
 	public void execute(String sql)throws SQLException{
-		execute(sql, new Object[0]);
+		//批量执行
+		String[] splitSql=sql.split(";");
+		for (String s : splitSql) {
+			if(!StringUtils.isBlank(s)){
+				execute(s, new Object[0]);
+			}
+		}
 	}
 
 	public void execute(String sql, final Object[] params) throws SQLException{

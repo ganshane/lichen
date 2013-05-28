@@ -158,11 +158,11 @@ public class ClientCommand implements Command {
 			try {
 				di.createSchema(schema);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
+				logger.error("创建用户出错:"+e.getMessage());
 				e.printStackTrace();
 			}
 		}
-		String sql=String.format("create table %s (\nid varchar2(20) primary key,\napplied_at varchar2(25),description varchar2(255)\n);",database_changelog);
+		String sql=String.format("create table %s (\nid varchar2(20) primary key,\napplied_at varchar2(25),\ndescription varchar2(255)\n);",database_changelog);
 		try {
 			js.execute(sql);
 		} catch (SQLException e) {
