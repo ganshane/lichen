@@ -14,10 +14,14 @@ package com.egf.db.command;
 public interface Command {
 
 	/**
-	 * 升级
-	 * @param pack 存放脚本的包路径
+	 * 初始化
 	 */
-	public void up(String pack);
+	public void init();
+	
+	/**
+	 * 升级
+	 */
+	public void up();
 
 	/**
 	 * 回滚到指定版本
