@@ -52,6 +52,32 @@ public class DatabaseServiceImplTest {
 		sb.append("age number not null,\n");
 		sb.append("xx varchar2(20)\n");
 		sb.append(");\n");
+		sb.append("comment on zdry.table test is '表注释';\n");
+		sb.append("comment on column zdry.test.xm is 'dd';\n");
+		sb.append("comment on column zdry.test.xx is 'dd';\n");
+		Mockito.verify(jdbcService).execute(sb.toString());
+	}
+	
+	@Test
+	public void testCreateTable1() throws SQLException{
+		service.setJdbcService(jdbcService);
+		service.createTable(new TableNameImpl("test"),new CommentImpl("表注释"), new CreateTableCallback() {
+			public void doCreateAction(Table t) {
+				t.number("id");
+				t.varchar2("xm",new LimitImpl(10),new NotNullImpl(),new CommentImpl("dd"));
+				t.blob("pic");
+				t.number("age",new NotNullImpl());
+				t.varchar2("xx",new LimitImpl(20),new CommentImpl("dd"));
+			}
+		});
+		StringBuffer sb=new StringBuffer();
+		sb.append("create table test (\n");
+		sb.append("id number,\n");
+		sb.append("xm varchar2(10) not null,\n");
+		sb.append("pic blob,\n");
+		sb.append("age number not null,\n");
+		sb.append("xx varchar2(20)\n");
+		sb.append(");\n");
 		sb.append("comment on table test is '表注释';\n");
 		sb.append("comment on column test.xm is 'dd';\n");
 		sb.append("comment on column test.xx is 'dd';\n");
@@ -229,8 +255,8 @@ public class DatabaseServiceImplTest {
 	@Test
 	public void testAddPrimaryKey() throws SQLException{
 		service.setJdbcService(jdbcService);
-		service.addPrimaryKey("pk", new TableNameImpl("test"), new ColumnNameImpl("id"));
-		Mockito.verify(jdbcService).execute("alter table test add constraint pk primary key (id)");
+		service.addPrimaryKey("pk", new TableNameImpl("zdry.test"), new ColumnNameImpl("id"));
+		Mockito.verify(jdbcService).execute("alter table zdry.test add constraint pk primary key (id)");
 	}
 
 
@@ -272,8 +298,8 @@ public class DatabaseServiceImplTest {
 	@Test
 	public void testDropPrimaryKey() throws SQLException{
 		service.setJdbcService(jdbcService);
-		service.dropPrimaryKey(new TableNameImpl("test"));
-		Mockito.verify(jdbcService).execute("alter table test drop constraint pk;");
+		service.dropPrimaryKey(new TableNameImpl("zdry.test"));
+		Mockito.verify(jdbcService).execute("alter table zdry.test drop constraint PK;");
 	}
 
 	
