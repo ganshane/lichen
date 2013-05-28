@@ -170,4 +170,11 @@ public class ClientCommand implements Command {
 			e.printStackTrace();
 		}
 	}
+
+	
+	public void down() {
+		String newDbVersion=this.getNewDbVersion();
+		this.down(newDbVersion);
+	}
+	
 }

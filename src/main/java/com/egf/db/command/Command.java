@@ -30,5 +30,10 @@ public interface Command {
 	 *            版本号
 	 */
 	public void down(String version);
+	
+	/**
+	 * 回滚到上一个版本
+	 */
+	public void down();
 
 }
