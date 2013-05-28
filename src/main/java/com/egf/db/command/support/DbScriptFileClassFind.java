@@ -19,6 +19,8 @@ import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import com.egf.db.core.DbConstant;
+
 /**
  * 数据库脚本class查找
  * 
@@ -35,7 +37,7 @@ class DbScriptFileClassFind {
 	 *            包名
 	 * @return
 	 */
-	public static Set<Class<?>> getDbScriptClasses(String pack) {
+	public static Set<Class<?>> getDbScriptClasses(String pack,final String sort) {
 		// class类的集合
 		Set<Class<?>> classes = new TreeSet<Class<?>>(new Comparator<Object>() {
 			public int compare(Object o1, Object o2) {
@@ -43,12 +45,22 @@ class DbScriptFileClassFind {
 				Class<?> cls2 = (Class<?>) o2;
 				String time1 = cls1.getName().split("_")[1];
 				String time2 = cls2.getName().split("_")[1];
-				if (time1.compareTo(time2) <0) {
-					return -1;
-				} else if (time1.compareTo(time2)==0) {
-					return 0;
-				} else {
-					return 1;
+				if(DbConstant.SORT_ASC.equals(sort)){
+					if (time1.compareTo(time2) <0) {
+						return -1;
+					} else if (time1.compareTo(time2)==0) {
+						return 0;
+					} else {
+						return 1;
+					}
+				}else{
+					if (time1.compareTo(time2) <0) {
+						return 1;
+					} else if (time1.compareTo(time2)==0) {
+						return 0;
+					} else {
+						return -1;
+					}
 				}
 			}
 		});
