@@ -26,8 +26,14 @@ public class DbConstant {
 	public final static String JDBC_USER = "jdbc.user";
 	/** jdbc连接密码常量定义 **/
 	public final static String JDBC_PASSWORD = "jdbc.password";
+	/**数据库脚本文件包路径常量定义**/
+	public final static String DB_SCRIPT_PACKAGE = "db_script_package";
 	/**版本控制表**/
 	public final static String CHANGELOG="changelog";
+	/**排序-升序**/
+	public final static String SORT_ASC="asc";
+	/**排序-降序**/
+	public final static String SORT_DESC="desc";
 	
 	/**oracle驱动常量定义**/
 	public final static String ORACLE_DRIVER_CLASS = "oracle.jdbc.driver.OracleDriver";
