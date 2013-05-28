@@ -13,6 +13,10 @@ package com.egf.db.command;
  */
 public interface Command {
 
+	/**
+	 * 升级
+	 * @param pack 存放脚本的包路径
+	 */
 	public void up(String pack);
 
 	/**
