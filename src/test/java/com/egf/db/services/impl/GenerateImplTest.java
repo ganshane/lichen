@@ -122,4 +122,16 @@ public class GenerateImplTest {
 		assertEquals("alter table test drop constraint test;", sql);
 	}
 
+	@Test
+	public void testAddColumnNullOrNot(){
+		String sql=generate.addColumnNullOrNot("test", "test", "null");
+		assertEquals("alter table test modify test null;", sql);
+	}
+	
+	@Test
+	public void testAddColumnNullOrNotN(){
+		String sql=generate.addColumnNullOrNot("test", "test", "not null");
+		assertEquals("alter table test modify test not null;", sql);
+	}
+	
 }

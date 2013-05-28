@@ -173,7 +173,7 @@ class DatabaseServiceImpl implements DatabaseService{
 	public void addColumnNull(TableName tableName, ColumnName columnName) throws SQLException{
 		String tn=tableName.getName();
 		String cn=columnName.getName();
-		String sql=generate.addColumnNull(tn, cn, NULL);
+		String sql=generate.addColumnNullOrNot(tn, cn, NULL);
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
@@ -366,7 +366,7 @@ class DatabaseServiceImpl implements DatabaseService{
 			if (DbConstant.H2_DRIVER_CLASS.equals(driverClass)) {
 				 sql=generate.addColumnNullOrNot(tn, cn,columnType, NOT_NULL);
 			} else {
-				 sql=generate.addColumnNullOrNot(tn, cn,columnType, NULL);
+				 sql=generate.addColumnNullOrNot(tn, cn,NOT_NULL);
 			}
 		}
 		return sql;
