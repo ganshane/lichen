@@ -7,9 +7,6 @@
 package com.egf.db.services.impl;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -33,6 +30,7 @@ import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
 import com.egf.db.core.sql.template.Generate;
 import com.egf.db.services.DatabaseService;
+import com.egf.db.utils.DateTimeUtils;
 import com.egf.db.utils.StringUtils;
 
 /**
@@ -45,8 +43,6 @@ class DatabaseServiceImpl implements DatabaseService{
 	Logger logger=Logger.getLogger(DatabaseServiceImpl.class);
 	
 	private final String PRIMARY_KEY="primary key";
-	
-	private static final String TIME_FORMAT_SHORT = "yyyyMMddHHmmss";
 	
 	private final String FOREIGN_KEY="foreign key";
 	
@@ -151,10 +147,10 @@ class DatabaseServiceImpl implements DatabaseService{
 			String c=comment.getComment();
 			sb.append("\n"+generate.addComment(tn, cn, c));
 		}if(unique!=null){
-			String uniqueName="unique_"+this.getTimeShortString(new Date());
+			String uniqueName="unique_"+DateTimeUtils.getNowTimeShortString();
 			sb.append("\n"+generate.addConstraint(tn, uniqueName, UNIQUE_KEY, cn));
 		}if(isPrimaryKey!=null){
-			String primaryKeyName="pk_"+this.getTimeShortString(new Date());
+			String primaryKeyName="pk_"+DateTimeUtils.getNowTimeShortString();
 			sb.append("\n"+generate.addConstraint(tn, primaryKeyName, PRIMARY_KEY, cn));
 		}
 		logger.info("\n"+sb.toString());
@@ -370,11 +366,6 @@ class DatabaseServiceImpl implements DatabaseService{
 			}
 		}
 		return sql;
-	}
-	
-	private String getTimeShortString(Date date) {
-		DateFormat fmt = new SimpleDateFormat(TIME_FORMAT_SHORT);
-		return fmt.format(date);
 	}
 	
 }
