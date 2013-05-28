@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 
 import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
+import com.egf.db.utils.StringUtils;
 
 /**
  * H2数据库实现
@@ -59,8 +60,13 @@ public class DbH2Impl implements DbInterface {
 
 	
 	public void createSchema(String schema) throws SQLException{
-		String sql="CREATE SCHEMA "+schema.toUpperCase();
-		logger.debug("\n"+sql);
-		jdbcService.execute(sql);
+		//判断用户是否存在
+		String schemaSql="SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME=?";
+		String name= (String) jdbcService.unique(schemaSql,new String[]{schema.toUpperCase()});
+		if(StringUtils.isBlank(name)){
+			String sql="CREATE SCHEMA "+schema.toUpperCase();
+			logger.debug("\n"+sql);
+			jdbcService.execute(sql);
+		}
 	}
 }
