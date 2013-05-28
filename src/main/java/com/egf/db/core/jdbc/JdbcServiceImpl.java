@@ -113,6 +113,48 @@ public class JdbcServiceImpl implements JdbcService {
 		}
 		return null;
 	}
+
+	public Object unique(String sql) {
+		return unique(sql, new Object[0]);
+	}
+
+	
+	public Object unique(String sql, Object[] params) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		try {
+			conn = DBConnectionManager.getConnection();
+			pstmt = conn.prepareStatement(sql);
+			for (int i = 0; i < params.length; i++) {
+				pstmt.setObject(i+1, params[i]);
+			}
+			ResultSet rs = pstmt.executeQuery();
+			ResultSetMetaData rsmd = rs.getMetaData();
+			int cc = rsmd.getColumnCount();
+			int i=0;
+			while (rs.next()) {
+				if(i==0){
+					if(cc==1){
+						return rs.getObject(1);
+					}else{
+						Object[] objs = new Object[cc];
+						for (int j = 1; j <= cc; j++) {
+							objs[j - 1] = rs.getObject(j);
+						}
+						return objs;
+					}
+				}
+				i++;
+			}
+			
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		} finally {
+			close();
+		}
+		return null;
+	}
 	
 	private  void close(){
 		if (pstmt != null) {

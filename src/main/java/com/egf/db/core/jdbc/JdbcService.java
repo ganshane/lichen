@@ -31,6 +31,21 @@ public interface JdbcService {
 	 */
 	public void execute(String sql, Object[] params) throws SQLException;
 	
+	/**
+	 * sql 查询,返回唯一结果
+	 * @param sql
+	 * @return
+	 */
+	public Object unique(String sql);
+	
+	/**
+	 * sql 查询,返回唯一结果
+	 * @param sql
+	 * @param params
+	 * @return
+	 */
+	public Object unique(String sql,Object[] params);
+	
 	
 	/**
 	 * sql查询
