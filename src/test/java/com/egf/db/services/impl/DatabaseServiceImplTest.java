@@ -35,7 +35,7 @@ public class DatabaseServiceImplTest {
 	@Test
 	public void testCreateTable() throws SQLException{
 		service.setJdbcService(jdbcService);
-		service.createTable(new TableNameImpl("test"),new CommentImpl("表注释"), new CreateTableCallback() {
+		service.createTable(new TableNameImpl("zdry.test"),new CommentImpl("表注释"), new CreateTableCallback() {
 			public void doCreateAction(Table t) {
 				t.number("id");
 				t.varchar2("xm",new LimitImpl(10),new NotNullImpl(),new CommentImpl("dd"));
@@ -45,7 +45,7 @@ public class DatabaseServiceImplTest {
 			}
 		});
 		StringBuffer sb=new StringBuffer();
-		sb.append("create table test (\n");
+		sb.append("create table zdry.test (\n");
 		sb.append("id number,\n");
 		sb.append("xm varchar2(10) not null,\n");
 		sb.append("pic blob,\n");
