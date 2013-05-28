@@ -57,10 +57,9 @@ public class ClientCommand implements Command {
 					am.up();
 				} catch (SQLException e) {
 					flag = false;
-					saveLog(timeId, handle);
 					break;
 				}
-				if (flag) {
+				finally {
 					// 升级操作
 					saveLog(timeId, handle);
 				}
