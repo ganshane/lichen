@@ -43,8 +43,14 @@ public class DbH2Impl implements DbInterface {
 
 	
 	public String getPrimaryKeyName(String tableName) {
-		String sql="SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.CONSTRAINTS WHERE TABLE_NAME=? AND CONSTRAINT_TYPE=?";
-		List<Object[]> list=(List<Object[]>) jdbcService.find(sql, new String[]{tableName.toUpperCase(),PRIMARY_KEY});
+		String name=tableName;
+		StringBuffer sql=new StringBuffer("SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.CONSTRAINTS WHERE TABLE_NAME=? AND CONSTRAINT_TYPE=?");
+		if(tableName.indexOf(".")!=-1){
+			String schema=tableName.split("\\.")[0];
+			name=tableName.split("\\.")[1];
+			sql.append(" AND TABLE_SCHEMA='"+schema.toUpperCase()+"'");
+		}
+		List<Object[]> list=(List<Object[]>) jdbcService.find(sql.toString(), new String[]{name.toUpperCase(),PRIMARY_KEY});
 		if(list!=null&&!list.isEmpty()){
 			return (String)list.get(0)[0];
 		}

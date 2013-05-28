@@ -78,14 +78,13 @@ class DatabaseServiceImpl implements DatabaseService{
 			DbInterface di=DbFactory.getDb();
 			String schema=tn.split("\\.")[0];
 			di.createSchema(schema);
-			tn=tn.split("\\.")[1];
 		}
 		String sql=String.format("create table %s (\n%s\n);",tableName.getName(),columns.toString());
 		if(comment!=null){
-			tableComment=String.format("comment on table %s is '%s';\n",tn,comment.getComment());
+			tableComment=String.format("comment on table %s is '%s';\n",tableName.getName(),comment.getComment());
 		}
 		String commentsSql=tmi.comments.toString();
-		commentsSql=commentsSql.replaceAll("TN", tn);
+		commentsSql=commentsSql.replaceAll("TN", tableName.getName());
 		logger.info("\n"+sql+"\n"+tableComment+commentsSql.toString());
 		jdbcService.execute(sql+"\n"+tableComment+commentsSql.toString());
 	}
@@ -246,13 +245,17 @@ class DatabaseServiceImpl implements DatabaseService{
 	}
 
 	public void addPrimaryKey(String name, TableName tableName,ColumnName... columnName) throws SQLException{
-		String sql=addKey(name, tableName,null, PRIMARY_KEY, columnName);
+		StringBuffer sb=new StringBuffer();
 		//修正主键不能为空
 		for (ColumnName cn : columnName) {
-			this.addColumnNotNull(tableName, cn);
+			String columnType=jdbcService.getColumnTypeName(tableName.getName(), cn.getName());
+			String sql=modifySql("not_null", tableName.getName(), cn.getName(), columnType, null);
+			sb.append(sql+"\n");
 		}
-		logger.info("\n"+sql);
-		jdbcService.execute(sql);
+		String sql=addKey(name, tableName,null, PRIMARY_KEY, columnName);
+		sb.append(sql+"\n");
+		logger.info("\n"+sb.toString());
+		jdbcService.execute(sb.toString());
 	}
 	
 	public void addForeignKey(String name, TableName tableName,TableName refTableName,ColumnName... columnName) throws SQLException{
