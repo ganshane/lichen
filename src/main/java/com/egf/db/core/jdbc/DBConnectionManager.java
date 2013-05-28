@@ -31,7 +31,7 @@ public class DBConnectionManager {
 	private static String dbPassword;
 
 	public static void getParam() {
-		SysConfigPropertyUtil dbScpu = SysConfigPropertyUtil.getInstance(DbConstant.JDBC_PROPERTIES);
+		SysConfigPropertyUtil dbScpu = SysConfigPropertyUtil.getInstance(DbConstant.DEVELOPMENT_PROPERTIES);
 		driver = dbScpu.getPropertyValue(DbConstant.JDBC_DRIVER_CLASS);
 		url = dbScpu.getPropertyValue(DbConstant.JDBC_JDBCURL);
 		dbUser = dbScpu.getPropertyValue(DbConstant.JDBC_USER);

@@ -19,6 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 
+import com.egf.db.core.DbConstant;
 import com.egf.db.utils.StringUtils;
 
 
@@ -76,10 +77,13 @@ public class SysConfigPropertyUtil {
 		}
 	}
 
+	public static SysConfigPropertyUtil getInstance() {
+		return getInstance(null);
+	}
 
 	public static SysConfigPropertyUtil getInstance(String file) {
 		if (StringUtils.isBlank(file)) {
-				file = "sysconfig.properties";
+				file = DbConstant.DEVELOPMENT_PROPERTIES;
 		}
 		SysConfigPropertyUtil instance = instanceMap.get(file);
 		if (instance == null) {
@@ -96,21 +100,7 @@ public class SysConfigPropertyUtil {
 		return instance;
 	}
 
-	public static SysConfigPropertyUtil getInstance(File file) {
-		SysConfigPropertyUtil instance = instanceMap.get(file.getName());
-		if (instance == null) {
-			try {
-				locker.lock();
-				if (instance == null) {
-					instance = new SysConfigPropertyUtil(file);
-					instanceMap.put(file.getName(), instance);
-				}
-			} finally {
-				locker.unlock();
-			}
-		}
-		return instance;
-	}
+
 
 	public String getPropertyValue(String key) {
 		if (StringUtils.isBlank(key)) {

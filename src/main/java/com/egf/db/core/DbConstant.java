@@ -16,7 +16,7 @@ package com.egf.db.core;
 public class DbConstant {
 	
 	/**数据库jdbc文件名常量定义**/
-	public final static String JDBC_PROPERTIES = "jdbc.properties";
+	public final static String DEVELOPMENT_PROPERTIES = "development.properties";
 	
 	/** jdbc驱动常量定义 **/
 	public final static String JDBC_DRIVER_CLASS = "jdbc.driverClass";
