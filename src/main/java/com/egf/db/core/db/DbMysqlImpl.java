@@ -6,6 +6,7 @@
  */
 package com.egf.db.core.db;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.egf.db.core.jdbc.JdbcService;
@@ -46,4 +47,7 @@ public class DbMysqlImpl implements DbInterface {
 		return null;
 	}
 
+	public void createSchema(String schema) throws SQLException{
+		
+	}
 }

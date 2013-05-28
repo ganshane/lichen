@@ -6,6 +6,7 @@
  */
 package com.egf.db.core.db;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import com.egf.db.core.jdbc.JdbcService;
@@ -43,6 +44,11 @@ public class DbOracleImpl implements DbInterface {
 			return (String)list.get(0)[0];
 		}
 		return null;
+	}
+
+	
+	public void createSchema(String schema) throws SQLException {
+	
 	}
 
 }

@@ -6,7 +6,10 @@
  */
 package com.egf.db.core.db;
 
+import java.sql.SQLException;
 import java.util.List;
+
+import org.apache.log4j.Logger;
 
 import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
@@ -18,6 +21,8 @@ import com.egf.db.core.jdbc.JdbcServiceImpl;
  * @since 1.0
  */
 public class DbH2Impl implements DbInterface {
+	
+	Logger logger=Logger.getLogger(DbH2Impl.class);
 	
     private JdbcService jdbcService=new JdbcServiceImpl();
     
@@ -44,5 +49,12 @@ public class DbH2Impl implements DbInterface {
 			return (String)list.get(0)[0];
 		}
 		return null;
+	}
+
+	
+	public void createSchema(String schema) throws SQLException{
+		String sql="CREATE SCHEMA "+schema.toUpperCase();
+		logger.debug("\n"+sql);
+		jdbcService.execute(sql);
 	}
 }

@@ -16,7 +16,7 @@ import com.egf.db.core.config.SysConfigPropertyUtil;
  */
 public class DbFactory {
 
-	private static SysConfigPropertyUtil scpu = SysConfigPropertyUtil.getInstance(DbConstant.JDBC_PROPERTIES);
+	private static SysConfigPropertyUtil scpu = SysConfigPropertyUtil.getInstance();
 
 	private DbFactory() {}
 
