@@ -202,4 +202,71 @@ public interface Table {
 	 * @param comment 注释
 	 */
 	public void number(String name,Default deft,Comment comment);
+	
+	
+	/**
+	 * 时间
+	 * @param name 名称
+	 * @param notNull 不为空
+	 * @param comment 注释
+	 */
+	public void date(String name,NotNull notNull,Comment comment);
+	
+	/**
+	 * 时间
+	 * @param name 名称
+	 * @param comment 注释
+	 */
+	public void date(String name,Comment comment);
+	
+	/**
+	 * 时间
+	 * @param name 名称
+	 * @param notNull 不为空
+	 */
+	public void date(String name,NotNull notNull);
+	
+	/**
+	 * 时间
+	 * @param name 名称
+	 * @param define
+	 * 可选参数
+	 * Null,NotNull 是否可为空 
+	 * Comment 注释
+	 */
+	public void date(String name,ColumnDefine ... define);
+	
+	/**
+	 * clob 大字段
+	 * @param name 名称
+	 * @param notNull 不为空
+	 * @param comment 注释
+	 */
+	public void clob(String name,NotNull notNull,Comment comment);
+	
+	/**
+	 * clob大字段
+	 * @param name 名称
+	 * @param comment 注释
+	 */
+	public void clob(String name,Comment comment);
+	
+	/**
+	 * clob大字段
+	 * @param name 名称
+	 * @param notNull 不为空
+	 */
+	public void clob(String name,NotNull notNull);
+	
+	/**
+	 * clob大字段
+	 * @param name 名称
+	 * @param define
+	 * 可选参数
+	 * Null,NotNull 是否可为空 
+	 * Comment 注释
+	 */
+	public void clob(String name,ColumnDefine ... define);
+	
+	
 }
