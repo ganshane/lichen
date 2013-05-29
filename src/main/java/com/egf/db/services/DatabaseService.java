@@ -34,7 +34,7 @@ public interface DatabaseService {
 	 * @param callback 回调函数
 	 * @throws SQLException
 	 */
-	public void createTable(TableName tableName,Comment comment, CreateTableCallback callback) throws SQLException;
+	public void createTable(TableName tableName,Comment comment, CreateTableCallback createTableCallback) throws SQLException;
 	
 	/**
 	 * 创建表
@@ -42,7 +42,7 @@ public interface DatabaseService {
 	 * @param callback 表注释
 	 * @throws SQLException
 	 */
-	public void createTable(TableName tableName, CreateTableCallback callback) throws SQLException;
+	public void createTable(TableName tableName, CreateTableCallback createTableCallback) throws SQLException;
 	
 	/**
 	 * 添加列

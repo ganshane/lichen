@@ -20,8 +20,8 @@ import com.egf.db.core.define.IndexType;
 import com.egf.db.core.define.column.ColumnDefine;
 import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Default;
-import com.egf.db.core.define.column.IsPrimaryKey;
 import com.egf.db.core.define.column.NotNull;
+import com.egf.db.core.define.column.PrimaryKey;
 import com.egf.db.core.define.column.Unique;
 import com.egf.db.core.define.name.ColumnName;
 import com.egf.db.core.define.name.IndexName;
@@ -61,11 +61,11 @@ class DatabaseServiceImpl implements DatabaseService{
 		this.jdbcService = jdbcService;
 	}
 	
-	public void createTable(TableName tableName, Comment comment,CreateTableCallback callback)throws SQLException {
+	public void createTable(TableName tableName, Comment comment,CreateTableCallback createTableCallback)throws SQLException {
 		TableImpl tmi=new TableImpl();
 		String tableComment="";
 		//进行回调操作
-		callback.doCreateAction(tmi);
+		createTableCallback.doCreateAction(tmi);
 		StringBuffer columns=tmi.columns;
 		columns=columns.delete(columns.length()-2, columns.length());
 		String tn=tableName.getName();
@@ -85,8 +85,8 @@ class DatabaseServiceImpl implements DatabaseService{
 		jdbcService.execute(sql+"\n"+tableComment+commentsSql.toString());
 	}
 	
-	public void createTable(TableName tableName, CreateTableCallback callback) throws SQLException{
-		createTable(tableName, null, callback);
+	public void createTable(TableName tableName, CreateTableCallback createTableCallback) throws SQLException{
+		createTable(tableName, null, createTableCallback);
 	}
 	
 	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType) throws SQLException{
@@ -117,7 +117,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		this.addColumn(tableName, columnName, columnType, null,deft, comment);
 	}
 
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NotNull notNull,Comment comment,Unique unique,IsPrimaryKey isPrimaryKey) throws SQLException{
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NotNull notNull,Comment comment,Unique unique,PrimaryKey primaryKey) throws SQLException{
 		String tn=tableName.getName();
 		String cn=columnName.getName();
 		String type=columnType.getColumnType();
@@ -135,21 +135,16 @@ class DatabaseServiceImpl implements DatabaseService{
 			sb.append(";");
 		}if(notNull!=null){
 			sb=sb.delete(sb.length()-1, sb.length());
-			if(NOT_NULL.equals(notNull.out())){
-				 sb.append(" ");
-				 sb.append(NOT_NULL);
-				 sb.append(";");
-			}else{
-				sb.append(NULL);
-				sb.append(";");
-			}
+			sb.append(" ");
+			sb.append(NOT_NULL);
+			sb.append(";");
 		}if(comment!=null){
 			String c=comment.getComment();
 			sb.append("\n"+generate.addComment(tn, cn, c));
 		}if(unique!=null){
 			String uniqueName="unique_"+DateTimeUtils.getNowTimeShortString();
 			sb.append("\n"+generate.addConstraint(tn, uniqueName, UNIQUE_KEY, cn));
-		}if(isPrimaryKey!=null){
+		}if(primaryKey!=null){
 			String primaryKeyName="pk_"+DateTimeUtils.getNowTimeShortString();
 			sb.append("\n"+generate.addConstraint(tn, primaryKeyName, PRIMARY_KEY, cn));
 		}
@@ -183,7 +178,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		NotNull notNull=null;
 		Comment comment=null;
 		Unique unique=null;
-		IsPrimaryKey isPrimaryKey=null;
+		PrimaryKey primarykey=null;
 		for (ColumnDefine columnDefine : define) {
 			if(columnDefine!=null){
 				if(columnDefine instanceof Default){
@@ -194,12 +189,12 @@ class DatabaseServiceImpl implements DatabaseService{
 					comment=(Comment)columnDefine;
 				}else if(columnDefine instanceof Unique){
 					unique=(Unique)columnDefine;
-				}else if(columnDefine instanceof IsPrimaryKey){
-					isPrimaryKey=(IsPrimaryKey)columnDefine;
+				}else if(columnDefine instanceof PrimaryKey){
+					primarykey=(PrimaryKey)columnDefine;
 				}
 			}
 		}
-		this.addColumn(tableName, columnName, columnType, deft, notNull, comment,unique,isPrimaryKey);
+		this.addColumn(tableName, columnName, columnType, deft, notNull, comment,unique,primarykey);
 	}
 	
 	public void addDefault(TableName tableName, ColumnName columnName,Default deft) throws SQLException{
