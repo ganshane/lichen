@@ -235,8 +235,8 @@ public class DatabaseServiceImplTest {
 	@Test
 	public void testAddIndexTableNameIndexNameColumnNameArray()throws SQLException {
 		service.setJdbcService(jdbcService);
-		service.addIndex(new TableNameImpl("test"), new IndexNameImpl("index"), new ColumnNameImpl("aa"),new ColumnNameImpl("dd"));
-		Mockito.verify(jdbcService).execute("create index index on test (aa,dd);");
+		service.addIndex(new TableNameImpl("zdry.test"), new IndexNameImpl("zdry.index"), new ColumnNameImpl("aa"),new ColumnNameImpl("dd"));
+		Mockito.verify(jdbcService).execute("create index zdry.index on zdry.test (aa,dd);");
 	}
 
 	/**
