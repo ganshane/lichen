@@ -112,6 +112,41 @@ class TableImpl implements Table {
 		appendColumn(name, new Varchar2Impl(limit.getLimit()));
 	}
 	
+	public void clob(String name, NotNull notNull, Comment comment) {
+		appendColumn(name, new ClobImpl(),notNull,comment);
+	}
+
+	
+	public void clob(String name, Comment comment) {
+		appendColumn(name, new ClobImpl(), comment);
+	}
+
+	public void clob(String name, NotNull notNull) {
+		appendColumn(name, new ClobImpl(),notNull);
+	}
+	
+	public void clob(String name, ColumnDefine... define) {
+		appendColumn(name, new ClobImpl(),define);
+	}
+	
+	public void date(String name, NotNull notNull, Comment comment) {
+		appendColumn(name, new DateImpl(), notNull,comment);
+	}
+
+	public void date(String name, Comment comment) {
+		appendColumn(name, new DateImpl(),comment);
+	}
+
+	
+	public void date(String name, NotNull notNull) {
+		appendColumn(name, new DateImpl(), notNull);
+	}
+
+	
+	public void date(String name, ColumnDefine... define) {
+		appendColumn(name, new DateImpl(),define);
+	}
+	
 	private void addComment(String columnName,String comment){
 		comments.append(String.format("comment on column TN.%s is '%s';\n",columnName, comment));
 	}
