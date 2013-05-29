@@ -7,6 +7,7 @@
 package com.egf.db.services.impl;
 
 import com.egf.db.core.define.column.Comment;
+import com.egf.db.core.define.column.PrimaryKey;
 import com.egf.db.core.define.column.Limit;
 import com.egf.db.core.define.column.NotNull;
 import com.egf.db.core.define.column.Unique;
@@ -41,6 +42,8 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 	protected final static Blob BLOB=new BlobImpl();
 	/**clob**/
 	protected final static Clob CLOB=new ClobImpl();
+	/**主键**/
+	protected final static PrimaryKey IS_PRIMARYKEY=new PrimaryKeyImpl();
 	
 	protected static TableName TableName(String name) {
 		return new TableNameImpl(name);
