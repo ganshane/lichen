@@ -193,9 +193,8 @@ class TableImpl implements Table {
 					String c=comment.getComment();
 					addComment(name, c);
 				}if(columnDefine instanceof Unique){
-					Unique unique=(Unique)columnDefine;
 					columns.append(" ");
-					columns.append(unique.out());
+					columns.append("unique");
 				}if(columnDefine instanceof PrimaryKey){
 					columns.append(" ");
 					columns.append("primary key");
