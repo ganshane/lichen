@@ -12,6 +12,8 @@ import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Default;
 import com.egf.db.core.define.column.Limit;
 import com.egf.db.core.define.column.NotNull;
+import com.egf.db.core.define.column.PrimaryKey;
+import com.egf.db.core.define.column.Unique;
 import com.egf.db.core.model.Table;
 
 /**
@@ -56,7 +58,6 @@ class TableImpl implements Table {
 	
 	public void number(String name, ColumnDefine... define) {
 		appendColumn(name, new NumberImpl(), define);
-		
 	}
 
 	public void number(String name,Default deft,NotNull notNull) {
@@ -125,10 +126,6 @@ class TableImpl implements Table {
 		appendColumn(name, new ClobImpl(),notNull);
 	}
 	
-	public void clob(String name, ColumnDefine... define) {
-		appendColumn(name, new ClobImpl(),define);
-	}
-	
 	public void date(String name, NotNull notNull, Comment comment) {
 		appendColumn(name, new DateImpl(), notNull,comment);
 	}
@@ -189,14 +186,19 @@ class TableImpl implements Table {
 					columns.append(deftValue);
 				}
 				if(columnDefine instanceof NotNull){
-					NotNull notNull=(NotNull)columnDefine;
-					String nullOrNot=notNull.out();
 					columns.append(" ");
-					columns.append(nullOrNot);
+					columns.append("not null");
 				}if(columnDefine instanceof Comment){
 					Comment comment=(Comment)columnDefine;
 					String c=comment.getComment();
 					addComment(name, c);
+				}if(columnDefine instanceof Unique){
+					Unique unique=(Unique)columnDefine;
+					columns.append(" ");
+					columns.append(unique.out());
+				}if(columnDefine instanceof PrimaryKey){
+					columns.append(" ");
+					columns.append("primary key");
 				}
 			}
 		}
