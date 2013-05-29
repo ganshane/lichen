@@ -6,6 +6,8 @@
  */
 package com.egf.db.command.support;
 
+import java.io.File;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Set;
 
@@ -23,6 +25,7 @@ import com.egf.db.utils.DateTimeUtils;
 import com.egf.db.utils.StringUtils;
 
 /**
+ * 客户端命令方法
  * @author fangj
  * @version $Revision: 2.0 $
  * @since 1.0
@@ -149,6 +152,7 @@ public class ClientCommand implements Command {
 	}
 	
 	public void init(){
+		initFile();
 		JdbcService js = new JdbcServiceImpl();
 		String database_changelog = SysConfigPropertyUtil.getInstance().getPropertyValue(DbConstant.CHANGELOG);
 		if(database_changelog.indexOf(".")!=-1){
@@ -175,6 +179,43 @@ public class ClientCommand implements Command {
 	public void down() {
 		String newDbVersion=this.getNewDbVersion();
 		this.down(newDbVersion);
+	}
+	
+	private void initFile(){
+		File resourcesDir=new File(System.getProperty("user.dir")+"\\src\\main\\resources");
+		if(!resourcesDir.exists()){
+			resourcesDir.mkdir();
+			createFile();
+		}else{
+			createFile();
+		}
+	}
+	
+	private void createFile(){
+		File developmentFile=new File(System.getProperty("user.dir")+"\\src\\main\\resources\\development.properties");
+		if(!developmentFile.exists()){
+			PrintWriter pw =null;
+			try {
+				developmentFile.createNewFile();
+				pw = new PrintWriter(developmentFile,"UTF-8");  
+				pw.println("#database connection configuration");
+				pw.println("jdbc.driverClass=org.h2.Driver");
+				pw.println("jdbc.jdbcUrl=jdbc:h2:target/testdb");
+				pw.println("#jdbc.driverClass=oracle.jdbc.driver.OracleDriver");
+				pw.println("#jdbc.jdbcUrl=jdbc:oracle:thin:@10.1.7.79:1521:tjkf");
+				pw.println("jdbc.user=sa");
+				pw.println("jdbc.password=");
+				pw.println("# Name of the table that tracks changes to the database(id,applied_at,description)");
+				pw.println("changelog=dqb.db_changelog");
+				pw.println("# database scripts pacakge");
+				pw.println("db_script_package=com.db.scripts");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally{
+				pw.flush();
+				pw.close();
+			}
+		}
 	}
 	
 }
