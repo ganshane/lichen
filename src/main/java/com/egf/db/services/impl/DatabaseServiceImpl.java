@@ -251,7 +251,7 @@ class DatabaseServiceImpl implements DatabaseService{
 	
 	public void addForeignKey(String name, TableName tableName,TableName refTableName,ColumnName... columnName) throws SQLException{
 		String sql=addKey(name, tableName,refTableName,FOREIGN_KEY, columnName);
-		logger.info(sql);
+		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
@@ -329,7 +329,7 @@ class DatabaseServiceImpl implements DatabaseService{
 			DbInterface di=DbFactory.getDb();
 			String[] referencesColumns=di.getPrimaryKeyColumn(refTableName.getName());
 			String referencesColumn=StringUtils.getUnionStringArray(referencesColumns, ",");
-			generate.addForeignKey(tn, name, refTableName.getName(), referencesColumn, columnNames);
+			sql=generate.addForeignKey(tn, name, refTableName.getName(), referencesColumn, columnNames);
 		}else{
 			sql=generate.addConstraint(tn, name, keyType, columnNames);
 		}
