@@ -52,30 +52,77 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 	/**索引Bitmap类型**/
 	protected final static Bitmap BITMAP=new Bitmap();
 	
+	/**
+	 * 创建表名
+	 * @param name 名称
+	 * 参数说明
+	 * 创建用户下的表：user.table
+	 * @return
+	 */
 	protected static TableName TableName(String name) {
 		return new TableNameImpl(name);
 	}
 	
+	/**
+	 * 创建索引
+	 * @param name 名称
+	 * 参数说明
+	 * 创建用户下的索引：user.index
+	 * @return
+	 */
 	protected static IndexName IndexName(String name) {
 		return new IndexNameImpl(name);
 	}
 	
+	/**
+	 * 创建列
+	 * @param name 名称
+	 * @return
+	 */
 	protected static ColumnName ColumnName(String name) {
 		return new ColumnNameImpl(name);
 	}
 
+	/**
+	 * 限制
+	 * @param length 长度
+	 * @return
+	 */
 	protected static Limit Limit(int length) {
 		return new LimitImpl(length);
 	}
 	
+	/**
+	 * 创建注释
+	 * @param comment 注释内容
+	 * @return
+	 */
 	protected static Comment Comment(String comment) {
 		return new CommentImpl(comment);
 	}
 
+	/**
+	 * 创建varchar2 类型
+	 * @param length 长度
+	 * @return
+	 */
 	protected static Varchar2 Varchar2(int length) {
 		return new Varchar2Impl(length);
 	}
 	
+	/**
+	 * 创建时间类型
+	 * @return
+	 */
+	protected static Date Date(){
+		return new DateImpl();
+	}
+	
+	/**
+	 * 创建默认值
+	 * @param value 值
+	 * @return
+	 */
 	protected static com.egf.db.core.define.column.Default Default(String value) {
 		return new DefaultImpl(value);
 	}
