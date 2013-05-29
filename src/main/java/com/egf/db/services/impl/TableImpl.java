@@ -172,12 +172,19 @@ class TableImpl implements Table {
 	 */
 	private void appendColumn(String name,ColumnType columnType,ColumnDefine ... define){
 		String type=columnType.getColumnType();
+		boolean primarykey=false;
 		columns.append(name);
 		columns.append(" ");
 		columns.append(type);
 		for (ColumnDefine columnDefine : define) {
+			if(columnDefine instanceof PrimaryKey){
+				primarykey=true;
+				break;
+			}
+		}
+		for (ColumnDefine columnDefine : define) {
 			if(columnDefine!=null){
-				if(columnDefine instanceof Default){
+				if(columnDefine instanceof Default && primarykey==false){
 					Default deft=(Default)columnDefine;
 					String deftValue=deft.getValue();
 					columns.append(" ");
@@ -192,7 +199,7 @@ class TableImpl implements Table {
 					Comment comment=(Comment)columnDefine;
 					String c=comment.getComment();
 					addComment(name, c);
-				}if(columnDefine instanceof Unique){
+				}if(columnDefine instanceof Unique && primarykey==false){
 					columns.append(" ");
 					columns.append("unique");
 				}if(columnDefine instanceof PrimaryKey){
