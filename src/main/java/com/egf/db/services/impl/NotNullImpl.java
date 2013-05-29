@@ -14,9 +14,5 @@ import com.egf.db.core.define.column.NotNull;
  * @since 1.0
  */
 class NotNullImpl implements NotNull{
-	
-	public String out() {
-		return "not null";
-	}
 
 }

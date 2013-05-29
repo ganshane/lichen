@@ -14,6 +14,4 @@ package com.egf.db.core.define.column;
  */
 public interface NotNull extends ColumnDefine{
 	
-	public String out();
-	
 }

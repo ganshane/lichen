@@ -15,8 +15,4 @@ import com.egf.db.core.define.column.Null;
  */
 class NullImpl implements Null{
 
-	public String out() {
-		return "null";
-	}
-
 }
