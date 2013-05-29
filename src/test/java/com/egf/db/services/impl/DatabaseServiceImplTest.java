@@ -37,7 +37,7 @@ public class DatabaseServiceImplTest {
 		service.setJdbcService(jdbcService);
 		service.createTable(new TableNameImpl("zdry.test"),new CommentImpl("表注释"), new CreateTableCallback() {
 			public void doCreateAction(Table t) {
-				t.number("id");
+				t.number("id",new PrimaryKeyImpl());
 				t.varchar2("xm",new LimitImpl(10),new NotNullImpl(),new CommentImpl("dd"));
 				t.blob("pic");
 				t.number("age",new NotNullImpl());
@@ -46,13 +46,13 @@ public class DatabaseServiceImplTest {
 		});
 		StringBuffer sb=new StringBuffer();
 		sb.append("create table zdry.test (\n");
-		sb.append("id number,\n");
+		sb.append("id number primary key,\n");
 		sb.append("xm varchar2(10) not null,\n");
 		sb.append("pic blob,\n");
 		sb.append("age number not null,\n");
 		sb.append("xx varchar2(20)\n");
 		sb.append(");\n");
-		sb.append("comment on zdry.table test is '表注释';\n");
+		sb.append("comment on table zdry.test is '表注释';\n");
 		sb.append("comment on column zdry.test.xm is 'dd';\n");
 		sb.append("comment on column zdry.test.xx is 'dd';\n");
 		Mockito.verify(jdbcService).execute(sb.toString());
