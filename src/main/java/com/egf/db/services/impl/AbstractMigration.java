@@ -45,6 +45,8 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 	/**主键**/
 	protected final static PrimaryKey IS_PRIMARYKEY=new PrimaryKeyImpl();
 	
+	protected final static com.egf.db.core.define.index.types.Unique UNIQUE_INDEX=new IndexUniqueImpl();
+	
 	protected static TableName TableName(String name) {
 		return new TableNameImpl(name);
 	}
