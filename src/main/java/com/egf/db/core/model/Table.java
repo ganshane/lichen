@@ -256,17 +256,6 @@ public interface Table {
 	 * @param name 名称
 	 * @param notNull 不为空
 	 */
-	public void clob(String name,NotNull notNull);
-	
-	/**
-	 * clob大字段
-	 * @param name 名称
-	 * @param define
-	 * 可选参数
-	 * Null,NotNull 是否可为空 
-	 * Comment 注释
-	 */
-	public void clob(String name,ColumnDefine ... define);
-	
+	public void clob(String name,NotNull notNull);	
 	
 }
