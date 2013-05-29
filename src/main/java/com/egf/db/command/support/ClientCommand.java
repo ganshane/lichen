@@ -65,7 +65,9 @@ public class ClientCommand implements Command {
 					}
 					finally {
 						// 升级操作
-						saveLog(timeId, handle);
+						if(flag){
+							saveLog(timeId, handle);
+						}
 					}
 				}
 			}
