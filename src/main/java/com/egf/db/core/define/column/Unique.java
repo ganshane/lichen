@@ -6,10 +6,6 @@
  */
 package com.egf.db.core.define.column;
 
-
-
-
-
 /**
  * @author fangj
  * @version $Revision: 2.0 $
