@@ -21,7 +21,7 @@ import com.egf.db.utils.StringUtils;
  * @version $Revision: 2.0 $
  * @since 1.0
  */
-public class DbH2Impl implements DbInterface {
+public class DbH2Impl extends AbstractDb {
 	
 	Logger logger=Logger.getLogger(DbH2Impl.class);
 	
@@ -30,8 +30,14 @@ public class DbH2Impl implements DbInterface {
     private final static String PRIMARY_KEY="PRIMARY KEY";
     
 	public String[] getPrimaryKeyColumn(String tableName) {
-		String sql="SELECT COLUMN_LIST FROM INFORMATION_SCHEMA.CONSTRAINTS WHERE TABLE_NAME=? AND CONSTRAINT_TYPE=?";
-		List<Object[]> list=(List<Object[]>) jdbcService.find(sql,new String[]{tableName.toUpperCase(),PRIMARY_KEY});
+		StringBuffer sql=new StringBuffer("SELECT COLUMN_LIST FROM INFORMATION_SCHEMA.CONSTRAINTS WHERE TABLE_NAME=? AND CONSTRAINT_TYPE=?");
+		String name=tableName;
+		if(tableName.indexOf(".")!=-1){
+			String schema=tableName.split("\\.")[0];
+			name=tableName.split("\\.")[1];
+			sql.append(" AND TABLE_SCHEMA='"+schema.toUpperCase()+"'");
+		}
+		List<Object[]> list=(List<Object[]>) jdbcService.find(sql.toString(),new String[]{name.toUpperCase(),PRIMARY_KEY});
 		if(list!=null&&!list.isEmpty()){
 			String[] strings = new String[ list.size()];
 			for (int i = 0; i < list.size(); i++) {
@@ -51,14 +57,12 @@ public class DbH2Impl implements DbInterface {
 			name=tableName.split("\\.")[1];
 			sql.append(" AND TABLE_SCHEMA='"+schema.toUpperCase()+"'");
 		}
-		List<Object[]> list=(List<Object[]>) jdbcService.find(sql.toString(), new String[]{name.toUpperCase(),PRIMARY_KEY});
-		if(list!=null&&!list.isEmpty()){
-			return (String)list.get(0)[0];
-		}
-		return null;
+		String keyName=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase(),PRIMARY_KEY});
+		return keyName;
 	}
 
 	
+	@Override
 	public void createSchema(String schema) throws SQLException{
 		//判断用户是否存在
 		String schemaSql="SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME=?";
@@ -69,4 +73,5 @@ public class DbH2Impl implements DbInterface {
 			jdbcService.execute(sql);
 		}
 	}
+	
 }

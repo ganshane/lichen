@@ -6,7 +6,6 @@
  */
 package com.egf.db.core.db;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.egf.db.core.jdbc.JdbcService;
@@ -18,7 +17,7 @@ import com.egf.db.core.jdbc.JdbcServiceImpl;
  * @version $Revision: 1.0 $
  * @since 1.0
  */
-public class DbOracleImpl implements DbInterface {
+public class DbOracleImpl extends AbstractDb{
 
 	private JdbcService jdbcService=new JdbcServiceImpl();
 	
@@ -39,16 +38,8 @@ public class DbOracleImpl implements DbInterface {
 
 	public String getPrimaryKeyName(String tableName) {
 		String sql="select constraint_name from all_constraints where owner = ? and table_name = ? and constraint_type = ?";
-		List<Object[]> list=(List<Object[]>) jdbcService.find(sql, new String[]{tableName.split("\\.")[0].toUpperCase(),tableName.split("\\.")[1].toUpperCase(),PRIMARY_KEY});
-		if(list!=null&&!list.isEmpty()){
-			return (String)list.get(0)[0];
-		}
-		return null;
+		String  keyName=(String) jdbcService.unique(sql, new String[]{tableName.split("\\.")[0].toUpperCase(),tableName.split("\\.")[1].toUpperCase(),PRIMARY_KEY});
+		return keyName;
 	}
-
 	
-	public void createSchema(String schema) throws SQLException {
-	
-	}
-
 }

@@ -6,7 +6,6 @@
  */
 package com.egf.db.core.db;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.egf.db.core.jdbc.JdbcService;
@@ -18,7 +17,7 @@ import com.egf.db.core.jdbc.JdbcServiceImpl;
  * @version $Revision: 1.0 $
  * @since 1.0
  */
-public class DbMysqlImpl implements DbInterface {
+public class DbMysqlImpl extends AbstractDb {
 
 	private JdbcService jdbcService = new JdbcServiceImpl();
 
@@ -40,14 +39,8 @@ public class DbMysqlImpl implements DbInterface {
 	
 	public String getPrimaryKeyName(String tableName) {
 		String sql="SELECT t.CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS t LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k USING(CONSTRAINT_NAME,TABLE_SCHEMA,TABLE_NAME) WHERE t.CONSTRAINT_TYPE=? AND t.TABLE_SCHEMA=DATABASE() AND t.TABLE_NAME=?";
-		List<Object[]> list=(List<Object[]>) jdbcService.find(sql, new String[]{PRIMARY_KEY,tableName.toUpperCase()});
-		if(list!=null&&!list.isEmpty()){
-			return (String)list.get(0)[0];
-		}
-		return null;
+		String keyName=(String) jdbcService.unique(sql, new String[]{PRIMARY_KEY,tableName.toUpperCase()});
+		return keyName;
 	}
-
-	public void createSchema(String schema) throws SQLException{
-		
-	}
+	
 }
