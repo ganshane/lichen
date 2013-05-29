@@ -6,8 +6,9 @@
  */
 package com.egf.db.services.impl;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.junit.Assert.*;
+
 import org.junit.Test;
 
 /**
@@ -209,4 +210,60 @@ public class TableImplTest {
 		fail("Not yet implemented");
 	}
 
+	@Test
+	public void testClobStringColumnDefineArray(){
+		table.clob("clob", new CommentImpl("clob"));
+		assertEquals("clob clob,\n", table.columns.toString());
+		assertEquals("comment on column TN.clob is 'clob';\n", table.comments.toString());
+	}
+	
+	@Test
+	public void testClobStringNotNull(){
+		table.clob("clob",new NotNullImpl());
+		assertEquals("clob clob not null,\n", table.columns.toString());
+	}
+	
+	@Test
+	public void testClobStringNotNullComment(){
+		table.clob("clob",new NotNullImpl(),new CommentImpl("test clob"));
+		assertEquals("clob clob not null,\n", table.columns.toString());
+		assertEquals("comment on column TN.clob is 'test clob';\n", table.comments.toString());
+	}
+	
+	@Test
+	public void testClobStringComment(){
+		table.clob("clob",new CommentImpl("test clob"));
+		assertEquals("clob clob,\n", table.columns.toString());
+		assertEquals("comment on column TN.clob is 'test clob';\n", table.comments.toString());
+	}
+	
+	
+	@Test
+	public void testDateStringColumnDefineArray(){
+		table.date("rksj", new CommentImpl("入库时间"));
+		assertEquals("rksj date,\n", table.columns.toString());
+		assertEquals("comment on column TN.rksj is '入库时间';\n", table.comments.toString());
+	}
+	
+	@Test
+	public void testDateStringNotNull(){
+		table.date("rksj", new CommentImpl("入库时间"));
+		assertEquals("rksj date,\n", table.columns.toString());
+		assertEquals("comment on column TN.rksj is '入库时间';\n", table.comments.toString());
+	}
+	
+	@Test
+	public void testDateStringNotNullComment(){
+		table.date("rksj",new NotNullImpl(),new CommentImpl("入库时间"));
+		assertEquals("rksj date not null,\n", table.columns.toString());
+		assertEquals("comment on column TN.rksj is '入库时间';\n", table.comments.toString());
+	}
+	
+	@Test
+	public void testDateStringComment(){
+		table.date("rksj",new CommentImpl("入库时间"));
+		assertEquals("rksj date,\n", table.columns.toString());
+		assertEquals("comment on column TN.rksj is '入库时间';\n", table.comments.toString());
+	}
+	
 }
