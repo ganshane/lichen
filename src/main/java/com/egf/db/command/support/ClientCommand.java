@@ -179,7 +179,7 @@ public class ClientCommand implements Command {
 				e.printStackTrace();
 			}
 		}else{
-			logger.info("初始化配置文件成功,请加入到classpath编译,修改配置文件后再运行init初始化!");
+			logger.info("初始化配置文件成功,请刷新项目加入到classpath编译,修改配置文件后再运行init初始化!");
 		}
 	}
 
