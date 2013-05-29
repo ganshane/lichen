@@ -40,33 +40,37 @@ public class ClientCommand implements Command {
 	boolean flag = true;
 	
 	public void up() {
-		// 查询数据库当前版本
-		String newDbVersion = getNewDbVersion();
-		Set<Class<?>> classSet = DbScriptFileClassFind.getDbScriptClasses(pack,DbConstant.SORT_ASC);
-		// 安文件时间先后排序
-		for (Class<?> cls : classSet) {
-			String className = cls.getName();
-			String fileName = className.substring(className.lastIndexOf(".") + 1, className.length());
-			handle = fileName.split("_")[0];
-			timeId = fileName.split("_")[1];
-			if (StringUtils.isBlank(newDbVersion)|| timeId.compareTo(newDbVersion) > 0) {
-				logger.info("\n" + cls.getName() + " up script start run...");
-				try {
-					am = (AbstractMigration) cls.newInstance();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				try {
-					am.up();
-				} catch (SQLException e) {
-					flag = false;
-					break;
-				}
-				finally {
-					// 升级操作
-					saveLog(timeId, handle);
+		if(!StringUtils.isBlank(pack)){
+			// 查询数据库当前版本
+			String newDbVersion = getNewDbVersion();
+			Set<Class<?>> classSet = DbScriptFileClassFind.getDbScriptClasses(pack,DbConstant.SORT_ASC);
+			// 安文件时间先后排序
+			for (Class<?> cls : classSet) {
+				String className = cls.getName();
+				String fileName = className.substring(className.lastIndexOf(".") + 1, className.length());
+				handle = fileName.split("_")[0];
+				timeId = fileName.split("_")[1];
+				if (StringUtils.isBlank(newDbVersion)|| timeId.compareTo(newDbVersion) > 0) {
+					logger.info("\n" + cls.getName() + " up script start run...");
+					try {
+						am = (AbstractMigration) cls.newInstance();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					try {
+						am.up();
+					} catch (SQLException e) {
+						flag = false;
+						break;
+					}
+					finally {
+						// 升级操作
+						saveLog(timeId, handle);
+					}
 				}
 			}
+		}else{
+			logger.error("\n请配置development.properties中的db_script_package,并新建包体!\n如果无development.properties文件请运行接口中的init方法,并把生成的文件加入到classpath!\n");
 		}
 	}
 
@@ -155,23 +159,27 @@ public class ClientCommand implements Command {
 		initFile();
 		JdbcService js = new JdbcServiceImpl();
 		String database_changelog = SysConfigPropertyUtil.getInstance().getPropertyValue(DbConstant.CHANGELOG);
-		if(database_changelog.indexOf(".")!=-1){
-			//创建用户
-			DbInterface di=DbFactory.getDb();
-			String schema=database_changelog.split("\\.")[0];
+		if(!StringUtils.isBlank(database_changelog)){
+			if(database_changelog.indexOf(".")!=-1){
+				//创建用户
+				DbInterface di=DbFactory.getDb();
+				String schema=database_changelog.split("\\.")[0];
+				try {
+					di.createSchema(schema);
+				} catch (SQLException e) {
+					logger.error("创建用户出错:"+e.getMessage());
+					e.printStackTrace();
+				}
+			}
+			String sql=String.format("create table %s (\nid varchar2(20) primary key,\napplied_at varchar2(25),\ndescription varchar2(255)\n);",database_changelog);
 			try {
-				di.createSchema(schema);
+				js.execute(sql);
 			} catch (SQLException e) {
-				logger.error("创建用户出错:"+e.getMessage());
+				logger.error("初始化数据失败:"+e.getMessage());
 				e.printStackTrace();
 			}
-		}
-		String sql=String.format("create table %s (\nid varchar2(20) primary key,\napplied_at varchar2(25),\ndescription varchar2(255)\n);",database_changelog);
-		try {
-			js.execute(sql);
-		} catch (SQLException e) {
-			logger.error("初始化数据失败:"+e.getMessage());
-			e.printStackTrace();
+		}else{
+			logger.info("初始化配置文件成功,请加入到classpath编译,修改配置文件后再运行init初始化!");
 		}
 	}
 
