@@ -10,6 +10,9 @@ import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Limit;
 import com.egf.db.core.define.column.NotNull;
 import com.egf.db.core.define.column.Unique;
+import com.egf.db.core.define.column.types.Blob;
+import com.egf.db.core.define.column.types.Clob;
+import com.egf.db.core.define.column.types.Date;
 import com.egf.db.core.define.column.types.Varchar2;
 import com.egf.db.core.define.name.ColumnName;
 import com.egf.db.core.define.name.IndexName;
@@ -26,12 +29,19 @@ import com.egf.db.services.Migration;
  */
 public abstract class AbstractMigration extends DatabaseServiceImpl implements Migration,DatabaseService{
 	
+	/**唯一**/
 	protected final static Unique UNIQUE=new UniqueImpl();
-	
+	/**不为空**/
 	protected final static NotNull NOTNULL=new NotNullImpl();
-	
+	/**number数字**/
 	protected final static com.egf.db.core.define.column.types.Number NUMBER=new NumberImpl();
-
+	/**时间**/
+	protected final static Date DATE=new DateImpl();
+	/**blob**/
+	protected final static Blob BLOB=new BlobImpl();
+	/**clob**/
+	protected final static Clob CLOB=new ClobImpl();
+	
 	protected static TableName TableName(String name) {
 		return new TableNameImpl(name);
 	}
@@ -55,7 +65,7 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 	protected static Varchar2 Varchar2(int length) {
 		return new Varchar2Impl(length);
 	}
-
+	
 	protected static com.egf.db.core.define.column.Default Default(String value) {
 		return new DefaultImpl(value);
 	}
