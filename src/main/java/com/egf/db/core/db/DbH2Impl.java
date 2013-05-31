@@ -73,5 +73,18 @@ public class DbH2Impl extends AbstractDb {
 			jdbcService.execute(sql);
 		}
 	}
+
+	public boolean existsTable(String tableName) {
+		//判断用户是否存在
+		String name=tableName;
+		StringBuffer sql=new StringBuffer("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME=?");
+		if(tableName.indexOf(".")!=-1){
+			String schema=tableName.split("\\.")[0];
+			name=tableName.split("\\.")[1];
+			sql.append(" AND TABLE_SCHEMA='"+schema.toUpperCase()+"'");
+		}
+		String tn=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase()});
+		return StringUtils.isBlank(tn)?false:true;
+	}
 	
 }

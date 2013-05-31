@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
+import com.egf.db.utils.StringUtils;
 
 /**
  * oracle数据库实现
@@ -40,6 +41,19 @@ public class DbOracleImpl extends AbstractDb{
 		String sql="select constraint_name from all_constraints where owner = ? and table_name = ? and constraint_type = ?";
 		String  keyName=(String) jdbcService.unique(sql, new String[]{tableName.split("\\.")[0].toUpperCase(),tableName.split("\\.")[1].toUpperCase(),PRIMARY_KEY});
 		return keyName;
+	}
+	
+	public boolean existsTable(String tableName) {
+		//判断用户是否存在
+		String name=tableName;
+		StringBuffer sql=new StringBuffer("select table_name from all_all_tables where table_name=?");
+		if(tableName.indexOf(".")!=-1){
+			String schema=tableName.split("\\.")[0];
+			name=tableName.split("\\.")[1];
+			sql.append(" AND owner='"+schema.toUpperCase()+"'");
+		}
+		String tn=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase()});
+		return StringUtils.isBlank(tn)?false:true;
 	}
 	
 }

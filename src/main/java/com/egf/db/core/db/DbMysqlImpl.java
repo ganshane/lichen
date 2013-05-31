@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
+import com.egf.db.utils.StringUtils;
 
 /**
  * mysql数据库实现
@@ -43,4 +44,16 @@ public class DbMysqlImpl extends AbstractDb {
 		return keyName;
 	}
 	
+	public boolean existsTable(String tableName) {
+		//判断用户是否存在
+		String name=tableName;
+		StringBuffer sql=new StringBuffer("select TABLE_NAME from INFORMATION_SCHEMA.TABLES where TABLE_NAME=?");
+		if(tableName.indexOf(".")!=-1){
+			String schema=tableName.split("\\.")[0];
+			name=tableName.split("\\.")[1];
+			sql.append(" AND TABLE_SCHEMA='"+schema.toUpperCase()+"'");
+		}
+		String tn=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase()});
+		return StringUtils.isBlank(tn)?false:true;
+	}
 }
