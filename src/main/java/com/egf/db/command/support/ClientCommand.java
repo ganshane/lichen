@@ -38,6 +38,8 @@ public class ClientCommand implements Command {
 	String timeId = null;
 	String handle = null;
 	boolean flag = true;
+	private final static String DOWN_SUCCESS_MESSAGE="数据库版本回滚成功,可继续回滚！";
+	private final static String DOWN_FAIL_MESSAGE="数据库版本回滚失败！";
 	
 	public void up() {
 		if(!StringUtils.isBlank(pack)){
@@ -76,7 +78,8 @@ public class ClientCommand implements Command {
 		}
 	}
 
-	public void down(String version) {
+	public String down(String version) {
+		String message=DOWN_SUCCESS_MESSAGE;
 		// 查询数据库当前版本
 		String newDbVersion = getNewDbVersion();
 		if(!StringUtils.isBlank(version)){
@@ -97,6 +100,7 @@ public class ClientCommand implements Command {
 						try {
 							am.down();
 						} catch (SQLException e) {
+							message=DOWN_FAIL_MESSAGE;
 							flag = false;
 							break;
 						}
@@ -109,7 +113,10 @@ public class ClientCommand implements Command {
 					}
 				}
 			}
+		}else{
+			message="数据库版本已回滚到初始化状态！";
 		}
+		return message;
 	}
 
 	/**
@@ -199,9 +206,9 @@ public class ClientCommand implements Command {
 	}
 
 	
-	public void down() {
+	public String down() {
 		String newDbVersion=this.getNewDbVersion();
-		this.down(newDbVersion);
+		return this.down(newDbVersion); 
 	}
 	
 	/**

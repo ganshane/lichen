@@ -42,7 +42,7 @@ public class ClientApplet extends JFrame implements ActionListener {
 	
 	/*JButton控件*/
 	JButton commitJb = new JButton("确定");
-	JButton	cancelJb = new JButton("取消");
+	JButton	cancelJb = new JButton("退出");
 	
 	JPanel p1 = new JPanel(new BorderLayout());
 	JPanel p2 = new JPanel();
@@ -91,17 +91,19 @@ public class ClientApplet extends JFrame implements ActionListener {
 		if (e.getSource() == commitJb) {
 				Command command=new ClientCommand();
 				String version=versionTf.getText();
+				String message=null;
 				if(StringUtils.isBlank(version)){
-					command.down();
+					message=command.down();
+					JOptionPane.showMessageDialog(null, message);
 				}else{
 					  Pattern pattern = Pattern.compile("[0-9]+");
 					  if(!pattern.matcher(version).matches()){
 						  JOptionPane.showMessageDialog(null, "版本号输入错误!");
 					  }else{
-						  command.down(version);
+						  message=command.down(version);
+						  JOptionPane.showMessageDialog(null, message);
 					  }
 				}
-			   JOptionPane.showMessageDialog(null, "数据库版本回滚成功,可继续回滚!");
 		}
 		if (e.getSource() == cancelJb) {
 			int exit = JOptionPane.showConfirmDialog(this, "确定要退出程序吗?");

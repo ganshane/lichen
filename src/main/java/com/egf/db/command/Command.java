@@ -29,11 +29,11 @@ public interface Command {
 	 * @param version
 	 *            版本号
 	 */
-	public void down(String version);
+	public String down(String version);
 	
 	/**
 	 * 回滚到上一个版本
 	 */
-	public void down();
+	public String down();
 
 }
