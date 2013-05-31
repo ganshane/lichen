@@ -37,4 +37,12 @@ public interface DbInterface {
 	 */
 	public void createSchema(String schema) throws SQLException;
 	
+	
+	/**
+	 * 是否存在表
+	 * @param tableName 表名
+	 * @return
+	 */
+	public boolean existsTable(String tableName);
+	
 }
