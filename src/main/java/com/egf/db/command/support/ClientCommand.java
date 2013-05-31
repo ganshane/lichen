@@ -39,7 +39,7 @@ public class ClientCommand implements Command {
 	String handle = null;
 	boolean flag = true;
 	private final static String DOWN_SUCCESS_MESSAGE="数据库版本回滚成功,可继续回滚！";
-	private final static String DOWN_FAIL_MESSAGE="数据库版本回滚失败！";
+	private final static String DOWN_FAIL_MESSAGE="数据库版本%s回滚失败！";
 	
 	public void up() {
 		if(!StringUtils.isBlank(pack)){
@@ -100,7 +100,7 @@ public class ClientCommand implements Command {
 						try {
 							am.down();
 						} catch (SQLException e) {
-							message=DOWN_FAIL_MESSAGE;
+							message=String.format(DOWN_FAIL_MESSAGE, timeId);
 							flag = false;
 							break;
 						}
