@@ -152,13 +152,17 @@ public class ClientCommand implements Command {
 	private String getNewDbVersion() {
 		JdbcService js = new JdbcServiceImpl();
 		String database_changelog = SysConfigPropertyUtil.getInstance().getPropertyValue(DbConstant.CHANGELOG);
+		DbInterface db=DbFactory.getDb();
+		boolean exists=db.existsTable(database_changelog);
+		if(!exists){
+			init();
+		}
 		String sql = String.format("select max(id) from %s", database_changelog);
 		String newDbVersion = (String) js.unique(sql);
 		return newDbVersion;
 	}
 	
 	public void init(){
-		initFile();
 		JdbcService js = new JdbcServiceImpl();
 		String database_changelog = SysConfigPropertyUtil.getInstance().getPropertyValue(DbConstant.CHANGELOG);
 		if(!StringUtils.isBlank(database_changelog)){
@@ -181,7 +185,7 @@ public class ClientCommand implements Command {
 				e.printStackTrace();
 			}
 		}else{
-			logger.info("初始化配置文件成功,请刷新项目加入到classpath编译,修改配置文件后再运行init初始化!");
+			logger.info("请载入配置文件"+DbConstant.DEVELOPMENT_PROPERTIES+"到classpath!");
 		}
 	}
 
@@ -191,6 +195,9 @@ public class ClientCommand implements Command {
 		this.down(newDbVersion);
 	}
 	
+	/**
+	 * 初始化文件
+	 */
 	private void initFile(){
 		File resourcesDir=new File(System.getProperty("user.dir")+"\\src\\main\\resources");
 		if(!resourcesDir.exists()){
@@ -201,6 +208,9 @@ public class ClientCommand implements Command {
 		}
 	}
 	
+	/**
+	 * 创建配置文件
+	 */
 	private void createFile(){
 		File developmentFile=new File(System.getProperty("user.dir")+"\\src\\main\\resources\\development.properties");
 		if(!developmentFile.exists()){
