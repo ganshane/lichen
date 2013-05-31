@@ -153,9 +153,12 @@ public class ClientCommand implements Command {
 		JdbcService js = new JdbcServiceImpl();
 		String database_changelog = SysConfigPropertyUtil.getInstance().getPropertyValue(DbConstant.CHANGELOG);
 		DbInterface db=DbFactory.getDb();
-		boolean exists=db.existsTable(database_changelog);
-		if(!exists){
-			init();
+		if(!DbConstant.DB_VERSION_INIT){
+			boolean exists=db.existsTable(database_changelog);
+			if(!exists){
+				init();
+				DbConstant.DB_VERSION_INIT=true;
+			}
 		}
 		String sql = String.format("select max(id) from %s", database_changelog);
 		String newDbVersion = (String) js.unique(sql);
