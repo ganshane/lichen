@@ -112,10 +112,10 @@ public class ClientCommand implements Command {
 						break;
 					}
 				}
-			}else{
-				message="该版本太高,数据库中不存在！";
 			}
-		}else{
+		}
+		//查看数据库版本
+		if(StringUtils.isBlank(getNewDbVersion())){
 			message="数据库版本已回滚到初始化状态！";
 		}
 		return message;
