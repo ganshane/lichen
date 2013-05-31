@@ -6,8 +6,7 @@
  */
 package com.egf.db;
 
-import com.egf.db.command.Command;
-import com.egf.db.command.support.ClientCommand;
+import com.egf.db.command.support.ClientApplet;
 
 /**
  * @author fangj
@@ -17,7 +16,7 @@ import com.egf.db.command.support.ClientCommand;
 public class Down {
 	
 	public static void main(String[] args) {
-		Command command=new  ClientCommand();
-		command.down();
-	}
+			new  ClientApplet();
+		}
+
 }
