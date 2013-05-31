@@ -15,6 +15,8 @@ package com.egf.db.core;
  */
 public class DbConstant {
 	
+	/**数据库初始化**/
+	public static boolean DB_VERSION_INIT=false;
 	/**数据库jdbc文件名常量定义**/
 	public final static String DEVELOPMENT_PROPERTIES = "development.properties";
 	
