@@ -86,7 +86,7 @@ public class ClientCommand implements Command {
 				String fileName = className.substring(className.lastIndexOf(".") + 1, className.length());
 				handle = fileName.split("_")[0];
 				timeId = fileName.split("_")[1];
-				if (timeId.compareTo(version) >= 0) {
+				if (timeId.compareTo(newDbVersion)<=0&&timeId.compareTo(version) >= 0) {
 					logger.info("\n" + cls.getName() + " down script start run...");
 					try {
 						am = (AbstractMigration) cls.newInstance();
@@ -103,6 +103,8 @@ public class ClientCommand implements Command {
 						// 回滚操作
 						deleteLog(timeId);
 					}
+				}else{
+					break;
 				}
 			}
 		}
