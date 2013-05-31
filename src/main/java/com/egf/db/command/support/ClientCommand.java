@@ -112,6 +112,8 @@ public class ClientCommand implements Command {
 						break;
 					}
 				}
+			}else{
+				message="该版本太高,数据库中不存在！";
 			}
 		}
 		//查看数据库版本
