@@ -77,15 +77,13 @@ public class ClientCommand implements Command {
 	}
 
 	public void down(String version) {
-		// 查询数据库当前版本
-		String newDbVersion = getNewDbVersion();
 		Set<Class<?>> classSet = DbScriptFileClassFind.getDbScriptClasses(pack,DbConstant.SORT_DESC);
 		for (Class<?> cls : classSet) {
 			String className = cls.getName();
 			String fileName = className.substring(className.lastIndexOf(".") + 1, className.length());
 			handle = fileName.split("_")[0];
 			timeId = fileName.split("_")[1];
-			if (timeId.compareTo(version) >= 0&& timeId.compareTo(newDbVersion) <= 0) {
+			if (timeId.compareTo(version) >= 0&& timeId.compareTo(version) <= 0) {
 				logger.info("\n" + cls.getName() + " down script start run...");
 				try {
 					am = (AbstractMigration) cls.newInstance();
