@@ -79,32 +79,34 @@ public class ClientCommand implements Command {
 	public void down(String version) {
 		// 查询数据库当前版本
 		String newDbVersion = getNewDbVersion();
-		if(version.compareTo(newDbVersion) <= 0){
-			Set<Class<?>> classSet = DbScriptFileClassFind.getDbScriptClasses(pack,DbConstant.SORT_DESC);
-			for (Class<?> cls : classSet) {
-				String className = cls.getName();
-				String fileName = className.substring(className.lastIndexOf(".") + 1, className.length());
-				handle = fileName.split("_")[0];
-				timeId = fileName.split("_")[1];
-				if (timeId.compareTo(newDbVersion)<=0&&timeId.compareTo(version) >= 0) {
-					logger.info("\n" + cls.getName() + " down script start run...");
-					try {
-						am = (AbstractMigration) cls.newInstance();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					try {
-						am.down();
-					} catch (SQLException e) {
-						flag = false;
+		if(!StringUtils.isBlank(version)){
+			if(version.compareTo(newDbVersion) <= 0){
+				Set<Class<?>> classSet = DbScriptFileClassFind.getDbScriptClasses(pack,DbConstant.SORT_DESC);
+				for (Class<?> cls : classSet) {
+					String className = cls.getName();
+					String fileName = className.substring(className.lastIndexOf(".") + 1, className.length());
+					handle = fileName.split("_")[0];
+					timeId = fileName.split("_")[1];
+					if (timeId.compareTo(newDbVersion)<=0&&timeId.compareTo(version) >= 0) {
+						logger.info("\n" + cls.getName() + " down script start run...");
+						try {
+							am = (AbstractMigration) cls.newInstance();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						try {
+							am.down();
+						} catch (SQLException e) {
+							flag = false;
+							break;
+						}
+						if (flag) {
+							// 回滚操作
+							deleteLog(timeId);
+						}
+					}if (timeId.compareTo(version) <0) {
 						break;
 					}
-					if (flag) {
-						// 回滚操作
-						deleteLog(timeId);
-					}
-				}else{
-					break;
 				}
 			}
 		}
