@@ -83,7 +83,7 @@ public class ClientCommand implements Command {
 		// 查询数据库当前版本
 		String newDbVersion = getNewDbVersion();
 		if(!StringUtils.isBlank(version)){
-			if(version.compareTo(newDbVersion) <= 0){
+			if(!StringUtils.isBlank(newDbVersion)&&version.compareTo(newDbVersion) <= 0){
 				Set<Class<?>> classSet = DbScriptFileClassFind.getDbScriptClasses(pack,DbConstant.SORT_DESC);
 				for (Class<?> cls : classSet) {
 					String className = cls.getName();
@@ -112,6 +112,8 @@ public class ClientCommand implements Command {
 						break;
 					}
 				}
+			}else{
+				message="该版本太高,数据库中不存在！";
 			}
 		}else{
 			message="数据库版本已回滚到初始化状态！";
