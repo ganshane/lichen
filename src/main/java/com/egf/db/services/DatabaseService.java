@@ -13,16 +13,18 @@ import com.egf.db.core.define.ColumnType;
 import com.egf.db.core.define.IndexType;
 import com.egf.db.core.define.column.ColumnDefine;
 import com.egf.db.core.define.column.Comment;
-import com.egf.db.core.define.column.Default;
-import com.egf.db.core.define.column.NotNull;
 import com.egf.db.core.define.name.ColumnName;
+import com.egf.db.core.define.name.ForeignKeyName;
 import com.egf.db.core.define.name.IndexName;
+import com.egf.db.core.define.name.PrimaryKeyName;
 import com.egf.db.core.define.name.TableName;
+import com.egf.db.core.define.name.UniqueName;
+import com.egf.db.exception.MigrationException;
 
 /**
  * 数据库服务接口
  * @author fangj
- * @version $Revision: 2.0 $
+ * @version $Revision: 2.0.1 $
  * @since 1.0
  */
 public interface DatabaseService {
@@ -34,7 +36,7 @@ public interface DatabaseService {
 	 * @param createTableCallback 回调函数
 	 * @throws SQLException
 	 */
-	public void createTable(TableName tableName,Comment comment, CreateTableCallback createTableCallback) throws SQLException;
+	public void createTable(TableName tableName,Comment comment, CreateTableCallback createTableCallback) throws MigrationException;
 	
 	/**
 	 * 创建表
@@ -42,166 +44,70 @@ public interface DatabaseService {
 	 * @param createTableCallback 表注释
 	 * @throws SQLException
 	 */
-	public void createTable(TableName tableName, CreateTableCallback createTableCallback) throws SQLException;
+	public void createTable(TableName tableName, CreateTableCallback createTableCallback) throws MigrationException;
+	
 	
 	/**
 	 * 添加列
 	 * @param tableName 表名
 	 * @param columnName 列名
 	 * @param columnType 列类型
-	 * @throws SQLException 
-	 */
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType) throws SQLException;
-	
-	/**
-	 * 添加列
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @param columnType 列类型
-	 * @param define 列定义
+	 * @param define 列定义<br/>
 	 * 可选参数：
-	 * Default 默认值
-	 * Null,NotNull 是否可为空 
+	 * Default 默认值<br/>
+	 * Null,NotNull 是否可为空<br/>
 	 * Comment 注释
-	 * @throws SQLException
+	 * @throws MigrationException
 	 */
-	public void addColumn(TableName tableName,ColumnName columnName,ColumnType columnType,ColumnDefine  ... define) throws SQLException;
+	public void addColumn(TableName tableName,ColumnName columnName,ColumnType columnType,ColumnDefine  ... define) throws MigrationException;
+	
 	
 	/**
-	 *  添加列
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @param columnType  列类型
-	 * @param deft	默认值
-	 * @throws SQLException
-	 */
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft) throws SQLException;
-	
-	/**
-	 * 添加列
+	 * 改变列
 	 * @param tableName 表名
 	 * @param columnName 列名
 	 * @param columnType 列类型
-	 * @param nullOrNotNull 是否可为空
-	 * @throws SQLException
+	 * @param define 列定义<br/>
+	 * 可选参数：
+	 * Default 默认值<br/>
+	 * Null,NotNull 是否可为空<br/> 
+	 * Comment 注释
+	 * @throws MigrationException
 	 */
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NotNull notNull) throws SQLException;
+	public void changeColumn(TableName tableName,ColumnName columnName,ColumnType columnType,ColumnDefine  ... define) throws MigrationException;
 	
+
 	/**
-	 *  添加列
+	 * 改变列
 	 * @param tableName 表名
 	 * @param columnName 列名
-	 * @param columnType 列类型
-	 * @param deft 默认值
-	 * @param nullOrNotNull 是否可为空
-	 * @throws SQLException
+	 * @param define 列定义<br/>
+	 * 可选参数：
+	 * Default 默认值<br/>
+	 * Null,NotNull 是否可为空<br/> 
+	 * Comment 注释
+	 * @throws MigrationException
 	 */
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NotNull notNull) throws SQLException;
-	
-	/**
-	 *  添加列
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @param columnType 列类型
-	 * @param comment 注释
-	 * @throws SQLException
-	 */
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Comment comment)throws SQLException;
-	
-	/**
-	 * 添加列
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @param columnType 列类型
-	 * @param deft 默认值
-	 * @param comment 注释
-	 * @throws SQLException
-	 */
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,Comment comment) throws SQLException;
-	
-	/**
-	 * 添加列
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @param columnType 列类型
-	 * @param nullOrNotNull 是否可为空
-	 * @param comment 注释
-	 * @throws SQLException
-	 */
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,NotNull notNull,Comment comment)throws SQLException;
-	
-	/**
-	 * 添加列
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @param columnType 列类型
-	 * @param deft 默认值
-	 * @param nullOrNotNull 是否可为空
-	 * @param comment 注释
-	 * @throws SQLException
-	 */
-	public void addColumn(TableName tableName,ColumnName columnName ,ColumnType columnType,Default deft,NotNull notNull,Comment comment) throws SQLException;
-	
-	/**
-	 * 添加列注释
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @param comment 注释
-	 * @throws SQLException
-	 */
-	public void addComment(TableName tableName,ColumnName columnName,Comment comment) throws SQLException;
-	
-	/**
-	 * 添加列不为空
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @throws SQLException
-	 */
-	public void addColumnNotNull(TableName tableName,ColumnName columnName) throws SQLException;
-	
-	/**
-	 * 添加列为空
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @throws SQLException
-	 */
-	public void addColumnNull(TableName tableName,ColumnName columnName) throws SQLException;
-	
-	/**
-	 * 修改列注释
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @param comment 注释
-	 * @throws SQLException
-	 */
-	public void updateComment(TableName tableName,ColumnName columnName,Comment comment) throws SQLException;
-	
-	/**
-	 * 添加默认值
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @param deft 默认值
-	 * @throws SQLException
-	 */
-	public void addDefault(TableName tableName,ColumnName columnName,Default deft) throws SQLException;
-	
-	/**
-	 * 修改默认值
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @param deft 默认值
-	 * @throws SQLException
-	 */
-	public void updateDefault(TableName tableName,ColumnName columnName,Default deft) throws SQLException;
+	public void changeColumn(TableName tableName,ColumnName columnName,ColumnDefine  ... define) throws MigrationException;
+		
 	
 	/**
 	 * 添加索引
 	 * @param tableName 表名
 	 * @param indexName 索引名称
 	 * @param columnName 列名
-	 * @throws SQLException
+	 * @throws MigrationException
 	 */
-	public void addIndex(TableName tableName,IndexName indexName, ColumnName ... columnName) throws SQLException;
+	public void addIndex(TableName tableName,IndexName indexName, ColumnName ... columnName) throws MigrationException;
+	
+	
+	/**
+	 * 添加索引
+	 * @param tableName 表名
+	 * @param columnName 列名
+	 * @throws MigrationException
+	 */
+	public void addIndex(TableName tableName,ColumnName ... columnName) throws MigrationException;
 	
 	/**
 	 * 添加索引
@@ -209,81 +115,92 @@ public interface DatabaseService {
 	 * @param indexName 索引名称
 	 * @param indexType 索引类型
 	 * @param columnName 列名(可多选,譬如:columnName1,columnName2)
-	 * @throws SQLException
+	 * @throws MigrationException
 	 */
-	public void addIndex(TableName tableName,IndexName indexName,IndexType indexType, ColumnName ...columnName) throws SQLException;
+	public void addIndex(TableName tableName,IndexName indexName,IndexType indexType, ColumnName ...columnName) throws MigrationException;
+	
+	
+	/**
+	 * 添加索引
+	 * @param tableName 表名
+	 * @param indexType 索引类型
+	 * @param columnName 列名(可多选,譬如:columnName1,columnName2)
+	 * @throws MigrationException
+	 */
+	public void addIndex(TableName tableName,IndexType indexType, ColumnName ...columnName) throws MigrationException;
+	
 	
 	/**
 	 * 添加主键
-	 * @param name 主键名称
+	 * @param primaryKeyName 主键名称
 	 * @param tableName 表名
 	 * @param columnName 列名(可多选,譬如：columnName1,columnName2)
-	 * @throws SQLException
+	 * @throws MigrationException
 	 */
-	public void addPrimaryKey(String name,TableName tableName,ColumnName ... columnName) throws SQLException;
+	public void addPrimaryKey(PrimaryKeyName primaryKeyName,TableName tableName,ColumnName ... columnName) throws MigrationException;
 	
 	/**
 	 * 添加外键
-	 * @param name 名称
+	 * @param primaryKeyName 名称
 	 * @param tableName 表名
 	 * @param refTableName 引用表
 	 * @param columnName 设置外键的列(可多选,譬如：columnName1,columnName2)
-	 * @throws SQLException
+	 * @throws MigrationException
 	 */
-	public void addForeignKey(String name,TableName tableName,TableName refTableName,ColumnName ... columnName) throws SQLException;
+	public void addForeignKey(ForeignKeyName primaryKeyName,TableName tableName,TableName refTableName,ColumnName ... columnName) throws MigrationException;
 	
 	/**
 	 * 添加唯一约束
 	 * @param name 约束名称
 	 * @param tableName 表名
 	 * @param columnName 列名
-	 * @throws SQLException
+	 * @throws MigrationException
 	 */
-	public void addUnique(String name,TableName tableName,ColumnName ... columnName) throws SQLException;
+	public void addUnique(UniqueName uniqueName,TableName tableName,ColumnName ... columnName) throws MigrationException;
 	
 	/**
 	 * 删除表
 	 * @param name 表名
-	 * @throws SQLException
+	 * @throws MigrationException
 	 */
-	public void dropTable(String name) throws SQLException;
+	public void dropTable(TableName tableName) throws MigrationException;
 	
 	/**
 	 * 删除索引
 	 * @param name 索引名称
-	 * @throws SQLException
+	 * @throws MigrationException
 	 */
-	public void dropIndex(String name) throws SQLException;
+	public void dropIndex(IndexName indexName) throws MigrationException;
 	
 	/**
 	 * 删除列
 	 * @param tableName 表名
 	 * @param columnName 列名
-	 * @throws SQLException
+	 * @throws MigrationException
 	 */
-	public void dropColumn(TableName tableName,ColumnName columnName) throws SQLException;
+	public void dropColumn(TableName tableName,ColumnName columnName) throws MigrationException;
 	
 	/**
 	 * 删除主键约束
 	 * @param tableName 表名
-	 * @throws SQLException
+	 * @throws MigrationException
 	 */
-	public void dropPrimaryKey(TableName tableName) throws SQLException;
+	public void dropPrimaryKey(TableName tableName) throws MigrationException;
 	
 	/**
 	 * 删除外键约束
 	 * @param tableName 表名
 	 * @param name 约束名称
-	 * @throws SQLException
+	 * @throws MigrationException
 	 */
-	public void dropForeignKey(TableName tableName,String name) throws SQLException;
+	public void dropForeignKey(TableName tableName,ForeignKeyName foreignKeyName) throws MigrationException;
 	
 	/**
 	 * 删除唯一约束
 	 * @param tableName 表名
 	 * @param name 唯一约束名称
-	 * @throws SQLException
+	 * @throws MigrationException
 	 */
-	public void dropUnique(TableName tableName,String name) throws SQLException;
+	public void dropUnique(TableName tableName,UniqueName uniqueName) throws MigrationException;
 
 }
