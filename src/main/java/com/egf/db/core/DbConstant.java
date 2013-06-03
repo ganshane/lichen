@@ -44,5 +44,9 @@ public class DbConstant {
 	/**mysql驱动常量定义**/
 	public final static String MTSQL_DRIVER_CLASS = "com.mysql.jdbc.Driver";
 	
+	
+	/** sql语句错误 **/
+	public static final String Migration_RETURN_CODE_01="01";
+	
 
 }
