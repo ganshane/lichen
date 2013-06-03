@@ -82,7 +82,7 @@ public class GenerateImplTest {
 	 */
 	@Test
 	public void testAddComment() {
-		String sql=generate.addComment("test", "cl1", "注释");
+		String sql=generate.changeColumn("test", "cl1", null,null,null,"注释");
 		assertEquals("comment on column test.cl1 is '注释';", sql);
 	}
 

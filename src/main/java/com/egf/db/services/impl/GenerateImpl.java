@@ -50,7 +50,7 @@ public class GenerateImpl implements Generate{
 	
 	public String changeColumn(String tableName,String columnName,String columnType,String ... columnDefine) {
 		StringBuffer sql= new StringBuffer(String.format("alter table %s modify %s;",tableName,columnName));		
-		if(StringUtils.isBlank(columnType)&&columnDefine[0]==null&&columnDefine[1]==null&&columnDefine[2]==null){
+		if(StringUtils.isBlank(columnType)&&columnDefine[0]==null&&columnDefine[1]==null){
 			return this.addComment(tableName, columnName, columnDefine[2]);
 		}else{
 			if(!StringUtils.isBlank(columnType)){
@@ -120,6 +120,12 @@ public class GenerateImpl implements Generate{
 			sql.append("\n"+this.addConstraint(tableName, primaryKeyName, primaryKey, columnName));
 		}
 		return sql.toString();
+	}
+
+	
+	public String renameColumn(String tableName, String oldColumnName,String newColumnName) {
+		String sql=String.format("alter table %s rename column %s to %s;", tableName,oldColumnName,newColumnName);
+		return sql;
 	}
 
 }

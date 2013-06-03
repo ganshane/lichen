@@ -92,6 +92,15 @@ public interface DatabaseService {
 		
 	
 	/**
+	 * 从命名列
+	 * @param tableName 表名
+	 * @param oldColumnName 原列名
+	 * @param newColumnName 新列名
+	 */
+	public void renameColumn(TableName tableName,ColumnName oldColumnName,ColumnName newColumnName);
+	
+	
+	/**
 	 * 添加索引
 	 * @param tableName 表名
 	 * @param indexName 索引名称

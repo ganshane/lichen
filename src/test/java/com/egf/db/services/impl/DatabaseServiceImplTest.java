@@ -195,7 +195,7 @@ public class DatabaseServiceImplTest {
 	@Test
 	public void testAddComment() throws SQLException{
 		service.setJdbcService(jdbcService);
-		service.addComment(new TableNameImpl("test"), new ColumnNameImpl("aa"), new CommentImpl("test"));
+		service.changeColumn(new TableNameImpl("test"), new ColumnNameImpl("aa"), new CommentImpl("test"));
 		Mockito.verify(jdbcService).execute("comment on column test.aa is 'test';");
 	}
 
@@ -205,7 +205,7 @@ public class DatabaseServiceImplTest {
 	@Test
 	public void testUpdateComment() throws SQLException{
 		service.setJdbcService(jdbcService);
-		service.addComment(new TableNameImpl("test"), new ColumnNameImpl("bb"), new CommentImpl("aa"));
+		service.changeColumn(new TableNameImpl("test"), new ColumnNameImpl("bb"), new CommentImpl("aa"));
 		Mockito.verify(jdbcService).execute("comment on column test.bb is 'aa';");
 	}
 

@@ -45,16 +45,6 @@ public interface Generate {
 	 */
 	public String changeColumn(String tableName,String columnName,String columnType,String ...columnDefine);
 	
-	
-	/**
-	 * 添加注释
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @param comment 注释
-	 * @return
-	 */
-	public String addComment(String tableName,String columnName,String comment);
-	
 	/**
 	 * 增加约束
 	 * @param tableName 表名
@@ -136,4 +126,12 @@ public interface Generate {
 	 */
 	public String dropConstraint(String tableName,String name);
 	
+	/**
+	 * 重命名列
+	 * @param tableName 表名
+	 * @param oldColumnName 原列名
+	 * @param newColumnName 新列名
+	 * @return
+	 */
+	public String renameColumn(String tableName,String oldColumnName,String newColumnName);
 }
