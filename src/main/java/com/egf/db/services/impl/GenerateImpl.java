@@ -49,14 +49,18 @@ public class GenerateImpl implements Generate{
 	}
 	
 	public String changeColumn(String tableName,String columnName,String columnType,String ... columnDefine) {
-		StringBuffer sql= new StringBuffer(String.format("alter table %s modify %s;",tableName,columnName));
-		if(!StringUtils.isBlank(columnType)){
-			sql=sql.delete(sql.length()-1, sql.length());
-			sql.append(" ");
-			sql.append(columnType);
-			sql.append(";");
+		StringBuffer sql= new StringBuffer(String.format("alter table %s modify %s %s;",tableName,columnName));		
+		if(StringUtils.isBlank(columnType)&&columnDefine[0]==null&&columnDefine[1]==null&&columnDefine[2]==null){
+			return this.addComment(tableName, columnName, columnDefine[2]);
+		}else{
+			if(!StringUtils.isBlank(columnType)){
+				sql=sql.delete(sql.length()-1, sql.length());
+				sql.append(" ");
+				sql.append(columnType);
+				sql.append(";");
+			}
+			appendSql(sql, tableName, columnName, columnDefine);
 		}
-		appendSql(sql, tableName, columnName, columnDefine);
 		return sql.toString();
 	}	
 	
@@ -90,7 +94,7 @@ public class GenerateImpl implements Generate{
 		String defaultValue=(columnDefine!=null&&columnDefine.length>=2)?columnDefine[1]:null;
 		String comment=(columnDefine!=null&&columnDefine.length>=3)?columnDefine[2]:null;
 		String unique=(columnDefine!=null&&columnDefine.length>=4)?columnDefine[3]:null;
-		String primaryKey=(columnDefine!=null&&columnDefine.length>=5)?columnDefine[4]:null;;
+		String primaryKey=(columnDefine!=null&&columnDefine.length>=5)?columnDefine[4]:null;
 		if(!StringUtils.isBlank(defaultValue)){
 			sql=sql.delete(sql.length()-1, sql.length());
 			sql.append(" ");
