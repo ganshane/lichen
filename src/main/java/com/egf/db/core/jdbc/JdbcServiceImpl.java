@@ -16,6 +16,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.egf.db.core.DbConstant;
+import com.egf.db.exception.MigrationException;
 import com.egf.db.utils.StringUtils;
 
 /**
@@ -31,7 +33,7 @@ public class JdbcServiceImpl implements JdbcService {
 	
 	private PreparedStatement pstmt = null;
 	
-	public void execute(String sql)throws SQLException{
+	public void execute(String sql)throws MigrationException{
 		//批量执行
 		String[] splitSql=sql.split(";");
 		for (String s : splitSql) {
@@ -41,7 +43,7 @@ public class JdbcServiceImpl implements JdbcService {
 		}
 	}
 
-	public void execute(String sql, final Object[] params) throws SQLException{
+	public void execute(String sql, final Object[] params) throws MigrationException{
 		try {
 			conn = DBConnectionManager.getConnection();
 			pstmt = conn.prepareStatement(sql);
@@ -58,7 +60,7 @@ public class JdbcServiceImpl implements JdbcService {
 				logger.error(e1.getMessage());
 				e1.printStackTrace();
 			}
-			throw new SQLException();
+			throw MigrationException.newFromErrorCode(DbConstant.Migration_RETURN_CODE_01);
 		} finally {
 			close();
 		}
