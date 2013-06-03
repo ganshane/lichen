@@ -8,6 +8,8 @@ package com.egf.db.core.db;
 
 import java.sql.SQLException;
 
+import com.egf.db.exception.MigrationException;
+
 /**
  * 数据库接口
  * @author fangj
@@ -35,7 +37,7 @@ public interface DbInterface {
 	 * @param schema 用户名称
 	 * @throws SQLException
 	 */
-	public void createSchema(String schema) throws SQLException;
+	public void createSchema(String schema) throws MigrationException;
 	
 	
 	/**

@@ -6,7 +6,7 @@
  */
 package com.egf.db.core.db;
 
-import java.sql.SQLException;
+import com.egf.db.exception.MigrationException;
 
 
 
@@ -17,6 +17,6 @@ import java.sql.SQLException;
  */
 public abstract class AbstractDb implements DbInterface{
 
-	public void createSchema(String schema)throws SQLException{}
+	public void createSchema(String schema)throws MigrationException{}
 
 }

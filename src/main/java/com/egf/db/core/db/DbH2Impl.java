@@ -6,13 +6,13 @@
  */
 package com.egf.db.core.db;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
+import com.egf.db.exception.MigrationException;
 import com.egf.db.utils.StringUtils;
 
 /**
@@ -63,7 +63,7 @@ public class DbH2Impl extends AbstractDb {
 
 	
 	@Override
-	public void createSchema(String schema) throws SQLException{
+	public void createSchema(String schema) throws MigrationException{
 		//判断用户是否存在
 		String schemaSql="SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME=?";
 		String name= (String) jdbcService.unique(schemaSql,new String[]{schema.toUpperCase()});
