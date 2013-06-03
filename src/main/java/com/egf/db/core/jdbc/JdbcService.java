@@ -9,6 +9,8 @@ package com.egf.db.core.jdbc;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.egf.db.exception.MigrationException;
+
 /**
  * jdbc service 接口
  * 
@@ -22,14 +24,14 @@ public interface JdbcService {
 	 * 自动提交执行sql语句
 	 * @param sql sql语句
 	 */
-	public void execute(String sql) throws SQLException;
+	public void execute(String sql) throws MigrationException;
 
 	/**
 	 * 自动提交执行sql语句
 	 * @param sql sql语句
 	 * @param params 参数
 	 */
-	public void execute(String sql, Object[] params) throws SQLException;
+	public void execute(String sql, Object[] params) throws MigrationException;
 	
 	/**
 	 * sql 查询,返回唯一结果
