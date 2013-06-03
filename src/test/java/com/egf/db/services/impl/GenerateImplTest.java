@@ -61,7 +61,7 @@ public class GenerateImplTest {
 	 */
 	@Test
 	public void testAddColumnStringStringString() {
-		String sql=generate.addColumn("test", "cl1", "varchar2(10)");
+		String sql=generate.addColumn("test", "cl1", "varchar2(10)",null,null,null,null,null);
 		assertEquals("alter table test add cl1 varchar2(10);", sql);
 	}
 
@@ -124,13 +124,13 @@ public class GenerateImplTest {
 
 	@Test
 	public void testAddColumnNullOrNot(){
-		String sql=generate.addColumnNullOrNot("test", "test", "null");
+		String sql=generate.changeColumn("test", "test", "null");
 		assertEquals("alter table test modify test null;", sql);
 	}
 	
 	@Test
 	public void testAddColumnNullOrNotN(){
-		String sql=generate.addColumnNullOrNot("test", "test", "not null");
+		String sql=generate.changeColumn("test", "test", "not null");
 		assertEquals("alter table test modify test not null;", sql);
 	}
 	

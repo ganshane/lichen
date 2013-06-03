@@ -6,13 +6,9 @@
  */
 package com.egf.db.services.impl;
 
-import java.sql.SQLException;
-
 import org.apache.log4j.Logger;
 
 import com.egf.db.core.CreateTableCallback;
-import com.egf.db.core.DbConstant;
-import com.egf.db.core.config.SysConfigPropertyUtil;
 import com.egf.db.core.db.DbFactory;
 import com.egf.db.core.db.DbInterface;
 import com.egf.db.core.define.ColumnType;
@@ -24,13 +20,16 @@ import com.egf.db.core.define.column.NotNull;
 import com.egf.db.core.define.column.PrimaryKey;
 import com.egf.db.core.define.column.Unique;
 import com.egf.db.core.define.name.ColumnName;
+import com.egf.db.core.define.name.ForeignKeyName;
 import com.egf.db.core.define.name.IndexName;
+import com.egf.db.core.define.name.PrimaryKeyName;
 import com.egf.db.core.define.name.TableName;
+import com.egf.db.core.define.name.UniqueName;
 import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
 import com.egf.db.core.sql.template.Generate;
+import com.egf.db.exception.MigrationException;
 import com.egf.db.services.DatabaseService;
-import com.egf.db.utils.DateTimeUtils;
 import com.egf.db.utils.StringUtils;
 
 /**
@@ -48,9 +47,11 @@ class DatabaseServiceImpl implements DatabaseService{
 	
 	private final String UNIQUE_KEY="unique";
 	
-	private final String NULL="null";
-	
 	private final String NOT_NULL="not null";
+	
+	private final static String HANDLE_COLUMN_TYPE_ADD="add";
+	
+	private final static String HANDLE_COLUMN_TYPE_CHANGE="change";
 	
 	private JdbcService jdbcService=new JdbcServiceImpl();
 	
@@ -61,7 +62,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		this.jdbcService = jdbcService;
 	}
 	
-	public void createTable(TableName tableName, Comment comment,CreateTableCallback createTableCallback)throws SQLException {
+	public void createTable(TableName tableName, Comment comment,CreateTableCallback createTableCallback)throws MigrationException {
 		TableImpl tmi=new TableImpl();
 		String tableComment="";
 		//进行回调操作
@@ -85,142 +86,44 @@ class DatabaseServiceImpl implements DatabaseService{
 		jdbcService.execute(sql+"\n"+tableComment+commentsSql.toString());
 	}
 	
-	public void createTable(TableName tableName, CreateTableCallback createTableCallback) throws SQLException{
+	public void createTable(TableName tableName, CreateTableCallback createTableCallback) throws MigrationException{
 		createTable(tableName, null, createTableCallback);
 	}
 	
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType) throws SQLException{
-		this.addColumn(tableName, columnName, columnType,null,null,null,null);
+	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, ColumnDefine... define) throws MigrationException{
+		this.handleColumn(HANDLE_COLUMN_TYPE_ADD, tableName, columnName, columnType, define);
 	}
 	
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NotNull notNull) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, notNull,null, null);
-	}
-
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Comment comment) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, null,null, comment);
+	public void changeColumn(TableName tableName, ColumnName columnName,ColumnDefine... define) throws MigrationException {
+		changeColumn(tableName, columnName,null, define);
 	}
 	
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, NotNull notNull, Comment comment) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, notNull,null, comment);
-	}
-
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, null,deft, null);
-	}
-
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NotNull notNull) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, notNull,deft, null);
-	}
-
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, Comment comment) throws SQLException{
-		this.addColumn(tableName, columnName, columnType, null,deft, comment);
-	}
-
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NotNull notNull,Comment comment,Unique unique,PrimaryKey primaryKey) throws SQLException{
-		String tn=tableName.getName();
-		String cn=columnName.getName();
-		String type=columnType.getColumnType();
-		String sql=generate.addColumn(tn, cn, type);
-		StringBuffer sb=new StringBuffer(sql);
-		if(deft!=null){
-			sb=sb.delete(sb.length()-1, sb.length());
-			sb.append(" ");
-			String value=deft.getValue();
-			sb.append("default");
-			sb.append(" ");
-			sb.append("'");
-			sb.append(value);
-			sb.append("'");
-			sb.append(";");
-		}if(notNull!=null){
-			sb=sb.delete(sb.length()-1, sb.length());
-			sb.append(" ");
-			sb.append(NOT_NULL);
-			sb.append(";");
-		}if(comment!=null){
-			String c=comment.getComment();
-			sb.append("\n"+generate.addComment(tn, cn, c));
-		}if(unique!=null){
-			String uniqueName="unique_"+DateTimeUtils.getNowTimeShortString();
-			sb.append("\n"+generate.addConstraint(tn, uniqueName, UNIQUE_KEY, cn));
-		}if(primaryKey!=null){
-			String primaryKeyName="pk_"+DateTimeUtils.getNowTimeShortString();
-			sb.append("\n"+generate.addConstraint(tn, primaryKeyName, PRIMARY_KEY, cn));
-		}
-		logger.info("\n"+sb.toString());
-		jdbcService.execute(sb.toString());
+	public void changeColumn(TableName tableName, ColumnName columnName,ColumnType columnType, ColumnDefine... define)throws MigrationException {
+		this.handleColumn(HANDLE_COLUMN_TYPE_CHANGE, tableName, columnName, columnType, define);
 	}
 	
-	public void addColumnNotNull(TableName tableName, ColumnName columnName) throws SQLException{
-		String tn=tableName.getName();
-		String cn=columnName.getName();
-		String columnType=jdbcService.getColumnTypeName(tn, cn);
-		String sql=modifySql("not_null", tn, cn, columnType, null);
-		logger.info("\n"+sql);
-		jdbcService.execute(sql);
-	}
-
-	public void addColumnNull(TableName tableName, ColumnName columnName) throws SQLException{
-		String tn=tableName.getName();
-		String cn=columnName.getName();
-		String sql=generate.addColumnNullOrNot(tn, cn, NULL);
-		logger.info("\n"+sql);
-		jdbcService.execute(sql);
-	}
-
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, Default deft, NotNull notNull,Comment comment) throws SQLException {
-		this.addColumn(tableName, columnName, columnType, deft,notNull,comment,null,null);
-	}
-	
-	public void addColumn(TableName tableName, ColumnName columnName,ColumnType columnType, ColumnDefine... define) throws SQLException{
-		Default deft=null;
-		NotNull notNull=null;
-		Comment comment=null;
-		Unique unique=null;
-		PrimaryKey primarykey=null;
-		for (ColumnDefine columnDefine : define) {
-			if(columnDefine!=null){
-				if(columnDefine instanceof Default){
-					deft=(Default)columnDefine;
-				}else if(columnDefine instanceof NotNull){
-					notNull=(NotNull)columnDefine;
-				}else if (columnDefine instanceof Comment){
-					comment=(Comment)columnDefine;
-				}else if(columnDefine instanceof Unique){
-					unique=(Unique)columnDefine;
-				}else if(columnDefine instanceof PrimaryKey){
-					primarykey=(PrimaryKey)columnDefine;
-				}
-			}
-		}
-		this.addColumn(tableName, columnName, columnType, deft, notNull, comment,unique,primarykey);
-	}
-	
-	public void addDefault(TableName tableName, ColumnName columnName,Default deft) throws SQLException{
-		String tn=tableName.getName();
-		String cn=columnName.getName();
-		String value=deft.getValue();
-		String columnType=jdbcService.getColumnTypeName(tn, cn);
-		String sql=modifySql("default", tn, cn, columnType, value);
-		logger.info("\n"+sql);
-		jdbcService.execute(sql);
+	public void addIndex(TableName tableName, ColumnName... columnName)throws MigrationException {
+		addIndex(tableName, null, null, columnName);
 	}
 
 	
-	public void updateDefault(TableName tableName, ColumnName columnName,Default deft) throws SQLException{
-		addDefault(tableName, columnName, deft);
+	public void addIndex(TableName tableName, IndexType indexType,ColumnName... columnName) throws MigrationException {
+		addIndex(tableName, null, indexType, columnName);
 	}
 	
-	public void addIndex(TableName tableName, IndexName IndexName,ColumnName... columnName) throws SQLException{
+	public void addIndex(TableName tableName, IndexName IndexName,ColumnName... columnName) throws MigrationException{
 		addIndex(tableName, IndexName, null, columnName);
 	}
 
-	public void addIndex(TableName tableName, IndexName IndexName, IndexType indexType,ColumnName... columnName) throws SQLException{
+	public void addIndex(TableName tableName, IndexName indexName, IndexType indexType,ColumnName... columnName) throws MigrationException{
 		String[] columnNames=new String[columnName.length];
 		String tn=tableName.getName();
-		String in=IndexName.getName();
+		String in=null;
 		String sql=null;
+		if(indexName==null){
+		}else{
+			 in=indexName.getName();
+		}
 		for (int i=0;i<columnName.length;i++) {
 			ColumnNameImpl columnImpl=(ColumnNameImpl)columnName[i];
 			columnNames[i]=columnImpl.getName();
@@ -235,39 +138,39 @@ class DatabaseServiceImpl implements DatabaseService{
 		jdbcService.execute(sql);
 	}
 
-	public void addPrimaryKey(String name, TableName tableName,ColumnName... columnName) throws SQLException{
+	public void addPrimaryKey(PrimaryKeyName primaryKeyName, TableName tableName,ColumnName... columnName) throws MigrationException{
 		StringBuffer sb=new StringBuffer();
 		//修正主键不能为空
 		for (ColumnName cn : columnName) {
 			String columnType=jdbcService.getColumnTypeName(tableName.getName(), cn.getName());
-			String sql=modifySql("not_null", tableName.getName(), cn.getName(), columnType, null);
+			String sql=  generate.changeColumn(tableName.getName(), cn.getName(), columnType,null,null,null);
 			sb.append(sql+"\n");
 		}
-		String sql=addKey(name, tableName,null, PRIMARY_KEY, columnName);
+		String sql=addKey(primaryKeyName.getName(), tableName,null, PRIMARY_KEY, columnName);
 		sb.append(sql+"\n");
 		logger.info("\n"+sb.toString());
 		jdbcService.execute(sb.toString());
 	}
 	
-	public void addForeignKey(String name, TableName tableName,TableName refTableName,ColumnName... columnName) throws SQLException{
-		String sql=addKey(name, tableName,refTableName,FOREIGN_KEY, columnName);
+	public void addForeignKey(ForeignKeyName foreignKeyName, TableName tableName,TableName refTableName,ColumnName... columnName) throws MigrationException{
+		String sql=addKey(foreignKeyName.getName(), tableName,refTableName,FOREIGN_KEY, columnName);
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
-	public void addUnique(String name, TableName tableName, ColumnName... columnName) throws SQLException{
-		String sql=addKey(name, tableName,null,UNIQUE_KEY, columnName);
+	public void addUnique(UniqueName uniqueName, TableName tableName, ColumnName... columnName) throws MigrationException{
+		String sql=addKey(uniqueName.getName(), tableName,null,UNIQUE_KEY, columnName);
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
-	public void dropTable(String name) throws SQLException{
-		String sql=generate.dropTalbe(name);
+	public void dropTable(TableName tableName) throws MigrationException{
+		String sql=generate.dropTalbe(tableName.getName());
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 	
-	public void dropColumn(TableName tableName,ColumnName columnName) throws SQLException{
+	public void dropColumn(TableName tableName,ColumnName columnName) throws MigrationException{
 		String tn=tableName.getName();
 		String cn=columnName.getName();
 		String sql=generate.dropColumn(tn, cn);
@@ -275,19 +178,19 @@ class DatabaseServiceImpl implements DatabaseService{
 		jdbcService.execute(sql);
 	}
 
-	public void dropIndex(String name) throws SQLException{
-	    String sql=	generate.dropIndex(name);
+	public void dropIndex(IndexName indexName) throws MigrationException{
+	    String sql=	generate.dropIndex(indexName.getName());
 	    logger.info("\n"+sql);
 	    jdbcService.execute(sql);
 	}
 	
-	public void dropForeignKey(TableName tableName,String name) throws SQLException{
-		String sql=dropKey(tableName, name);
+	public void dropForeignKey(TableName tableName,ForeignKeyName foreignKeyName) throws MigrationException{
+		String sql=dropKey(tableName, foreignKeyName.getName());
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
-	public void dropPrimaryKey(TableName tableName) throws SQLException{
+	public void dropPrimaryKey(TableName tableName) throws MigrationException{
 		//查询表对应的主键名称
 		DbInterface di=DbFactory.getDb();
 		String pkName=di.getPrimaryKeyName(tableName.getName());
@@ -296,13 +199,13 @@ class DatabaseServiceImpl implements DatabaseService{
 		jdbcService.execute(sql);
 	}
 
-	public void dropUnique(TableName tableName,String name) throws SQLException{
-		String sql=dropKey(tableName, name);
+	public void dropUnique(TableName tableName,UniqueName uniqueName) throws MigrationException{
+		String sql=dropKey(tableName, uniqueName.getName());
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 	
-	public void addComment(TableName tableName, ColumnName columnName,Comment comment) throws SQLException{
+	public void addComment(TableName tableName, ColumnName columnName,Comment comment) throws MigrationException{
 		String tn=tableName.getName();
 		String cn=columnName.getName();
 		String c=comment.getComment();
@@ -312,10 +215,41 @@ class DatabaseServiceImpl implements DatabaseService{
 	}
 	
 	
-	public void updateComment(TableName tableName, ColumnName columnName,Comment comment) throws SQLException{
+	public void changeComment(TableName tableName, ColumnName columnName,Comment comment) throws MigrationException{
 		addComment(tableName, columnName, comment);
 	}
 
+	private void handleColumn(String handleType,TableName tableName, ColumnName columnName,ColumnType columnType, ColumnDefine... define){
+		Default deft=null;
+		NotNull notNull=null;
+		Comment comment=null;
+		Unique unique=null;
+		String sql=null;
+		PrimaryKey primaryKey=null;
+		for (ColumnDefine columnDefine : define) {
+			if(columnDefine!=null){
+				if(columnDefine instanceof Default){
+					deft=(Default)columnDefine;
+				}else if(columnDefine instanceof NotNull){
+					notNull=(NotNull)columnDefine;
+				}else if (columnDefine instanceof Comment){
+					comment=(Comment)columnDefine;
+				}else if(columnDefine instanceof Unique){
+					unique=(Unique)columnDefine;
+				}else if(columnDefine instanceof PrimaryKey){
+					primaryKey=(PrimaryKey)columnDefine;
+				}
+			}
+		}
+		if(HANDLE_COLUMN_TYPE_ADD.equals(handleType)){
+			sql=generate.addColumn(tableName.getName(), columnName.getName(), columnType.getColumnType(),notNull==null?null:NOT_NULL, deft==null?null:deft.getValue(), comment==null?null:comment.getComment(), unique==null?null:UNIQUE_KEY, primaryKey==null?null:PRIMARY_KEY);
+		}else if(HANDLE_COLUMN_TYPE_CHANGE.equals(handleType)){
+			sql=generate.changeColumn(tableName.getName(), columnName.getName(),columnType==null?null:columnType.getColumnType(),notNull==null?null:NOT_NULL, deft==null?null:deft.getValue(), comment==null?null:comment.getComment());
+		}
+		logger.info("\n"+sql);
+		jdbcService.execute(sql);
+	}
+	
 	private String addKey(String name, TableName tableName,TableName refTableName, String keyType,ColumnName... columnName){
 		String[] columnNames=new String[columnName.length];
 		String sql=null;
@@ -340,27 +274,6 @@ class DatabaseServiceImpl implements DatabaseService{
 		String tn=tableName.getName();
 	    String sql=generate.dropConstraint(tn, name);
 	    return sql;
-	}
-	
-	
-	private String modifySql(String handle,String tn,String cn,String columnType,String value){
-		SysConfigPropertyUtil scpu = SysConfigPropertyUtil.getInstance();
-		String driverClass = scpu.getPropertyValue(DbConstant.JDBC_DRIVER_CLASS);
-		String sql=null;
-		if(handle.equals("default")){
-			if (DbConstant.H2_DRIVER_CLASS.equals(driverClass)) {
-				 sql=generate.addDefault(tn, cn,columnType, value);
-			} else {
-				sql=generate.addDefault(tn, cn, value);
-			}
-		}else if(handle.equals("not_null")){
-			if (DbConstant.H2_DRIVER_CLASS.equals(driverClass)) {
-				 sql=generate.addColumnNullOrNot(tn, cn,columnType, NOT_NULL);
-			} else {
-				 sql=generate.addColumnNullOrNot(tn, cn,NOT_NULL);
-			}
-		}
-		return sql;
 	}
 	
 }

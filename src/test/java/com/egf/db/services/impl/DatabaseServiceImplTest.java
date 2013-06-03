@@ -215,8 +215,8 @@ public class DatabaseServiceImplTest {
 	@Test
 	public void testAddDefault() throws SQLException{
 		service.setJdbcService(jdbcService);
-		service.addDefault(new TableNameImpl("test"), new ColumnNameImpl("cc"), new DefaultImpl("test"));
-		Mockito.verify(jdbcService).execute("alter table test modify cc null default 'test';");
+		service.changeColumn(new TableNameImpl("test"), new ColumnNameImpl("cc"), new DefaultImpl("test"));
+		Mockito.verify(jdbcService).execute("alter table test modify cc default 'test';");
 	}
 
 	/**
@@ -225,8 +225,8 @@ public class DatabaseServiceImplTest {
 	@Test
 	public void testUpdateDefault() throws SQLException{
 		service.setJdbcService(jdbcService);
-		service.addDefault(new TableNameImpl("test"), new ColumnNameImpl("xx"), new DefaultImpl("dddd"));
-		Mockito.verify(jdbcService).execute("alter table test modify xx null default 'dddd';");
+		service.changeColumn(new TableNameImpl("test"), new ColumnNameImpl("xx"), new DefaultImpl("dddd"));
+		Mockito.verify(jdbcService).execute("alter table test modify xx default 'dddd';");
 	}
 
 	/**
@@ -255,7 +255,7 @@ public class DatabaseServiceImplTest {
 	@Test
 	public void testAddPrimaryKey() throws SQLException{
 		service.setJdbcService(jdbcService);
-		service.addPrimaryKey("pk", new TableNameImpl("zdry.test"), new ColumnNameImpl("id"));
+		service.addPrimaryKey(new PrimaryKeyNameImpl("pk"), new TableNameImpl("zdry.test"), new ColumnNameImpl("id"));
 		Mockito.verify(jdbcService).execute("alter table zdry.test add constraint pk primary key (id)");
 	}
 
@@ -266,7 +266,7 @@ public class DatabaseServiceImplTest {
 	@Test
 	public void testAddUnique() throws SQLException{
 		service.setJdbcService(jdbcService);
-		service.addUnique("u1", new TableNameImpl("test"), new ColumnNameImpl("xx"));
+		service.addUnique(new UniqueNameImpl("u1"), new TableNameImpl("test"), new ColumnNameImpl("xx"));
 		Mockito.verify(jdbcService).execute("alter table test add constraint u1 unique (xx);");
 	}
 
@@ -278,7 +278,7 @@ public class DatabaseServiceImplTest {
 	@Test
 	public void testDropIndex() throws SQLException{
 		service.setJdbcService(jdbcService);
-		service.dropIndex("index2");
+		service.dropIndex(new IndexNameImpl("index2"));
 		Mockito.verify(jdbcService).execute("drop index index2;");
 	}
 
@@ -309,7 +309,7 @@ public class DatabaseServiceImplTest {
 	@Test
 	public void testDropUnique() throws SQLException{
 		service.setJdbcService(jdbcService);
-		service.dropUnique(new TableNameImpl("test"), "u1");
+		service.dropUnique(new TableNameImpl("test"), new UniqueNameImpl("u1"));
 		Mockito.verify(jdbcService).execute("alter table test drop constraint u1;");
 	}
 	
@@ -319,7 +319,7 @@ public class DatabaseServiceImplTest {
 	@Test
 	public void testDropTable() throws SQLException{
 		service.setJdbcService(jdbcService);
-		service.dropTable("test");
+		service.dropTable(new TableNameImpl("test"));
 		Mockito.verify(jdbcService).execute("drop table test;");
 	}
 }

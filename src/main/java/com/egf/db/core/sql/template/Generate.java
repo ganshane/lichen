@@ -6,6 +6,7 @@
  */
 package com.egf.db.core.sql.template;
 
+
 /**
  * 生成sql语句类
  * @author fangj
@@ -13,72 +14,37 @@ package com.egf.db.core.sql.template;
  * @since 1.0
  */
 public interface Generate {
-	
+
 	/**
 	 * 增加列
-	 * @param tableName 表名
-	 * @param name 列名
-	 * @param columnType 列类型
-	 * @return
-	 */
-	public String addColumn(String tableName,String name,String columnType);
-	
-	/**
-	 * 增加列
-	 * @param tableName 表名
-	 * @param name 列名
-	 * @param columnType 列类型
-	 * @param nullOrNotNull 是否为空
-	 * 参数说明：
-	 * null为空
-	 * not null不为空
-	 * @return
-	 */
-	public String addColumn(String tableName,String name,String columnType,String nullOrNotNull);
-	
-	/**
-	 * 添加列是否为空
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @param nullOrNot 是否为空
-	 * 参数说明
-	 * null为空
-	 * not null不为空
-	 * @return
-	 */
-	public String addColumnNullOrNot(String tableName, String columnName,String nullOrNot);
-	
-	/**
-	 * 添加列是否为空
-	 * @param tableName 表名
+	 * @param tableName  表名
 	 * @param columnName 列名
 	 * @param columnType 类型
-	 * @param nullOrNot 是否为空
-	 * * 参数说明
-	 * null为空
-	 * not null不为空
+	 * @param columnDefine <br>
+	 * 可选参数说明：<br>
+	 * @param notNull 不为空<br>
+	 * @param defaultValue 默认值<br>
+	 * @param comment 注释<br>
+	 * @param unique 唯一<br>
+	 * @param primaryKey 主键
 	 * @return
 	 */
-	public String addColumnNullOrNot(String tableName,String columnName,String columnType,String nullOrNot);
-	
+	public String addColumn(String tableName,String columnName,String columnType,String ...columnDefine);
+
 	/**
-	 * 添加列默认值
-	 * @param tableName 表名
+	 * 修改列
+	 * @param tableName  表名
 	 * @param columnName 列名
 	 * @param columnType 类型
-	 * @param value	默认值
+	 * @param columnDefine <br>
+	 * 可选参数说明：<br>
+	 * @param notNull 不为空<br>
+	 * @param defaultValue 默认值<br>
+	 * @param comment 注释
 	 * @return
 	 */
-	public String addDefault(String tableName,String columnName,String columnType,String value);
+	public String changeColumn(String tableName,String columnName,String columnType,String ...columnDefine);
 	
-	/**
-	 * 添加列默认值
-	 * @param tableName 表名
-	 * @param columnName 列名
-	 * @param value 默认值
-	 * @return
-	 */
-	public String addDefault(String tableName,String columnName,String value);
 	
 	/**
 	 * 添加注释
@@ -169,6 +135,5 @@ public interface Generate {
 	 * @return
 	 */
 	public String dropConstraint(String tableName,String name);
-	
 	
 }
