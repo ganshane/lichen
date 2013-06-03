@@ -17,8 +17,11 @@ import com.egf.db.core.define.column.types.Date;
 import com.egf.db.core.define.column.types.Varchar2;
 import com.egf.db.core.define.index.types.Normal;
 import com.egf.db.core.define.name.ColumnName;
+import com.egf.db.core.define.name.ForeignKeyName;
 import com.egf.db.core.define.name.IndexName;
+import com.egf.db.core.define.name.PrimaryKeyName;
 import com.egf.db.core.define.name.TableName;
+import com.egf.db.core.define.name.UniqueName;
 import com.egf.db.services.DatabaseService;
 import com.egf.db.services.Migration;
 
@@ -101,6 +104,33 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 		return new CommentImpl(comment);
 	}
 
+	/**
+	 * 主键名称
+	 * @param name 名称
+	 * @return
+	 */
+	protected static PrimaryKeyName PrimaryKeyName(String name) {
+		return new PrimaryKeyNameImpl(name);
+	}
+	
+	/**
+	 * 外键名称
+	 * @param name 名称
+	 * @return
+	 */
+	protected static ForeignKeyName ForeignKeyName(String name) {
+		return new ForeignKeyNameImpl(name);
+	}
+	
+	/**
+	 * 唯一名称
+	 * @param name 名称
+	 * @return
+	 */
+	protected static UniqueName UniqueName(String name) {
+		return new UniqueNameImpl(name);
+	}
+	
 	/**
 	 * 创建varchar2 类型
 	 * @param length 长度
