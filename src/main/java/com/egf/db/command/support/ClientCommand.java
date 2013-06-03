@@ -8,7 +8,6 @@ package com.egf.db.command.support;
 
 import java.io.File;
 import java.io.PrintWriter;
-import java.sql.SQLException;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -20,6 +19,7 @@ import com.egf.db.core.db.DbFactory;
 import com.egf.db.core.db.DbInterface;
 import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
+import com.egf.db.exception.MigrationException;
 import com.egf.db.services.impl.AbstractMigration;
 import com.egf.db.utils.DateTimeUtils;
 import com.egf.db.utils.StringUtils;
@@ -61,7 +61,7 @@ public class ClientCommand implements Command {
 					}
 					try {
 						am.up();
-					} catch (SQLException e) {
+					} catch (MigrationException e) {
 						flag = false;
 						break;
 					}
@@ -99,7 +99,7 @@ public class ClientCommand implements Command {
 						}
 						try {
 							am.down();
-						} catch (SQLException e) {
+						} catch (MigrationException e) {
 							message=String.format(DOWN_FAIL_MESSAGE, timeId);
 							flag = false;
 							break;
@@ -138,7 +138,7 @@ public class ClientCommand implements Command {
 		try {
 			logger.info("\n记录版本信息:" + sql);
 			js.execute(sql);
-		} catch (SQLException e) {
+		} catch (MigrationException e) {
 			e.printStackTrace();
 			logger.error("\n记录版本信息出错:" + e.getMessage());
 		}
@@ -155,7 +155,7 @@ public class ClientCommand implements Command {
 		try {
 			logger.info("\n回滚版本信息:" + sql);
 			js.execute(sql);
-		} catch (SQLException e) {
+		} catch (MigrationException e) {
 			logger.error("删除数据库升级日志出错:"+e.getMessage());
 			e.printStackTrace();
 		}
@@ -192,7 +192,7 @@ public class ClientCommand implements Command {
 				String schema=database_changelog.split("\\.")[0];
 				try {
 					di.createSchema(schema);
-				} catch (SQLException e) {
+				} catch (MigrationException e) {
 					logger.error("创建用户出错:"+e.getMessage());
 					e.printStackTrace();
 				}
@@ -200,7 +200,7 @@ public class ClientCommand implements Command {
 			String sql=String.format("create table %s (\nid varchar2(20) primary key,\napplied_at varchar2(25),\ndescription varchar2(255)\n);",database_changelog);
 			try {
 				js.execute(sql);
-			} catch (SQLException e) {
+			} catch (MigrationException e) {
 				logger.error("初始化数据失败:"+e.getMessage());
 				e.printStackTrace();
 			}
