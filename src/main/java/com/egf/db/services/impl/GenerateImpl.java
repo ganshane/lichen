@@ -49,7 +49,7 @@ public class GenerateImpl implements Generate{
 	}
 	
 	public String changeColumn(String tableName,String columnName,String columnType,String ... columnDefine) {
-		StringBuffer sql= new StringBuffer(String.format("alter table %s modify %s %s;",tableName,columnName));		
+		StringBuffer sql= new StringBuffer(String.format("alter table %s modify %s;",tableName,columnName));		
 		if(StringUtils.isBlank(columnType)&&columnDefine[0]==null&&columnDefine[1]==null&&columnDefine[2]==null){
 			return this.addComment(tableName, columnName, columnDefine[2]);
 		}else{
