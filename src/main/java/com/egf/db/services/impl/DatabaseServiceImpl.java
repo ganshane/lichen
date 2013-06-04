@@ -126,13 +126,21 @@ class DatabaseServiceImpl implements DatabaseService{
 		String tn=tableName.getName();
 		String in=null;
 		String sql=null;
-		if(indexName==null){
-		}else{
-			 in=indexName.getName();
-		}
 		for (int i=0;i<columnName.length;i++) {
 			ColumnNameImpl columnImpl=(ColumnNameImpl)columnName[i];
 			columnNames[i]=columnImpl.getName();
+		}
+		if(indexName==null){
+			//自动命名
+			in=StringUtils.getUnionStringArray(columnNames, "_")+"_index";
+			if(in.length()>30){
+				for (String s : columnNames) {
+					in=in+s.charAt(0)+"_";
+				}
+				in=in+"index";
+			}
+		}else{
+			in=indexName.getName();
 		}
 		if(indexType!=null){
 			String type=indexType.getIndexType();
