@@ -58,7 +58,7 @@ public class DbMysqlImpl extends AbstractDb {
 	}
 
 	public String renameColumnName(String tableName, String oldColumnName,String newColumnName) {
-		String sql=String.format("ALTER TABLE %S CHANGE %s %s",tableName,oldColumnName,newColumnName);
+		String sql=String.format("ALTER TABLE %s CHANGE %s %s",tableName,oldColumnName,newColumnName);
 		return sql;
 	}
 	
