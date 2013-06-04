@@ -53,7 +53,7 @@ public class ClientCommand implements Command {
 				handle = fileName.split("_")[0];
 				timeId = fileName.split("_")[1];
 				if (StringUtils.isBlank(newDbVersion)|| timeId.compareTo(newDbVersion) > 0) {
-					logger.info("\n" + cls.getName() + " up script start run...");
+					logger.info("\n--------------------" + fileName + " up script start run...--------------------");
 					try {
 						am = (AbstractMigration) cls.newInstance();
 					} catch (Exception e) {
@@ -68,6 +68,8 @@ public class ClientCommand implements Command {
 					finally {
 						// 升级操作
 						if(flag){
+							logger.info("\n--------------------" + fileName + " up OK!--------------------");
+							logger.info("\n");
 							saveLog(timeId, handle);
 						}
 					}
@@ -91,7 +93,7 @@ public class ClientCommand implements Command {
 					handle = fileName.split("_")[0];
 					timeId = fileName.split("_")[1];
 					if (timeId.compareTo(newDbVersion)<=0&&timeId.compareTo(version) >= 0) {
-						logger.info("\n" + cls.getName() + " down script start run...");
+						logger.info("\n--------------------" + fileName + " down script start run...--------------------");
 						try {
 							am = (AbstractMigration) cls.newInstance();
 						} catch (Exception e) {
@@ -106,6 +108,8 @@ public class ClientCommand implements Command {
 						}
 						if (flag) {
 							// 回滚操作
+							logger.info("\n--------------------" + fileName + " down OK!--------------------");
+							logger.info("\n");
 							deleteLog(timeId);
 						}
 					}if (timeId.compareTo(version) <0) {
@@ -136,7 +140,7 @@ public class ClientCommand implements Command {
 		String database_changelog = SysConfigPropertyUtil.getInstance().getPropertyValue(DbConstant.CHANGELOG);
 		String sql = String.format("insert into %s (id,applied_at,description) values('%s','%s','%s')",database_changelog, timeId, DateTimeUtils.getNowTimeNormalString(), handle);
 		try {
-			logger.info("\n记录版本信息:" + sql);
+			logger.debug("\n记录版本信息:" + sql);
 			js.execute(sql);
 		} catch (MigrationException e) {
 			e.printStackTrace();
@@ -153,7 +157,7 @@ public class ClientCommand implements Command {
 		String sql=String.format("delete from %s where id='%s'",database_changelog,id);
 		JdbcService js = new JdbcServiceImpl();
 		try {
-			logger.info("\n回滚版本信息:" + sql);
+			logger.debug("\n回滚版本信息:" + sql);
 			js.execute(sql);
 		} catch (MigrationException e) {
 			logger.error("删除数据库升级日志出错:"+e.getMessage());
