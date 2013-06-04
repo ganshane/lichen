@@ -86,5 +86,11 @@ public class DbH2Impl extends AbstractDb {
 		String tn=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase()});
 		return StringUtils.isBlank(tn)?false:true;
 	}
+
+	
+	public String renameColumnName(String tableName, String oldColumnName,String newColumnName) {
+		String sql=String.format("ALTER TABLE %s ALTER COLUMN %s RENAME TO %s", tableName,oldColumnName,newColumnName);
+		return sql;
+	}
 	
 }

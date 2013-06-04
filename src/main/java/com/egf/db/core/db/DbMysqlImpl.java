@@ -56,4 +56,10 @@ public class DbMysqlImpl extends AbstractDb {
 		String tn=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase()});
 		return StringUtils.isBlank(tn)?false:true;
 	}
+
+	public String renameColumnName(String tableName, String oldColumnName,String newColumnName) {
+		String sql=String.format("ALTER TABLE %S CHANGE %s %s",tableName,oldColumnName,newColumnName);
+		return sql;
+	}
+	
 }

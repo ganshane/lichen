@@ -211,7 +211,8 @@ class DatabaseServiceImpl implements DatabaseService{
 	}
 
 	public void renameColumn(TableName tableName, ColumnName oldColumnName,ColumnName newColumnName) {
-		String sql=generate.renameColumn(tableName.getName(), oldColumnName.getName(), newColumnName.getName());
+		DbInterface di=DbFactory.getDb();
+		String sql=di.renameColumnName(tableName.getName(), oldColumnName.getName(), newColumnName.getName());
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}

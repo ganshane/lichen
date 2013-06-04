@@ -39,12 +39,19 @@ public interface DbInterface {
 	 */
 	public void createSchema(String schema) throws MigrationException;
 	
-	
 	/**
 	 * 是否存在表
 	 * @param tableName 表名
 	 * @return
 	 */
 	public boolean existsTable(String tableName);
+	
+	/**
+	 * 重命名列sql
+	 * @param tableName
+	 * @param oldColumnName
+	 * @param newColumnName
+	 */
+	public String renameColumnName(String tableName,String oldColumnName,String newColumnName);
 	
 }
