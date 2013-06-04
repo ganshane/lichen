@@ -68,7 +68,7 @@ public class ClientCommand implements Command {
 					finally {
 						// 升级操作
 						if(flag){
-							logger.info("\n--------------------" + fileName + " up OK!--------------------");
+							logger.info("\n--------------------execute  " + fileName + " up script ok!--------------------");
 							logger.info("\n");
 							saveLog(timeId, handle);
 						}
@@ -108,7 +108,7 @@ public class ClientCommand implements Command {
 						}
 						if (flag) {
 							// 回滚操作
-							logger.info("\n--------------------" + fileName + " down OK!--------------------");
+							logger.info("\n--------------------execute  " + fileName + " down script ok!--------------------");
 							logger.info("\n");
 							deleteLog(timeId);
 						}
