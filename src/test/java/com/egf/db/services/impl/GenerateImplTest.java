@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import com.egf.db.core.sql.template.Generate;
+import com.egf.db.core.sql.template.OracleGenerate;
 
 /**
  * @author fangj
@@ -22,9 +23,9 @@ public class GenerateImplTest {
 
 	Logger logger=Logger.getLogger(GenerateImplTest.class);
 	
-	Generate generate =new GenerateImpl();
+	Generate generate =new OracleGenerate();
 	/**
-	 * Test method for {@link com.egf.db.services.impl.GenerateImpl#AddConstraint(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}.
+	 * Test method for {@link com.egf.db.core.sql.template.OracleGenerate#AddConstraint(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}.
 	 */
 	@Test
 	public void testAddConstraint() {
@@ -36,7 +37,7 @@ public class GenerateImplTest {
 	}
 
 	/**
-	 * Test method for {@link com.egf.db.services.impl.GenerateImpl#addIndex(java.lang.String, java.lang.String, java.lang.String[])}.
+	 * Test method for {@link com.egf.db.core.sql.template.OracleGenerate#addIndex(java.lang.String, java.lang.String, java.lang.String[])}.
 	 */
 	@Test
 	public void testAddIndexStringStringStringArray() {
@@ -48,7 +49,7 @@ public class GenerateImplTest {
 	}
 
 	/**
-	 * Test method for {@link com.egf.db.services.impl.GenerateImpl#addIndex(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}.
+	 * Test method for {@link com.egf.db.core.sql.template.OracleGenerate#addIndex(java.lang.String, java.lang.String, java.lang.String, java.lang.String[])}.
 	 */
 	@Test
 	public void testAddIndexStringStringStringStringArray() {
@@ -57,7 +58,7 @@ public class GenerateImplTest {
 	}
 
 	/**
-	 * Test method for {@link com.egf.db.services.impl.GenerateImpl#AddColumn(java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.egf.db.core.sql.template.OracleGenerate#AddColumn(java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testAddColumnStringStringString() {
@@ -66,7 +67,7 @@ public class GenerateImplTest {
 	}
 
 	/**
-	 * Test method for {@link com.egf.db.services.impl.GenerateImpl#AddColumn(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.egf.db.core.sql.template.OracleGenerate#AddColumn(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testAddColumnStringStringStringString() {
@@ -78,7 +79,7 @@ public class GenerateImplTest {
 	}
 
 	/**
-	 * Test method for {@link com.egf.db.services.impl.GenerateImpl#addComment(java.lang.String, java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.egf.db.core.sql.template.OracleGenerate#addComment(java.lang.String, java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testAddComment() {
@@ -87,7 +88,7 @@ public class GenerateImplTest {
 	}
 
 	/**
-	 * Test method for {@link com.egf.db.services.impl.GenerateImpl#dropColumn(java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.egf.db.core.sql.template.OracleGenerate#dropColumn(java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testDropColumn() {
@@ -96,7 +97,7 @@ public class GenerateImplTest {
 	}
 
 	/**
-	 * Test method for {@link com.egf.db.services.impl.GenerateImpl#dropIndex(java.lang.String)}.
+	 * Test method for {@link com.egf.db.core.sql.template.OracleGenerate#dropIndex(java.lang.String)}.
 	 */
 	@Test
 	public void testDropIndex() {
@@ -105,7 +106,7 @@ public class GenerateImplTest {
 	}
 
 	/**
-	 * Test method for {@link com.egf.db.services.impl.GenerateImpl#dropTalbe(java.lang.String)}.
+	 * Test method for {@link com.egf.db.core.sql.template.OracleGenerate#dropTalbe(java.lang.String)}.
 	 */
 	@Test
 	public void testDropTalbe() {
@@ -114,7 +115,7 @@ public class GenerateImplTest {
 	}
 
 	/**
-	 * Test method for {@link com.egf.db.services.impl.GenerateImpl#dropConstraint(java.lang.String, java.lang.String)}.
+	 * Test method for {@link com.egf.db.core.sql.template.OracleGenerate#dropConstraint(java.lang.String, java.lang.String)}.
 	 */
 	@Test
 	public void testDropConstraint() {
