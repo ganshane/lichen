@@ -84,13 +84,13 @@ public class DbH2Impl extends AbstractDb {
 
 	public String getColumnType(String tableName, String columnName) {
 		String name=tableName;
-		StringBuffer sql=new StringBuffer("select DATA_TYPE from information_schema.COLUMNS where TABLE_NAME=? and column_name = ?");
+		StringBuffer sql=new StringBuffer("select TYPE_NAME from information_schema.COLUMNS where TABLE_NAME=? and column_name = ?");
 		if(tableName.indexOf(".")!=-1){
 			String schema=tableName.split("\\.")[0];
 			name=tableName.split("\\.")[1];
 			sql.append(" AND TABLE_SCHEMA='"+schema.toUpperCase()+"'");
 		}
-		String type=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase(),columnName.toUpperCase()});
+		String type=jdbcService.unique(sql.toString(), new String[]{name.toUpperCase(),columnName.toUpperCase()}).toString();
 		return type;
 	}
 }
