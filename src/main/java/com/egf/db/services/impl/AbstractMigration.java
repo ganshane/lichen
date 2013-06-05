@@ -14,8 +14,6 @@ import com.egf.db.core.define.column.Unique;
 import com.egf.db.core.define.column.types.Blob;
 import com.egf.db.core.define.column.types.Clob;
 import com.egf.db.core.define.column.types.Date;
-import com.egf.db.core.define.column.types.Varchar2;
-import com.egf.db.core.define.index.types.Normal;
 import com.egf.db.core.define.name.ColumnName;
 import com.egf.db.core.define.name.ForeignKeyName;
 import com.egf.db.core.define.name.IndexName;
@@ -48,12 +46,6 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 	protected final static Clob CLOB=new ClobImpl();
 	/**主键**/
 	protected final static PrimaryKey IS_PRIMARYKEY=new PrimaryKeyImpl();
-	/**索引唯一类型**/
-	protected final static com.egf.db.core.define.index.types.Unique UNIQUE_INDEX=new IndexUniqueImpl();
-	/**索引默认类型**/
-	protected final static Normal NORMAL=new com.egf.db.services.impl.Normal();
-	/**索引Bitmap类型**/
-	protected final static Bitmap BITMAP=new Bitmap();
 	
 	/**
 	 * 创建表名
@@ -136,8 +128,8 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 	 * @param length 长度
 	 * @return
 	 */
-	protected static Varchar2 Varchar2(int length) {
-		return new Varchar2Impl(length);
+	protected static StringImpl String(int length) {
+		return new StringImpl(length);
 	}
 	
 	/**
