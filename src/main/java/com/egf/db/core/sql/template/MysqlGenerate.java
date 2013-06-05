@@ -40,8 +40,8 @@ public class MysqlGenerate extends AbstractGenerate{
 	}
 
 	public String dropIndex(String indexName) {
-		String tn=indexName.split("\\.")[0];
-		String in=indexName.split("\\.")[1];
+		String tn=indexName.substring(0,indexName.lastIndexOf("."));
+		String in=indexName.substring(indexName.lastIndexOf(".")+1);
 		String sql= String.format("alter table %s drop index %s;",tn,in);
 		return sql;
 	}
