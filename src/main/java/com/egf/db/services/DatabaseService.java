@@ -10,7 +10,6 @@ import java.sql.SQLException;
 
 import com.egf.db.core.CreateTableCallback;
 import com.egf.db.core.define.ColumnType;
-import com.egf.db.core.define.IndexType;
 import com.egf.db.core.define.column.ColumnDefine;
 import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.name.ColumnName;
@@ -117,27 +116,7 @@ public interface DatabaseService {
 	 * @throws MigrationException
 	 */
 	public void addIndex(TableName tableName,ColumnName ... columnName) throws MigrationException;
-	
-	/**
-	 * 添加索引
-	 * @param tableName 表名
-	 * @param indexName 索引名称
-	 * @param indexType 索引类型
-	 * @param columnName 列名(可多选,譬如:columnName1,columnName2)
-	 * @throws MigrationException
-	 */
-	public void addIndex(TableName tableName,IndexName indexName,IndexType indexType, ColumnName ...columnName) throws MigrationException;
-	
-	
-	/**
-	 * 添加索引
-	 * @param tableName 表名
-	 * @param indexType 索引类型
-	 * @param columnName 列名(可多选,譬如:columnName1,columnName2)
-	 * @throws MigrationException
-	 */
-	public void addIndex(TableName tableName,IndexType indexType, ColumnName ...columnName) throws MigrationException;
-	
+
 	
 	/**
 	 * 添加主键
