@@ -14,6 +14,27 @@ package com.egf.db.core.sql.template;
  * @since 1.0
  */
 public interface Generate {
+	
+	/**
+	 * 获取字符串类型
+	 * @param length 长度
+	 * @return
+	 */
+	public String getString(int length);
+	
+	/**
+	 * 获取整数类型
+	 * @return
+	 */
+	public String getNumber();
+	
+	/**
+	 * 更改表注释
+	 * @param tableName 表名
+	 * @param comment 注释
+	 * @return
+	 */
+	public String changeTableComment(String tableName,String comment);
 
 	/**
 	 * 增加列
@@ -131,7 +152,9 @@ public interface Generate {
 	 * @param tableName 表名
 	 * @param oldColumnName 原列名
 	 * @param newColumnName 新列名
+	 * @param columnType 列类型
 	 * @return
 	 */
-	public String renameColumn(String tableName,String oldColumnName,String newColumnName);
+	public String renameColumnName(String tableName, String oldColumnName,String newColumnName,String columnType);
+	
 }
