@@ -7,6 +7,7 @@
 package com.egf.db.services.impl;
 
 import com.egf.db.core.define.column.types.Number;
+import com.egf.db.core.sql.template.GenerateFactory;
 
 /**
  * @author fangj
@@ -16,7 +17,7 @@ import com.egf.db.core.define.column.types.Number;
 class NumberImpl implements Number{
 
 	public String getColumnType() {
-			return "number";
+		return GenerateFactory.getGenerate().getNumber();
 	}
 
 }
