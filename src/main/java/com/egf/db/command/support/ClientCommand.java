@@ -19,6 +19,8 @@ import com.egf.db.core.db.DbFactory;
 import com.egf.db.core.db.DbInterface;
 import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
+import com.egf.db.core.sql.template.Generate;
+import com.egf.db.core.sql.template.GenerateFactory;
 import com.egf.db.exception.MigrationException;
 import com.egf.db.services.impl.AbstractMigration;
 import com.egf.db.utils.DateTimeUtils;
@@ -27,7 +29,7 @@ import com.egf.db.utils.StringUtils;
 /**
  * 客户端命令方法
  * @author fangj
- * @version $Revision: 2.0 $
+ * @version $Revision: 2.0.2 $
  * @since 1.0
  */
 public class ClientCommand implements Command {
@@ -70,8 +72,8 @@ public class ClientCommand implements Command {
 						if(flag){
 							logger.info("\n--------------------execute  " + fileName + " up script ok!--------------------");
 							logger.info("\n");
-							saveLog(timeId, handle);
 						}
+						saveLog(timeId, handle);
 					}
 				}
 			}
@@ -201,7 +203,11 @@ public class ClientCommand implements Command {
 					e.printStackTrace();
 				}
 			}
-			String sql=String.format("create table %s (\nid varchar2(20) primary key,\napplied_at varchar2(25),\ndescription varchar2(255)\n);",database_changelog);
+			Generate generate=GenerateFactory.getGenerate();
+			String idType=generate.getString(20);
+			String applied_at_type=generate.getString(25);
+			String descriptionType=generate.getString(255);
+			String sql=String.format("create table %s (\nid "+idType+" primary key,\napplied_at "+applied_at_type+",\ndescription "+descriptionType+"\n);",database_changelog);
 			try {
 				js.execute(sql);
 			} catch (MigrationException e) {
