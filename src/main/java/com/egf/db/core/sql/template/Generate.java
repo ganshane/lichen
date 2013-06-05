@@ -157,4 +157,14 @@ public interface Generate {
 	 */
 	public String renameColumnName(String tableName, String oldColumnName,String newColumnName,String columnType);
 	
+	/**
+	 * 
+	 * @param columnSql 列sql语句
+	 * @param  commentSql 注释sql语句
+	 * @param columnName 列名
+	 * @param comment 注释
+	 * @return
+	 */
+	public StringBuffer addComment(StringBuffer columnSql,StringBuffer commentSql, String columnName,String comment);
+	
 }

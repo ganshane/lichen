@@ -22,5 +22,10 @@ public class H2Generate extends AbstractGenerate{
 		String sql=String.format("ALTER TABLE %s ALTER COLUMN %s RENAME TO %s", tableName,oldColumnName,newColumnName);
 		return sql;
 	}
+
+	public StringBuffer addComment(StringBuffer columnSql, StringBuffer commentSql, String columnName, String comment) {
+		commentSql.append(String.format("comment on column TN.%s is '%s';\n",columnName, comment));
+		return commentSql;
+	}
 	
 }

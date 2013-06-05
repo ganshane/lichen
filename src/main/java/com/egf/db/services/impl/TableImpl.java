@@ -15,6 +15,7 @@ import com.egf.db.core.define.column.NotNull;
 import com.egf.db.core.define.column.PrimaryKey;
 import com.egf.db.core.define.column.Unique;
 import com.egf.db.core.model.Table;
+import com.egf.db.core.sql.template.GenerateFactory;
 
 /**
  * table定义实现
@@ -81,36 +82,36 @@ class TableImpl implements Table {
 		appendColumn(name, new NumberImpl());
 	}
 
-	public void varchar2(String name, Limit limit, Comment comment) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()),comment);
+	public void String(String name, Limit limit, Comment comment) {
+		appendColumn(name, new StringImpl(limit.getLimit()),comment);
 	}
 
-	public void varchar2(String name, Limit limit, Default deft, Comment comment) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()),deft, comment);
+	public void String(String name, Limit limit, Default deft, Comment comment) {
+		appendColumn(name, new StringImpl(limit.getLimit()),deft, comment);
 	}
 
-	public void varchar2(String name, Limit limit, Default deft,NotNull notNull, Comment comment) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), notNull, deft, comment);
+	public void String(String name, Limit limit, Default deft,NotNull notNull, Comment comment) {
+		appendColumn(name, new StringImpl(limit.getLimit()), notNull, deft, comment);
 	}
 
-	public void varchar2(String name, Limit limit, Default deft,NotNull notNull) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), notNull, deft);
+	public void String(String name, Limit limit, Default deft,NotNull notNull) {
+		appendColumn(name, new StringImpl(limit.getLimit()), notNull, deft);
 	}
 
-	public void varchar2(String name, Limit limit, Default deft) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), deft);
+	public void String(String name, Limit limit, Default deft) {
+		appendColumn(name, new StringImpl(limit.getLimit()), deft);
 	}
 
-	public void varchar2(String name, Limit limit, NotNull notNull,Comment comment) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), notNull, comment);
+	public void String(String name, Limit limit, NotNull notNull,Comment comment) {
+		appendColumn(name, new StringImpl(limit.getLimit()), notNull, comment);
 	}
 
-	public void varchar2(String name, Limit limit, NotNull notNull) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), notNull);
+	public void String(String name, Limit limit, NotNull notNull) {
+		appendColumn(name, new StringImpl(limit.getLimit()), notNull);
 	}
 
-	public void varchar2(String name, Limit limit) {
-		appendColumn(name, new Varchar2Impl(limit.getLimit()));
+	public void String(String name, Limit limit) {
+		appendColumn(name, new StringImpl(limit.getLimit()));
 	}
 	
 	public void clob(String name, NotNull notNull, Comment comment) {
@@ -144,11 +145,8 @@ class TableImpl implements Table {
 		appendColumn(name, new DateImpl(),define);
 	}
 	
-	private void addComment(String columnName,String comment){
-		comments.append(String.format("comment on column TN.%s is '%s';\n",columnName, comment));
-	}
 	
-	public void varchar2(String name, Limit limit, ColumnDefine... define) {
+	public void String(String name, Limit limit, ColumnDefine... define) {
 		NotNull notNull=null;
 		Default deft=null;
 		Comment comment=null;
@@ -161,7 +159,7 @@ class TableImpl implements Table {
 				comment=(Comment)columnDefine;
 			}
 		}
-		appendColumn(name, new Varchar2Impl(limit.getLimit()), notNull, deft, comment);
+		appendColumn(name, new StringImpl(limit.getLimit()), notNull, deft, comment);
 	}
 	
 	/**
@@ -198,7 +196,7 @@ class TableImpl implements Table {
 				}if(columnDefine instanceof Comment){
 					Comment comment=(Comment)columnDefine;
 					String c=comment.getComment();
-					addComment(name, c);
+					GenerateFactory.getGenerate().addComment(columns, comments, name, c);
 				}if(columnDefine instanceof Unique && primarykey==false){
 					columns.append(" ");
 					columns.append("unique");

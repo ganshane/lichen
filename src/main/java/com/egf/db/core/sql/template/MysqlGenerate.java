@@ -103,5 +103,14 @@ public class MysqlGenerate extends AbstractGenerate{
 		String sql=String.format("ALTER TABLE %s CHANGE %s %s %s",tableName,oldColumnName,newColumnName,columnType);
 		return sql;
 	}
+
+	
+	public StringBuffer addComment(StringBuffer columnSql,StringBuffer commentSql, String columnName, String comment) {
+		columnSql.append(" ");
+		columnSql.append("comment");
+		columnSql.append(" ");
+		columnSql.append("'"+comment+"'");
+		return columnSql;
+	}
 	
 }

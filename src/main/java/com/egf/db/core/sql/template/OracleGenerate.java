@@ -133,4 +133,8 @@ public class OracleGenerate extends AbstractGenerate{
 		return sql;
 	}
 	
+	public StringBuffer addComment(StringBuffer columnSql, StringBuffer commentSql, String columnName, String comment) {
+		commentSql.append(String.format("comment on column TN.%s is '%s';\n",columnName, comment));
+		return commentSql;
+	}
 }
