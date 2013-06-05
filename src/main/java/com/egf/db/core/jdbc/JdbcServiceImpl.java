@@ -46,6 +46,7 @@ public class JdbcServiceImpl implements JdbcService {
 	public void execute(String sql, final Object[] params) throws MigrationException{
 		try {
 			conn = DBConnectionManager.getConnection();
+			conn.setAutoCommit(false);
 			pstmt = conn.prepareStatement(sql);
 			for (int i = 0; i < params.length; i++) {
 				pstmt.setObject(i+1, params[i]);
