@@ -24,75 +24,75 @@ import com.egf.db.core.define.column.NotNull;
 public interface Table {
 	
 	/**
-	 * varchar2
+	 * 字符串类型
 	 * @param name 名称
 	 * @param limit 长度限制
 	 * @param notNull 不为空
 	 */
-	public void varchar2(String name,Limit limit,NotNull notNull);
+	public void String(String name,Limit limit,NotNull notNull);
 	
 	/**
-	 * varchar2
+	 * 字符串类型
 	 * @param name 名称
 	 * @param limit 长度限制
 	 * @param notNull 不为空
 	 * @param comment 注释
 	 */
-	public void varchar2(String name,Limit limit,NotNull notNull,Comment comment);
+	public void String(String name,Limit limit,NotNull notNull,Comment comment);
 	
 	/**
-	 * varchar2
+	 * 字符串类型
 	 * @param name 名称
 	 * @param limit 长度限制
 	 * @param comment 注释
 	 */
-	public void varchar2(String name,Limit limit,Comment comment);
+	public void String(String name,Limit limit,Comment comment);
 	
 	/**
-	 * varchar2
+	 * 字符串类型
 	 * @param name 名称
 	 * @param limit 长度限制
 	 */
-	public void varchar2(String name,Limit limit);
+	public void String(String name,Limit limit);
 	
 	/**
-	 * varchar2
+	 * 字符串类型
 	 * @param name 名称
 	 * @param limit 长度限制
 	 * @param deft	默认值
 	 * @param notNull 不为空
 	 */
-	public void varchar2(String name,Limit limit,Default deft,NotNull notNull);
+	public void String(String name,Limit limit,Default deft,NotNull notNull);
 	
 	/**
-	 * varchar2
+	 * 字符串类型
 	 * @param name 名称
 	 * @param limit 长度限制
 	 * @param deft 默认值
 	 * @param notNull 不为空
 	 * @param comment 注释
 	 */
-	public void varchar2(String name,Limit limit,Default deft,NotNull notNull,Comment comment);
+	public void String(String name,Limit limit,Default deft,NotNull notNull,Comment comment);
 	
 	/**
-	 * varchar2
+	 * 字符串类型
 	 * @param name 名称
 	 * @param limit 长度限制
 	 * @param deft 默认值
 	 * @param comment 注释
 	 */
-	public void varchar2(String name,Limit limit,Default deft,Comment comment);
+	public void String(String name,Limit limit,Default deft,Comment comment);
 	
 	/**
-	 * varchar2
+	 * 字符串类型
 	 * @param name 名称
 	 * @param limit 长度限制
 	 * @param deft 默认值
 	 */
-	public void varchar2(String name,Limit limit,Default deft);
+	public void String(String name,Limit limit,Default deft);
 	
 	/**
-	 * varchar2类型
+	 * 字符串类型
 	 * @param name 字段名称
 	 * @param limit 长度
 	 * @param define 其他字段特性定义
@@ -102,7 +102,7 @@ public interface Table {
 	 * Comment 注释
 	 * @throws SQLException
 	 */
-	public void varchar2(String name,Limit limit, ColumnDefine ... define);
+	public void String(String name,Limit limit, ColumnDefine ... define);
 	
 	/**
 	 * blob
