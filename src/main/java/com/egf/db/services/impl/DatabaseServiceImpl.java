@@ -82,8 +82,8 @@ class DatabaseServiceImpl implements DatabaseService{
 		}
 		String commentsSql=tmi.comments.toString();
 		commentsSql=commentsSql.replaceAll("TN", tableName.getName());
-		logger.info("\n"+sql+"\n"+tableComment+commentsSql.toString());
-		jdbcService.execute(sql+"\n"+tableComment+commentsSql.toString());
+		logger.info("\n"+sql+"\n"+tableComment+"\n"+commentsSql.toString());
+		jdbcService.execute(sql+"\n"+tableComment+"\n"+commentsSql.toString());
 	}
 	
 	public void createTable(TableName tableName, CreateTableCallback createTableCallback) throws MigrationException{
