@@ -70,10 +70,10 @@ public class ClientCommand implements Command {
 					finally {
 						// 升级操作
 						if(flag){
+							saveLog(timeId, handle);
 							logger.info("\n--------------------execute  " + fileName + " up script ok!--------------------");
 							logger.info("\n");
 						}
-						saveLog(timeId, handle);
 					}
 				}
 			}
