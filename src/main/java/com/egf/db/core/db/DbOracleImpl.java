@@ -57,15 +57,7 @@ public class DbOracleImpl extends AbstractDb{
 	}
 
 	public String getColumnType(String tableName, String columnName) {
-		String name=tableName;
-		StringBuffer sql=new StringBuffer("Select DATA_TYPE From all_tab_columns where table_name = ? and COLUMN_NAME = ?");
-		if(tableName.indexOf(".")!=-1){
-			String schema=tableName.split("\\.")[0];
-			name=tableName.split("\\.")[1];
-			sql.append(" AND owner='"+schema.toUpperCase()+"'");
-		}
-		String type=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase(),columnName.toUpperCase()});
-		return type;
+		return null;
 	}
 
 }

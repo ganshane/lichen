@@ -244,7 +244,7 @@ class DatabaseServiceImpl implements DatabaseService{
 			sql=generate.addColumn(tableName.getName(), columnName.getName(), columnType.getColumnType(),notNull==null?null:NOT_NULL, deft==null?null:deft.getValue(), comment==null?null:comment.getComment(), unique==null?null:UNIQUE_KEY, primaryKey==null?null:PRIMARY_KEY);
 		}else if(HANDLE_COLUMN_TYPE_CHANGE.equals(handleType)){
 				String type=DbFactory.getDb().getColumnType(tableName.getName(), columnName.getName());
-				sql= generate.changeColumn(tableName.getName(), columnName.getName(),type,notNull==null?null:NOT_NULL, deft==null?null:deft.getValue(), comment==null?null:comment.getComment());
+				sql= generate.changeColumn(tableName.getName(), columnName.getName(),columnType==null?type:columnType.getColumnType(),notNull==null?null:NOT_NULL, deft==null?null:deft.getValue(), comment==null?null:comment.getComment());
 		}
 		return sql;
 	}
