@@ -8,8 +8,6 @@ package com.egf.db.core.db;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
 import com.egf.db.exception.MigrationException;
@@ -22,8 +20,6 @@ import com.egf.db.utils.StringUtils;
  * @since 1.0
  */
 public class DbH2Impl extends AbstractDb {
-	
-	Logger logger=Logger.getLogger(DbH2Impl.class);
 	
     private JdbcService jdbcService=new JdbcServiceImpl();
     
@@ -69,7 +65,6 @@ public class DbH2Impl extends AbstractDb {
 		String name= (String) jdbcService.unique(schemaSql,new String[]{schema.toUpperCase()});
 		if(StringUtils.isBlank(name)){
 			String sql="CREATE SCHEMA "+schema.toUpperCase();
-			logger.debug("\n"+sql);
 			jdbcService.execute(sql);
 		}
 	}
@@ -87,10 +82,15 @@ public class DbH2Impl extends AbstractDb {
 		return StringUtils.isBlank(tn)?false:true;
 	}
 
-	
-	public String renameColumnName(String tableName, String oldColumnName,String newColumnName) {
-		String sql=String.format("ALTER TABLE %s ALTER COLUMN %s RENAME TO %s", tableName,oldColumnName,newColumnName);
-		return sql;
+	public String getColumnType(String tableName, String columnName) {
+		String name=tableName;
+		StringBuffer sql=new StringBuffer("select DATA_TYPE from information_schema.COLUMNS where TABLE_NAME=? and column_name = ?");
+		if(tableName.indexOf(".")!=-1){
+			String schema=tableName.split("\\.")[0];
+			name=tableName.split("\\.")[1];
+			sql.append(" AND TABLE_SCHEMA='"+schema.toUpperCase()+"'");
+		}
+		String type=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase(),columnName.toUpperCase()});
+		return type;
 	}
-	
 }

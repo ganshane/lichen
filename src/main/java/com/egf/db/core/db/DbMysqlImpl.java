@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
+import com.egf.db.exception.MigrationException;
 import com.egf.db.utils.StringUtils;
 
 /**
@@ -19,14 +20,20 @@ import com.egf.db.utils.StringUtils;
  * @since 1.0
  */
 public class DbMysqlImpl extends AbstractDb {
-
+	
 	private JdbcService jdbcService = new JdbcServiceImpl();
 
 	private final static String PRIMARY_KEY="PRIMARY KEY";
     
 	public String[] getPrimaryKeyColumn(String tableName) {
-		String sql="SELECT k.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS t LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k USING(CONSTRAINT_NAME,TABLE_SCHEMA,TABLE_NAME) WHERE t.CONSTRAINT_TYPE=? AND t.TABLE_SCHEMA=DATABASE() AND t.TABLE_NAME=?";
-		List<Object[]> list=(List<Object[]>) jdbcService.find(sql,new String[]{PRIMARY_KEY,tableName.toUpperCase()});
+		String name=tableName;
+		StringBuffer sql=new StringBuffer("SELECT k.COLUMN_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS t LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k USING(CONSTRAINT_NAME,TABLE_SCHEMA,TABLE_NAME) WHERE t.CONSTRAINT_TYPE=? AND t.TABLE_NAME=?");
+		if(tableName.indexOf(".")!=-1){
+			String schema=tableName.split("\\.")[0];
+			name=tableName.split("\\.")[1];
+			sql.append(" AND TABLE_SCHEMA='"+schema.toUpperCase()+"'");
+		}
+		List<Object[]> list=(List<Object[]>) jdbcService.find(sql.toString(),new String[]{PRIMARY_KEY,name.toUpperCase()});
 		if(list!=null&&!list.isEmpty()){
 			String[] strings = new String[ list.size()];
 			for (int i = 0; i < list.size(); i++) {
@@ -36,12 +43,28 @@ public class DbMysqlImpl extends AbstractDb {
 		}
 		return null;
 	}
-
 	
 	public String getPrimaryKeyName(String tableName) {
-		String sql="SELECT t.CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS t LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k USING(CONSTRAINT_NAME,TABLE_SCHEMA,TABLE_NAME) WHERE t.CONSTRAINT_TYPE=? AND t.TABLE_SCHEMA=DATABASE() AND t.TABLE_NAME=?";
-		String keyName=(String) jdbcService.unique(sql, new String[]{PRIMARY_KEY,tableName.toUpperCase()});
+		String name=tableName;
+		StringBuffer sql=new StringBuffer("SELECT t.CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS t LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE k USING(CONSTRAINT_NAME,TABLE_SCHEMA,TABLE_NAME) WHERE t.CONSTRAINT_TYPE=? AND t.TABLE_NAME=?");
+		if(tableName.indexOf(".")!=-1){
+			String schema=tableName.split("\\.")[0];
+			name=tableName.split("\\.")[1];
+			sql.append(" AND TABLE_SCHEMA='"+schema.toUpperCase()+"'");
+		}
+		String keyName=(String) jdbcService.unique(sql.toString(), new String[]{PRIMARY_KEY,name.toUpperCase()});
 		return keyName;
+	}
+	
+	@Override
+	public void createSchema(String schema) throws MigrationException{
+		//判断用户是否存在
+		String schemaSql="SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME=?";
+		String name= (String) jdbcService.unique(schemaSql,new String[]{schema.toUpperCase()});
+		if(StringUtils.isBlank(name)){
+			String sql="CREATE database "+schema.toUpperCase();
+			jdbcService.execute(sql);
+		}
 	}
 	
 	public boolean existsTable(String tableName) {
@@ -57,17 +80,20 @@ public class DbMysqlImpl extends AbstractDb {
 		return StringUtils.isBlank(tn)?false:true;
 	}
 
-	public String renameColumnName(String tableName, String oldColumnName,String newColumnName) {
+	public String getColumnType(String tableName, String columnName) {
 		String name=tableName;
-		StringBuffer sql=new StringBuffer("select DATA_TYPE from information_schema.COLUMNS where TABLE_NAME=? and column_name = ?");
+		StringBuffer sql=new StringBuffer("select DATA_TYPE,character_maximum_length from information_schema.COLUMNS where TABLE_NAME=? and column_name = ?");
 		if(tableName.indexOf(".")!=-1){
 			String schema=tableName.split("\\.")[0];
 			name=tableName.split("\\.")[1];
 			sql.append(" AND TABLE_SCHEMA='"+schema.toUpperCase()+"'");
 		}
-		String type=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase(),oldColumnName});
-		String renameSql=String.format("ALTER TABLE %s CHANGE %s %s %s",tableName,oldColumnName,newColumnName,type);
-		return renameSql;
+		Object[] objects=(Object[])jdbcService.unique(sql.toString(), new String[]{name.toUpperCase(),columnName.toUpperCase()});
+		if(objects[1]==null||StringUtils.isBlank(objects[1].toString())){
+			return (String)objects[0];
+		}else{
+			return objects[0]+"("+objects[1]+")";
+		}
 	}
 	
 }

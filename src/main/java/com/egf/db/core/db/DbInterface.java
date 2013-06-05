@@ -46,12 +46,13 @@ public interface DbInterface {
 	 */
 	public boolean existsTable(String tableName);
 	
+	
 	/**
-	 * 重命名列sql
+	 * 获取列的类型
 	 * @param tableName
-	 * @param oldColumnName
-	 * @param newColumnName
+	 * @param columnName
+	 * @return
 	 */
-	public String renameColumnName(String tableName,String oldColumnName,String newColumnName);
+	public String getColumnType(String tableName,String columnName);
 	
 }
