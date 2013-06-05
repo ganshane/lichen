@@ -9,12 +9,9 @@ package com.egf.db.services.impl;
 import org.apache.log4j.Logger;
 
 import com.egf.db.core.CreateTableCallback;
-import com.egf.db.core.DbConstant;
-import com.egf.db.core.config.SysConfigPropertyUtil;
 import com.egf.db.core.db.DbFactory;
 import com.egf.db.core.db.DbInterface;
 import com.egf.db.core.define.ColumnType;
-import com.egf.db.core.define.IndexType;
 import com.egf.db.core.define.column.ColumnDefine;
 import com.egf.db.core.define.column.Comment;
 import com.egf.db.core.define.column.Default;
@@ -30,6 +27,7 @@ import com.egf.db.core.define.name.UniqueName;
 import com.egf.db.core.jdbc.JdbcService;
 import com.egf.db.core.jdbc.JdbcServiceImpl;
 import com.egf.db.core.sql.template.Generate;
+import com.egf.db.core.sql.template.GenerateFactory;
 import com.egf.db.exception.MigrationException;
 import com.egf.db.services.DatabaseService;
 import com.egf.db.utils.StringUtils;
@@ -57,7 +55,7 @@ class DatabaseServiceImpl implements DatabaseService{
 	
 	private JdbcService jdbcService=new JdbcServiceImpl();
 	
-	private Generate generate=new GenerateImpl();
+	private Generate generate=GenerateFactory.getGenerate();
 	
 	//仅仅用来测试
 	void setJdbcService(JdbcService jdbcService){
@@ -80,7 +78,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		}
 		String sql=String.format("create table %s (\n%s\n);",tableName.getName(),columns.toString());
 		if(comment!=null){
-			tableComment=String.format("comment on table %s is '%s';\n",tableName.getName(),comment.getComment());
+			tableComment=GenerateFactory.getGenerate().changeTableComment(tableName.getName(),comment.getComment());
 		}
 		String commentsSql=tmi.comments.toString();
 		commentsSql=commentsSql.replaceAll("TN", tableName.getName());
@@ -109,19 +107,10 @@ class DatabaseServiceImpl implements DatabaseService{
 	}
 	
 	public void addIndex(TableName tableName, ColumnName... columnName)throws MigrationException {
-		addIndex(tableName, null, null, columnName);
+		addIndex(tableName, null, columnName);
 	}
 
-	
-	public void addIndex(TableName tableName, IndexType indexType,ColumnName... columnName) throws MigrationException {
-		addIndex(tableName, null, indexType, columnName);
-	}
-	
-	public void addIndex(TableName tableName, IndexName IndexName,ColumnName... columnName) throws MigrationException{
-		addIndex(tableName, IndexName, null, columnName);
-	}
-
-	public void addIndex(TableName tableName, IndexName indexName, IndexType indexType,ColumnName... columnName) throws MigrationException{
+	public void addIndex(TableName tableName, IndexName indexName,ColumnName... columnName) throws MigrationException{
 		String[] columnNames=new String[columnName.length];
 		String tn=tableName.getName();
 		String in=null;
@@ -142,12 +131,7 @@ class DatabaseServiceImpl implements DatabaseService{
 		}else{
 			in=indexName.getName();
 		}
-		if(indexType!=null){
-			String type=indexType.getIndexType();
-			sql=generate.addIndex(tn,in,type,columnNames);
-		}else {
-			sql=generate.addIndex(tn, in, columnNames);	
-		}
+		sql=generate.addIndex(tn, in, columnNames);	
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
@@ -220,7 +204,8 @@ class DatabaseServiceImpl implements DatabaseService{
 
 	public void renameColumn(TableName tableName, ColumnName oldColumnName,ColumnName newColumnName) {
 		DbInterface di=DbFactory.getDb();
-		String sql=di.renameColumnName(tableName.getName(), oldColumnName.getName(), newColumnName.getName());
+		String type=di.getColumnType(tableName.getName(), oldColumnName.getName());
+		String sql=generate.renameColumnName(tableName.getName(), oldColumnName.getName(), newColumnName.getName(),type);
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
@@ -234,8 +219,6 @@ class DatabaseServiceImpl implements DatabaseService{
 	 * @param define 列定义
 	 */
 	private String handleColumn(String handleType,TableName tableName, ColumnName columnName,ColumnType columnType, ColumnDefine... define){
-		SysConfigPropertyUtil scpu = SysConfigPropertyUtil.getInstance();
-		String driverClass = scpu.getPropertyValue(DbConstant.JDBC_DRIVER_CLASS);
 		Default deft=null;
 		NotNull notNull=null;
 		Comment comment=null;
@@ -260,12 +243,8 @@ class DatabaseServiceImpl implements DatabaseService{
 		if(HANDLE_COLUMN_TYPE_ADD.equals(handleType)){
 			sql=generate.addColumn(tableName.getName(), columnName.getName(), columnType.getColumnType(),notNull==null?null:NOT_NULL, deft==null?null:deft.getValue(), comment==null?null:comment.getComment(), unique==null?null:UNIQUE_KEY, primaryKey==null?null:PRIMARY_KEY);
 		}else if(HANDLE_COLUMN_TYPE_CHANGE.equals(handleType)){
-			if (DbConstant.H2_DRIVER_CLASS.equals(driverClass)) {
-				String ct=jdbcService.getColumnTypeName(tableName.getName(),columnName.getName());
-				sql= generate.changeColumn(tableName.getName(), columnName.getName(),columnType==null?ct:columnType.getColumnType(),notNull==null?null:NOT_NULL, deft==null?null:deft.getValue(), comment==null?null:comment.getComment());
-			} else {
-				sql=generate.changeColumn(tableName.getName(), columnName.getName(),columnType==null?null:columnType.getColumnType(),notNull==null?null:NOT_NULL, deft==null?null:deft.getValue(), comment==null?null:comment.getComment());
-			}
+				String type=DbFactory.getDb().getColumnType(tableName.getName(), columnName.getName());
+				sql= generate.changeColumn(tableName.getName(), columnName.getName(),type,notNull==null?null:NOT_NULL, deft==null?null:deft.getValue(), comment==null?null:comment.getComment());
 		}
 		return sql;
 	}
