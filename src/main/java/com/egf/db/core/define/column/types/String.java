@@ -14,6 +14,6 @@ import com.egf.db.core.define.ColumnType;
  * @version $Revision: 2.0  $
  * @since 1.0
  */
-public interface Varchar2  extends ColumnType{
+public interface String  extends ColumnType{
 	
 }
