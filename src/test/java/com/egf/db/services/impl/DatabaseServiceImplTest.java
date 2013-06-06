@@ -37,10 +37,10 @@ public class DatabaseServiceImplTest {
 		service.setJdbcService(jdbcService);
 		service.createTable(new TableNameImpl("zdry.test"),new CommentImpl("表注释"), new CreateTableCallback() {
 			public void doCreateAction(Table t) {
-				t.number("id",new PrimaryKeyImpl());
+				t.integer("id",new PrimaryKeyImpl());
 				t.String("xm",new LimitImpl(10),new NotNullImpl(),new CommentImpl("dd"));
 				t.blob("pic");
-				t.number("age",new NotNullImpl());
+				t.integer("age",new NotNullImpl());
 				t.String("xx",new LimitImpl(20),new CommentImpl("dd"));
 			}
 		});
@@ -63,10 +63,10 @@ public class DatabaseServiceImplTest {
 		service.setJdbcService(jdbcService);
 		service.createTable(new TableNameImpl("test"),new CommentImpl("表注释"), new CreateTableCallback() {
 			public void doCreateAction(Table t) {
-				t.number("id");
+				t.integer("id");
 				t.String("xm",new LimitImpl(10),new NotNullImpl(),new CommentImpl("dd"));
 				t.blob("pic");
-				t.number("age",new NotNullImpl());
+				t.integer("age",new NotNullImpl());
 				t.String("xx",new LimitImpl(20),new CommentImpl("dd"));
 			}
 		});
@@ -89,10 +89,10 @@ public class DatabaseServiceImplTest {
 		service.setJdbcService(jdbcService);
 		service.createTable(new TableNameImpl("test2"), new CreateTableCallback() {
 			public void doCreateAction(Table t) {
-				t.number("id");
+				t.integer("id");
 				t.String("xm",new LimitImpl(10),new NotNullImpl(),new CommentImpl("dd"));
 				t.blob("pic");
-				t.number("age",new NotNullImpl());
+				t.integer("age",new NotNullImpl());
 				t.String("xx",new LimitImpl(20),new CommentImpl("dd"));
 			}
 		});

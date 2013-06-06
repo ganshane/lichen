@@ -63,7 +63,7 @@ public class TableImplTest {
 	 */
 	@Test
 	public void testNumberStringComment() {
-		table.number("age",new CommentImpl("年龄"));
+		table.integer("age",new CommentImpl("年龄"));
 		assertEquals("age number,\n", table.columns.toString());
 		assertEquals("comment on column TN.age is '年龄';\n", table.comments.toString());
 	}
@@ -73,7 +73,7 @@ public class TableImplTest {
 	 */
 	@Test
 	public void testNumberStringDefaultComment() {
-		table.number("age", new DefaultImpl("30"), new CommentImpl("年龄"));
+		table.integer("age", new DefaultImpl("30"), new CommentImpl("年龄"));
 		assertEquals("age number default 30,\n", table.columns.toString());
 		assertEquals("comment on column TN.age is '年龄';\n", table.comments.toString());
 	}
@@ -83,7 +83,7 @@ public class TableImplTest {
 	 */
 	@Test
 	public void testNumberStringDefaultNotNullComment() {
-		table.number("age", new DefaultImpl("30"),new NotNullImpl(), new CommentImpl("年龄"));
+		table.integer("age", new NotNullImpl(), new DefaultImpl("30"),new CommentImpl("年龄"));
 		assertEquals("age number not null default 30,\n", table.columns.toString());
 		assertEquals("comment on column TN.age is '年龄';\n", table.comments.toString());
 	}
@@ -93,7 +93,7 @@ public class TableImplTest {
 	 */
 	@Test
 	public void testNumberStringColumnDefineArray() {
-		table.number("age", new DefaultImpl("30"),new NotNullImpl(), new CommentImpl("年龄"));
+		table.integer("age", new NotNullImpl(),new DefaultImpl("30"), new CommentImpl("年龄"));
 		assertEquals("age number not null default 30,\n", table.columns.toString());
 		assertEquals("comment on column TN.age is '年龄';\n", table.comments.toString());
 	}
