@@ -28,138 +28,25 @@ class TableImpl implements Table {
 	public StringBuffer columns=new StringBuffer();
 	
 	public StringBuffer comments=new StringBuffer();
-
-	public void blob(String name, Comment comment) {
-		appendColumn(name, new BlobImpl(), comment);
+	
+	public void blob(String name, ColumnDefine... define) {
+		appendColumn(name, new BlobImpl(),define);
 	}
 
-	public void blob(String name, NotNull notNull, Comment comment) {
-		appendColumn(name, new BlobImpl(), notNull,comment);
-	}
-
-	public void blob(String name, NotNull notNull) {
-		appendColumn(name, new BlobImpl(), notNull);
-	}
-
-	public void blob(String name) {
-		appendColumn(name, new BlobImpl());
-	}
-
-	public void number(String name, Comment comment) {
-		appendColumn(name, new NumberImpl(),comment);
-	}
-
-	public void number(String name, Default deft, Comment comment) {
-		appendColumn(name, new NumberImpl(),deft,comment);
-	}
-
-	public void number(String name,Default deft,NotNull notNull, Comment comment) {
-		appendColumn(name, new NumberImpl(), notNull, deft, comment);
+	public void integer(String name, ColumnDefine... define) {
+		appendColumn(name, new IntegerImpl(), define);
 	}
 	
-	public void number(String name, ColumnDefine... define) {
-		appendColumn(name, new NumberImpl(), define);
+	public void clob(String name, ColumnDefine... define) {
+		appendColumn(name, new ClobImpl(),define);
 	}
-
-	public void number(String name,Default deft,NotNull notNull) {
-		appendColumn(name, new NumberImpl(), notNull, deft);
-	}
-
-	public void number(String name, Default deft) {
-		appendColumn(name, new NumberImpl(),deft);
-		
-	}
-
-	public void number(String name, NotNull notNull,Comment comment) {
-		appendColumn(name, new NumberImpl(), notNull, comment);
-	}
-
-	public void number(String name,NotNull notNull) {
-		appendColumn(name, new NumberImpl(), notNull);
-	}
-
-	public void number(String name) {
-		appendColumn(name, new NumberImpl());
-	}
-
-	public void String(String name, Limit limit, Comment comment) {
-		appendColumn(name, new StringImpl(limit.getLimit()),comment);
-	}
-
-	public void String(String name, Limit limit, Default deft, Comment comment) {
-		appendColumn(name, new StringImpl(limit.getLimit()),deft, comment);
-	}
-
-	public void String(String name, Limit limit, Default deft,NotNull notNull, Comment comment) {
-		appendColumn(name, new StringImpl(limit.getLimit()), notNull, deft, comment);
-	}
-
-	public void String(String name, Limit limit, Default deft,NotNull notNull) {
-		appendColumn(name, new StringImpl(limit.getLimit()), notNull, deft);
-	}
-
-	public void String(String name, Limit limit, Default deft) {
-		appendColumn(name, new StringImpl(limit.getLimit()), deft);
-	}
-
-	public void String(String name, Limit limit, NotNull notNull,Comment comment) {
-		appendColumn(name, new StringImpl(limit.getLimit()), notNull, comment);
-	}
-
-	public void String(String name, Limit limit, NotNull notNull) {
-		appendColumn(name, new StringImpl(limit.getLimit()), notNull);
-	}
-
-	public void String(String name, Limit limit) {
-		appendColumn(name, new StringImpl(limit.getLimit()));
-	}
-	
-	public void clob(String name, NotNull notNull, Comment comment) {
-		appendColumn(name, new ClobImpl(),notNull,comment);
-	}
-
-	
-	public void clob(String name, Comment comment) {
-		appendColumn(name, new ClobImpl(), comment);
-	}
-
-	public void clob(String name, NotNull notNull) {
-		appendColumn(name, new ClobImpl(),notNull);
-	}
-	
-	public void date(String name, NotNull notNull, Comment comment) {
-		appendColumn(name, new DateImpl(), notNull,comment);
-	}
-
-	public void date(String name, Comment comment) {
-		appendColumn(name, new DateImpl(),comment);
-	}
-
-	
-	public void date(String name, NotNull notNull) {
-		appendColumn(name, new DateImpl(), notNull);
-	}
-
 	
 	public void date(String name, ColumnDefine... define) {
 		appendColumn(name, new DateImpl(),define);
 	}
 	
-	
 	public void String(String name, Limit limit, ColumnDefine... define) {
-		NotNull notNull=null;
-		Default deft=null;
-		Comment comment=null;
-		for (ColumnDefine columnDefine : define) {
-			if(columnDefine instanceof NotNull){
-				notNull=(NotNull) columnDefine;
-			}else if(columnDefine instanceof Default){
-				deft=(Default) columnDefine;
-			}else if(columnDefine instanceof Comment){
-				comment=(Comment)columnDefine;
-			}
-		}
-		appendColumn(name, new StringImpl(limit.getLimit()), notNull, deft, comment);
+		appendColumn(name, new StringImpl(limit.getLimit()), define);
 	}
 	
 	/**
