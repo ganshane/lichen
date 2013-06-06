@@ -6,7 +6,7 @@
  */
 package com.egf.db.services.impl;
 
-import com.egf.db.core.define.column.types.Number;
+import com.egf.db.core.define.column.types.Integer;
 import com.egf.db.core.sql.template.GenerateFactory;
 
 /**
@@ -14,10 +14,10 @@ import com.egf.db.core.sql.template.GenerateFactory;
  * @version $Revision: 1.0 $
  * @since 1.0
  */
-class NumberImpl implements Number{
+class IntegerImpl implements Integer{
 
 	public String getColumnType() {
-		return GenerateFactory.getGenerate().getNumber();
+		return GenerateFactory.getGenerate().getInteger();
 	}
 
 }
