@@ -29,9 +29,11 @@ public class DbFactory {
 				return new DbOracleImpl();
 			} else if (DbConstant.H2_DRIVER_CLASS.equals(driverClass)) {
 				return new DbH2Impl();
-			} else if (DbConstant.MTSQL_DRIVER_CLASS.equals(driverClass)) {
+			} else if (DbConstant.MYSQL_DRIVER_CLASS.equals(driverClass)) {
 				return new DbMysqlImpl();
-			} else {
+			} else if(DbConstant.DB2_DRIVER_CLASS.equals(driverClass)){
+				return new DbDb2Impl();
+			}else {
 				// 默认H2数据库
 				return new DbH2Impl();
 			}
