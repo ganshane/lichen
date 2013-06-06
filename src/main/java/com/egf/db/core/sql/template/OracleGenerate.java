@@ -124,7 +124,7 @@ public class OracleGenerate extends AbstractGenerate{
 		return "varchar2("+length+")";
 	}
 	
-	public String getNumber() {
+	public String getInteger() {
 		return "number";
 	}
 	

@@ -94,7 +94,7 @@ public class MysqlGenerate extends AbstractGenerate{
 		return sql.toString();
 	}
 
-	public String getNumber() {
+	public String getInteger() {
 		return "int";
 	}
 

@@ -26,7 +26,7 @@ public interface Generate {
 	 * 获取整数类型
 	 * @return
 	 */
-	public String getNumber();
+	public String getInteger();
 	
 	/**
 	 * 更改表注释

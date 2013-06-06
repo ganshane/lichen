@@ -14,7 +14,7 @@ package com.egf.db.core.sql.template;
  */
 public class H2Generate extends AbstractGenerate{
 	
-	public String getNumber() {
+	public String getInteger() {
 		return "number";
 	}
 	
