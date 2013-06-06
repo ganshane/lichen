@@ -24,8 +24,8 @@ public interface Table {
 	 * 字符串类型
 	 * @param name 字段名称
 	 * @param limit 长度
-	 * @param define 其他字段特性定义<br>
-	 * 可选参数：
+	 * @param define 其他字段特性定义(可多选)<br>
+	 * 可选参数：<br>
 	 * Default 默认值<br>
 	 * Null,NotNull 是否可为空 <br>
 	 * Comment 注释<br>
@@ -39,7 +39,7 @@ public interface Table {
 	/**
 	 * 整数 
 	 * @param name 名称
-	 * @param define 其他字段特性定义<br>
+	 * @param define 其他字段特性定义(可多选)<br>
 	 * 可选参数：<br>
 	 * Default 默认值<br>
 	 * Null,NotNull 是否可为空 <br>
@@ -53,7 +53,7 @@ public interface Table {
 	/**
 	 * 时间
 	 * @param name 名称
-	 * @param define 其他字段特性定义<br>
+	 * @param define 其他字段特性定义(可多选)<br>
 	 * 可选参数：<br>
 	 * Default 默认值<br>
 	 * Null,NotNull 是否可为空 <br>
@@ -65,7 +65,7 @@ public interface Table {
 	/**
 	 * blob 大字段
 	 * @param name 名称
-	 * @param define 其他字段特性定义<br>
+	 * @param define 其他字段特性定义(可多选)<br>
 	 * 可选参数：<br>
 	 * Null,NotNull 是否可为空 <br>
 	 * Comment 注释
@@ -76,7 +76,7 @@ public interface Table {
 	/**
 	 * clob 大字段
 	 * @param name 名称
-	 * @param define 其他字段特性定义<br>
+	 * @param define 其他字段特性定义(可多选)<br>
 	 * 可选参数：<br>
 	 * Null,NotNull 是否可为空 <br>
 	 * Comment 注释
