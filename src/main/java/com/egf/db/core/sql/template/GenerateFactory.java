@@ -30,9 +30,11 @@ public class GenerateFactory {
 				return new OracleGenerate();
 			} else if (DbConstant.H2_DRIVER_CLASS.equals(driverClass)) {
 				return new H2Generate();
-			} else if (DbConstant.MTSQL_DRIVER_CLASS.equals(driverClass)) {
+			} else if (DbConstant.MYSQL_DRIVER_CLASS.equals(driverClass)) {
 				return new MysqlGenerate();
-			} else {
+			} else if(DbConstant.DB2_DRIVER_CLASS.equals(driverClass)){
+				return new Db2Generate();
+			}else {
 				// 默认H2数据库
 				return new H2Generate();
 			}
