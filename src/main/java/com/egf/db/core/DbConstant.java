@@ -42,7 +42,9 @@ public class DbConstant {
 	/**H2驱动常量定义**/
 	public final static String H2_DRIVER_CLASS = "org.h2.Driver";
 	/**mysql驱动常量定义**/
-	public final static String MTSQL_DRIVER_CLASS = "com.mysql.jdbc.Driver";
+	public final static String MYSQL_DRIVER_CLASS = "com.mysql.jdbc.Driver";
+	/**db2驱动常量定义**/
+	public final static String DB2_DRIVER_CLASS="com.ibm.db2.jcc.DB2Driver";
 	
 	
 	/** sql语句错误 **/
