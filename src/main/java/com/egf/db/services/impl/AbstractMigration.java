@@ -37,7 +37,7 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 	/**不为空**/
 	protected final static NotNull NOTNULL=new NotNullImpl();
 	/**number数字**/
-	protected final static com.egf.db.core.define.column.types.Number NUMBER=new NumberImpl();
+	protected final static com.egf.db.core.define.column.types.Integer NUMBER=new IntegerImpl();
 	/**时间**/
 	protected final static Date DATE=new DateImpl();
 	/**blob**/
