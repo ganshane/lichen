@@ -21,8 +21,6 @@ import com.egf.db.utils.StringUtils;
  */
 public class DbH2Impl extends AbstractDb {
 	
-    private JdbcService jdbcService=new JdbcServiceImpl();
-    
     private final static String PRIMARY_KEY="PRIMARY KEY";
     
 	public String[] getPrimaryKeyColumn(String tableName) {

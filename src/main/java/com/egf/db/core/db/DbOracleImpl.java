@@ -8,8 +8,6 @@ package com.egf.db.core.db;
 
 import java.util.List;
 
-import com.egf.db.core.jdbc.JdbcService;
-import com.egf.db.core.jdbc.JdbcServiceImpl;
 import com.egf.db.utils.StringUtils;
 
 /**
@@ -19,8 +17,6 @@ import com.egf.db.utils.StringUtils;
  * @since 1.0
  */
 public class DbOracleImpl extends AbstractDb{
-
-	private JdbcService jdbcService=new JdbcServiceImpl();
 	
 	private final static String PRIMARY_KEY="P";
 	
