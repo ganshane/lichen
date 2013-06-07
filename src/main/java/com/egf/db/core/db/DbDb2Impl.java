@@ -33,27 +33,19 @@ public class DbDb2Impl extends AbstractDb{
 		return StringUtils.isBlank(tn)?false:true;
 	}
 
-	
+
 	public String getColumnType(String tableName, String columnName) {			
-	   String name=tableName;
-		StringBuffer sql=new StringBuffer("select coltype from SYSIBM.SYSCOLUMNS where tbname=?");
-		if(tableName.indexOf(".")!=-1){
-			String schema=tableName.split("\\.")[0];
-			name=tableName.split("\\.")[1];
-			sql.append(" AND tbcreator='"+schema.toUpperCase()+"'");
-		}
-		String type=jdbcService.unique(sql.toString(), new String[]{name.toUpperCase(),columnName.toUpperCase()}).toString();
-		return type;
+	  return null;
 	}
 
 	
 	public String[] getPrimaryKeyColumn(String tableName) {
 		String name=tableName;
-		StringBuffer sql=new StringBuffer("select B.COLNAME from syscat.tabconst A ,SYSCAT.KEYCOLUSE B WHERE A.CONSTNAME = B.CONSTNAME AND A.TYPE='P' and A.tabname =? with ur");
+		StringBuffer sql=new StringBuffer("select B.COLNAME from syscat.tabconst A ,SYSCAT.KEYCOLUSE B WHERE A.CONSTNAME = B.CONSTNAME AND A.TYPE='P' and A.tabname =?");
 		if(tableName.indexOf(".")!=-1){
 			String schema=tableName.split("\\.")[0];
 			name=tableName.split("\\.")[1];
-			sql.append(" AND TABSCHEMA='"+schema.toUpperCase()+"'");
+			sql.append(" AND A.TABSCHEMA='"+schema.toUpperCase()+"'");
 		}
 		List<Object[]> list=(List<Object[]>) jdbcService.find(sql.toString(),new String[]{name.toUpperCase()});
 		if(list!=null&&!list.isEmpty()){
