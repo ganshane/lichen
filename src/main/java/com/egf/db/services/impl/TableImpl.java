@@ -77,7 +77,7 @@ class TableImpl implements Table {
 					columns.append(" ");
 					columns.append(deftValue);
 				}
-				if(columnDefine instanceof NotNull){
+				if(columnDefine instanceof NotNull && primarykey==false){
 					columns.append(" ");
 					columns.append("not null");
 				}if(columnDefine instanceof Comment){
