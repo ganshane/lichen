@@ -6,7 +6,6 @@
  */
 package com.egf.db.core.jdbc;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import com.egf.db.exception.MigrationException;
