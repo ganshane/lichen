@@ -16,10 +16,6 @@ import com.egf.db.utils.StringUtils;
  */
 public abstract class AbstractGenerate implements Generate{
 	
-	public String getString(int length) {
-		return "varchar("+length+")";
-	}
-	
 	public String changeTableComment(String tableName,String comment){
 		String sql=String.format("comment on table %s is '%s';",tableName, comment);
 		return sql;
@@ -43,12 +39,6 @@ public abstract class AbstractGenerate implements Generate{
 		return sql;
 	}
 
-	public String addIndex(String tableName, String indexName, String type,String... columnName) {
-		String columnNames=StringUtils.getUnionStringArray(columnName,",");
-		String sql= String.format("create %s index %s on %s (%s);",type,indexName,tableName,columnNames);
-		return sql;
-	}
-
 	
 	public String addColumn(String tableName,String columnName,String columnType,String ... columnDefine) {
 		StringBuffer sql= new StringBuffer(String.format("alter table %s add %s %s;",tableName,columnName,columnType));
@@ -58,25 +48,16 @@ public abstract class AbstractGenerate implements Generate{
 	
 	public String changeColumn(String tableName,String columnName,String columnType,String ... columnDefine) {
 		StringBuffer sql= new StringBuffer(String.format("alter table %s modify %s;",tableName,columnName));		
-		if(StringUtils.isBlank(columnType)&&columnDefine[0]==null&&columnDefine[1]==null){
-			return this.addComment(tableName, columnName, columnDefine[2]);
-		}else{
-			if(!StringUtils.isBlank(columnType)){
-				sql=sql.delete(sql.length()-1, sql.length());
-				sql.append(" ");
-				sql.append(columnType);
-				sql.append(";");
-			}
-			appendSql(sql, tableName, columnName, columnDefine);
+		if(!StringUtils.isBlank(columnType)){
+			sql=sql.delete(sql.length()-1, sql.length());
+			sql.append(" ");
+			sql.append(columnType);
+			sql.append(";");
 		}
+		appendSql(sql, tableName, columnName, columnDefine);
 		return sql.toString();
 	}	
 	
-	public String addComment(String tableName, String columnName, String comment) {
-		String sql= String.format("comment on column %s.%s is '%s';",tableName,columnName,comment);
-		return sql;
-	}
-
 	public String dropColumn(String talbeName, String columnName) {
 		String sql= String.format("alter table %s drop column %s;",talbeName,columnName);
 		return sql;
@@ -97,7 +78,7 @@ public abstract class AbstractGenerate implements Generate{
 		return sql;
 	}
 	
-	private String appendSql(StringBuffer sql,String tableName,String columnName,String ...columnDefine){
+	public String appendSql(StringBuffer sql,String tableName,String columnName,String ...columnDefine){
 		String notNull=(columnDefine!=null&&columnDefine.length>=1)?columnDefine[0]:null;
 		String defaultValue=(columnDefine!=null&&columnDefine.length>=2)?columnDefine[1]:null;
 		String comment=(columnDefine!=null&&columnDefine.length>=3)?columnDefine[2]:null;
@@ -119,7 +100,8 @@ public abstract class AbstractGenerate implements Generate{
 			sql.append(notNull);
 			sql.append(";");
 		}if(!StringUtils.isBlank(comment)){
-			sql.append("\n"+this.addComment(tableName, columnName, comment));
+			sql.append("\n");
+			addComment(sql,sql,tableName,columnName,comment);
 		}if(!StringUtils.isBlank(unique)){
 			String uniqueName="unique_"+DateTimeUtils.getNowTimeShortString();
 			sql.append("\n"+this.addConstraint(tableName, uniqueName, unique, columnName));
@@ -128,12 +110,6 @@ public abstract class AbstractGenerate implements Generate{
 			sql.append("\n"+this.addConstraint(tableName, primaryKeyName, primaryKey, columnName));
 		}
 		return sql.toString();
-	}
-
-	
-	public String renameColumn(String tableName, String oldColumnName,String newColumnName) {
-		String sql=String.format("alter table %s rename column %s to %s;", tableName,oldColumnName,newColumnName);
-		return sql;
 	}
 
 }

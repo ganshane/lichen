@@ -103,21 +103,6 @@ public interface Generate {
 	public String addIndex(String tableName,String indexName,String... columnName);
 	
 	/**
-	 * 增加索引
-	 * @param tableName 表名
-	 * @param indexName 索引名称
-	 * @param type 索引类型
-	 * 可选参数说明：
-	 * normal
-	 * unique
-	 * bitmap
-	 * @param columnName
-	 * 引用的列,可多选,例如：(cl1,cl2,cl3)
-	 * @return
-	 */
-	public String addIndex(String tableName,String indexName,String type,String... columnName);
-	
-	/**
 	 * 删除表
 	 * @param tableName 表名
 	 * @return
@@ -160,11 +145,12 @@ public interface Generate {
 	/**
 	 * 
 	 * @param columnSql 列sql语句
-	 * @param  commentSql 注释sql语句
+	 * @param commentSql 注释sql语句
+	 * @param tableName 表名
 	 * @param columnName 列名
 	 * @param comment 注释
 	 * @return
 	 */
-	public StringBuffer addComment(StringBuffer columnSql,StringBuffer commentSql, String columnName,String comment);
+	public StringBuffer addComment(StringBuffer columnSql,StringBuffer commentSql,String tableName, String columnName,String comment);
 	
 }

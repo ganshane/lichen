@@ -6,8 +6,6 @@
  */
 package com.egf.db.core.sql.template;
 
-import com.egf.db.utils.DateTimeUtils;
-import com.egf.db.utils.StringUtils;
 
 /**
  * @author fangj
@@ -20,19 +18,6 @@ public class MysqlGenerate extends AbstractGenerate{
 		String sql=String.format("alter table %s comment '%s';",tableName, comment);
 		return sql;
 	}
-	
-	public String addColumn(String tableName,String columnName,String columnType,String ... columnDefine) {
-		StringBuffer sql= new StringBuffer(String.format("alter table %s add %s %s;",tableName,columnName,columnType));
-		appendSql(sql, tableName, columnName, columnDefine);
-		return sql.toString();
-	}
-	
-	public String changeColumn(String tableName,String columnName,String columnType,String ... columnDefine) {
-		StringBuffer sql= new StringBuffer(String.format("alter table %s modify %s %s;",tableName,columnName,columnType));		
-		appendSql(sql, tableName, columnName, columnDefine);
-		return sql.toString();
-	}	
-	
 
 	public String dropColumn(String talbeName, String columnName) {
 		String sql= String.format("alter table %s drop column %s;",talbeName,columnName);
@@ -46,70 +31,32 @@ public class MysqlGenerate extends AbstractGenerate{
 		return sql;
 	}
 	
-	public String dropTalbe(String tableName) {
-		String sql= String.format("drop table %s;",tableName);
-		return sql;
-	}
-
-	public String dropConstraint(String talbeName,String name) {
-		String sql=String.format("alter table %s drop constraint %s;", talbeName,name);
-		return sql;
-	}
-	
-	private String appendSql(StringBuffer sql,String tableName,String columnName,String ...columnDefine){
-		String notNull=(columnDefine!=null&&columnDefine.length>=1)?columnDefine[0]:null;
-		String defaultValue=(columnDefine!=null&&columnDefine.length>=2)?columnDefine[1]:null;
-		String comment=(columnDefine!=null&&columnDefine.length>=3)?columnDefine[2]:null;
-		String unique=(columnDefine!=null&&columnDefine.length>=4)?columnDefine[3]:null;
-		String primaryKey=(columnDefine!=null&&columnDefine.length>=5)?columnDefine[4]:null;
-		if(!StringUtils.isBlank(defaultValue)){
-			sql=sql.delete(sql.length()-1, sql.length());
-			sql.append(" ");
-			String value=defaultValue;
-			sql.append("default");
-			sql.append(" ");
-			sql.append("'");
-			sql.append(value);
-			sql.append("'");
-			sql.append(";");
-		}if(!StringUtils.isBlank(notNull)){
-			sql=sql.delete(sql.length()-1, sql.length());
-			sql.append(" ");
-			sql.append(notNull);
-			sql.append(";");
-		}if(!StringUtils.isBlank(comment)){
-			sql=sql.delete(sql.length()-1, sql.length());
-			sql.append(" ");
-			sql.append("comment");
-			sql.append(" ");
-			sql.append("'"+comment+"'");
-			sql.append(";");
-		}if(!StringUtils.isBlank(unique)){
-			String uniqueName="unique_"+DateTimeUtils.getNowTimeShortString();
-			sql.append("\n"+this.addConstraint(tableName, uniqueName, unique, columnName));
-		}if(primaryKey!=null){
-			String primaryKeyName="pk_"+DateTimeUtils.getNowTimeShortString();
-			sql.append("\n"+this.addConstraint(tableName, primaryKeyName, primaryKey, columnName));
-		}
-		return sql.toString();
+	public String getString(int length) {
+		return "varchar("+length+")";
 	}
 
 	public String getInteger() {
 		return "int";
 	}
-
 	
 	public String renameColumnName(String tableName, String oldColumnName,String newColumnName, String columnType) {
-		String sql=String.format("ALTER TABLE %s CHANGE %s %s %s",tableName,oldColumnName,newColumnName,columnType);
+		String sql=String.format("ALTER TABLE %s CHANGE %s %s %s;",tableName,oldColumnName,newColumnName,columnType);
 		return sql;
 	}
-
 	
-	public StringBuffer addComment(StringBuffer columnSql,StringBuffer commentSql, String columnName, String comment) {
+	public StringBuffer addComment(StringBuffer columnSql,StringBuffer commentSql,String tableName,String columnName, String comment) {
+		boolean flag=false;
+		if(";\n".equals(columnSql.substring(columnSql.length()-2, columnSql.length()))){
+			columnSql=columnSql.delete(columnSql.length()-1, columnSql.length());
+			flag=true;
+		}
 		columnSql.append(" ");
 		columnSql.append("comment");
 		columnSql.append(" ");
 		columnSql.append("'"+comment+"'");
+		if(flag){
+			columnSql.append(";");
+		}
 		return columnSql;
 	}
 	

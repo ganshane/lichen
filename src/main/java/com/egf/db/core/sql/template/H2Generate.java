@@ -6,6 +6,8 @@
  */
 package com.egf.db.core.sql.template;
 
+import com.egf.db.utils.StringUtils;
+
 
 /**
  * @author fangj
@@ -14,17 +16,21 @@ package com.egf.db.core.sql.template;
  */
 public class H2Generate extends AbstractGenerate{
 	
+	public String getString(int length) {
+		return "varchar2("+length+")";
+	}
+	
 	public String getInteger() {
 		return "number";
 	}
 	
 	public String renameColumnName(String tableName, String oldColumnName,String newColumnName,String columnType) {
-		String sql=String.format("ALTER TABLE %s ALTER COLUMN %s RENAME TO %s", tableName,oldColumnName,newColumnName);
+		String sql=String.format("ALTER TABLE %s ALTER COLUMN %s RENAME TO %s;", tableName,oldColumnName,newColumnName);
 		return sql;
 	}
 
-	public StringBuffer addComment(StringBuffer columnSql, StringBuffer commentSql, String columnName, String comment) {
-		commentSql.append(String.format("comment on column TN.%s is '%s';\n",columnName, comment));
+	public StringBuffer addComment(StringBuffer columnSql, StringBuffer commentSql,String tableName, String columnName, String comment) {
+		commentSql.append(String.format("comment on column %s.%s is '%s';",StringUtils.isBlank(tableName)?"TN":tableName, columnName, comment));
 		return commentSql;
 	}
 	
