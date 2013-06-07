@@ -84,7 +84,9 @@ class TableImpl implements Table {
 					Comment comment=(Comment)columnDefine;
 					String c=comment.getComment();
 					GenerateFactory.getGenerate().addComment(columns, comments,null, name, c);
-					comments.append("\n");
+					if(comments.length()!=0){
+						comments.append("\n");
+					}
 				}if(columnDefine instanceof Unique && primarykey==false){
 					columns.append(" ");
 					columns.append("unique");
