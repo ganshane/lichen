@@ -53,8 +53,8 @@ public class GenerateImplTest {
 	 */
 	@Test
 	public void testAddIndexStringStringStringStringArray() {
-		String sql=generate.addIndex("zdry.zdryqbxx", "test", "unique", new String[]{"cl1","cl2"});
-		assertEquals("create unique index test on zdry.zdryqbxx (cl1,cl2);", sql);
+		String sql=generate.addIndex("zdry.zdryqbxx", "test", new String[]{"cl1","cl2"});
+		assertEquals("create index test on zdry.zdryqbxx (cl1,cl2);", sql);
 	}
 
 	/**
