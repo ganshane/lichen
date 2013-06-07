@@ -6,6 +6,7 @@
  */
 package com.egf.db.core.sql.template;
 
+import com.egf.db.utils.DateTimeUtils;
 import com.egf.db.utils.StringUtils;
 
 
@@ -30,6 +31,47 @@ public class Db2Generate extends AbstractGenerate{
 		return "INTEGER";
 	}
 
+	
+	public String addColumn(String tableName,String columnName,String columnType,String ... columnDefine) {
+		StringBuffer sql= new StringBuffer(String.format("alter table %s add column %s %s;",tableName,columnName,columnType));
+		appendSql(sql, tableName, columnName, columnDefine);
+		return sql.toString();
+	}
+	
+	
+	public String addConstraint(String tableName, String name, String type,String... columnName) {
+		String columnNames=StringUtils.getUnionStringArray(columnName,",");
+		String sql=String.format("call SYSPROC.ADMIN_CMD('reorg table %s');\nalter table %s add constraint %s %s (%s);",tableName,tableName,name,type,columnNames);
+		return sql;
+	}
+	
+	public String changeColumn(String tableName,String columnName,String columnType,String ... columnDefine) {	
+		String notNull=(columnDefine!=null&&columnDefine.length>=1)?columnDefine[0]:null;
+		String defaultValue=(columnDefine!=null&&columnDefine.length>=2)?columnDefine[1]:null;
+		String comment=(columnDefine!=null&&columnDefine.length>=3)?columnDefine[2]:null;
+		String unique=(columnDefine!=null&&columnDefine.length>=4)?columnDefine[3]:null;
+		String primaryKey=(columnDefine!=null&&columnDefine.length>=5)?columnDefine[4]:null;
+		StringBuffer sql= new StringBuffer();		
+		if(!StringUtils.isBlank(columnType)){
+			sql.append(String.format("alter table %s alter COLUMN %s set data type %s;\n",tableName,columnName,columnType));
+		}
+		if(!StringUtils.isBlank(defaultValue)){
+			sql.append(String.format("alter table %s alter COLUMN %s set default '%s';\n",tableName,columnName,defaultValue));
+		}if(!StringUtils.isBlank(notNull)){
+			sql.append(String.format("alter table %s alter COLUMN %s set %s;\n",tableName,columnName,notNull));
+		}if(!StringUtils.isBlank(comment)){
+			addComment(sql,sql,tableName,columnName,comment);
+		}if(!StringUtils.isBlank(unique)){
+			String uniqueName="unique_"+DateTimeUtils.getNowTimeShortString();
+			sql.append("\n"+this.addConstraint(tableName, uniqueName, unique, columnName));
+		}if(primaryKey!=null){
+			String primaryKeyName="pk_"+DateTimeUtils.getNowTimeShortString();
+			sql.append("\n"+this.addConstraint(tableName, primaryKeyName, primaryKey, columnName));
+		}
+		return sql.toString();
+	}
+	
+	
 	public String renameColumnName(String tableName, String oldColumnName,String newColumnName,String columnType) {
 		String sql=String.format("ALTER TABLE %s RENAME COLUMN %s TO %s;",tableName,oldColumnName,newColumnName);
 		return sql;
