@@ -47,7 +47,7 @@ public class MysqlGenerate extends AbstractGenerate{
 	public StringBuffer addComment(StringBuffer columnSql,StringBuffer commentSql,String tableName,String columnName, String comment) {
 		boolean flag=false;
 		if(";\n".equals(columnSql.substring(columnSql.length()-2, columnSql.length()))){
-			columnSql=columnSql.delete(columnSql.length()-1, columnSql.length());
+			columnSql=columnSql.delete(columnSql.length()-2, columnSql.length());
 			flag=true;
 		}
 		columnSql.append(" ");
