@@ -90,7 +90,7 @@ class TableImpl implements Table {
 					columns.append("unique");
 				}if(columnDefine instanceof PrimaryKey){
 					columns.append(" ");
-					columns.append("primary key");
+					columns.append("not null primary key");
 				}
 			}
 		}
