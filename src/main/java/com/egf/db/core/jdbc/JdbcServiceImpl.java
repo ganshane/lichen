@@ -35,7 +35,7 @@ public class JdbcServiceImpl implements JdbcService {
 	
 	public void execute(String sql)throws MigrationException{
 		//批量执行
-		String[] splitSql=sql.split(";");
+		String[] splitSql=sql.replaceAll("\n", "").split(";");
 		for (String s : splitSql) {
 			if(!StringUtils.isBlank(s)){
 				execute(s, new Object[0]);
