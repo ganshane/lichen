@@ -207,7 +207,7 @@ public class ClientCommand implements Command {
 			String idType=generate.getString(20);
 			String applied_at_type=generate.getString(25);
 			String descriptionType=generate.getString(255);
-			String sql=String.format("create table %s (\nid "+idType+" primary key,\napplied_at "+applied_at_type+",\ndescription "+descriptionType+"\n);",database_changelog);
+			String sql=String.format("create table %s (\nid "+idType+" not null primary key,\napplied_at "+applied_at_type+",\ndescription "+descriptionType+"\n);",database_changelog);
 			try {
 				js.execute(sql);
 			} catch (MigrationException e) {
