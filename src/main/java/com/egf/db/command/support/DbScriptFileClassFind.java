@@ -19,6 +19,9 @@ import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.egf.db.core.DbConstant;
 
 /**
@@ -30,6 +33,8 @@ import com.egf.db.core.DbConstant;
  */
 class DbScriptFileClassFind {
 
+	static Logger logger=LoggerFactory.getLogger(DbScriptFileClassFind.class);
+	
 	/**
 	 * 从包package中获取所有的Class
 	 * 
@@ -113,12 +118,13 @@ class DbScriptFileClassFind {
 								// 如果可以迭代下去 并且是一个包
 								if ((idx != -1) || recursive) {
 									// 如果是一个.class文件 而且不是目录
-									if (name.endsWith(".class")&& !entry.isDirectory()) {
+									if (name.endsWith(".class")&& !entry.isDirectory()&& !name.contains("$") && name.contains("_")) {
 										// 去掉后面的".class" 获取真正的类名
-										String className = name.substring(packageName.length() + 1, name.length() - 6);
+										String className = name.replaceAll("/", ".").substring(0, name.length() - 6);
 										try {
 											// 添加到classes
-											classes.add(Class.forName(packageName + '.'+ className));
+											logger.debug("find class:"+className);
+											classes.add(Class.forName(className));
 										} catch (ClassNotFoundException e) {
 											e.printStackTrace();
 										}
