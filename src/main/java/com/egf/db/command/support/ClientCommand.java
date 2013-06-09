@@ -64,6 +64,7 @@ public class ClientCommand implements Command {
 					try {
 						am.up();
 					} catch (MigrationException e) {
+						logger.error(e.toString());
 						flag = false;
 						break;
 					}
