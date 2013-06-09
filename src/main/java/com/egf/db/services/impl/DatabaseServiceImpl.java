@@ -140,8 +140,12 @@ class DatabaseServiceImpl implements DatabaseService{
 		StringBuffer sb=new StringBuffer();
 		//修正主键不能为空
 		for (ColumnName cn : columnName) {
-			String sql=this.handleColumn(HANDLE_COLUMN_TYPE_CHANGE, tableName, cn, null,new NotNullImpl());
-			sb.append(sql+"\n");
+			DbInterface di=DbFactory.getDb();
+			boolean isNotNull=di.columnIsNotNull(tableName.getName(), cn.getName());
+			if(!isNotNull){
+				String sql=this.handleColumn(HANDLE_COLUMN_TYPE_CHANGE, tableName, cn, null,new NotNullImpl());
+				sb.append(sql+"\n");
+			}
 		}
 		String sql=addKey(primaryKeyName.getName(),tableName,null,PRIMARY_KEY,columnName);
 		sb.append(sql+"\n");
