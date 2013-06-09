@@ -119,7 +119,7 @@ public class GenerateImplTest {
 	 */
 	@Test
 	public void testDropConstraint() {
-		String sql=generate.dropConstraint("test", "test");
+		String sql=generate.dropPrimaryKey("test", "test");
 		assertEquals("alter table test drop constraint test;", sql);
 	}
 

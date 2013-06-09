@@ -111,11 +111,11 @@ public interface Generate {
 	
 	/**
 	 * 删除列
-	 * @param talbeName 表名
+	 * @param tableName 表名
 	 * @param columnName 列名
 	 * @return
 	 */
-	public String dropColumn(String talbeName,String columnName);
+	public String dropColumn(String tableName,String columnName);
 	
 	/**
 	 * 删除索引
@@ -125,12 +125,28 @@ public interface Generate {
 	public String dropIndex(String indexName);
 	
 	/**
-	 * 删除约束
+	 * 删除主键约束
 	 * @param tableName 表名
-	 * @param name 约束名称
+	 * @param primaryKeyName 主键名称
 	 * @return
 	 */
-	public String dropConstraint(String tableName,String name);
+	public String dropPrimaryKey(String tableName,String primaryKeyName);
+	
+	/**
+	 * 删除外键约束
+	 * @param tableName 表名
+	 * @param foreignKeyName 外键名称
+	 * @return
+	 */
+	public String dropForeignKey(String tableName,String foreignKeyName);
+	
+	/**
+	 * 删除唯一约束
+	 * @param tableName 表名
+	 * @param uniqueName 唯一约束名称
+	 * @return
+	 */
+	public String dropUnique(String tableName,String uniqueName);
 	
 	/**
 	 * 重命名列

@@ -53,4 +53,19 @@ public class OracleGenerate extends AbstractGenerate{
 		commentSql.append(String.format("comment on column %s.%s is '%s';",StringUtils.isBlank(tableName)?"TN":tableName, columnName, comment));
 		return commentSql;
 	}
+
+	public String dropForeignKey(String tableName, String foreignKeyName) {
+		return dropConstraint(tableName, foreignKeyName);
+	}
+
+	
+	public String dropPrimaryKey(String tableName,String primaryKeyName) {
+		return dropConstraint(tableName, primaryKeyName);
+	}
+
+	
+	public String dropUnique(String tableName, String uniqueName) {
+		return dropConstraint(tableName, uniqueName);
+	}
+
 }

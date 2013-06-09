@@ -72,11 +72,6 @@ public abstract class AbstractGenerate implements Generate{
 		String sql= String.format("drop table %s;",tableName);
 		return sql;
 	}
-
-	public String dropConstraint(String talbeName,String name) {
-		String sql=String.format("alter table %s drop constraint %s;", talbeName,name);
-		return sql;
-	}
 	
 	public String appendSql(StringBuffer sql,String tableName,String columnName,String ...columnDefine){
 		String notNull=(columnDefine!=null&&columnDefine.length>=1)?columnDefine[0]:null;
@@ -112,4 +107,9 @@ public abstract class AbstractGenerate implements Generate{
 		return sql.toString();
 	}
 
+	protected String dropConstraint(String tableName,String name) {
+		String sql=String.format("alter table %s drop constraint %s;", tableName,name);
+		return sql;
+	}
+	
 }

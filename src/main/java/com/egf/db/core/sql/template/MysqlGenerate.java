@@ -31,6 +31,21 @@ public class MysqlGenerate extends AbstractGenerate{
 		return sql;
 	}
 	
+	public String dropPrimaryKey(String talbeName,String primaryKeyName) {
+		String sql=String.format("alter table %s drop primary key;", talbeName);
+		return sql;
+	}
+	
+	public String dropForeignKey(String talbeName,String foreignKeyName){
+		String sql=String.format("alter table %s drop foreign key %s;", talbeName,foreignKeyName);
+		return sql;
+	}
+	
+	public String dropUnique(String tableName,String uniqueName){
+		String sql=String.format("alter table %s drop index %s;", tableName,uniqueName);
+		return sql;
+	}
+	
 	public String getString(int length) {
 		return "varchar("+length+")";
 	}

@@ -34,4 +34,16 @@ public class H2Generate extends AbstractGenerate{
 		return commentSql;
 	}
 	
+	public String dropForeignKey(String tableName, String foreignKeyName) {
+		return dropConstraint(tableName, foreignKeyName);
+	}
+	
+	public String dropPrimaryKey(String tableName,String primaryKeyName) {
+		return dropConstraint(tableName, primaryKeyName);
+	}
+	
+	public String dropUnique(String tableName, String uniqueName) {
+		return dropConstraint(tableName, uniqueName);
+	}
+	
 }

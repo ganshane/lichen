@@ -182,7 +182,7 @@ class DatabaseServiceImpl implements DatabaseService{
 	}
 	
 	public void dropForeignKey(TableName tableName,ForeignKeyName foreignKeyName) throws MigrationException{
-		String sql=dropKey(tableName, foreignKeyName.getName());
+		String sql=generate.dropForeignKey(tableName.getName(), foreignKeyName.getName());
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
@@ -191,13 +191,13 @@ class DatabaseServiceImpl implements DatabaseService{
 		//查询表对应的主键名称
 		DbInterface di=DbFactory.getDb();
 		String pkName=di.getPrimaryKeyName(tableName.getName());
-		String sql=dropKey(tableName, pkName);
+		String sql=generate.dropPrimaryKey(tableName.getName(), pkName);
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
 
 	public void dropUnique(TableName tableName,UniqueName uniqueName) throws MigrationException{
-		String sql=dropKey(tableName, uniqueName.getName());
+		String sql=generate.dropUnique(tableName.getName(), uniqueName.getName());
 		logger.info("\n"+sql);
 		jdbcService.execute(sql);
 	}
@@ -276,18 +276,6 @@ class DatabaseServiceImpl implements DatabaseService{
 			sql=generate.addConstraint(tn, name, keyType, columnNames);
 		}
 		return sql;
-	}
-	
-	/**
-	 * 删除键约束
-	 * @param tableName 表名
-	 * @param name 约束名称
-	 * @return
-	 */
-	private String dropKey(TableName tableName,String name){
-		String tn=tableName.getName();
-	    String sql=generate.dropConstraint(tn, name);
-	    return sql;
 	}
 	
 }

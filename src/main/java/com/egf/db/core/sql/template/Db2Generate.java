@@ -71,10 +71,20 @@ public class Db2Generate extends AbstractGenerate{
 		return sql.toString();
 	}
 	
-	
 	public String renameColumnName(String tableName, String oldColumnName,String newColumnName,String columnType) {
 		String sql=String.format("ALTER TABLE %s RENAME COLUMN %s TO %s;",tableName,oldColumnName,newColumnName);
 		return sql;
 	}
 	
+	public String dropForeignKey(String tableName, String foreignKeyName) {
+		return dropConstraint(tableName, foreignKeyName);
+	}
+	
+	public String dropPrimaryKey(String tableName,String primaryKeyName) {
+		return dropConstraint(tableName, primaryKeyName);
+	}
+	
+	public String dropUnique(String tableName, String uniqueName) {
+		return dropConstraint(tableName, uniqueName);
+	}
 }
