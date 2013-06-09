@@ -56,4 +56,17 @@ public class DbOracleImpl extends AbstractDb{
 		return null;
 	}
 
+	
+	public boolean columnIsNotNull(String tableName, String columnName) {
+		StringBuffer sql=new StringBuffer("select nullable from all_tab_columns where  table_name=? and column_name=?");
+		String name=tableName;
+		if(tableName.indexOf(".")!=-1){
+			String schema=tableName.split("\\.")[0];
+			name=tableName.split("\\.")[1];
+			sql.append(" AND owner='"+schema.toUpperCase()+"'");
+		}
+		String nullable=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase(),columnName.toUpperCase()});
+		return "N".equals(nullable)?true:false;
+	}
+
 }

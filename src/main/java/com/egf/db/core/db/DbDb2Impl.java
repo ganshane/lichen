@@ -60,7 +60,7 @@ public class DbDb2Impl extends AbstractDb{
 	
 	public String getPrimaryKeyName(String tableName) {
 		String name=tableName;
-		StringBuffer sql=new StringBuffer("select B.CONSTNAME from syscat.tabconst A,SYSCAT.KEYCOLUSE B WHERE A.CONSTNAME = B.CONSTNAME AND A.TYPE='P' and A.tabname =? with ur;");
+		StringBuffer sql=new StringBuffer("select B.CONSTNAME from syscat.tabconst A,SYSCAT.KEYCOLUSE B WHERE A.CONSTNAME = B.CONSTNAME AND A.TYPE='P' and A.tabname =?");
 		if(tableName.indexOf(".")!=-1){
 			String schema=tableName.split("\\.")[0];
 			name=tableName.split("\\.")[1];
@@ -79,6 +79,18 @@ public class DbDb2Impl extends AbstractDb{
 			String sql="CREATE SCHEMA "+schema.toUpperCase();
 			jdbcService.execute(sql);
 		}
+	}
+	
+	public boolean columnIsNotNull(String tableName, String columnName) {
+		StringBuffer sql=new StringBuffer("select NULLS from SYSCAT.COLUMNS A WHERE A.tabname =?");
+		String name=tableName;
+		if(tableName.indexOf(".")!=-1){
+			String schema=tableName.split("\\.")[0];
+			name=tableName.split("\\.")[1];
+			sql.append(" AND A.TABSCHEMA='"+schema.toUpperCase()+"'");
+		}
+		String nullable=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase(),columnName.toUpperCase()});
+		return "N".equals(nullable)?true:false;
 	}
 	
 }

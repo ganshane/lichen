@@ -8,8 +8,6 @@ package com.egf.db.core.db;
 
 import java.util.List;
 
-import com.egf.db.core.jdbc.JdbcService;
-import com.egf.db.core.jdbc.JdbcServiceImpl;
 import com.egf.db.exception.MigrationException;
 import com.egf.db.utils.StringUtils;
 
@@ -41,7 +39,6 @@ public class DbH2Impl extends AbstractDb {
 		}
 		return null;
 	}
-
 	
 	public String getPrimaryKeyName(String tableName) {
 		String name=tableName;
@@ -91,4 +88,17 @@ public class DbH2Impl extends AbstractDb {
 		String type=jdbcService.unique(sql.toString(), new String[]{name.toUpperCase(),columnName.toUpperCase()}).toString();
 		return type;
 	}
+
+	public boolean columnIsNotNull(String tableName, String columnName) {
+		StringBuffer sql=new StringBuffer("select is_nullable from information_schema.COLUMNS where TABLE_NAME=? and column_name = ?");
+		String name=tableName;
+		if(tableName.indexOf(".")!=-1){
+			String schema=tableName.split("\\.")[0];
+			name=tableName.split("\\.")[1];
+			sql.append(" AND TABLE_SCHEMA='"+schema.toUpperCase()+"'");
+		}
+		String nullable=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase(),columnName.toUpperCase()});
+		return "NO".equals(nullable)?true:false;
+	}
+	
 }

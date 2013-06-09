@@ -55,4 +55,12 @@ public interface DbInterface {
 	 */
 	public String getColumnType(String tableName,String columnName);
 	
+	/**
+	 * 列是否为空
+	 * @param tableName 表名
+	 * @param columnName 列名
+	 * @return
+	 */
+	public boolean columnIsNotNull(String tableName,String columnName);
+	
 }
