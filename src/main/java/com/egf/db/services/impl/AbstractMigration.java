@@ -36,8 +36,8 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 	protected final static Unique UNIQUE=new UniqueImpl();
 	/**不为空**/
 	protected final static NotNull NOTNULL=new NotNullImpl();
-	/**number数字**/
-	protected final static com.egf.db.core.define.column.types.Integer NUMBER=new IntegerImpl();
+	/**integer数字**/
+	protected final static com.egf.db.core.define.column.types.Integer INTEGER=new IntegerImpl();
 	/**时间**/
 	protected final static Date DATE=new DateImpl();
 	/**blob**/
@@ -77,7 +77,7 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 	protected static ColumnName ColumnName(String name) {
 		return new ColumnNameImpl(name);
 	}
-
+	
 	/**
 	 * 限制
 	 * @param length 长度

@@ -29,31 +29,31 @@ class TableImpl implements Table {
 	
 	public StringBuffer comments=new StringBuffer();
 	
-	public void blob(String name, ColumnDefine... define) {
-		appendColumn(name, new BlobImpl(),define);
+	public void blob(String name, ColumnDefine... columnDefine) {
+		appendColumn(name, new BlobImpl(),columnDefine);
 	}
 
-	public void integer(String name, ColumnDefine... define) {
-		appendColumn(name, new IntegerImpl(), define);
+	public void integer(String name, ColumnDefine... columnDefine) {
+		appendColumn(name, new IntegerImpl(), columnDefine);
 	}
 	
-	public void clob(String name, ColumnDefine... define) {
-		appendColumn(name, new ClobImpl(),define);
+	public void clob(String name, ColumnDefine... columnDefine) {
+		appendColumn(name, new ClobImpl(),columnDefine);
 	}
 	
-	public void date(String name, ColumnDefine... define) {
-		appendColumn(name, new DateImpl(),define);
+	public void date(String name, ColumnDefine... columnDefine) {
+		appendColumn(name, new DateImpl(),columnDefine);
 	}
 	
-	public void String(String name, Limit limit, ColumnDefine... define) {
-		appendColumn(name, new StringImpl(limit.getLimit()), define);
+	public void String(String name, Limit limit, ColumnDefine... columnDefine) {
+		appendColumn(name, new StringImpl(limit.getLimit()), columnDefine);
 	}
 	
 	/**
 	 * 添加列
 	 * @param name 名称
 	 * @param columnType 列类型
-	 * @param define 列定义
+	 * @param columnDefine 列定义
 	 */
 	private void appendColumn(String name,ColumnType columnType,ColumnDefine ... define){
 		String type=columnType.getColumnType();
