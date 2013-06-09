@@ -57,11 +57,12 @@ public class JdbcServiceImpl implements JdbcService {
 			try {
 				conn.rollback();
 				e.printStackTrace();
+				throw MigrationException.newFromErrorCode(DbConstant.Migration_RETURN_CODE_01);
 			} catch (SQLException e1) {
 				logger.error(e1.getMessage());
 				e1.printStackTrace();
+				throw MigrationException.newFromErrorCode(DbConstant.Migration_RETURN_CODE_01);
 			}
-			throw MigrationException.newFromErrorCode(DbConstant.Migration_RETURN_CODE_01);
 		} finally {
 			close();
 		}
