@@ -98,7 +98,7 @@ public class DbMysqlImpl extends AbstractDb {
 		if(tableName.indexOf(".")!=-1){
 			String schema=tableName.split("\\.")[0];
 			name=tableName.split("\\.")[1];
-			sql.append(" AND owner='"+schema.toUpperCase()+"'");
+			sql.append(" AND TABLE_SCHEMA='"+schema.toUpperCase()+"'");
 		}
 		String nullable=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase(),columnName.toUpperCase()});
 		return "NO".equals(nullable)?true:false;

@@ -64,7 +64,7 @@ public class DbDb2Impl extends AbstractDb{
 		if(tableName.indexOf(".")!=-1){
 			String schema=tableName.split("\\.")[0];
 			name=tableName.split("\\.")[1];
-			sql.append(" AND TABLE_SCHEMA='"+schema.toUpperCase()+"'");
+			sql.append(" AND B.TABSCHEMA='"+schema.toUpperCase()+"'");
 		}
 		String keyName=(String)jdbcService.unique(sql.toString(), new String[]{name.toUpperCase()});
 		return keyName;
@@ -82,7 +82,7 @@ public class DbDb2Impl extends AbstractDb{
 	}
 	
 	public boolean columnIsNotNull(String tableName, String columnName) {
-		StringBuffer sql=new StringBuffer("select NULLS from SYSCAT.COLUMNS A WHERE A.tabname =?");
+		StringBuffer sql=new StringBuffer("select NULLS from SYSCAT.COLUMNS A WHERE A.tabname =? and  A.COLNAME =?");
 		String name=tableName;
 		if(tableName.indexOf(".")!=-1){
 			String schema=tableName.split("\\.")[0];
