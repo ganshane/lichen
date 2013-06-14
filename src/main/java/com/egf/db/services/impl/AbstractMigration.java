@@ -18,6 +18,7 @@ import com.egf.db.core.define.name.ColumnName;
 import com.egf.db.core.define.name.ForeignKeyName;
 import com.egf.db.core.define.name.IndexName;
 import com.egf.db.core.define.name.PrimaryKeyName;
+import com.egf.db.core.define.name.SequenceName;
 import com.egf.db.core.define.name.TableName;
 import com.egf.db.core.define.name.UniqueName;
 import com.egf.db.services.DatabaseService;
@@ -56,6 +57,15 @@ public abstract class AbstractMigration extends DatabaseServiceImpl implements M
 	 */
 	protected static TableName TableName(String name) {
 		return new TableNameImpl(name);
+	}
+	
+	/**
+	 * 创建序列
+	 * @param name 序列名称
+	 * @return
+	 */
+	protected static SequenceName SequenceName(String name){
+		return new SequenceNameImpl(name);
 	}
 	
 	/**

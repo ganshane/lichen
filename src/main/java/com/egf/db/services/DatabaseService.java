@@ -16,6 +16,7 @@ import com.egf.db.core.define.name.ColumnName;
 import com.egf.db.core.define.name.ForeignKeyName;
 import com.egf.db.core.define.name.IndexName;
 import com.egf.db.core.define.name.PrimaryKeyName;
+import com.egf.db.core.define.name.SequenceName;
 import com.egf.db.core.define.name.TableName;
 import com.egf.db.core.define.name.UniqueName;
 import com.egf.db.exception.MigrationException;
@@ -44,6 +45,12 @@ public interface DatabaseService {
 	 * @throws SQLException
 	 */
 	public void createTable(TableName tableName, CreateTableCallback createTableCallback) throws MigrationException;
+	
+	/**
+	 * 创建序列
+	 * @param sequenceName
+	 */
+	public void createSequence(SequenceName sequenceName);
 	
 	
 	/**

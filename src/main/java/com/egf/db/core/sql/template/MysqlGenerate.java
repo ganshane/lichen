@@ -74,5 +74,11 @@ public class MysqlGenerate extends AbstractGenerate{
 		}
 		return columnSql;
 	}
+
+	
+	public String createSequence(String sequenceName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

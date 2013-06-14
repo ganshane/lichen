@@ -68,4 +68,10 @@ public class OracleGenerate extends AbstractGenerate{
 		return dropConstraint(tableName, uniqueName);
 	}
 
+	
+	public String createSequence(String sequenceName) {
+		String sql=String.format("create sequence %s", sequenceName);
+		return sql;
+	}
+
 }

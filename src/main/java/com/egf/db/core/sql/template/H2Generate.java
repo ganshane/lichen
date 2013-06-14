@@ -45,5 +45,11 @@ public class H2Generate extends AbstractGenerate{
 	public String dropUnique(String tableName, String uniqueName) {
 		return dropConstraint(tableName, uniqueName);
 	}
+
+	
+	public String createSequence(String sequenceName) {
+		String sql=String.format("CREATE SEQUENCE %s", sequenceName);
+		return sql;
+	}
 	
 }

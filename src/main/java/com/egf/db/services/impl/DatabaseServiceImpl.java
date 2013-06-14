@@ -22,6 +22,7 @@ import com.egf.db.core.define.name.ColumnName;
 import com.egf.db.core.define.name.ForeignKeyName;
 import com.egf.db.core.define.name.IndexName;
 import com.egf.db.core.define.name.PrimaryKeyName;
+import com.egf.db.core.define.name.SequenceName;
 import com.egf.db.core.define.name.TableName;
 import com.egf.db.core.define.name.UniqueName;
 import com.egf.db.core.jdbc.JdbcService;
@@ -280,6 +281,15 @@ class DatabaseServiceImpl implements DatabaseService{
 			sql=generate.addConstraint(tn, name, keyType, columnNames);
 		}
 		return sql;
+	}
+
+	
+	public void createSequence(SequenceName sequenceName) {
+		String sql=generate.createSequence(sequenceName.getName());
+		if(!StringUtils.isBlank(sql)){
+			logger.info("\n"+sql);
+			jdbcService.execute(sql);
+		}
 	}
 	
 }

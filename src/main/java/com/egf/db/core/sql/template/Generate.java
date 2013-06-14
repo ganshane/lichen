@@ -16,6 +16,13 @@ package com.egf.db.core.sql.template;
 public interface Generate {
 	
 	/**
+	 * 创建序列
+	 * @param sequenceName 序列名称
+	 * @return
+	 */
+	public String createSequence(String sequenceName);
+	
+	/**
 	 * 获取字符串类型
 	 * @param length 长度
 	 * @return
