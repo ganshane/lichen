@@ -23,6 +23,13 @@ public interface Generate {
 	public String createSequence(String sequenceName);
 	
 	/**
+	 * 删除序列
+	 * @param sequenceName 序列名称
+	 * @return
+	 */
+	public String dropSequence(String sequenceName);
+	
+	/**
 	 * 获取字符串类型
 	 * @param length 长度
 	 * @return

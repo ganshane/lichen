@@ -52,4 +52,9 @@ public class H2Generate extends AbstractGenerate{
 		return sql;
 	}
 	
+	public String dropSequence(String sequenceName) {
+		String sql=String.format("DROP SEQUENCE %s", sequenceName);
+		return sql;
+	}
+	
 }

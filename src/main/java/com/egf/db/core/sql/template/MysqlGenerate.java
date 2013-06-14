@@ -81,4 +81,9 @@ public class MysqlGenerate extends AbstractGenerate{
 		return null;
 	}
 	
+	public String dropSequence(String sequenceName){
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }

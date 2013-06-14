@@ -215,6 +215,23 @@ class DatabaseServiceImpl implements DatabaseService{
 		jdbcService.execute(sql);
 	}
 	
+	public void createSequence(SequenceName sequenceName) {
+		String sql=generate.createSequence(sequenceName.getName());
+		if(!StringUtils.isBlank(sql)){
+			logger.info("\n"+sql);
+			jdbcService.execute(sql);
+		}
+	}
+
+	
+	public void dropSequence(SequenceName sequenceName) {
+		String sql=generate.dropSequence(sequenceName.getName());
+		if(!StringUtils.isBlank(sql)){
+			logger.info("\n"+sql);
+			jdbcService.execute(sql);
+		}
+	}
+	
 	/**
 	 * 处理列(添加、修改)
 	 * @param handleType 处理类型(add,change)
@@ -281,15 +298,6 @@ class DatabaseServiceImpl implements DatabaseService{
 			sql=generate.addConstraint(tn, name, keyType, columnNames);
 		}
 		return sql;
-	}
-
-	
-	public void createSequence(SequenceName sequenceName) {
-		String sql=generate.createSequence(sequenceName.getName());
-		if(!StringUtils.isBlank(sql)){
-			logger.info("\n"+sql);
-			jdbcService.execute(sql);
-		}
 	}
 	
 }

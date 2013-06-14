@@ -161,6 +161,12 @@ public interface DatabaseService {
 	public void dropTable(TableName tableName) throws MigrationException;
 	
 	/**
+	 * 删除序列
+	 * @param sequenceName 序列名称
+	 */
+	public void dropSequence(SequenceName sequenceName);
+	
+	/**
 	 * 删除索引
 	 * @param name 索引名称
 	 * @throws MigrationException

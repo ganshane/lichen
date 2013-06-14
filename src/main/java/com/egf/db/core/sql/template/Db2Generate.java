@@ -93,4 +93,9 @@ public class Db2Generate extends AbstractGenerate{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public String dropSequence(String sequenceName){
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
