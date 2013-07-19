@@ -1,24 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.egf.db</groupId>
-	<artifactId>db_migration</artifactId>
-	<version>2.2.2</version>
-	<packaging>jar</packaging>
-	<name>db_migration</name>
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.ganshane.lichen</groupId>
+    <artifactId>lichen-migration</artifactId>
+    <name>Lichen Database Migration Tools</name>
+    <parent>
+        <groupId>com.ganshane.lichen</groupId>
+        <artifactId>lichen</artifactId>
+        <version>0.1</version>
+    </parent>
 	<dependencies>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.14</version>
-		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.5.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -28,13 +22,11 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.4</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>
-			<version>1.9.0</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -71,24 +63,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-					<optimize>true</optimize>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-			<plugin>
-				<!-- Entry needed to create, install and deploy sources jars -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<!-- Entry needed to create, install and deploy sources jars -->
@@ -108,39 +82,10 @@
 				<version>2.6.1</version>
 				<configuration>
 					<bottom>
-					<![CDATA[<i>Copyright 2010 <a href="http://www.egfit.com">The Eastern Golden Finger Information Co., Ltd.<a></i>]]>
+					<![CDATA[<i>Copyright 2013 the original author or authors.</i>]]>
 					</bottom>
 				</configuration>
 			</plugin>
 		</plugins>
 	</build>
-	<repositories>
-		<repository>
-			<id>central</id>
-			<name>EGF Repository</name>
-			<url>
-				http://egf-dev-server:82/nexus/content/groups/public
-			</url>
-		</repository>
-		<repository>
-			<id>snapshots</id>
-			<name>EGF Snapshot Repository</name>
-			<url>
-				http://egf-dev-server:82/nexus/content/groups/public-snapshots
-			</url>
-		</repository>
-	</repositories>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>egf</id>
-			<url>
-				http://egf-dev-server:82/nexus/content/repositories/snapshots
-			</url>
-		</snapshotRepository>
-		<repository>
-			<id>egf</id>
-			<url>http://egf-dev-server:82/nexus/content/repositories/releases
-			</url>
-		</repository>
-	</distributionManagement>
 </project>
