@@ -18,9 +18,14 @@ import java.util.List;
 public abstract class ColumnDefinition {
     protected Logger logger = LoggerFactory.getLogger(getClass());
     protected List<ColumnOption> options = new ArrayList<ColumnOption>();
-    protected String columnName = null;
     protected boolean isAutoIncrement = false;
     protected String defaultValue = null;
+    protected Option<DatabaseAdapter> adapterOpt;
+    protected Option<String> tableNameOpt;
+    protected String tableName(){return tableNameOpt.get();}
+    protected Option<String> columnNameOpt;
+    protected String columnName(){return columnNameOpt.get();}
+
     public void initialize() {
         // Because AutoIncrement adds specific behavior the application
         // depends upon, always check if AutoIncrement is specified and
@@ -28,7 +33,7 @@ public abstract class ColumnDefinition {
         checkForAutoIncrement();
         if (isAutoIncrement && this.getClass().getAnnotation(ColumnSupportsAutoIncrement.class) == null){
             String message = "AutoIncrement cannot be used on column '" +
-                    columnName +
+                    columnName() +
                     "' because its data type does not support auto-increment.";
             throw new UnsupportedOperationException(message);
         }
@@ -58,7 +63,7 @@ public abstract class ColumnDefinition {
                 it.remove();
                 ((Scale) columnOption).getValue();
                 if(scale.isDefined()){
-                    logger.warn("列{}重复定义了Precision",columnName);
+                    logger.warn("列{}重复定义了Precision",columnName());
                 }
                 scale = Option.Some(((Scale) columnOption).getValue());
             }
@@ -74,7 +79,7 @@ public abstract class ColumnDefinition {
                 it.remove();
                 ((Precision) columnOption).getValue();
                 if(precision.isDefined()){
-                    logger.warn("列{}重复定义了Precision",columnName);
+                    logger.warn("列{}重复定义了Precision",columnName());
                 }
                 precision = Option.Some(((Precision) columnOption).getValue());
             }
@@ -88,7 +93,7 @@ public abstract class ColumnDefinition {
             if(columnOption instanceof Default){
                 it.remove();
                 if(defaultValue != null){
-                    logger.warn("列{}重复定义了默认值",columnName);
+                    logger.warn("列{}重复定义了默认值",columnName());
                 }
                 defaultValue = ((Default) columnOption).getValue();
             }
@@ -103,7 +108,7 @@ public abstract class ColumnDefinition {
             if(columnOption instanceof Limit){
                 it.remove();
                 if(limitValue != null){
-                    logger.warn("列{}重复定义了长度",columnName);
+                    logger.warn("列{}重复定义了长度",columnName());
                 }
                 limitValue = String.valueOf(((Limit) columnOption).getValue());
             }
@@ -117,7 +122,7 @@ public abstract class ColumnDefinition {
             if(columnOption instanceof AutoIncrement){
                 it.remove();
                 if(isAutoIncrement){
-                    logger.warn("列{}重复定义了自增长列",columnName);
+                    logger.warn("列{}重复定义了自增长列",columnName());
                 }
                 isAutoIncrement = true;
             }
@@ -131,13 +136,13 @@ public abstract class ColumnDefinition {
             if(columnOption instanceof NotNull){
                 it.remove();
                 if(notNull.isDefined()){
-                    logger.warn("列{}重复定义了NotNull Or Nullable",columnName);
+                    logger.warn("列{}重复定义了NotNull Or Nullable",columnName());
                 }
                 notNull = Option.Some(true);
             }else if(columnOption instanceof Nullable){
                 it.remove();
                 if(notNull.isDefined()){
-                    logger.warn("列{}重复定义了NotNull Or Nullable",columnName);
+                    logger.warn("列{}重复定义了NotNull Or Nullable",columnName());
                 }
                 notNull = Option.Some(false);
             }
@@ -195,7 +200,7 @@ public abstract class ColumnDefinition {
         }
         // Warn for any unused options.
         if (!options.isEmpty()) {
-            logger.warn("The following options for the '{}' column are unused: {}.",columnName, options);
+            logger.warn("The following options for the '{}' column are unused: {}.",columnName(), options);
         }
 
         // Warn about illegal combinations in some databases.
