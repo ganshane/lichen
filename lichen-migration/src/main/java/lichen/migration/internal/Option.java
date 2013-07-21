@@ -14,7 +14,7 @@ public abstract class Option<T> {
             return null;
         }
     };
-    public static <T> Option<T> None(){
+    public static <T extends Object> Option<T> None(){
         return (Option<T>) None;
     }
     public static <T> Option<T> Some(T value){

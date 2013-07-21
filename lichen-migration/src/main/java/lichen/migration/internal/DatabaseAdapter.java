@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @author jcai
  */
 abstract class DatabaseAdapter {
-    private Option<String> schemaNameOpt;
+    Option<String> schemaNameOpt;
     /**
      * The vendor of the database.
      */
@@ -150,7 +150,7 @@ abstract class DatabaseAdapter {
         return quoteCharacter + unquotedNameConverter(columnName) + quoteCharacter;
     }
 
-    private String unquotedNameConverter(String columnName) {
+    String unquotedNameConverter(String columnName) {
         return unquotedNameConverter.apply(columnName);
     }
 
