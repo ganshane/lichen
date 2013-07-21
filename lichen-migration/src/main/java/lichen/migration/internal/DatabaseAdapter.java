@@ -9,6 +9,26 @@ import java.util.Arrays;
  * @author jcai
  */
 abstract class DatabaseAdapter {
+    /**
+     * Return the appropriate database adapter for the given database
+     * vendor.
+     *
+     * @param vendor the database vendor
+     * @param schemaNameOpt an optional schema name used to qualify all
+     *        table names in the generated SQL; if Some(), then all
+     *        table names are qualified with the name, otherwise, table
+     *        names are unqualified
+     * @return a DatabaseAdapter suitable to use for the database
+     */
+    public static DatabaseAdapter forVendor(DatabaseVendor vendor,
+                  Option<String> schemaNameOpt){
+        switch (vendor){
+            case H2:
+                return new H2DatabaseAdapter(schemaNameOpt);
+            default:
+                throw new UnsupportedOperationException("not support adapter "+vendor);
+        }
+    }
     Option<String> schemaNameOpt;
     /**
      * The vendor of the database.
@@ -67,7 +87,7 @@ abstract class DatabaseAdapter {
         d.adapterOpt = Option.Some(this);
         d.tableNameOpt = Option.Some(tableName);
         d.columnNameOpt = Option.Some(columnName);
-        d.options = Arrays.asList(options);
+        d.options.addAll(Arrays.asList(options));
 
         d.initialize();
 

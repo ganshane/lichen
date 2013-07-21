@@ -21,9 +21,9 @@ class H2VarbinaryColumnDefinition
 class H2DatabaseAdapter extends DatabaseAdapter{
     public H2DatabaseAdapter(Option<String> schemaNameOpt){
         super(schemaNameOpt);
+        unquotedNameConverter = UnquotedNameConverter.UppercaseUnquotedNameConverter;
+        addingForeignKeyConstraintCreatesIndex = true;
     }
-    protected boolean addingForeignKeyConstraintCreatesIndex = true;
-
     protected String alterColumnSql(Option<String> schema_name_opt,ColumnDefinition column_definition){
         return new java.lang.StringBuilder(512)
                 .append("ALTER TABLE ")
@@ -72,6 +72,5 @@ class H2DatabaseAdapter extends DatabaseAdapter{
         return "DROP INDEX " +
                 quoteColumnName(index_name);
     }
-    protected UnquotedNameConverter unquotedNameConverter;
 
 }

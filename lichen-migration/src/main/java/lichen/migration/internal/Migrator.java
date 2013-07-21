@@ -15,7 +15,7 @@ import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class Migrator{
+public class Migrator{
     /**
      * The name of the table that stores all the installed migration
      * version numbers.
@@ -27,7 +27,7 @@ class Migrator{
      * A migration to create the schema_migrations table that records
      * which migrations have been applied to a database.
      */
-    private class CreateSchemaMigrationsTableMigration
+    public static class CreateSchemaMigrationsTableMigration
             extends Migration {
         public void up() throws Throwable {
             createTable(Migrator.schemaMigrationsTableName,new Function1<TableDefinition, Void>() {

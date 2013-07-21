@@ -119,6 +119,7 @@ public abstract class Migration {
         ResourceUtils.autoClosingStatement(connection().createStatement(), new Function1<Statement, Void>() {
             public Void apply(Statement parameter) throws Throwable {
                 parameter.execute(sql);
+                logger.info("success to execute sql:{}",sql);
                 return null;
             }
         });
