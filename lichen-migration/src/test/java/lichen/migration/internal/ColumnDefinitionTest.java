@@ -22,5 +22,10 @@ public class ColumnDefinitionTest {
             options.add(Options.AutoIncrement);
             options.add(Options.AutoIncrement);
         }
+
+        @Override
+        protected String sql() {
+            return null;
+        }
     }
 }
