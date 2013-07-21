@@ -13,7 +13,7 @@ package lichen.migration.services;
  * @version $Revision: 2.0 $
  * @since 1.0
  */
-public interface Migration {
+public interface OldMigration {
 	
 	public void up();
 	

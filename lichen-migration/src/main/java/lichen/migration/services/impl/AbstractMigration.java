@@ -22,7 +22,7 @@ import lichen.migration.core.define.name.SequenceName;
 import lichen.migration.core.define.name.TableName;
 import lichen.migration.core.define.name.UniqueName;
 import lichen.migration.services.DatabaseService;
-import lichen.migration.services.Migration;
+import lichen.migration.services.OldMigration;
 
 /**
  * 升级服务抽象类
@@ -31,7 +31,7 @@ import lichen.migration.services.Migration;
  * @version $Revision: 2.0 $
  * @since 1.0
  */
-public abstract class AbstractMigration extends DatabaseServiceImpl implements Migration,DatabaseService{
+public abstract class AbstractMigration extends DatabaseServiceImpl implements OldMigration,DatabaseService{
 	
 	/**唯一**/
 	protected final static Unique UNIQUE=new UniqueImpl();
