@@ -4,6 +4,7 @@ import lichen.migration.services.Options;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -22,6 +23,7 @@ public class Migrator{
      */
     final static String schemaMigrationsTableName = "schema_migrations";
     final static Logger logger = LoggerFactory.getLogger(Migrator.class);
+
 
     /**
      * A migration to create the schema_migrations table that records
@@ -348,6 +350,9 @@ public class Migrator{
     public Migrator(ConnectionBuilder connectionBuilder,DatabaseAdapter adapter){
         this.connectionBuilder = connectionBuilder;
         this.adapter = adapter;
+    }
+    public Migrator(DataSource dataSource, DatabaseAdapter databaseAdapter) {
+        this(new ConnectionBuilder(dataSource),databaseAdapter);
     }
     /**
      * Construct a migrator to a database that needs a username and password.
