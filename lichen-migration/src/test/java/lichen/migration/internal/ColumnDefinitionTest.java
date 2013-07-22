@@ -12,6 +12,7 @@ public class ColumnDefinitionTest {
     @Test
     public void test_autoincrement(){
         A a = new A();
+        a.columnNameOpt = Option.Some("test_column");
         a.initialize();
         Assert.assertTrue(a.isAutoIncrement);
         Assert.assertEquals(a.options.size(),0);
