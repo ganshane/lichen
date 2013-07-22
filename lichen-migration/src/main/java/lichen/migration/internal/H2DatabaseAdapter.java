@@ -75,4 +75,10 @@ class H2DatabaseAdapter extends DatabaseAdapter{
                 quoteColumnName(index_name);
     }
 
+    @Override
+    public String lockTableSql(Option<String> schemaNameOpt, String tableName) {
+        return "SELECT * FROM " +
+                quoteTableName(schemaNameOpt, tableName) +
+                " FOR UPDATE";
+    }
 }

@@ -276,4 +276,26 @@ abstract class DatabaseAdapter {
                        String indexName){
         return removeIndexSql(schemaNameOpt, tableName, indexName);
     }
+    /**
+     * Different databases require different SQL to lock a table.
+     *
+     * @param tableName the name of the table to lock
+     * @return the SQL to lock the table
+     */
+    public String lockTableSql(String tableName){
+        return lockTableSql(schemaNameOpt, tableName);
+    }
+    /**
+     * Different databases require different SQL to lock a table.
+     *
+     * @param schemaNameOpt the optional schema name to qualify the
+     *        table name
+     * @param tableName the name of the table to lock
+     * @return the SQL to lock the table
+     */
+    public String lockTableSql(Option<String> schemaNameOpt,String tableName){
+        return "LOCK TABLE " +
+                quoteTableName(schemaNameOpt, tableName) +
+                " IN EXCLUSIVE MODE";
+    }
 }

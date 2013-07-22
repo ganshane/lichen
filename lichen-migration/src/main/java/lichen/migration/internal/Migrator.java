@@ -428,7 +428,7 @@ public class Migrator{
         helper.adapterOpt = Option.Some(adapter);
         helper.rawConnectionOpt = Option.Some(connection);
         helper.connectionOpt = Option.Some(connection);
-        Migration migration = classInstantiator.with(Options.class,options).with(MigrationHelper.class,helper).newInstance();
+        Migration migration = classInstantiator.with(Options.class,options).with(MigrationHelper.class, helper).newInstance();
 
         switch (direction){
             case Up:
@@ -568,7 +568,13 @@ public class Migrator{
         connectionBuilder.withConnection(ResourceUtils.CommitBehavior.CommitUponReturnOrException,new Function1<Connection, Object>() {
             public Object apply(Connection schemaConnection) throws Throwable {
 
-                //TODO Lock Schema_migrations table
+                logger.debug("Getting an exclusive lock on the '{}' table.",schemaMigrationsTableName);
+                ResourceUtils.autoClosingStatement(schemaConnection.prepareStatement(adapter.lockTableSql(schemaMigrationsTableName)),new Function1<PreparedStatement, Object>() {
+                    @Override
+                    public Object apply(PreparedStatement parameter) throws Throwable {
+                        return parameter.execute();
+                    }
+                });
 
                 // Get a list of all available and installed migrations.  Check
                 // that all installed migrations have a migration class
