@@ -5,12 +5,14 @@ import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.Options;
 import lichen.migration.model.TableDefinition;
 import lichen.migration.services.TableCallback;
+import org.apache.tapestry5.internal.plastic.PlasticClassPool;
 import org.apache.tapestry5.plastic.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +33,27 @@ public class Migrator{
      */
     final static String schemaMigrationsTableName = "schema_migrations";
     final static Logger logger = LoggerFactory.getLogger(Migrator.class);
-    final static PlasticManager plasticManager = PlasticManager.withClassLoader(Thread.currentThread().getContextClassLoader()).create();
+    final static Set<String> packages = new HashSet<String>();
+    final static PlasticClassPool plasticClassPool = new PlasticClassPool(Thread.currentThread().getContextClassLoader(), new PlasticManagerDelegate(){
+                @Override
+                public <T> ClassInstantiator<T> configureInstantiator(String className, ClassInstantiator<T> instantiator) {
+                    return instantiator;
+                }
+
+                @Override
+                public void transform(PlasticClass plasticClass) {
+                    List<PlasticField> fields = plasticClass.getFieldsWithAnnotation(Inject.class);
+                    for (PlasticField field : fields) {
+                        if (field.getTypeName().equals(MigrationHelper.class.getName())) {
+                            field.injectFromInstanceContext();
+                        } else {
+                            throw new RuntimeException("wrong inject " + field.getName());
+                        }
+                    }
+                }
+            },packages,new HashSet<TransformationOption>());
     {
+        packages.add("lichen.migration.internal");
         //plasticManager.addPlasticClassListener(new PlasticClassListenerLogger(logger));
     }
 
@@ -40,26 +61,30 @@ public class Migrator{
      * A migration to create the schema_migrations table that records
      * which migrations have been applied to a database.
      */
-    public static abstract class CreateSchemaMigrationsTableMigration
+    /*
+    public static class CreateSchemaMigrationsTableMigration
             implements Migration {
+        @Inject
+        private MigrationHelper helper;
+
         public void up() throws Throwable {
-            createTable(Migrator.schemaMigrationsTableName,new TableCallback() {
+            helper.createTable(Migrator.schemaMigrationsTableName, new TableCallback() {
                 public void doInTable(TableDefinition t) throws Throwable {
                     t.varchar("version", Options.Limit(32), Options.NotNull);
-                }});
+                }
+            });
 
-        /*
         addIndex(Migrator.schemaMigrationsTableName,
                 Array("version"),
                 Unique,
                 Name("unique_schema_migrations"))
-        */
         }
 
         public void down() {
             throw new IllegalStateException("Fail to down");
         }
     }
+    */
 
 
     /**
@@ -427,17 +452,7 @@ public class Migrator{
                               Option<Long> versionUpdateOpt) throws Throwable{
         logger.info("Migrating {} with '{}'.",direction, migrationClass.getName());
 
-        //final Migration migration = migrationClass.getConstructor().newInstance();
-        ClassInstantiator<? extends Migration> classInstantiator =  plasticManager.createClass(migrationClass, new PlasticClassTransformer() {
-
-            public void transform(PlasticClass plasticClass) {
-                final PlasticField migrationHelperField = plasticClass.introduceField(MigrationHelper.class, "migrationHelper")
-                        .injectFromInstanceContext();
-                for (Method method : MigrationHelper.class.getMethods()) {
-                    plasticClass.introduceMethod(method).delegateTo(migrationHelperField);//.delegateTo(delegateMethod);
-                }
-            }
-        });
+        ClassInstantiator<? extends Migration> classInstantiator = plasticClassPool.getClassInstantiator(migrationClass.getName());
         final MigrationHelperImpl helper = new MigrationHelperImpl();
         helper.adapterOpt = Option.Some(adapter);
         helper.rawConnectionOpt = Option.Some(connection);
@@ -570,6 +585,7 @@ public class Migrator{
     public void migrate(final MigratorOperation operation,
                         final String packageName,
                         final boolean searchSubPackages) throws Throwable {
+        packages.add(packageName);
         initializeSchemaMigrationsTable();
 
         // Get a new connection that locks the schema_migrations table.
@@ -790,7 +806,7 @@ public class Migrator{
 
             if (!notInstalled.isEmpty()) {
                 sb.append("the following migrations are not installed: ");
-                for (Class<? extends MigrationHelper> aClass : notInstalled.values()) {
+                for (Class<? extends Migration> aClass : notInstalled.values()) {
                     sb.append(aClass.getName()).append(", ");
                 }
 

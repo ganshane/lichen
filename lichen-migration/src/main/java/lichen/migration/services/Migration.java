@@ -4,7 +4,7 @@ package lichen.migration.services;
  * migration
  * @author jcai
  */
-public interface Migration extends MigrationHelper{
+public interface Migration{
     /**
      * 数据库升级时候执行方法
      */
