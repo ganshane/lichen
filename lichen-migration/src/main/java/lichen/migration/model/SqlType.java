@@ -1,10 +1,10 @@
-package lichen.migration.internal;
+package lichen.migration.model;
 
 /**
  * sqltype
  * @author jcai
  */
-enum SqlType {
+public enum SqlType {
     BigintType,
     BlobType,
     BooleanType,

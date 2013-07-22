@@ -1,6 +1,9 @@
 package lichen.migration.internal;
 
 
+import lichen.migration.services.Migration;
+import lichen.migration.services.MigrationHelper;
+
 import java.util.SortedMap;
 import java.util.SortedSet;
 
@@ -14,14 +17,14 @@ class MigrationStatuses{
      * migrations.
      *
      * @param notInstalled a sorted map of migration version numbers to
-     *        Migration subclasses that are not installed in the database
+     *        MigrationHelper subclasses that are not installed in the database
      * @param installedWithAvailableImplementation a sorted map of
-     *        migration version numbers to Migration subclasses that are
+     *        migration version numbers to MigrationHelper subclasses that are
      *        currently installed in the database that have a matching a
-     *        Migration subclass
+     *        MigrationHelper subclass
      * @param installedWithoutAvailableImplementation a sorted set of
      *        migration version numbers that are currently installed in
-     *        the database but do not have a matching a Migration subclass
+     *        the database but do not have a matching a MigrationHelper subclass
      */
     MigrationStatuses(SortedMap<Long, Class<? extends Migration>> notInstalled,
                       SortedMap<Long, Class<? extends Migration>> installedWithAvailableImplementation,

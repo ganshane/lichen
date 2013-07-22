@@ -10,6 +10,11 @@
         <version>0.1</version>
     </parent>
 	<dependencies>
+        <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>plastic</artifactId>
+            <version>5.3.6</version>
+        </dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>

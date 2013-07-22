@@ -1,5 +1,7 @@
 package lichen.migration.internal;
 
+import lichen.migration.model.SqlType;
+
 /**
  * @author jcai
  */

@@ -1,12 +1,20 @@
 package lichen.migration.internal;
 
+import lichen.migration.services.Migration;
+import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.Options;
+import lichen.migration.model.TableDefinition;
+import lichen.migration.services.TableCallback;
+import org.apache.tapestry5.plastic.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.sql.*;
@@ -23,20 +31,21 @@ public class Migrator{
      */
     final static String schemaMigrationsTableName = "schema_migrations";
     final static Logger logger = LoggerFactory.getLogger(Migrator.class);
-
+    final static PlasticManager plasticManager = PlasticManager.withClassLoader(Thread.currentThread().getContextClassLoader()).create();
+    {
+        //plasticManager.addPlasticClassListener(new PlasticClassListenerLogger(logger));
+    }
 
     /**
      * A migration to create the schema_migrations table that records
      * which migrations have been applied to a database.
      */
-    public static class CreateSchemaMigrationsTableMigration
-            extends Migration {
+    public static abstract class CreateSchemaMigrationsTableMigration
+            implements Migration {
         public void up() throws Throwable {
-            createTable(Migrator.schemaMigrationsTableName,new Function1<TableDefinition, Void>() {
-                public Void apply(TableDefinition t) throws Throwable {
+            createTable(Migrator.schemaMigrationsTableName,new TableCallback() {
+                public void doInTable(TableDefinition t) throws Throwable {
                     t.varchar("version", Options.Limit(32), Options.NotNull);
-
-                    return null;
                 }});
 
         /*
@@ -147,7 +156,7 @@ public class Migrator{
      * the resource.
      *
      * @param url the resource's URL
-     * @param packageName the Java package name to search for Migration
+     * @param packageName the Java package name to search for MigrationHelper
      *        subclasses
      * @param searchSubPackages true if sub-packages of packageName
      *        should be searched
@@ -194,7 +203,7 @@ public class Migrator{
 
     /**
      * Given a Java package name, return a set of concrete classes with
-     * a no argument constructor that implement Migration.
+     * a no argument constructor that implement MigrationHelper.
      *
      * Limitations:
      * 1) This function assumes that only a single directory or jar file
@@ -203,12 +212,12 @@ public class Migrator{
      *    directory or other jars to find other migrations.
      * 3) It does not support remotely loaded classes and jar files.
      *
-     * @param packageName the Java package name to search for Migration
+     * @param packageName the Java package name to search for MigrationHelper
      *        subclasses
      * @param searchSubPackages true if sub-packages of packageName
      *        should be searched
      * @return a sorted map with version number keys and the concrete
-     *         Migration subclasses as the value
+     *         MigrationHelper subclasses as the value
      */
     private static SortedMap<Long,Class<? extends Migration>> findMigrations(
             String packageName,
@@ -237,7 +246,7 @@ public class Migrator{
         }
 
         // Search through the class names for ones that are concrete
-        // subclasses of Migration that have a no argument constructor.
+        // subclasses of MigrationHelper that have a no argument constructor.
         // Use a sorted map mapping the version to the class name so the
         // final results will be sorted in numerically increasing order.
         TreeMap<Long,String> seenVersions = new TreeMap<Long, String>();
@@ -315,7 +324,7 @@ public class Migrator{
             Class<?> c = null;
             try {
                 c = Class.forName(className);
-                if (Migration.class.isAssignableFrom(c) &&
+                if (MigrationHelperImpl.class.isAssignableFrom(c) &&
                         !c.isInterface() &&
                         !java.lang.reflect.Modifier.isAbstract(c.getModifiers())) {
                     try {
@@ -418,10 +427,23 @@ public class Migrator{
                               Option<Long> versionUpdateOpt) throws Throwable{
         logger.info("Migrating {} with '{}'.",direction, migrationClass.getName());
 
-        final Migration migration = migrationClass.getConstructor().newInstance();
-        migration.adapterOpt = Option.Some(adapter);
-        migration.rawConnectionOpt = Option.Some(connection);
-        migration.connectionOpt = Option.Some(connection);
+        //final Migration migration = migrationClass.getConstructor().newInstance();
+        ClassInstantiator<? extends Migration> classInstantiator =  plasticManager.createClass(migrationClass, new PlasticClassTransformer() {
+
+            public void transform(PlasticClass plasticClass) {
+                final PlasticField migrationHelperField = plasticClass.introduceField(MigrationHelper.class, "migrationHelper")
+                        .injectFromInstanceContext();
+                for (Method method : MigrationHelper.class.getMethods()) {
+                    plasticClass.introduceMethod(method).delegateTo(migrationHelperField);//.delegateTo(delegateMethod);
+                }
+            }
+        });
+        final MigrationHelperImpl helper = new MigrationHelperImpl();
+        helper.adapterOpt = Option.Some(adapter);
+        helper.rawConnectionOpt = Option.Some(connection);
+        helper.connectionOpt = Option.Some(connection);
+        Migration migration = classInstantiator.with(MigrationHelper.class,helper).newInstance();
+
         switch (direction){
             case Up:
                 migration.up();
@@ -534,12 +556,12 @@ public class Migrator{
     /**
      * Migrate the database.
      *
-     * Running this method, even if no concrete Migration subclasses are
+     * Running this method, even if no concrete MigrationHelper subclasses are
      * found in the given package name, will result in the creation of
      * the schema_migrations table in the database, if it does not
      * currently exist.
      *
-     * @param packageName the Java package name to search for Migration
+     * @param packageName the Java package name to search for MigrationHelper
      *        subclasses
      * @param searchSubPackages true if sub-packages of packageName
      *        should be searched
@@ -696,11 +718,11 @@ public class Migrator{
     /**
      * Get the status of all the installed and available migrations.  A
      * tuple-like class is returned that contains three groups of
-     * migrations: installed migrations with an associated Migration
-     * subclass, installed migration without an associated Migration
-     * subclass and Migration subclasses that are not installed.
+     * migrations: installed migrations with an associated MigrationHelper
+     * subclass, installed migration without an associated MigrationHelper
+     * subclass and MigrationHelper subclasses that are not installed.
      *
-     * @param packageName the Java package name to search for Migration
+     * @param packageName the Java package name to search for MigrationHelper
      *        subclasses
      * @param searchSubPackages true if sub-packages of packageName
      *        should be searched
@@ -736,23 +758,23 @@ public class Migrator{
     /**
      * Determine if the database has all available migrations installed
      * in it and no migrations installed that do not have a
-     * corresponding concrete Migration subclass; that is, the database
+     * corresponding concrete MigrationHelper subclass; that is, the database
      * must have only those migrations installed that are found by
-     * searching the package name for concrete Migration subclasses.
+     * searching the package name for concrete MigrationHelper subclasses.
      *
      * Running this method does not modify the database in any way.  The
      * schema migrations table is not created.
      *
-     * @param packageName the Java package name to search for Migration
+     * @param packageName the Java package name to search for MigrationHelper
      *        subclasses
      * @param searchSubPackages true if sub-packages of packageName
      *        should be searched
      * @return None if all available migrations are installed and all
-     *         installed migrations have a corresponding Migration
+     *         installed migrations have a corresponding MigrationHelper
      *         subclass; Some(message) with a message suitable for
      *         logging with the not-installed migrations and the
      *         installed migrations that do not have a matching
-     *         Migration subclass
+     *         MigrationHelper subclass
      */
     public Option<String> whyNotMigrated(String packageName,boolean searchSubPackages) throws Throwable {
         MigrationStatuses migrationStatuses = getMigrationStatuses(packageName, searchSubPackages);
@@ -768,7 +790,7 @@ public class Migrator{
 
             if (!notInstalled.isEmpty()) {
                 sb.append("the following migrations are not installed: ");
-                for (Class<? extends Migration> aClass : notInstalled.values()) {
+                for (Class<? extends MigrationHelper> aClass : notInstalled.values()) {
                     sb.append(aClass.getName()).append(", ");
                 }
 
@@ -779,7 +801,7 @@ public class Migrator{
 
             if (!installedWithoutAvailableImplementation.isEmpty()) {
                 sb.append("the following migrations are installed without a " +
-                        "matching Migration subclass: ");
+                        "matching MigrationHelper subclass: ");
                 for (Long anInstalledWithoutAvailableImplementation : installedWithoutAvailableImplementation)
                     sb.append(anInstalledWithoutAvailableImplementation).append(",");
             }
@@ -787,6 +809,29 @@ public class Migrator{
             sb.append('.');
 
             return Option.Some(sb.toString());
+        }
+    }
+    public class PlasticClassListenerLogger implements PlasticClassListener
+    {
+        private final Logger logger;
+
+        public PlasticClassListenerLogger(Logger logger)
+        {
+            this.logger = logger;
+        }
+
+        public void classWillLoad(PlasticClassEvent event)
+        {
+            if (logger.isDebugEnabled())
+            {
+                Marker marker = MarkerFactory.getMarker(event.getPrimaryClassName());
+
+                String extendedClassName = event.getType() == ClassType.PRIMARY ? event.getPrimaryClassName() : String
+                        .format("%s (%s for %s)", event.getClassName(), event.getType(), event.getPrimaryClassName());
+
+                logger.debug(marker,
+                        String.format("Loading class %s:\n%s", extendedClassName, event.getDissasembledBytecode()));
+            }
         }
     }
 }

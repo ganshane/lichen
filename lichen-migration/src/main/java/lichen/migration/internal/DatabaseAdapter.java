@@ -1,6 +1,7 @@
 package lichen.migration.internal;
 
 import lichen.migration.model.ColumnOption;
+import lichen.migration.model.SqlType;
 
 import java.util.Arrays;
 

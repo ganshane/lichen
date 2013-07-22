@@ -1,7 +1,10 @@
 package lichen.migration.internal;
 
 import lichen.migration.model.ColumnOption;
+import lichen.migration.model.SqlType;
 import lichen.migration.model.TableOption;
+import lichen.migration.services.MigrationHelper;
+import lichen.migration.services.TableCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,21 +14,8 @@ import java.sql.*;
  * 数据库升级抽象类
  * @author jcai
  */
-public abstract class Migration {
-    private final static Logger logger = LoggerFactory.getLogger(Migration.class);
-
-    /**
-     * Concrete migration classes must define this method to migrate the
-     * database up to a new migration.
-     */
-    public abstract void up() throws Throwable;
-
-    /**
-     * Concrete migration classes must define this method to back out of
-     * this migration.  If the migration cannot be reversed, then a
-     * IrreversibleMigrationException should be thrown.
-     */
-    public abstract void down() throws Throwable;
+class MigrationHelperImpl implements MigrationHelper {
+    private final static Logger logger = LoggerFactory.getLogger(MigrationHelperImpl.class);
 
     /**
      * The raw connection to the database that underlies the logging
@@ -45,10 +35,10 @@ public abstract class Migration {
      * any custom work.  This connection is the raw connection that
      * underlies the logging connection and does not log any operations
      * performed on it.  It should only be used when the logging
-     * connection does not provide a required feature.  The Migration
+     * connection does not provide a required feature.  The MigrationHelper
      * subclass must be careful with this connection and leave it in a
      * good state, as all of the other migration methods defined in
-     * Migration use the same connection.
+     * MigrationHelper use the same connection.
      */
     public Connection rawConnection(){ return rawConnectionOpt.get();}
 
@@ -65,9 +55,9 @@ public abstract class Migration {
     /**
      * Get the connection to the database the migration can use for any
      * custom work.  This connection logs all operations performed on
-     * it.  The Migration subclass must be careful with this connection
+     * it.  The MigrationHelper subclass must be careful with this connection
      * and leave it in a good state, as all of the other migration
-     * methods defined in Migration use the same connection.
+     * methods defined in MigrationHelper use the same connection.
      */
     public Connection connection(){return connectionOpt.get();}
 
@@ -166,47 +156,30 @@ public abstract class Migration {
         return ResourceUtils.autoClosingResultSet(rs,f);
     }
 
-    final public void createTable(String tableName,Function1<TableDefinition,Void> body,TableOption ... options) throws Throwable {
-        TableDefinition tableDefinition = new TableDefinition(adapter(), tableName);
+    final public void createTable(String tableName, TableCallback body, TableOption... options) throws Throwable {
+        TableDefinitionImpl tableDefinition = new TableDefinitionImpl(adapter(), tableName);
 
-        body.apply(tableDefinition);
+        body.doInTable(tableDefinition);
 
         String sql = "CREATE TABLE " + adapter().quoteTableName(tableName) + " (" + tableDefinition.toSql() + ')';
         execute(sql);
     }
 
     final public void addColumn(String tableName,
-                        String columnName,
-                        SqlType columnType,
-                        ColumnOption ... options) throws Throwable {
-        TableDefinition tableDefinition = new TableDefinition(adapter(), tableName);
+                                String columnName,
+                                SqlType columnType,
+                                ColumnOption... options) throws Throwable {
+        TableDefinitionImpl tableDefinition = new TableDefinitionImpl(adapter(), tableName);
 
         tableDefinition.column(columnName, columnType, options);
         String sql = "ALTER TABLE " + adapter().quoteTableName(tableName) + " ADD " + tableDefinition.toSql();
         execute(sql);
     }
 
-    /**
-     * Alter the definition of an existing column.
-     *
-     * NOTE: if the original column definition uses CharacterSet() then
-     * it must be used here again, unless the base SQL data type is
-     * being changed.  For example, on Oracle, creating a column without
-     * CharacterSet uses VARCHAR2 while using CharacterSet(Unicode) uses
-     * NVARCHAR2, so if the original column used CharacterSet(Unicode)
-     * and #alterColumn() is not passed CharacterSet(Unicode), then the
-     * column's data type will be change from NVARCHAR2 to VARCHAR2.
-     *
-     * @param tableName the name of the table with the column
-     * @param columnName the name of the column
-     * @param columnType the type the column is being altered to
-     * @param options a possibly empty array of column options to
-     *        customize the column
-     */
     final public void alterColumn(String tableName,
-                          String columnName,
-                          SqlType columnType,
-                          ColumnOption ... options) throws Throwable {
+                                  String columnName,
+                                  SqlType columnType,
+                                  ColumnOption... options) throws Throwable {
         execute(adapter().alterColumnSql(tableName,
                 columnName,
                 columnType,
@@ -214,7 +187,7 @@ public abstract class Migration {
     }
 
     final public void removeColumn(String tableName,
-                           String columnName) throws Throwable {
+                                   String columnName) throws Throwable {
         execute(adapter().removeColumnSql(tableName, columnName));
     }
     final public void dropTable(String tableName) throws Throwable {
