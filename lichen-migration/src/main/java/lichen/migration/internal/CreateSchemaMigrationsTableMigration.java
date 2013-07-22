@@ -1,10 +1,7 @@
 package lichen.migration.internal;
 
 import lichen.migration.model.TableDefinition;
-import lichen.migration.services.Migration;
-import lichen.migration.services.MigrationHelper;
-import lichen.migration.services.Options;
-import lichen.migration.services.TableCallback;
+import lichen.migration.services.*;
 
 import javax.inject.Inject;
 
@@ -15,11 +12,13 @@ import javax.inject.Inject;
 public class CreateSchemaMigrationsTableMigration  implements Migration {
     @Inject
     private MigrationHelper helper;
+    @Inject
+    private Options options;
 
     public void up() throws Throwable {
         helper.createTable(Migrator.schemaMigrationsTableName, new TableCallback() {
             public void doInTable(TableDefinition t) throws Throwable {
-                t.varchar("version", Options.Limit(32), Options.NotNull);
+                t.varchar("version", options.Limit(32), options.NotNull());
             }
         });
 

@@ -19,8 +19,9 @@ public class ColumnDefinitionTest {
     @ColumnSupportsAutoIncrement
     class A extends ColumnDefinition{
         public A(){
-            options.add(Options.AutoIncrement);
-            options.add(Options.AutoIncrement);
+            Options optionsService = new OptionsImpl();
+            options.add(optionsService.AutoIncrement());
+            options.add(optionsService.AutoIncrement());
         }
 
         @Override

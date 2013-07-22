@@ -2,6 +2,7 @@ package lichen.migration.internal;
 
 import lichen.migration.services.Migration;
 import lichen.migration.services.MigrationHelper;
+import lichen.migration.services.Options;
 import org.apache.tapestry5.internal.plastic.PlasticClassPool;
 import org.apache.tapestry5.plastic.*;
 import org.slf4j.Logger;
@@ -13,10 +14,12 @@ import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLDecoder;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -30,6 +33,7 @@ public class Migrator{
      */
     final static String schemaMigrationsTableName = "schema_migrations";
     final static Logger logger = LoggerFactory.getLogger(Migrator.class);
+    private final static Options options = new OptionsImpl();
     final static Set<String> packages = new HashSet<String>();
     final static PlasticClassPool plasticClassPool = new PlasticClassPool(Thread.currentThread().getContextClassLoader(), new PlasticManagerDelegate(){
                 @Override
@@ -41,7 +45,8 @@ public class Migrator{
                 public void transform(PlasticClass plasticClass) {
                     List<PlasticField> fields = plasticClass.getFieldsWithAnnotation(Inject.class);
                     for (PlasticField field : fields) {
-                        if (field.getTypeName().equals(MigrationHelper.class.getName())) {
+                        if (field.getTypeName().equals(MigrationHelper.class.getName()) ||
+                                field.getTypeName().equals(Options.class.getName())) {
                             field.injectFromInstanceContext();
                         } else {
                             throw new RuntimeException("wrong inject " + field.getName());
@@ -53,37 +58,6 @@ public class Migrator{
         packages.add("lichen.migration.internal");
         //plasticManager.addPlasticClassListener(new PlasticClassListenerLogger(logger));
     }
-
-    /**
-     * A migration to create the schema_migrations table that records
-     * which migrations have been applied to a database.
-     */
-    /*
-    public static class CreateSchemaMigrationsTableMigration
-            implements Migration {
-        @Inject
-        private MigrationHelper helper;
-
-        public void up() throws Throwable {
-            helper.createTable(Migrator.schemaMigrationsTableName, new TableCallback() {
-                public void doInTable(TableDefinition t) throws Throwable {
-                    t.varchar("version", Options.Limit(32), Options.NotNull);
-                }
-            });
-
-        addIndex(Migrator.schemaMigrationsTableName,
-                Array("version"),
-                Unique,
-                Name("unique_schema_migrations"))
-        }
-
-        public void down() {
-            throw new IllegalStateException("Fail to down");
-        }
-    }
-    */
-
-
     /**
      * Given a path to a JAR file, return a set of all the names of all
      * the classes the JAR file contains.
@@ -454,7 +428,7 @@ public class Migrator{
         helper.adapterOpt = Option.Some(adapter);
         helper.rawConnectionOpt = Option.Some(connection);
         helper.connectionOpt = Option.Some(connection);
-        Migration migration = classInstantiator.with(MigrationHelper.class,helper).newInstance();
+        Migration migration = classInstantiator.with(Options.class,options).with(MigrationHelper.class,helper).newInstance();
 
         switch (direction){
             case Up:
