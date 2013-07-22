@@ -29,6 +29,5 @@ class MigrationStatuses{
         this.notInstalled = notInstalled;
         this.installedWithAvailableImplementation = installedWithAvailableImplementation;
         this.installedWithoutAvailableImplementation = installedWithoutAvailableImplementation;
-
     }
 }
