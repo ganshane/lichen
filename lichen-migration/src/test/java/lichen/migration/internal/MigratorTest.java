@@ -20,7 +20,8 @@ public class MigratorTest {
 
     @Test
     public void test_migrate() throws Throwable {
-        migrator.migrate(MigratorOperation.InstallAllMigrations,"com.imageworks.vnp.dao.migrations", false);
+        migrator.migrate(MigratorOperation.InstallAllMigrations,"lichen.migration.testdb", false);
+        migrator.migrate(MigratorOperation.RemoveAllMigrations,"lichen.migration.testdb", false);
     }
     @BeforeClass
     public static void setup() throws ProxoolException {

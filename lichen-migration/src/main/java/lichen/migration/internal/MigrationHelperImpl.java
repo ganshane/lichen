@@ -108,8 +108,8 @@ class MigrationHelperImpl implements MigrationHelper {
     final public void execute(final String sql) throws Throwable{
         ResourceUtils.autoClosingStatement(connection().createStatement(), new Function1<Statement, Void>() {
             public Void apply(Statement parameter) throws Throwable {
+                logger.info("prepare to execute sql:{}",sql);
                 parameter.execute(sql);
-                logger.info("success to execute sql:{}",sql);
                 return null;
             }
         });

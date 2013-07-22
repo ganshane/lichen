@@ -2,9 +2,6 @@ package lichen.migration.internal;
 
 import lichen.migration.services.Migration;
 import lichen.migration.services.MigrationHelper;
-import lichen.migration.services.Options;
-import lichen.migration.model.TableDefinition;
-import lichen.migration.services.TableCallback;
 import org.apache.tapestry5.internal.plastic.PlasticClassPool;
 import org.apache.tapestry5.plastic.*;
 import org.slf4j.Logger;
@@ -181,7 +178,7 @@ public class Migrator{
      * the resource.
      *
      * @param url the resource's URL
-     * @param packageName the Java package name to search for MigrationHelper
+     * @param packageName the Java package name to search for Migration
      *        subclasses
      * @param searchSubPackages true if sub-packages of packageName
      *        should be searched
@@ -228,7 +225,7 @@ public class Migrator{
 
     /**
      * Given a Java package name, return a set of concrete classes with
-     * a no argument constructor that implement MigrationHelper.
+     * a no argument constructor that implement Migration.
      *
      * Limitations:
      * 1) This function assumes that only a single directory or jar file
@@ -237,12 +234,12 @@ public class Migrator{
      *    directory or other jars to find other migrations.
      * 3) It does not support remotely loaded classes and jar files.
      *
-     * @param packageName the Java package name to search for MigrationHelper
+     * @param packageName the Java package name to search for Migration
      *        subclasses
      * @param searchSubPackages true if sub-packages of packageName
      *        should be searched
      * @return a sorted map with version number keys and the concrete
-     *         MigrationHelper subclasses as the value
+     *         Migration subclasses as the value
      */
     private static SortedMap<Long,Class<? extends Migration>> findMigrations(
             String packageName,
@@ -271,7 +268,7 @@ public class Migrator{
         }
 
         // Search through the class names for ones that are concrete
-        // subclasses of MigrationHelper that have a no argument constructor.
+        // subclasses of Migration that have a no argument constructor.
         // Use a sorted map mapping the version to the class name so the
         // final results will be sorted in numerically increasing order.
         TreeMap<Long,String> seenVersions = new TreeMap<Long, String>();
@@ -349,7 +346,7 @@ public class Migrator{
             Class<?> c = null;
             try {
                 c = Class.forName(className);
-                if (MigrationHelperImpl.class.isAssignableFrom(c) &&
+                if (Migration.class.isAssignableFrom(c) &&
                         !c.isInterface() &&
                         !java.lang.reflect.Modifier.isAbstract(c.getModifiers())) {
                     try {
@@ -429,7 +426,7 @@ public class Migrator{
                     public Set<String> apply(ResultSet rs) throws Throwable {
                         Set<String> names = new HashSet<String>();
                         while (rs.next()) {
-                            names.add(rs.getString(3));
+                            names.add(rs.getString(3).trim());
                         }
                         return names;
                     }
@@ -571,12 +568,12 @@ public class Migrator{
     /**
      * Migrate the database.
      *
-     * Running this method, even if no concrete MigrationHelper subclasses are
+     * Running this method, even if no concrete Migration subclasses are
      * found in the given package name, will result in the creation of
      * the schema_migrations table in the database, if it does not
      * currently exist.
      *
-     * @param packageName the Java package name to search for MigrationHelper
+     * @param packageName the Java package name to search for migration
      *        subclasses
      * @param searchSubPackages true if sub-packages of packageName
      *        should be searched
@@ -734,11 +731,11 @@ public class Migrator{
     /**
      * Get the status of all the installed and available migrations.  A
      * tuple-like class is returned that contains three groups of
-     * migrations: installed migrations with an associated MigrationHelper
-     * subclass, installed migration without an associated MigrationHelper
-     * subclass and MigrationHelper subclasses that are not installed.
+     * migrations: installed migrations with an associated Migration
+     * subclass, installed migration without an associated Migration
+     * subclass and Migration subclasses that are not installed.
      *
-     * @param packageName the Java package name to search for MigrationHelper
+     * @param packageName the Java package name to search for Migration
      *        subclasses
      * @param searchSubPackages true if sub-packages of packageName
      *        should be searched
@@ -774,23 +771,23 @@ public class Migrator{
     /**
      * Determine if the database has all available migrations installed
      * in it and no migrations installed that do not have a
-     * corresponding concrete MigrationHelper subclass; that is, the database
+     * corresponding concrete Migration subclass; that is, the database
      * must have only those migrations installed that are found by
-     * searching the package name for concrete MigrationHelper subclasses.
+     * searching the package name for concrete Migration subclasses.
      *
      * Running this method does not modify the database in any way.  The
      * schema migrations table is not created.
      *
-     * @param packageName the Java package name to search for MigrationHelper
+     * @param packageName the Java package name to search for Migration
      *        subclasses
      * @param searchSubPackages true if sub-packages of packageName
      *        should be searched
      * @return None if all available migrations are installed and all
-     *         installed migrations have a corresponding MigrationHelper
+     *         installed migrations have a corresponding Migration
      *         subclass; Some(message) with a message suitable for
      *         logging with the not-installed migrations and the
      *         installed migrations that do not have a matching
-     *         MigrationHelper subclass
+     *         Migration subclass
      */
     public Option<String> whyNotMigrated(String packageName,boolean searchSubPackages) throws Throwable {
         MigrationStatuses migrationStatuses = getMigrationStatuses(packageName, searchSubPackages);
@@ -817,7 +814,7 @@ public class Migrator{
 
             if (!installedWithoutAvailableImplementation.isEmpty()) {
                 sb.append("the following migrations are installed without a " +
-                        "matching MigrationHelper subclass: ");
+                        "matching Migration subclass: ");
                 for (Long anInstalledWithoutAvailableImplementation : installedWithoutAvailableImplementation)
                     sb.append(anInstalledWithoutAvailableImplementation).append(",");
             }
