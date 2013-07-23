@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<migrator>
+    <driver_class>driver_class_name</driver_class>
+    <user_name>sa</user_name>
+    <password>pass</password>
+    <url>jdbc:h2:mem:testdb</url>
+    <package>lichen.migration.testdb</package>
+</migrator>
