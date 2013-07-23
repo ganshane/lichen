@@ -95,10 +95,9 @@ public class CommandLine {
 
   private void printUsage() {
     console.printf(
-        "%nUsage: migrate command [parameter] [--path=<directory>] [--env=<environment>] [--template=<path to custom template>]%n%n");
-    console.printf("--path=<directory>   Path to repository.  Default current working directory.%n");
+        "%nUsage: migrate command [parameter] [--path=<file>] %n%n");
+    console.printf("--config=<file>      Path to configuration.  Default current working directory.%n");
     console.printf("--help               Displays this usage message.%n");
-    console.printf("--trace              Shows additional error details (if any).%n");
     console.printf("%n");
     console.printf("Commands:%n");
     console.printf("  info               Display build version informations.%n");

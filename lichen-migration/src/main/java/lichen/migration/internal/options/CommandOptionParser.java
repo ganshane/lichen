@@ -41,29 +41,8 @@ public enum CommandOptionParser {
         case PATH:
           options.getPaths().setBasePath(new File(argParts[1]));
           break;
-        case ENVPATH:
-          options.getPaths().setEnvPath(new File(argParts[1]));
-          break;
-        case SCRIPTPATH:
-          options.getPaths().setScriptPath(new File(argParts[1]));
-          break;
-        case DRIVERPATH:
-          options.getPaths().setDriverPath(new File(argParts[1]));
-          break;
-        case ENV:
-          options.setEnvironment(argParts[1]);
-          break;
-        case FORCE:
-          options.setForce(true);
-          break;
-        case TRACE:
-          options.setTrace(true);
-          break;
         case HELP:
           options.setHelp(true);
-          break;
-        case TEMPLATE:
-          options.setTemplate(argParts[1]);
           break;
       }
     }
