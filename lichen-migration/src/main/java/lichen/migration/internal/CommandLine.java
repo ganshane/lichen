@@ -1,10 +1,5 @@
 package lichen.migration.internal;
 
-import lichen.migration.internal.commands.Command;
-import lichen.migration.internal.commands.Commands;
-import lichen.migration.internal.options.CommandOptionParser;
-import lichen.migration.internal.options.SelectedOptions;
-
 import java.io.File;
 import java.io.PrintStream;
 import java.util.Date;
