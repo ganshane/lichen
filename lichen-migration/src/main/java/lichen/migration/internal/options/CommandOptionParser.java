@@ -37,13 +37,16 @@ public enum CommandOptionParser {
       final String[] argParts = arg.substring(2).split("=");
       final CommandOption option = CommandOption.valueOf(argParts[0].toUpperCase());
 
-      switch (option) {
-        case PATH:
-          options.getPaths().setBasePath(new File(argParts[1]));
-          break;
-        case HELP:
-          options.setHelp(true);
-          break;
+        switch (option) {
+            case PATH:
+                options.getPaths().setBasePath(new File(argParts[1]));
+                break;
+            case TRACE:
+                options.setTrace(true);
+                break;
+            case HELP:
+                options.setHelp(true);
+                break;
       }
     }
 

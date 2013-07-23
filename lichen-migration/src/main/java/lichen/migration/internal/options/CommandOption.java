@@ -1,6 +1,7 @@
 package lichen.migration.internal.options;
 
 public enum CommandOption {
-  PATH,
-  HELP,
+    PATH,
+    TRACE,
+    HELP,
 }
