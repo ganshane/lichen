@@ -4,6 +4,7 @@ import lichen.migration.model.SqlType;
 import lichen.migration.model.TableDefinition;
 import lichen.migration.services.Migration;
 import lichen.migration.services.MigrationHelper;
+import lichen.migration.services.Options;
 import lichen.migration.services.TableCallback;
 
 import javax.inject.Inject;
@@ -14,6 +15,8 @@ import javax.inject.Inject;
 public class Migrate_20130722093444_CreateTable implements Migration{
     @Inject
     private MigrationHelper helper;
+    @Inject
+    private Options options;
 
     @Override
     public void up() throws Throwable {
@@ -33,10 +36,14 @@ public class Migrate_20130722093444_CreateTable implements Migration{
                 t.varchar("vc");
             }
         });
+
+        helper.addColumn("test_table","test_col",SqlType.VarcharType,options.NotNull());
+
     }
 
     @Override
     public void down() throws Throwable {
+        helper.removeColumn("test_table","test_col");
         helper.dropTable("test_table");
     }
 }

@@ -36,7 +36,7 @@ class TableDefinitionImpl implements TableDefinition {
           else {
               sb.append(", ");
           }
-          sb.append(columnDefinition.columnName())
+          sb.append(adapter.quoteColumnName(columnDefinition.columnName()))
                   .append(' ')
                   .append(columnDefinition.toSql());
       }

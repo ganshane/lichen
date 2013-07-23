@@ -447,12 +447,12 @@ public class Migrator{
                 case Up:
                     sql = "INSERT INTO " +
                             tableName +
-                            " (version) VALUES (?)";
+                            " ("+adapter.quoteColumnName("version")+") VALUES (?)";
                     break;
                 case Down:
                     sql= "DELETE FROM " +
                             tableName +
-                            " WHERE version = ?";
+                            " WHERE "+adapter.quoteColumnName("version")+"= ?";
                     break;
             }
 
@@ -512,7 +512,7 @@ public class Migrator{
     }
 
     private SortedSet<Long> getInstalledVersions(Connection connection) throws Throwable{
-        final String sql = "SELECT version FROM " +
+        final String sql = "SELECT "+adapter.quoteColumnName("version")+" FROM " +
                 adapter.quoteTableName(schemaMigrationsTableName);
         return ResourceUtils.autoClosingStatement(connection.prepareStatement(sql), new Function1<PreparedStatement, SortedSet<Long>>() {
             public SortedSet<Long> apply(PreparedStatement parameter) throws Throwable {
