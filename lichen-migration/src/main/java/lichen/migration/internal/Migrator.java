@@ -234,7 +234,7 @@ public class Migrator{
         HashSet<String> classNames = new HashSet<String>();
         while (urls.hasMoreElements()) {
             URL url = urls.nextElement();
-            logger.debug("For package '{}' found resource at '{}'.",packageName, url);
+            //logger.debug("For package '{}' found resource at '{}'.",packageName, url);
 
             classNames.addAll(classNamesInResource(url,
                     packageName,
@@ -305,7 +305,7 @@ public class Migrator{
             }
             else {
                 skipNames.add(className);
-                logger.debug("Skipping '{}' because it does not match '{}'.",className, reStr);
+                //logger.debug("Skipping '{}' because it does not match '{}'.",className, reStr);
             }
         }
 
@@ -421,7 +421,8 @@ public class Migrator{
     private void runMigration(Connection connection,Class<? extends Migration> migrationClass,
                               final MigrationDirection direction,
                               Option<Long> versionUpdateOpt) throws Throwable{
-        logger.info("Migrating {} with '{}'.",direction, migrationClass.getName());
+        //logger.info("Migrating {} with '{}'.",direction, migrationClass.getName());
+        System.out.println(horizontalLine("Applying: " + migrationClass.getSimpleName(), 80));
 
         ClassInstantiator<? extends Migration> classInstantiator = plasticClassPool.getClassInstantiator(migrationClass.getName());
         final MigrationHelperImpl helper = new MigrationHelperImpl();
@@ -464,6 +465,7 @@ public class Migrator{
                 }
             });
         }
+        //System.out.println(horizontalLine("OK", 80));
     }
 
     /**
@@ -569,7 +571,7 @@ public class Migrator{
             public Object apply(Connection schemaConnection) throws Throwable {
                 initializeSchemaMigrationsTable();
 
-                logger.debug("Getting an exclusive lock on the '{}' table.",schemaMigrationsTableName);
+                //logger.debug("Getting an exclusive lock on the '{}' table.",schemaMigrationsTableName);
                 ResourceUtils.autoClosingStatement(schemaConnection.prepareStatement(adapter.lockTableSql(schemaMigrationsTableName)),new Function1<PreparedStatement, Object>() {
                     @Override
                     public Object apply(PreparedStatement parameter) throws Throwable {
@@ -707,7 +709,18 @@ public class Migrator{
             }
         });
     }
-
+    protected String horizontalLine(String caption, int length) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("==========");
+        if (caption.length() > 0) {
+            caption = " " + caption + " ";
+            builder.append(caption);
+        }
+        for (int i = 0; i < length - caption.length() - 10; i++) {
+            builder.append("=");
+        }
+        return builder.toString();
+    }
 
     /**
      * Get the status of all the installed and available migrations.  A
