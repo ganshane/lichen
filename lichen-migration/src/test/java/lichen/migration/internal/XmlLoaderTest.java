@@ -13,7 +13,9 @@ import java.io.InputStream;
 public class XmlLoaderTest {
     @Test
     public void test_xml() throws Throwable {
-        MigratorConfig config = XmlLoader.parseXML(MigratorConfig.class, getClass().getResourceAsStream("/test_config.xml"), Option.<InputStream>None());
+        MigratorConfig config = XmlLoader.parseXML(MigratorConfig.class,
+                getClass().getResourceAsStream("/test_config.xml"),
+                Option.Some(getClass().getResourceAsStream("/migrator-config.xsd")));
         Assert.assertEquals("driver_class_name",config.driverClassName);
         Assert.assertEquals("lichen.migration.testdb",config.migratePackage);
     }
