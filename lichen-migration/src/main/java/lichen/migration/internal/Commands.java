@@ -1,8 +1,8 @@
 package lichen.migration.internal;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
+import lichen.migration.config.MigratorConfig;
+
+import java.io.*;
 import java.util.Properties;
 
 public enum Commands {
@@ -28,9 +28,11 @@ public enum Commands {
   }
 
   private static Command createCommand(Commands aResolvedCommand, SelectedOptions selectedOptions) {
-    switch (aResolvedCommand) {
-      case INFO:
-        return new InfoCommand(System.out);
+      switch (aResolvedCommand) {
+          case INFO:
+              return new InfoCommand(System.out);
+          case UP:
+              return new UpCommand(selectedOptions);
       /*
       case INIT:
         return new InitializeCommand(selectedOptions);
@@ -38,8 +40,6 @@ public enum Commands {
         return new BootstrapCommand(selectedOptions);
       case NEW:
         return new NewCommand(selectedOptions);
-      case UP:
-        return new UpCommand(selectedOptions);
       case DOWN:
         return new DownCommand(selectedOptions);
       case PENDING:
@@ -62,6 +62,33 @@ public enum Commands {
 }
 interface Command {
     void execute(String... params);
+}
+final class UpCommand implements Command{
+    private SelectedOptions selectedOptions;
+
+    UpCommand(SelectedOptions selectedOptions){
+        this.selectedOptions = selectedOptions;
+    }
+    @Override
+    public void execute(String... params) {
+        if(!selectedOptions.getPaths().getConfigPath().exists()){
+            throw new MigrationException(String.format("config file %s doesn't exists!",
+                    selectedOptions.getPaths().getConfigPath().getAbsolutePath()));
+        }
+        try {
+            InputStream configInputStream = new FileInputStream(selectedOptions.getPaths().getConfigPath());
+            MigratorConfig config = XmlLoader.parseXML(MigratorConfig.class,configInputStream,Option.Some(getClass().getResourceAsStream("/migrator-config.xsd")));
+
+            DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(DatabaseVendor.forDriver(config.driverClassName), Option.<String>None());
+            Migrator migrator = new Migrator(config.url,config.username,config.password,databaseAdapter);
+            migrator.migrate(MigratorOperation.InstallAllMigrations,config.migratePackage, false);
+        } catch (FileNotFoundException e) {
+            throw new MigrationException(String.format("config file %s doesn't exists!",
+                    selectedOptions.getPaths().getConfigPath().getAbsolutePath()));
+        } catch (Throwable throwable) {
+            throw new MigrationException(throwable);
+        }
+    }
 }
 
 final class InfoCommand implements Command {

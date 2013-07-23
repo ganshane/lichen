@@ -2,7 +2,7 @@
 <migrator>
     <driver_class>org.h2.Driver</driver_class>
     <user_name>sa</user_name>
-    <password>pass</password>
+    <password></password>
     <url>jdbc:h2:mem:testdb</url>
     <package>lichen.migration.testdb</package>
 </migrator>

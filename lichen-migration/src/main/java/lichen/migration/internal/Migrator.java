@@ -557,7 +557,7 @@ public class Migrator{
                         final String packageName,
                         final boolean searchSubPackages) throws Throwable {
         packages.add(packageName);
-        initializeSchemaMigrationsTable();
+        //initializeSchemaMigrationsTable();
 
         // Get a new connection that locks the schema_migrations table.
         // This will prevent concurrent migrations from running.  Commit
@@ -567,6 +567,7 @@ public class Migrator{
 
         connectionBuilder.withConnection(ResourceUtils.CommitBehavior.CommitUponReturnOrException,new Function1<Connection, Object>() {
             public Object apply(Connection schemaConnection) throws Throwable {
+                initializeSchemaMigrationsTable();
 
                 logger.debug("Getting an exclusive lock on the '{}' table.",schemaMigrationsTableName);
                 ResourceUtils.autoClosingStatement(schemaConnection.prepareStatement(adapter.lockTableSql(schemaMigrationsTableName)),new Function1<PreparedStatement, Object>() {

@@ -91,7 +91,8 @@ public class CommandLine {
     private void printUsage() {
         console.printf(
                 "%nUsage: migrate command [parameter] [--path=<file>] %n%n");
-        console.printf("--config=<file>      Path to configuration.  Default current working directory.%n");
+        console.printf("--path=<file>        Path to repository.  Default current working directory.%n");
+        console.printf("--config=<file>      Path to config file. Default basedir/config/migrator.xml.%n");
         console.printf("--help               Displays this usage message.%n");
         console.printf("--trace              Shows additional error details (if any).%n");
         console.printf("%n");

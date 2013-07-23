@@ -29,28 +29,31 @@ enum CommandOptionParser {
     }
   }
 
-  private static boolean parseOptions(String arg, SelectedOptions options) {
-    final boolean isOption = isOption(arg);
+    private static boolean parseOptions(String arg, SelectedOptions options) {
+        final boolean isOption = isOption(arg);
 
-    if (isOption) {
-      final String[] argParts = arg.substring(2).split("=");
-      final CommandOption option = CommandOption.valueOf(argParts[0].toUpperCase());
+        if (isOption) {
+            final String[] argParts = arg.substring(2).split("=");
+            final CommandOption option = CommandOption.valueOf(argParts[0].toUpperCase());
 
-        switch (option) {
-            case PATH:
-                options.getPaths().setBasePath(new File(argParts[1]));
-                break;
-            case TRACE:
-                options.setTrace(true);
-                break;
-            case HELP:
-                options.setHelp(true);
-                break;
-      }
+            switch (option) {
+                case PATH:
+                    options.getPaths().setBasePath(new File(argParts[1]));
+                    break;
+                case CONFIG:
+                    options.getPaths().setConfigPath(new File(argParts[1]));
+                    break;
+                case TRACE:
+                    options.setTrace(true);
+                    break;
+                case HELP:
+                    options.setHelp(true);
+                    break;
+            }
+        }
+
+        return isOption;
     }
-
-    return isOption;
-  }
     public static boolean isOption(String arg) {
         return arg.startsWith("--") && !arg.trim().endsWith("=");
     }
@@ -61,40 +64,27 @@ enum CommandOptionParser {
 }
 class SelectedPaths {
     private File basePath = new File("./");
-    private File envPath;
-    private File scriptPath;
-    private File driverPath;
+    private File configPath;
 
     public File getBasePath() {
         return basePath;
     }
-
-    public File getEnvPath() {
-        return envPath == null ? CommandOptionParser.file(basePath, "./environments") : envPath;
-    }
-
-    public File getScriptPath() {
-        return scriptPath == null ? CommandOptionParser.file(basePath, "./scripts") : scriptPath;
-    }
-
-    public File getDriverPath() {
-        return driverPath == null ? CommandOptionParser.file(basePath, "./drivers") : driverPath;
-    }
-
     public void setBasePath(File aBasePath) {
         basePath = aBasePath;
     }
 
-    public void setEnvPath(File aEnvPath) {
-        envPath = aEnvPath;
+    public File getLibPath() {
+        return new File(basePath,"./lib");
     }
 
-    public void setScriptPath(File aScriptPath) {
-        scriptPath = aScriptPath;
+    public File getConfigPath() {
+        if(configPath == null)
+            return new File(basePath,"./config/migrator.xml");
+        return configPath;
     }
 
-    public void setDriverPath(File aDriverPath) {
-        driverPath = aDriverPath;
+    public void setConfigPath(File configPath) {
+        this.configPath = configPath;
     }
 }
 class SelectedOptions {
@@ -103,6 +93,7 @@ class SelectedOptions {
     private String params;
     private boolean trace;
     private boolean help;
+    private File configPath;
 
 
     public SelectedPaths getPaths() {
@@ -141,9 +132,11 @@ class SelectedOptions {
     public void setTrace(boolean trace) {
         this.trace = trace;
     }
+
 }
 enum CommandOption {
     PATH,
     TRACE,
     HELP,
+    CONFIG,
 }
