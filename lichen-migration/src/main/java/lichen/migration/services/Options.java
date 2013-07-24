@@ -1,3 +1,5 @@
+// Copyright 2013 the original author or authors.
+// site: http://lichen.ganshane.com
 package lichen.migration.services;
 
 import lichen.migration.model.*;

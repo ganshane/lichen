@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- 
+   Copyright 2013 the original author or authors.
+   site: http://lichen.ganshane.com
+-->
+
 <migrator>
     <driver_class>org.h2.Driver</driver_class>
     <user_name>sa</user_name>
