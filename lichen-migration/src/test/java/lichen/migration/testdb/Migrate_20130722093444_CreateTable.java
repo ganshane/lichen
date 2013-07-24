@@ -31,11 +31,11 @@ public class Migrate_20130722093444_CreateTable implements Migration{
                 t.char_("char_");
                 t.column("column_", SqlType.BigintType);
                 //t.decimal("decimal_",Op);
-                t.integer("int_");
+                t.integer("int_",options.Unique());
                 t.smallint("sint_");
                 t.timestamp("ts");
                 t.varbinary("vb");
-                t.varchar("vc");
+                t.varchar("vc",options.Limit(10),options.Default("'asdf'"));
             }
         });
 
