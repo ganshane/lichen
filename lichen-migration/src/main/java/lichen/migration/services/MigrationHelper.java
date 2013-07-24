@@ -11,37 +11,56 @@ import lichen.migration.services.TableCallback;
  * @author jcai
  */
 public interface MigrationHelper {
+    /**
+     * 创建一张表
+     * @param tableName 表名
+     * @param body 创建表的回调函数
+     * @param options 表的属性定义
+     * @throws Throwable 任何错误，将抛出异常
+     */
     void createTable(String tableName, TableCallback body, TableOption... options) throws Throwable;
 
+    /**
+     * 删除表
+     * @param tableName 待删除的表名
+     * @throws Throwable 任何错误，将抛出异常
+     */
+    void dropTable(String tableName) throws Throwable;
+
+    /**
+     * 向表中加入某一列
+     * @param tableName 表名
+     * @param columnName 列名
+     * @param columnType 列的类型
+     * @param options 列的定义
+     * @throws Throwable 任何错误，将抛出异常
+     */
     void addColumn(String tableName,
                    String columnName,
                    SqlType columnType,
                    ColumnOption... options) throws Throwable;
 
     /**
-     * Alter the definition of an existing column.
+     * 删除列
+     * @param tableName 表名
+     * @param columnName 列名
+     * @throws Throwable 任何错误，将抛出此异常
+     */
+    void removeColumn(String tableName,
+                      String columnName) throws Throwable;
+
+    /**
+     * 修改一个存在的列
      *
-     * NOTE: if the original column definition uses CharacterSet() then
-     * it must be used here again, unless the base SQL data type is
-     * being changed.  For example, on Oracle, creating a column without
-     * CharacterSet uses VARCHAR2 while using CharacterSet(Unicode) uses
-     * NVARCHAR2, so if the original column used CharacterSet(Unicode)
-     * and #alterColumn() is not passed CharacterSet(Unicode), then the
-     * column's data type will be change from NVARCHAR2 to VARCHAR2.
-     *
-     * @param tableName the name of the table with the column
-     * @param columnName the name of the column
-     * @param columnType the type the column is being altered to
-     * @param options a possibly empty array of column options to
-     *        customize the column
+     * @param tableName 表名
+     * @param columnName 列名
+     * @param columnType 列的类型
+     * @param options 列的属性
      */
     void alterColumn(String tableName,
                      String columnName,
                      SqlType columnType,
                      ColumnOption... options) throws Throwable;
 
-    void removeColumn(String tableName,
-                      String columnName) throws Throwable;
 
-    void dropTable(String tableName) throws Throwable;
 }
