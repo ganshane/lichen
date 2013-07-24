@@ -63,4 +63,11 @@ public interface Options {
      * @return 自增长列
      */
     AutoIncrement AutoIncrement();
+
+    /**
+     * 针对索引或者外键的命名
+     * @param name 名称
+     * @return Name配置
+     */
+    Name Name(String name);
 }

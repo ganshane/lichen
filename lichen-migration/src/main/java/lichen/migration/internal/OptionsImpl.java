@@ -77,6 +77,17 @@ public class OptionsImpl implements Options {
         return AutoIncrement;
     }
 
+    @Override
+    public Name Name(final String name) {
+        return new Name(){
+
+            @Override
+            public String getValue() {
+                return name;
+            }
+        };
+    }
+
     /**
      * 定义主键列
      */

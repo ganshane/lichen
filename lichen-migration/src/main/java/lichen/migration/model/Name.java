@@ -5,4 +5,5 @@ package lichen.migration.model;
  * @author jcai
  */
 public interface Name extends ForeignKeyOption,IndexOption{
+    public String getValue();
 }
