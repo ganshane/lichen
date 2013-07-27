@@ -12,6 +12,7 @@
     <name>Application Develope Framework</name>
     <modules>
         <module>lichen-migration</module>
+        <module>lichen-activerecord</module>
     </modules>
     <scm>
 	    <connection>scm:git:http://github.com/ganshane/lichen.git</connection>
