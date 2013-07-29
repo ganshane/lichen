@@ -1,7 +1,7 @@
 package lichen.ar.internal;
 
-import lichen.ar.services.ErrorCode;
-import lichen.ar.services.LichenActiveRecordException;
+import lichen.ar.services.ActiveRecordErrorCode;
+import lichen.core.services.LichenException;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,7 +35,7 @@ public abstract class ActiveRecordClassImpl<T,PKValue>{
      */
     public Object setData(String fieldName, Object fieldValue){
         if(!columns.contains(fieldName)){
-            throw new LichenActiveRecordException(ErrorCode.COLUMN_NOT_EXISTS);
+            throw new LichenException(ActiveRecordErrorCode.COLUMN_NOT_EXISTS);
         }
         //TODO 要不要判断旧的值和新值是否相等?
         columnsModified.add(fieldName);

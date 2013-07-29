@@ -1,5 +1,8 @@
 package lichen.jdbc.internal;
 
+import lichen.core.services.LichenException;
+import lichen.jdbc.services.JdbcErrorCode;
+
 import javax.sql.DataSource;
 import java.io.InputStream;
 import java.io.Reader;
@@ -191,7 +194,7 @@ public class JdbcHelper {
          if (logger != null) {
              logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -221,7 +224,7 @@ public class JdbcHelper {
          if (logger != null) {
              logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -245,7 +248,7 @@ public class JdbcHelper {
                if (logger != null) {
                   logger.log(e);
                }
-               throw new JdbcException(e);
+               throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
             } finally {
                JdbcUtil.close(transaction.connection);
                currentTransaction.remove();
@@ -274,7 +277,7 @@ public class JdbcHelper {
             if (logger != null) {
                logger.log(e);
             }
-            throw new JdbcException(e);
+            throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
          } finally {
             JdbcUtil.close(transaction.connection);
             currentTransaction.remove();
@@ -300,7 +303,7 @@ public class JdbcHelper {
             if (logger != null) {
                logger.log(e);
             }
-            throw new JdbcException(e);
+            throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
          } finally {
             JdbcUtil.close(transaction.connection);
             currentTransaction.remove();
@@ -395,8 +398,7 @@ public class JdbcHelper {
          }
 
          rollBack = isInTransaction();
-
-         throw new JdbcException("Error running query:\n" + sql + "\n\nError: " + e.getMessage(), e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       } finally {
          JdbcUtil.close(stmt, result);
          if (rollBack)
@@ -473,7 +475,7 @@ public class JdbcHelper {
          }
 
          rollBack = isInTransaction();
-         throw new JdbcException("Error running query:\n" + sql + "\n\nError: " + e.getMessage(), e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       } finally {
          JdbcUtil.close(stmt, result);
          if (rollBack)
@@ -1855,7 +1857,7 @@ public class JdbcHelper {
 
          rollBack = isInTransaction();
 
-         throw new JdbcException("Error executing query:\n" + sql + "\n\nError: " + e.getMessage(), e);
+          throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       } finally {
          JdbcUtil.close(stmt);
          if (rollBack)
@@ -1916,7 +1918,7 @@ public class JdbcHelper {
          }
 
          rollBack = isInTransaction();
-         throw new JdbcException("Error executing query:\n" + sql + "\n\nError: " + e.getMessage(), e);
+          throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       } finally {
          JdbcUtil.close(stmt);
          if (rollBack)
@@ -1981,7 +1983,7 @@ public class JdbcHelper {
          }
 
          rollBack = isInTransaction();
-         throw new JdbcException("Error executing query:\n" + sql + "\n\nError: " + e.getMessage(), e);
+          throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       } finally {
          JdbcUtil.close(stmt);
 
@@ -2018,7 +2020,7 @@ public class JdbcHelper {
              logger.log(e, sql);
          }
          rollBack = isInTransaction();
-         throw new JdbcException("Error executing query:\n" + sql + "\n\nError: " + e.getMessage(), e);
+          throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       } finally {
          JdbcUtil.close(stmt);
          if (rollBack)
@@ -2064,7 +2066,7 @@ public class JdbcHelper {
          }
 
          rollBack = isInTransaction();
-         throw new JdbcException("Error executing query:\n" + sql + "\n\nError: " + e.getMessage(), e);
+          throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       } finally {
          JdbcUtil.close(stmt);
          if (rollBack)
@@ -2103,7 +2105,7 @@ public class JdbcHelper {
              logger.log(e, sql);
          }
          rollBack = isInTransaction();
-         throw new JdbcException("Error executing query:\n" + sql + "\n\nError: " + e.getMessage(), e);
+          throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       } finally {
          JdbcUtil.close(stmt);
          if (rollBack)
@@ -2172,7 +2174,7 @@ public class JdbcHelper {
              logger.log(e, sql);
          }
          rollBack = isInTransaction();
-         throw new JdbcException("Error executing query:\n" + sql + "\n\nError: " + e.getMessage(), e);
+          throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       } finally {
          JdbcUtil.close(stmt);
          if (rollBack)

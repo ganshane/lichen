@@ -13,6 +13,7 @@
     <modules>
         <module>lichen-migration</module>
         <module>lichen-activerecord</module>
+        <module>lichen-core</module>
     </modules>
     <scm>
 	    <connection>scm:git:http://github.com/ganshane/lichen.git</connection>

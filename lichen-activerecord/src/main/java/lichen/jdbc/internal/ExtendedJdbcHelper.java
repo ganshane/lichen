@@ -1,5 +1,8 @@
 package lichen.jdbc.internal;
 
+import lichen.core.services.LichenException;
+import lichen.jdbc.services.JdbcErrorCode;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -21,7 +24,7 @@ public class ExtendedJdbcHelper extends JdbcHelper {
          con = getConnection();
          return con.getMetaData();
       } catch (SQLException e) {
-         throw new JdbcException("Error getting database meta data", e);
+          throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
       } finally {
          freeConnection(con);
       }

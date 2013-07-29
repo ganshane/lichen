@@ -1,48 +1,48 @@
-package lichen.ar.services;
+package lichen.core.services;
 
 
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.util.Map;
-import java.util.TreeMap;
+
 /**
+ * global lichen exception
  * @author jcai
  */
-public class LichenActiveRecordException extends RuntimeException {
+public class LichenException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public static LichenActiveRecordException wrap(Throwable exception, ErrorCode errorCode) {
-        if (exception instanceof LichenActiveRecordException) {
-            LichenActiveRecordException se = (LichenActiveRecordException)exception;
+    public static LichenException wrap(Throwable exception, ErrorCode errorCode) {
+        if (exception instanceof LichenException) {
+            LichenException se = (LichenException)exception;
             if (errorCode != null && errorCode != se.getErrorCode()) {
-                return new LichenActiveRecordException(exception.getMessage(), exception, errorCode);
+                return new LichenException(exception.getMessage(), exception, errorCode);
             }
             return se;
         } else {
-            return new LichenActiveRecordException(exception.getMessage(), exception, errorCode);
+            return new LichenException(exception.getMessage(), exception, errorCode);
         }
     }
 
-    public static LichenActiveRecordException wrap(Throwable exception) {
+    public static LichenException wrap(Throwable exception) {
         return wrap(exception, null);
     }
     private ErrorCode errorCode;
-    public LichenActiveRecordException(ErrorCode errorCode) {
+    public LichenException(ErrorCode errorCode) {
         this.errorCode = errorCode;
     }
 
-    public LichenActiveRecordException(String message, ErrorCode errorCode) {
+    public LichenException(String message, ErrorCode errorCode) {
         super(message);
         this.errorCode = errorCode;
     }
 
-    public LichenActiveRecordException(Throwable cause, ErrorCode errorCode) {
+    public LichenException(Throwable cause, ErrorCode errorCode) {
         super(cause);
         this.errorCode = errorCode;
     }
 
-    public LichenActiveRecordException(String message, Throwable cause, ErrorCode errorCode) {
+    public LichenException(String message, Throwable cause, ErrorCode errorCode) {
         super(message, cause);
         this.errorCode = errorCode;
     }
@@ -74,10 +74,10 @@ public class LichenActiveRecordException extends RuntimeException {
     public String toString(){
         StringBuilder sb = new StringBuilder();
         if(errorCode != null){
-            sb.append("LICHEN-AR-").append(errorCode.getNumber()).append(":");
+            sb.append("LICHEN-").append(errorCode.getNumber()).append(":");
             sb.append(errorCode.toString()).append(" ");
         }else{
-            sb.append("LICHEN_AR-0000 UNKNOWN ");
+            sb.append("LICHEN-0000 UNKNOWN ");
         }
         if(getMessage()!= null){sb.append(getMessage());}
         if(getCause()!=null){sb.append(" -> ").append(getCause());}

@@ -1,5 +1,8 @@
 package lichen.jdbc.internal;
 
+import lichen.core.services.LichenException;
+import lichen.jdbc.services.JdbcErrorCode;
+
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -25,7 +28,7 @@ public class SimpleDataSource implements DataSource {
       try {
          Class.forName(driverClassName.trim());
       } catch (ClassNotFoundException e) {
-         throw new JdbcException("Could not load JDBC Driver class " + driverClassName, e);
+          throw LichenException.wrap(e, JdbcErrorCode.DRIVER_NOT_FOUND);
       }
    }
 

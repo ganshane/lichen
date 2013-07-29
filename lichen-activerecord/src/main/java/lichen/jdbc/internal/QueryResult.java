@@ -1,5 +1,8 @@
 package lichen.jdbc.internal;
 
+import lichen.core.services.LichenException;
+import lichen.jdbc.services.JdbcErrorCode;
+
 import java.math.BigDecimal;
 import java.sql.*;
 
@@ -36,7 +39,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e, sql);
          }
-         throw new JdbcException("Error running query:\n" + sql + "\n\nError: " + e.getMessage(), e);
+          throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -51,7 +54,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+          throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -62,7 +65,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -73,7 +76,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -91,7 +94,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException("Error running query:\n" + sql + "\n\nError: " + e.getMessage(), e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -110,7 +113,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -129,7 +132,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -140,7 +143,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -151,7 +154,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -162,7 +165,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -173,7 +176,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -184,7 +187,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -195,7 +198,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -203,7 +206,7 @@ public class QueryResult {
       try {
          return result.last();
       } catch (SQLException e) {
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -214,7 +217,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -225,7 +228,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -236,7 +239,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -247,7 +250,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -258,7 +261,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -269,7 +272,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -280,7 +283,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -291,7 +294,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -302,7 +305,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -313,7 +316,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -324,7 +327,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -335,7 +338,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -346,7 +349,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -357,7 +360,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -368,7 +371,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -376,7 +379,7 @@ public class QueryResult {
       try {
          return result.getTime(columnIndex);
       } catch (SQLException e) {
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -387,7 +390,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -398,7 +401,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -410,7 +413,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -421,7 +424,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -432,7 +435,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -443,7 +446,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -454,7 +457,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -465,7 +468,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -476,7 +479,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -487,7 +490,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -495,7 +498,7 @@ public class QueryResult {
       try {
          return result.getDouble(columnLabel);
       } catch (SQLException e) {
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -506,7 +509,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -517,7 +520,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -528,7 +531,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -539,7 +542,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -550,7 +553,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -561,7 +564,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 
@@ -572,7 +575,7 @@ public class QueryResult {
          if (jdbc.logger != null) {
              jdbc.logger.log(e);
          }
-         throw new JdbcException(e);
+         throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
       }
    }
 }
