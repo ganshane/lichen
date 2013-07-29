@@ -2,6 +2,7 @@ package lichen.ar.internal;
 
 import lichen.ar.services.ActiveRecordErrorCode;
 import lichen.core.services.LichenException;
+import lichen.core.services.WordUtil;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,10 +13,9 @@ import java.util.Set;
  * 抽象class的实现类
  * active record的基础实现类
  * @author jcai
- * @param <T> 实体类
  * @param <PKValue> 对应的主键值
  */
-public abstract class ActiveRecordClassImpl<T,PKValue>{
+public abstract class ActiveRecordClassImpl<PKValue>{
     /** 主键字段名称 **/
     protected String pk = "id";
     /** 对应的表名 **/
@@ -26,6 +26,9 @@ public abstract class ActiveRecordClassImpl<T,PKValue>{
     Map<String,Object> values = new HashMap<String, Object>();
     /** 修改后的列的集合 **/
     private Set<String> columnsModified = new HashSet<String>();
+    protected ActiveRecordClassImpl(){
+        tableName = WordUtil.tableize(getClass().getSimpleName());
+    }
 
     /**
      * 设置数据
