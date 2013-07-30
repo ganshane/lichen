@@ -8,7 +8,8 @@ import lichen.core.services.ErrorCode;
  */
 public enum JdbcErrorCode implements ErrorCode{
     DATA_ACCESS_ERROR(3001),
-    DRIVER_NOT_FOUND(3002)
+    DRIVER_NOT_FOUND(3002),
+    NO_TRANSACTION_IN_CURRENT_THREAD(3003)
     ;
 
     private int errorCode;

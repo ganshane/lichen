@@ -15,6 +15,7 @@ import java.util.StringTokenizer;
 
 
 /**
+ * 此文件来自 http://www.scooterframework.com
  * <p>Conversion between singular and plural form of a noun word.</p>
  *
  * @author (Fei) John Chen

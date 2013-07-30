@@ -1,5 +1,6 @@
 package lichen.jdbc.internal;
 
+import lichen.jdbc.services.JdbcHelper;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -25,7 +26,7 @@ public class JdbcHelperTest {
          "jdbc:h2:mem:testdb",
          "sa", null);
 
-      jdbc = new JdbcHelper(dataSource);
+      jdbc = new JdbcHelperImpl(dataSource);
 
       jdbc.holdConnection();
       jdbc.execute("CREATE TABLE IF NOT EXISTS `jdbctest`(" +
@@ -66,7 +67,13 @@ public class JdbcHelperTest {
       jdbc.execute("DROP TABLE `jdbctest`");
       jdbc.releaseConnection();
    }
+    @Test
+    public void test(){
+        int  r= jdbc.execute("update jdbctest set id=1234 where id = 1234");
+        assertEquals(0,r);
+    }
 
+    /*
 
    @Test
    public void testQueryForList() {
@@ -211,4 +218,5 @@ public class JdbcHelperTest {
 
       assertEquals(2, res.length);
    }
+   */
 }

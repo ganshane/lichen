@@ -6,9 +6,8 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 
 /**
- * Author: Erdinc YILMAZEL
- * Date: Dec 25, 2008
- * Time: 12:29:19 AM
+ * jdbc util
+ * @author  jcai
  */
 public class JdbcUtil {
 
