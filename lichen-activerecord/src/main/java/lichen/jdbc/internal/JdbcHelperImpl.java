@@ -3,23 +3,28 @@ package lichen.jdbc.internal;
 import lichen.core.services.LichenException;
 import lichen.jdbc.services.JdbcErrorCode;
 import lichen.jdbc.services.JdbcHelper;
+import lichen.jdbc.services.RowMapper;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * 实现JdbcHelper,此类非线程安全，只能在某一个线程中运行
  * @author jcai
  */
 public class JdbcHelperImpl implements JdbcHelper {
+    //操作的底层数据库
     private final DataSource dataSource;
+    //当前线程绑定的事务
     private final ThreadLocal<Transaction> currentTransaction;
     public JdbcHelperImpl(DataSource dataSource){
         this.dataSource =dataSource;
         currentTransaction = new ThreadLocal<Transaction>();
     }
+    //事务定义
     private static class Transaction {
         Connection connection;
         boolean autoCommit;
@@ -44,6 +49,32 @@ public class JdbcHelperImpl implements JdbcHelper {
             currentTransaction.set(transaction);
         } catch (SQLException e) {
             throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
+        }
+    }
+    @Override
+    public void releaseConnection() {
+        Transaction transaction = currentTransaction.get();
+        if (transaction == null) {
+            throw new RuntimeException("There isn't a current connection to release");
+        }
+
+        transaction.hold--;
+
+        if (transaction.hold == 0) {
+            if (!transaction.autoCommit) {
+                try {
+                    transaction.connection.commit();
+                    transaction.connection.setAutoCommit(true);
+                } catch (SQLException e) {
+                    throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
+                } finally {
+                    JdbcUtil.close(transaction.connection);
+                    currentTransaction.remove();
+                }
+            } else {
+                JdbcUtil.close(transaction.connection);
+                currentTransaction.remove();
+            }
         }
     }
 
@@ -84,7 +115,7 @@ public class JdbcHelperImpl implements JdbcHelper {
             }
         }
     }
-    public Connection getConnection() throws SQLException {
+    private Connection getConnection() throws SQLException {
         Transaction transaction = currentTransaction.get();
 
         if (transaction == null) {
@@ -93,10 +124,10 @@ public class JdbcHelperImpl implements JdbcHelper {
             return transaction.connection;
         }
     }
-    public boolean isConnectionHeld() {
+    private boolean isConnectionHeld() {
         return currentTransaction.get() != null;
     }
-    public boolean isInTransaction() {
+    private boolean isInTransaction() {
         Transaction transaction = currentTransaction.get();
         return transaction != null && !transaction.autoCommit;
     }
@@ -126,12 +157,19 @@ public class JdbcHelperImpl implements JdbcHelper {
             }
         }
     }
+
+    @Override
+    public <T> List<T> queryForList(String sql, RowMapper<T> mapper) {
+        //TODO 实现查询
+        return null;
+    }
+
     private void freeConnection(Connection con) {
         if (!isConnectionHeld()) {
             JdbcUtil.close(con);
         }
     }
-    public void rollbackTransaction() {
+    private void rollbackTransaction() {
         Transaction transaction = currentTransaction.get();
 
         if (transaction == null || transaction.autoCommit) {
@@ -143,32 +181,6 @@ public class JdbcHelperImpl implements JdbcHelper {
             } catch (SQLException e) {
                 throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
             } finally {
-                JdbcUtil.close(transaction.connection);
-                currentTransaction.remove();
-            }
-        }
-    }
-    @Override
-    public void releaseConnection() {
-        Transaction transaction = currentTransaction.get();
-        if (transaction == null) {
-            throw new RuntimeException("There isn't a current connection to release");
-        }
-
-        transaction.hold--;
-
-        if (transaction.hold == 0) {
-            if (!transaction.autoCommit) {
-                try {
-                    transaction.connection.commit();
-                    transaction.connection.setAutoCommit(true);
-                } catch (SQLException e) {
-                    throw LichenException.wrap(e,JdbcErrorCode.DATA_ACCESS_ERROR);
-                } finally {
-                    JdbcUtil.close(transaction.connection);
-                    currentTransaction.remove();
-                }
-            } else {
                 JdbcUtil.close(transaction.connection);
                 currentTransaction.remove();
             }

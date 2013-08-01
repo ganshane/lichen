@@ -1,6 +1,7 @@
 package lichen.jdbc.internal;
 
 import lichen.jdbc.services.JdbcHelper;
+import lichen.jdbc.services.RowMapper;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Author: Erdinc YILMAZEL
@@ -67,30 +69,30 @@ public class JdbcHelperTest {
       jdbc.execute("DROP TABLE `jdbctest`");
       jdbc.releaseConnection();
    }
-    @Test
-    public void test(){
-        int  r= jdbc.execute("update jdbctest set id=1234 where id = 1234");
-        assertEquals(0,r);
+    private class Bean{
+        int id;
+        String name;
+        Timestamp creationDate;
     }
-
-    /*
 
    @Test
    public void testQueryForList() {
-      ArrayList<Bean> list = jdbc.queryForList("select * from jdbctest", new BeanCreator<Bean>() {
-         public Bean createBean(ResultSet rs) throws SQLException {
-            Bean bean = new Bean();
-            bean.id = rs.getInt("id");
-            bean.name = rs.getString("name");
-            bean.creationDate = rs.getTimestamp("creation_date");
-            return bean;
-         }
+      List<Bean> list = jdbc.queryForList("select * from jdbctest", new RowMapper<Bean>() {
+          @Override
+          public Bean mapRow(ResultSet rs, int index) throws SQLException {
+              Bean bean = new Bean();
+              bean.id = rs.getInt("id");
+              bean.name = rs.getString("name");
+              bean.creationDate = rs.getTimestamp("creation_date");
+              return bean;
+          }
       });
 
       assertNotNull(list);
       assertEquals("Testing query for list", 2, list.size());
    }
 
+    /*
    @Test
    public void testQueryForObject() {
       Bean bean = jdbc.queryForObject("select * from jdbctest where id = ?", new BeanCreator<Bean>() {

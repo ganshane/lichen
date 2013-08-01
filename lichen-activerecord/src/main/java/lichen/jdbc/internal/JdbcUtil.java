@@ -6,10 +6,10 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 
 /**
- * jdbc util
+ * jdbc util class
  * @author  jcai
  */
-public class JdbcUtil {
+class JdbcUtil {
 
    public static void close(Statement stmt, ResultSet rs) {
       close(stmt);

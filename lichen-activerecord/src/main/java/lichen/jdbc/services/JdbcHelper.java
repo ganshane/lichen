@@ -1,7 +1,13 @@
 package lichen.jdbc.services;
 
+import java.util.List;
+
 /**
- * 针对数据库操作的帮助类
+ * 针对数据库操作的帮助类.
+ * 常用方法
+ * {@link #beginTransaction()} 和 {@link #commitTransaction()};
+ * {@link #holdConnection()} 和 {@link #releaseConnection()}
+ * 为成对出现
  * @author jcai
  */
 public interface JdbcHelper {
@@ -37,4 +43,13 @@ public interface JdbcHelper {
      * @return 执行的结果
      */
     public int execute(String sql,Object ... params);
+
+    /**
+     * 查询出来一个list对象
+     * @param sql 待查询语句
+     * @param mapper 行的mapper对象
+     * @param <T> 返回的结果对象类型
+     * @return list对象
+     */
+    public <T> List<T> queryForList(String sql,RowMapper<T> mapper);
 }
