@@ -13,6 +13,7 @@ public interface RowMapper<T>{
      * @param rs 结果集对象
      * @param index 行数的索引，从0开始
      * @return map行数据之后的结果
+     * @throws SQLException 发生数据库操作异常
      */
     public T mapRow(ResultSet rs,int index) throws SQLException;
 }
