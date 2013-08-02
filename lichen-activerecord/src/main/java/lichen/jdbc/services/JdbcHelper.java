@@ -52,4 +52,14 @@ public interface JdbcHelper {
      * @return list对象
      */
     public <T> List<T> queryForList(String sql,RowMapper<T> mapper);
+    
+    /**
+     * 可以传递参数的查询，查询结果是一个list
+     * @param <T> 返回的结果对象类型
+     * @param sql 含有占位符待查询语句
+     * @param mapper 行的mapper对象
+     * @param setters 给占位符赋值的对象
+     * @return list对象
+     */
+    public <T> List<T> queryForList(String sql,RowMapper<T> mapper,PreparedStatementSetter ... setters);
 }

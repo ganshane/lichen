@@ -1,17 +1,22 @@
 package lichen.jdbc.internal;
 
-import lichen.jdbc.services.JdbcHelper;
-import lichen.jdbc.services.RowMapper;
-import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import org.junit.BeforeClass;
-import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.sql.*;
-import java.util.ArrayList;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.List;
+
+import lichen.jdbc.services.JdbcHelper;
+import lichen.jdbc.services.PreparedStatementSetter;
+import lichen.jdbc.services.RowMapper;
+
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  * Author: Erdinc YILMAZEL
@@ -92,6 +97,37 @@ public class JdbcHelperTest {
       assertEquals("Testing query for list", 2, list.size());
    }
 
+   @Test
+   public void testQueryForList2() {
+      List<Bean> list = jdbc.queryForList("select * from jdbctest where id=? and jkey=? and name=?", new RowMapper<Bean>() {
+          @Override
+          public Bean mapRow(ResultSet rs, int index) throws SQLException {
+              Bean bean = new Bean();
+              bean.id = rs.getInt("id");
+              bean.name = rs.getString("name");
+              bean.creationDate = rs.getTimestamp("creation_date");
+              return bean;
+          }
+      },new PreparedStatementSetter(){
+    	  @Override
+    	  public void set(PreparedStatement ps,int index) throws SQLException {
+    		  ps.setObject(index, "1");
+    	  }
+      },new PreparedStatementSetter(){
+    	  @Override
+    	  public void set(PreparedStatement ps,int index) throws SQLException {
+    		  ps.setObject(index, "10");
+    	  }
+      },new PreparedStatementSetter(){
+    	  @Override
+    	  public void set(PreparedStatement ps,int index) throws SQLException {
+    		  ps.setObject(index, "erdinc");
+    	  }
+      });
+
+      assertNotNull(list);
+      assertEquals("Testing query for list", 1, list.size());
+   }
     /*
    @Test
    public void testQueryForObject() {
