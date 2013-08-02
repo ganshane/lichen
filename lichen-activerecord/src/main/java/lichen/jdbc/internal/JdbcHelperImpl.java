@@ -164,16 +164,13 @@ public class JdbcHelperImpl implements JdbcHelper {
 
 	@Override
 	public <T> List<T> queryForList(String sql, RowMapper<T> mapper) {
-		return queryForList(sql, mapper, new PreparedStatementSetter() {
-			@Override
-			public void set(PreparedStatement ps, int index)
-					throws SQLException {
-			}
-		});
+        return internalQueryForList(sql,mapper);
 	}
-
     @Override
-	public <T> List<T> queryForList(String sql, RowMapper<T> mapper,PreparedStatementSetter... setters) {
+    public <T> List<T> queryForList(String sql, RowMapper<T> mapper,PreparedStatementSetter... setters) {
+        return internalQueryForList(sql,mapper,setters);
+    }
+    private <T> List<T> internalQueryForList(String sql, RowMapper<T> mapper,PreparedStatementSetter... setters) {
     	Connection conn = null;
 		PreparedStatement ps = null;
 		List<T> list = new ArrayList<T>();
