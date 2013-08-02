@@ -162,28 +162,15 @@ public class JdbcHelperImpl implements JdbcHelper {
         }
     }
 
-    @Override
-    public <T> List<T> queryForList(String sql, RowMapper<T> mapper) {
-		Connection conn = null;
-		PreparedStatement ps = null;
-		List<T> list = new ArrayList<T>();
-		try {
-			conn = getConnection();
-			ps = conn.prepareStatement(sql);
-			ResultSet rs = ps.executeQuery();
-			int index = 0;
-			while (rs.next()) {
-				list.add(mapper.mapRow(rs, index));
-				index++;
+	@Override
+	public <T> List<T> queryForList(String sql, RowMapper<T> mapper) {
+		return queryForList(sql, mapper, new PreparedStatementSetter() {
+			@Override
+			public void set(PreparedStatement ps, int index)
+					throws SQLException {
 			}
-			return list;
-		} catch (SQLException e) {
-			throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
-		} finally {
-			JdbcUtil.close(ps);
-			freeConnection(conn);
-		}
-    }
+		});
+	}
 
     @Override
 	public <T> List<T> queryForList(String sql, RowMapper<T> mapper,PreparedStatementSetter... setters) {
