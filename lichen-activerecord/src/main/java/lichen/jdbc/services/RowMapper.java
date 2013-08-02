@@ -6,6 +6,7 @@ import java.sql.SQLException;
 /**
  * 针对数据库每行数据进行mapper
  * @author jcai
+ * @param <T> 对应处理完行后返回的结果
  */
 public interface RowMapper<T>{
     /**
