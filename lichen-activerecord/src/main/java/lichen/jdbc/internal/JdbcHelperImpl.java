@@ -180,6 +180,7 @@ public class JdbcHelperImpl implements JdbcHelper {
 			throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
 		} finally {
 			JdbcUtil.close(ps);
+			freeConnection(conn);
 		}
     }
 
