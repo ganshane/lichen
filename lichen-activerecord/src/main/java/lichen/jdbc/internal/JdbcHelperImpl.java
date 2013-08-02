@@ -1,15 +1,18 @@
 package lichen.jdbc.internal;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.sql.DataSource;
+
 import lichen.core.services.LichenException;
 import lichen.jdbc.services.JdbcErrorCode;
 import lichen.jdbc.services.JdbcHelper;
 import lichen.jdbc.services.RowMapper;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.util.List;
 
 /**
  * 实现JdbcHelper,此类非线程安全，只能在某一个线程中运行
@@ -160,8 +163,24 @@ public class JdbcHelperImpl implements JdbcHelper {
 
     @Override
     public <T> List<T> queryForList(String sql, RowMapper<T> mapper) {
-        //TODO 实现查询
-        return null;
+		Connection conn = null;
+		PreparedStatement ps = null;
+		List<T> list = new ArrayList<T>();
+		try {
+			conn = getConnection();
+			ps = conn.prepareStatement(sql);
+			ResultSet rs = ps.executeQuery();
+			int index = 0;
+			while (rs.next()) {
+				list.add(mapper.mapRow(rs, index));
+				index++;
+			}
+			return list;
+		} catch (SQLException e) {
+			throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
+		} finally {
+			JdbcUtil.close(ps);
+		}
     }
 
     private void freeConnection(Connection con) {
