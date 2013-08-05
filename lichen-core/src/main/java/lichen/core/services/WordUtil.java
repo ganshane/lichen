@@ -16,14 +16,18 @@ import java.util.StringTokenizer;
 
 /**
  * 此文件来自 http://www.scooterframework.com
+ *
  * <p>Conversion between singular and plural form of a noun word.</p>
  *
  * @author (Fei) John Chen
  */
 public class WordUtil {
 
+    //单数到复数的映射
 	private static final Map<String, String> resolvedSingle2Plurals = new HashMap<String, String>();
+    //已经处理过的复数
 	private static final List<String> resolvedPlurals = new ArrayList<String>();
+    //复数到单数的映射
 	private static final Map<String, String> resolvedPlural2Singles = new HashMap<String, String>();
 	private static final List<String> resolvedSingles = new ArrayList<String>();
 
@@ -274,14 +278,15 @@ public class WordUtil {
     }
 
     /**
-     * Returns a pluralized word.
+     * 把给定的单词转换为复数
      *
-     * @param word          the word to be converted to plural form
-     * @return pluralized string
+     * @param word 待转换的单词
+     * @return 复数字符串
      */
     public static String pluralize(String word) {
     	if (word == null || "".equals(word)) return word;
 
+        //先判断是否处理过了
     	String plform = resolvedSingle2Plurals.get(word);
     	if (plform == null && (resolvedPlurals.contains(word) || resolvedPlural2Singles.containsKey(word))) {
     		plform = word;
@@ -294,8 +299,7 @@ public class WordUtil {
             plform = tmp;
         }
 
-    	if (plform != null) {
-    		;
+    	if (plform != null) {//映射里面已经得到
     	}
         //Rule #5: For words that end in -is, change the -is to -es to make the plural form
         else if (tmp.endsWith("is")) {
@@ -377,7 +381,6 @@ public class WordUtil {
             plform = word + "s";
         }
         else {
-        	plform = tmp;
         	resolvedPlurals.add(word);
         	return word;
         }
@@ -409,9 +412,9 @@ public class WordUtil {
 
 
     /**
-     * Returns a singularized word from a plural word.
+     * 从复数变换为单数
      *
-     * @param word          the word to be converted to singular form
+     * @param word 复数形式的单词
      * @return singularized string
      */
     public static String singularize(String word) {
@@ -430,7 +433,6 @@ public class WordUtil {
         }
 
         if (sgform != null) {
-    		;
     	}
         else if (tmp.endsWith("ices")) {
         	sgform = replaceLast(tmp, "ices", "ix");
