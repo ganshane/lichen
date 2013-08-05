@@ -62,4 +62,15 @@ public interface JdbcHelper {
      * @return list对象
      */
     public <T> List<T> queryForList(String sql,RowMapper<T> mapper,PreparedStatementSetter ... setters);
+
+    /**
+     * 返回查询的第一行
+     * @param <T> 返回的结果对象类型
+     * @param sql 待查询的语句
+     * @param getter 取值的对象
+     * @param setters 给占位符赋值的对象
+     * @return getter返回的对象
+     */
+    public <T> T queryForFirst(String sql,ResultSetGetter<T> getter,PreparedStatementSetter ... setters); 
+
 }
