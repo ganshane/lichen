@@ -3,10 +3,10 @@
 package lichen.migration.services;
 
 import lichen.migration.model.ColumnOption;
+import lichen.migration.model.IndexOption;
+import lichen.migration.model.Name;
 import lichen.migration.model.SqlType;
-import lichen.migration.model.TableDefinition;
 import lichen.migration.model.TableOption;
-import lichen.migration.services.TableCallback;
 
 /**
  * 数据库升级脚本的帮助类
@@ -64,5 +64,37 @@ public interface MigrationHelper {
                      SqlType columnType,
                      ColumnOption... options) throws Throwable;
 
-
+    
+    /**
+     * 针对某一列，创建数据库索引
+     * @param tableName 表名
+     * @param columnName 字段名称数据
+     * @param options
+     */
+    void addIndex(String tableName,
+            String columnName,
+            IndexOption... options) throws Throwable; 
+    
+    
+    /**
+     * 针对多个列，创建数据库索引
+     * @param tableName 表名
+     * @param columnNames 字段名称数组
+     * @param options
+     */
+    void addIndex(String tableName,
+            String [] columnNames,
+            IndexOption... options) throws Throwable;
+    
+    
+    /**
+     * 删除多个列创建的索引
+     * @param tableName 表名
+     * @param columnNames 字段名称数组
+     * @param name
+     */
+    void removeIndex(String tableName,
+            String [] columnNames,
+            Name ... name);
+    
 }

@@ -2,15 +2,23 @@
 // site: http://lichen.ganshane.com
 package lichen.migration.internal;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Arrays;
+
 import lichen.migration.model.ColumnOption;
+import lichen.migration.model.IndexOption;
+import lichen.migration.model.Name;
 import lichen.migration.model.SqlType;
 import lichen.migration.model.TableOption;
 import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.TableCallback;
+import lichen.migration.util.StringUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.sql.*;
 
 /**
  * 数据库升级抽象类
@@ -111,6 +119,7 @@ class MigrationHelperImpl implements MigrationHelper {
         ResourceUtils.autoClosingStatement(connection().createStatement(), new Function1<Statement, Void>() {
             public Void apply(Statement parameter) throws Throwable {
                 logger.debug("execute sql:{}",sql);
+                System.out.println("execute sql:" + sql);	//zy+:打印执行的sql语句
                 parameter.execute(sql);
                 return null;
             }
@@ -196,4 +205,66 @@ class MigrationHelperImpl implements MigrationHelper {
         String sql = "DROP TABLE " + adapter().quoteTableName(tableName);
         execute(sql);
     }
+
+    
+    public void addIndex(String tableName, String columnName,
+			IndexOption... options) throws Throwable {
+		StringBuffer indexName = new StringBuffer();
+		//如果未指定options，则自动按照idx_tableName_columnName给索引命名
+		if(options.length == 0) {
+			indexName.append("IDX_").append(tableName);
+			indexName.append("_").append(adapter().quoteColumnName(columnName).trim());
+		}else {
+			throw new RuntimeException("创建索引暂时不支持options参数");
+		}
+		
+		StringBuffer sql = new StringBuffer();
+		sql.append("CREATE INDEX ")
+		   .append(indexName.toString().toUpperCase())
+		   .append(" ON ")
+		   .append(adapter().quoteTableName(tableName).trim())
+		   .append("(")
+		   .append(columnName.toUpperCase())
+		   .append(")");
+		execute(sql.toString());
+	}
+    
+    
+	@Override
+	public void addIndex(String tableName, String[] columnNames,
+			IndexOption... options) throws Throwable {
+		StringBuffer indexName = new StringBuffer();
+		//如果未指定options，则自动按照idx_tableName_字段1_字段2_..._字段n（按照列的升序排列）
+		if(options.length == 0) {
+			Arrays.sort(columnNames);
+			indexName.append("IDX_").append(tableName);
+			indexName.append("_").append(StringUtils.join(columnNames, "_"));
+		}else {
+			throw new RuntimeException("创建索引暂时不支持options参数");
+		}
+		
+		for(int i = 0; i < columnNames.length; i++) {	//为列加上特殊修饰符号
+			columnNames[i] = adapter().quoteColumnName(columnNames[i]).trim();
+		}
+		StringBuffer sql = new StringBuffer();
+		sql.append("CREATE INDEX ")
+		   .append(indexName.toString().toUpperCase())
+		   .append(" ON ")
+		   .append(adapter().quoteTableName(tableName).trim())
+		   .append("(")
+		   .append(StringUtils.join(columnNames, ",").toUpperCase())
+		   .append(")");
+		execute(sql.toString());
+	}
+
+	
+	@Override
+	public void removeIndex(String tableName, String[] columnNames,
+			Name... name) {
+		// TODO Auto-generated method stub
+		
+	}
+    
+    
+    
 }
