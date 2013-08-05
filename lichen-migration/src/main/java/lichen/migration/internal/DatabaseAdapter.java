@@ -39,6 +39,7 @@ abstract class DatabaseAdapter {
     protected DatabaseVendor databaseVendor;
 
     /**
+     * 默认一个空格字符，可以在未赋新值得情况下不影响其它的正常操作
      * The character that is used to quote identifiers.
      */
     protected char quoteCharacter = ' ';

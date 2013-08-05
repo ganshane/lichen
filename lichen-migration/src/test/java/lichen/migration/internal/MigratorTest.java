@@ -26,6 +26,7 @@ public class MigratorTest {
         migrator.migrate(MigratorOperation.RemoveAllMigrations,"lichen.migration.testdb", false);
     }
     
+    //创建视图测试用例
     @Test
     public void test_migrate_index() throws Throwable {
         migrator.migrate(MigratorOperation.InstallAllMigrations,"lichen.migration.testdb.index", false);

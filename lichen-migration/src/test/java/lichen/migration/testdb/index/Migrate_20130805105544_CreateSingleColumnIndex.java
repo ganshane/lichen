@@ -2,6 +2,7 @@
 // site: http://lichen.ganshane.com
 package lichen.migration.testdb.index;
 
+import lichen.migration.internal.OptionsImpl;
 import lichen.migration.services.Migration;
 import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.Options;
@@ -25,7 +26,8 @@ public class Migrate_20130805105544_CreateSingleColumnIndex implements Migration
 
     @Override
     public void up() throws Throwable {
-        helper.addIndex("test_table", "field_d");
+    	//创建唯一索引
+        helper.addIndex("test_table", "field4", options.Unique());
     }
 
     @Override

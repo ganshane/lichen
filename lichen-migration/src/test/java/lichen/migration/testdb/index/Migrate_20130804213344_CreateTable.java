@@ -25,13 +25,13 @@ public class Migrate_20130804213344_CreateTable implements Migration{
         helper.createTable("test_table", new TableCallback() {
             @Override
             public void doInTable(TableDefinition t) throws Throwable {
-                t.varchar("field_a");
-                t.varchar("field_b");
-                t.varchar("field_c");
-                t.varchar("field_d");
-                t.varchar("field_e");
-                t.varchar("field_f");
-                t.varchar("field_g");
+                t.varchar("field1");
+                t.varchar("field2");
+                t.varchar("field3");
+                t.varchar("field4");
+                t.varchar("field5");
+                t.varchar("field6");
+                t.varchar("field7");
             }
         });
     }

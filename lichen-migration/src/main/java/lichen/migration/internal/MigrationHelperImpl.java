@@ -13,6 +13,7 @@ import lichen.migration.model.IndexOption;
 import lichen.migration.model.Name;
 import lichen.migration.model.SqlType;
 import lichen.migration.model.TableOption;
+import lichen.migration.model.Unique;
 import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.TableCallback;
 import lichen.migration.util.StringUtils;
@@ -209,17 +210,31 @@ class MigrationHelperImpl implements MigrationHelper {
     
     public void addIndex(String tableName, String columnName,
 			IndexOption... options) throws Throwable {
-		StringBuffer indexName = new StringBuffer();
-		//如果未指定options，则自动按照idx_tableName_columnName给索引命名
-		if(options.length == 0) {
+		
+    	StringBuffer indexName = new StringBuffer();
+		boolean isUnique = false;
+		
+		for(int i = 0; i < options.length; i++) {
+			IndexOption option = options[i];
+			if(option instanceof Name) {	//指定了索引的名称
+				indexName.append(((Name)option).getValue());
+			}else if(option instanceof Unique) {	//创建唯一索引
+				isUnique = true;
+			}else {
+				logger.warn("暂不支持该选项参数: " + option.toString());
+			}
+		}
+		
+		//如果未指定Name，则自动按照idx_tableName_columnName给索引命名
+		if(indexName.length() == 0) {
 			indexName.append("IDX_").append(tableName);
-			indexName.append("_").append(adapter().quoteColumnName(columnName).trim());
-		}else {
-			throw new RuntimeException("创建索引暂时不支持options参数");
+			indexName.append("_").append(columnName.trim());
 		}
 		
 		StringBuffer sql = new StringBuffer();
-		sql.append("CREATE INDEX ")
+		sql.append("CREATE")
+		   .append(isUnique? " UNIQUE ":" ")
+		   .append("INDEX ")
 		   .append(indexName.toString().toUpperCase())
 		   .append(" ON ")
 		   .append(adapter().quoteTableName(tableName).trim())
@@ -233,21 +248,34 @@ class MigrationHelperImpl implements MigrationHelper {
 	@Override
 	public void addIndex(String tableName, String[] columnNames,
 			IndexOption... options) throws Throwable {
+		
 		StringBuffer indexName = new StringBuffer();
+		boolean isUnique = false;
+		for(int i = 0; i < options.length; i++) {
+			IndexOption option = options[i];
+			if(option instanceof Name) {	//指定了索引的名称
+				indexName.append(((Name)option).getValue());
+			}else if(option instanceof Unique) {	//创建唯一索引
+				isUnique = true;
+			}else {
+				logger.warn("暂不支持该选项参数: " + option.toString());
+			}
+		}
+		
 		//如果未指定options，则自动按照idx_tableName_字段1_字段2_..._字段n（按照列的升序排列）
-		if(options.length == 0) {
+		if(indexName.length() == 0) {
 			Arrays.sort(columnNames);
 			indexName.append("IDX_").append(tableName);
 			indexName.append("_").append(StringUtils.join(columnNames, "_"));
-		}else {
-			throw new RuntimeException("创建索引暂时不支持options参数");
+			for(int i = 0; i < columnNames.length; i++) {	//为列加上特殊修饰符号
+				columnNames[i] = adapter().quoteColumnName(columnNames[i]).trim();
+			}
 		}
 		
-		for(int i = 0; i < columnNames.length; i++) {	//为列加上特殊修饰符号
-			columnNames[i] = adapter().quoteColumnName(columnNames[i]).trim();
-		}
 		StringBuffer sql = new StringBuffer();
-		sql.append("CREATE INDEX ")
+		sql.append("CREATE")
+		   .append(isUnique? " UNIQUE ":" ")
+		   .append("INDEX ")
 		   .append(indexName.toString().toUpperCase())
 		   .append(" ON ")
 		   .append(adapter().quoteTableName(tableName).trim())
