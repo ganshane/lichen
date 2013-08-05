@@ -32,6 +32,7 @@ public class Migrate_20130805105544_CreateSingleColumnIndex implements Migration
 
     @Override
     public void down() throws Throwable {
-    	
+    	//删除未指定名称的索引（单列）
+    	helper.removeIndex("test_table", "field4");
     }
 }

@@ -44,5 +44,15 @@ public class Migrate_20130804213444_CreateMultiColumnIndex implements Migration{
     @Override
     public void down() throws Throwable {
     	
+    	//删除已指定名称的索引
+    	helper.removeIndex("test_table", new String[]{
+        		"field4",
+        		"field5",}, options.Name("idx_test_table_4_5"));
+    	
+    	//删除未指定名称的索引
+    	helper.removeIndex("test_table", new String[]{
+        		"field3",
+        		"field1",
+        		"field2"});
     }
 }

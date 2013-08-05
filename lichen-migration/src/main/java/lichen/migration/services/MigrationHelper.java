@@ -88,6 +88,16 @@ public interface MigrationHelper {
     
     
     /**
+     * 删除单个列创建的索引
+     * @param tableName 表名
+     * @param columnNames 字段名称数组
+     * @param name
+     */
+    void removeIndex(String tableName,
+            String columnName,
+            Name ... name) throws Throwable;
+    
+    /**
      * 删除多个列创建的索引
      * @param tableName 表名
      * @param columnNames 字段名称数组
@@ -95,6 +105,6 @@ public interface MigrationHelper {
      */
     void removeIndex(String tableName,
             String [] columnNames,
-            Name ... name);
+            Name ... name) throws Throwable;
     
 }

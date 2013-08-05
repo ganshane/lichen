@@ -30,7 +30,7 @@ public class MigratorTest {
     @Test
     public void test_migrate_index() throws Throwable {
         migrator.migrate(MigratorOperation.InstallAllMigrations,"lichen.migration.testdb.index", false);
-//        migrator.migrate(MigratorOperation.RemoveAllMigrations,"lichen.migration.testdb", false);
+        migrator.migrate(MigratorOperation.RemoveAllMigrations,"lichen.migration.testdb.index", false);
     }
     
     @BeforeClass
