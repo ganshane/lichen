@@ -12,6 +12,7 @@ import java.util.List;
 
 import lichen.jdbc.services.JdbcHelper;
 import lichen.jdbc.services.PreparedStatementSetter;
+import lichen.jdbc.services.ResultSetGetter;
 import lichen.jdbc.services.RowMapper;
 
 import org.junit.AfterClass;
@@ -128,6 +129,74 @@ public class JdbcHelperTest {
       assertNotNull(list);
       assertEquals("Testing query for list", 1, list.size());
    }
+   
+   @Test
+	public void testqueryForFirst() {
+		Bean b = jdbc.queryForFirst("select * from jdbctest where jkey=? order by id",
+				new ResultSetGetter<Bean>() {
+					public Bean get(ResultSet rs, int index)
+							throws SQLException {
+						  Bean bean = new Bean();
+			              bean.id = rs.getInt("id");
+			              bean.name = rs.getString("name");
+			              bean.creationDate = rs.getTimestamp("creation_date");
+			              return bean;
+					}
+				}, new PreparedStatementSetter() {
+					@Override
+					public void set(PreparedStatement ps, int index)
+							throws SQLException {
+						ps.setObject(index, "10");
+					}
+				});
+		assertNotNull(b);
+		assertEquals(1,b.id);
+		
+		int count = jdbc.queryForFirst("select count(*) from jdbctest where jkey=?",
+				new ResultSetGetter<Integer>() {
+					public Integer get(ResultSet rs, int index)
+							throws SQLException {
+						return rs.getInt(1);
+					}
+				}, new PreparedStatementSetter() {
+					@Override
+					public void set(PreparedStatement ps, int index)
+							throws SQLException {
+						ps.setObject(index, "10");
+					}
+				});
+		assertEquals(2,count);
+		
+		long lCount = jdbc.queryForFirst("select count(*) from jdbctest where jkey=?",
+				new ResultSetGetter<Long>() {
+					public Long get(ResultSet rs, int index)
+							throws SQLException {
+						return rs.getLong(1);
+					}
+				}, new PreparedStatementSetter() {
+					@Override
+					public void set(PreparedStatement ps, int index)
+							throws SQLException {
+						ps.setObject(index, "10");
+					}
+				});
+		assertEquals(2,lCount);
+		
+		String s = jdbc.queryForFirst("select name from jdbctest where jkey=? order by id desc ",
+				new ResultSetGetter<String>() {
+					public String get(ResultSet rs, int index) throws SQLException {
+						return rs.getString(1);
+					}
+				}, new PreparedStatementSetter() {
+					@Override
+					public void set(PreparedStatement ps, int index)
+							throws SQLException {
+						ps.setObject(index, "10");
+					}
+				});
+		assertEquals("bahar",s);
+	}
+
     /*
    @Test
    public void testQueryForObject() {
