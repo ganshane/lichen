@@ -50,7 +50,6 @@ abstract class DatabaseAdapter {
      */
     protected UnquotedNameConverter unquotedNameConverter;
     /**
-     * zy+: 删除一个字段的外键时使用的关键词，不同数据库使用的关键词不一样，
      * 		如Derby, Oracle and PostgreSQL使用CONSTRAINT，而MySQL使用FOREIGN KEY
      * 
      * The SQL keyword(s) or "phrase" used to drop a foreign key
@@ -112,7 +111,6 @@ abstract class DatabaseAdapter {
         return quoteCharacter + unquotedNameConverter(schemaName) + quoteCharacter;
     }
     /**
-     * zy+:为表名添加添加模式引用，如写成zngjfx.users
      * Quote a table name, prepending the quoted schema name to the
      * quoted table name along with a '.' if a schema name is provided.
      *

@@ -120,7 +120,6 @@ class MigrationHelperImpl implements MigrationHelper {
         ResourceUtils.autoClosingStatement(connection().createStatement(), new Function1<Statement, Void>() {
             public Void apply(Statement parameter) throws Throwable {
                 logger.debug("execute sql:{}",sql);
-                System.out.println("execute sql:" + sql);	//zy+:打印执行的sql语句
                 parameter.execute(sql);
                 return null;
             }
