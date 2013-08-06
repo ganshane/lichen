@@ -22,7 +22,7 @@ public class MigratorTest {
 
     @Test
     public void test_migrate() throws Throwable {
-        migrator.migrate(MigratorOperation.InstallAllMigrations,"lichen.migration.testdbs", false);
+        migrator.migrate(MigratorOperation.InstallAllMigrations,"lichen.migration.testdb", false);
         migrator.migrate(MigratorOperation.RemoveAllMigrations,"lichen.migration.testdb", false);
     }
     
