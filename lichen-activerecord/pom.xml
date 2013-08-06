@@ -17,7 +17,6 @@
         <dependency>
             <groupId>com.ganshane.lichen</groupId>
             <artifactId>lichen-core</artifactId>
-            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.tapestry</groupId>
@@ -37,11 +36,18 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 		</dependency>
+        <!--
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>3.3.2.GA</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
             <scope>test</scope>
         </dependency>
+        -->
         <dependency>
             <groupId>proxool</groupId>
             <artifactId>proxool</artifactId>
@@ -110,11 +116,6 @@
 					</bottom>
 				</configuration>
 			</plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.5.1</version>
-            </plugin>
 		</plugins>
 	</build>
     <reporting>
@@ -122,7 +123,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.5.1</version>
             </plugin>
         </plugins>
     </reporting>

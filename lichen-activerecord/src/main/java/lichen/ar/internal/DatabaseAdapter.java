@@ -1,7 +1,10 @@
 package lichen.ar.internal;
 
 import lichen.ar.services.FieldType;
+import lichen.jdbc.internal.JdbcHelperImpl;
+import lichen.jdbc.services.JdbcHelper;
 
+import javax.sql.DataSource;
 import java.sql.Types;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +15,10 @@ import java.util.Map;
  */
 public class DatabaseAdapter {
     private final Map<Integer,FieldType<?>> types = new HashMap<Integer,FieldType<?>>();
+    private final DataSource dataSource;
+    DatabaseAdapter(DataSource dataSource){
+        this.dataSource = dataSource;
+    }
     public void registerTypes(){
         types.put( Types.BIGINT, LichenArTypes.BIG_INTEGER);
         /*
@@ -34,5 +41,9 @@ public class DatabaseAdapter {
         types.put( Types.CLOB, Types.CLOB.getName() );
         types.put( Types.REAL, Types.FLOAT.getName() );
         */
+    }
+
+    JdbcHelper createJdbcHelper() {
+        return new JdbcHelperImpl(dataSource);
     }
 }
