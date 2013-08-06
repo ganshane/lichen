@@ -23,6 +23,16 @@
         <dependencies>
             <dependency>
                 <groupId>com.ganshane.lichen</groupId>
+                <artifactId>lichen-activerecord</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ganshane.lichen</groupId>
+                <artifactId>lichen-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ganshane.lichen</groupId>
                 <artifactId>lichen-migration</artifactId>
                 <version>${project.version}</version>
             </dependency>
