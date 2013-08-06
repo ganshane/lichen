@@ -250,22 +250,9 @@ class MigrationHelperImpl implements MigrationHelper {
     @Override
     public void addIndex(String tableName, String columnName,
 			IndexOption... options) throws Throwable {
-		this.addIndex(tableName, new String[]{columnName}, options);
+		addIndex(tableName, new String[]{columnName}, options);
 	}
 	
-	@Override
-	public void removeIndex(String tableName, String columnName, Name... name) throws Throwable {
-		StringBuffer indexName = new StringBuffer();
-		//如果未指定Name，则默认索引名称为：idx_tableName_columnName
-		if(name.length == 0) {
-			indexName.append("IDX_").append(tableName);
-			indexName.append("_").append(columnName.trim()); 
-		}else {
-			indexName.append(name[0].getValue());	//只取第一个值作为索引名称
-		}
-		String removeSql = adapter().removeIndexSql(tableName, indexName.toString());
-		execute(removeSql);
-	}
 
 	@Override
 	public void removeIndex(String tableName, String[] columnNames,
@@ -283,5 +270,8 @@ class MigrationHelperImpl implements MigrationHelper {
 		execute(removeSql);
 	}
     
-    
+	@Override
+	public void removeIndex(String tableName, String columnName, Name... name) throws Throwable {
+		removeIndex(tableName, new String[]{columnName}, name);
+	}
 }
