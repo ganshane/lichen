@@ -1,4 +1,4 @@
-package lichen.migration.util;
+package lichen.migration.internal.util;
 
 /**
  * 字符串操作类

@@ -16,7 +16,7 @@ import lichen.migration.model.TableOption;
 import lichen.migration.model.Unique;
 import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.TableCallback;
-import lichen.migration.util.StringUtils;
+import lichen.migration.internal.util.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -236,7 +236,7 @@ class MigrationHelperImpl implements MigrationHelper {
     	
     	StringBuffer sql = new StringBuffer();
     	sql.append("CREATE")
-    	.append(isUnique? " UNIQUE ":" ")
+    	.append(isUnique ? " UNIQUE " : " ")
     	.append("INDEX ")
     	.append(indexName.toString().toUpperCase())
     	.append(" ON ")
