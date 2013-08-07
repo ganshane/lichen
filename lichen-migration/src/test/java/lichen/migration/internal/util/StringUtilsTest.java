@@ -1,7 +1,6 @@
-package lichen.migration.util;
+package lichen.migration.internal.util;
 
 import junit.framework.Assert;
-import lichen.migration.util.StringUtils;
 
 import org.junit.Test;
 
