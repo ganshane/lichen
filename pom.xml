@@ -299,7 +299,7 @@
     <distributionManagement>
         <site>
             <id>website</id>
-            <url>scp://jcai@egfit-s01/opt/sites/lichen/</url>
+            <url>scp://jcai@egfit-s01/opt/app/sites/lichen/</url>
         </site>
     </distributionManagement>
     <properties>
