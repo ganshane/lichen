@@ -1,6 +1,8 @@
 package lichen.ar.internal;
 
+import lichen.ar.model.Field;
 import lichen.ar.services.ActiveRecordErrorCode;
+import lichen.ar.services.PersisterHelper;
 import lichen.core.services.LichenException;
 import lichen.core.services.WordUtil;
 
@@ -17,7 +19,7 @@ import java.util.Set;
  */
 public abstract class ActiveRecordClassImpl<PKValue>{
     /** 主键字段名称 **/
-    protected String pk = "id";
+    protected String pkFieldName = "id";
     /** 对应的表名 **/
     protected String tableName;
     /** 对应数据库的列名,自动初始化 **/
@@ -26,8 +28,10 @@ public abstract class ActiveRecordClassImpl<PKValue>{
     Map<String,Object> values = new HashMap<String, Object>();
     /** 修改后的列的集合 **/
     private Set<String> columnsModified = new HashSet<String>();
-    protected ActiveRecordClassImpl(){
+    private final Map<String,Field<?>> fields;
+    protected ActiveRecordClassImpl(PersisterHelper persisterHelper){
         tableName = WordUtil.tableize(getClass().getSimpleName());
+        fields = persisterHelper.findTableFields(tableName);
     }
 
     /**

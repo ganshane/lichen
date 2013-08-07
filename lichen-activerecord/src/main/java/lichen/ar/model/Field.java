@@ -1,4 +1,4 @@
-package lichen.ar.internal;
+package lichen.ar.model;
 
 import lichen.ar.services.FieldType;
 
@@ -6,7 +6,7 @@ import lichen.ar.services.FieldType;
  * 针对对象的字段定义
  * @author jcai
  */
-class Field<T> {
+public class Field<T> {
     //字段类型
     FieldType<T> fieldType;
     //字段名称
