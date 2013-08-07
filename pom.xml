@@ -9,7 +9,7 @@
     <artifactId>lichen</artifactId>
     <packaging>pom</packaging>
     <version>0.1.1-SNAPSHOT</version>
-    <name>Lichen Framework Parent</name>
+    <name>Lichen Framework</name>
     <description>Lichen是一个基于Java技术的应用框架,非技术框架，提高生产力为第一目标.</description>
     <modules>
         <module>lichen-migration</module>
@@ -244,6 +244,57 @@
                         <format>html</format>
                     </formats>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.15</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-changelog-plugin</artifactId>
+                <version>2.2</version>
+                <reportSets>
+                    <reportSet>
+                        <id>dual-report</id>
+                        <configuration>
+                            <type>range</type>
+                            <range>30</range>
+                        </configuration>
+                        <reports>
+                            <report>changelog</report>
+                            <report>file-activity</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <version>2.10</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.0.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <reportSets>
+                    <reportSet>
+                        <id>aggregate</id>
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.3</version>
             </plugin>
         </plugins>
     </reporting>

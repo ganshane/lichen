@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ganshane.lichen</groupId>
     <artifactId>lichen-migration</artifactId>
-    <name>Lichen Database Migration Tools</name>
+    <name>Migration Tools</name>
     <description>数据库升级工具类，不依赖SQL</description>
     <parent>
         <groupId>com.ganshane.lichen</groupId>

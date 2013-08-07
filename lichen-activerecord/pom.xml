@@ -7,7 +7,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.ganshane.lichen</groupId>
     <artifactId>lichen-activerecord</artifactId>
-    <name>Lichen ActiveRecord Library</name>
+    <name>ActiveRecord Library</name>
     <description>AcitveRecord为ORM工具，提供对数据库的持久化功能，也包含了一个jdbc操作类</description>
     <parent>
         <groupId>com.ganshane.lichen</groupId>
