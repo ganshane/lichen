@@ -12,6 +12,7 @@ import java.util.List;
 
 import lichen.jdbc.services.JdbcHelper;
 import lichen.jdbc.services.PreparedStatementSetter;
+import lichen.jdbc.services.ResultSetCallback;
 import lichen.jdbc.services.ResultSetGetter;
 import lichen.jdbc.services.RowMapper;
 
@@ -96,6 +97,63 @@ public class JdbcHelperTest {
 
       assertNotNull(list);
       assertEquals("Testing query for list", 2, list.size());
+   }
+   
+   @Test
+   public void testWithResultSet() {
+	  Bean bean = jdbc.withResultSet("select * from jdbctest where id=? and jkey=? and name=?", new ResultSetCallback<Bean>() {
+			@Override
+			public Bean doInResultSet(ResultSet rs)
+					throws SQLException {
+				Bean bean = new Bean();
+		        bean.id = rs.getInt("id");
+		        bean.name = rs.getString("name");
+		        bean.creationDate = rs.getTimestamp("creation_date");
+		        return bean;
+			}
+		  },new PreparedStatementSetter(){
+			  @Override
+			  public void set(PreparedStatement ps,int index) throws SQLException {
+				  ps.setObject(index, "1");
+			  }
+		  },new PreparedStatementSetter(){
+			  @Override
+			  public void set(PreparedStatement ps,int index) throws SQLException {
+				  ps.setObject(index, "10");
+			  }
+		  },new PreparedStatementSetter(){
+			  @Override
+			  public void set(PreparedStatement ps,int index) throws SQLException {
+				  ps.setObject(index, "erdinc");
+			  }
+		  });
+		
+		  assertNotNull(bean);
+		  
+		  Integer currentId = jdbc.withResultSet("select * from jdbctest where id=? and jkey=? and name=?", new ResultSetCallback<Integer>() {
+				@Override
+				public Integer doInResultSet(ResultSet rs)
+						throws SQLException {
+			        return rs.getInt("id");
+				}
+			  },new PreparedStatementSetter(){
+				  @Override
+				  public void set(PreparedStatement ps,int index) throws SQLException {
+					  ps.setObject(index, "1");
+				  }
+			  },new PreparedStatementSetter(){
+				  @Override
+				  public void set(PreparedStatement ps,int index) throws SQLException {
+					  ps.setObject(index, "10");
+				  }
+			  },new PreparedStatementSetter(){
+				  @Override
+				  public void set(PreparedStatement ps,int index) throws SQLException {
+					  ps.setObject(index, "erdinc");
+				  }
+			  });
+			
+			  assertEquals(1, currentId.intValue());
    }
 
    @Test
