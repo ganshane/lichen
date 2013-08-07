@@ -1,12 +1,13 @@
 package lichen.core.internal;
 
 import lichen.core.services.*;
+import lichen.core.services.func.Function1;
 
 import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * 针对{@link IterableLike}的实现
+ * 针对{@link IterableLike}的实现.
  *
  * @author jcai
  */
@@ -23,7 +24,7 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
     }
 
     @Override
-    public <B> IterableLike<B> map(final Function.Function1<A, B> function) {
+    public <B> IterableLike<B> map(final Function1<A, B> function) {
         final Iterator<A> old = iterator();
         return new IterableLikeImpl<B>() {
             @Override
@@ -49,7 +50,7 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
     }
 
     @Override
-    public void foreach(Function.Function1<A, Void> function) {
+    public void foreach(Function1<A, Void> function) {
         Iterator<A> it = iterator();
         while (it.hasNext()) {
             function.apply(it.next());
@@ -57,7 +58,7 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
     }
 
     @Override
-    public Option<A> first(Function.Function1<A, Boolean> function) {
+    public Option<A> first(Function1<A, Boolean> function) {
         Iterator<A> it = iterator();
         while (it.hasNext()) {
             A obj = it.next();
