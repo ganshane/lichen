@@ -20,4 +20,11 @@ public interface IterableLike<A> extends Iterable<A>{
      * @param function 待执行的方法
      */
     public void foreach(Function.Function1<A,Void> function);
+
+    /**
+     * 通过给定的函数查找符合函数要求的第一个元素
+     * @param function 符合条件的函数
+     * @return 第一个符合条件的元素
+     */
+    public Option<A> first(Function.Function1<A,Boolean> function);
 }

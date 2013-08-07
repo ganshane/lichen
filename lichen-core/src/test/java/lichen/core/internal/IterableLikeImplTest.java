@@ -3,6 +3,7 @@ package lichen.core.internal;
 import junit.framework.Assert;
 import lichen.core.services.Function;
 import lichen.core.services.IterableLike;
+import lichen.core.services.Option;
 import lichen.core.services.Tuple;
 import org.junit.Test;
 
@@ -54,7 +55,22 @@ public class IterableLikeImplTest {
                 return null;
             }
         });
-        Assert.assertEquals(43,list.get(0).age);
+        Assert.assertEquals(43, list.get(0).age);
         Assert.assertEquals(42,list.get(1).age);
+    }
+    @Test
+    public void test_first() {
+        List<Bean> list = new ArrayList<Bean>();
+        list.add(new Bean("acai", 33));
+        list.add(new Bean("jcai", 32));
+        IterableLikeImpl<Bean> iterableLike = new IterableLikeImpl<Bean>(list);
+        Option<Bean> first = iterableLike.first(new Function.Function1<Bean, Boolean>() {
+            @Override
+            public Boolean apply(Bean value) {
+                return value.name.equals("jcai");
+            }
+        });
+        Assert.assertTrue(first.isDefined());
+        Assert.assertEquals(32,first.get().age);
     }
 }

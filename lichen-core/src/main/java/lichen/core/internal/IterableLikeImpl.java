@@ -1,9 +1,6 @@
 package lichen.core.internal;
 
-import lichen.core.services.Function;
-import lichen.core.services.IterableLike;
-import lichen.core.services.LichenCoreErrorCode;
-import lichen.core.services.LichenException;
+import lichen.core.services.*;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -53,6 +50,18 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
         while(it.hasNext()){
             function.apply(it.next());
         }
+    }
+
+    @Override
+    public Option<A> first(Function.Function1<A, Boolean> function) {
+        Iterator<A> it = iterator();
+        while(it.hasNext()){
+            A obj = it.next();
+            if(function.apply(obj)){
+                return Option.Some(obj);
+            }
+        }
+        return Option.None();
     }
 
     @Override
