@@ -1,9 +1,15 @@
 package lichen.core.services;
 
 /**
- * error code
+ * global error code interface.
+ *
  * @author jcai
  */
 public interface ErrorCode {
-    public int getNumber();
+    /**
+     * 返回错误代码.
+     *
+     * @return 错误代码
+     */
+    int getNumber();
 }
