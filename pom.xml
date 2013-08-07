@@ -274,7 +274,7 @@
             </properties>
         </profile>
     </profiles>
-    <url>http://lichen.ganshane.com/${project.artifactId}</url>
+    <url>http://lichen.ganshane.com</url>
     <inceptionYear>2013</inceptionYear>
     <organization>
         <name>Lichen Developer Team</name>
