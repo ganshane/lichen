@@ -71,6 +71,16 @@ public interface JdbcHelper {
      * @param setters 给占位符赋值的对象
      * @return getter返回的对象
      */
-    public <T> T queryForFirst(String sql,ResultSetGetter<T> getter,PreparedStatementSetter ... setters); 
+    public <T> T queryForFirst(String sql,ResultSetGetter<T> getter,PreparedStatementSetter ... setters);
+    
+    /**
+     * 带回调函数的查询
+     * @param <T> 返回的结果对象类型
+     * @param sql 待查询的语句
+     * @param callback 回调函数
+     * @param setters 给占位符赋值的对象
+     * @return 通过回调函数处理后结果
+     */
+    public <T> T withResultSet(String sql,ResultSetCallback<T> callback,PreparedStatementSetter ... setters);
 
 }

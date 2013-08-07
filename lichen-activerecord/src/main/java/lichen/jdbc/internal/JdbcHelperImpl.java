@@ -13,6 +13,7 @@ import lichen.core.services.LichenException;
 import lichen.jdbc.services.JdbcErrorCode;
 import lichen.jdbc.services.JdbcHelper;
 import lichen.jdbc.services.PreparedStatementSetter;
+import lichen.jdbc.services.ResultSetCallback;
 import lichen.jdbc.services.ResultSetGetter;
 import lichen.jdbc.services.RowMapper;
 
@@ -245,4 +246,29 @@ public class JdbcHelperImpl implements JdbcHelper {
             }
         }
     }
+	@Override
+	public <T> T withResultSet(String sql, ResultSetCallback<T> callback,
+			PreparedStatementSetter... setters) {
+		Connection conn = null;
+		PreparedStatement ps = null;
+		try {
+			conn = getConnection();
+			ps = conn.prepareStatement(sql);
+			int index = 1;
+			for(PreparedStatementSetter setter : setters) {
+				setter.set(ps, index);
+				index++;
+			}
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				return callback.doInResultSet(rs);
+			}
+			return null;
+		} catch (SQLException e) {
+			throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
+		} finally {
+			JdbcUtil.close(ps);
+			freeConnection(conn);
+		}
+	}
 }
