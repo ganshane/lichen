@@ -9,14 +9,15 @@
     <artifactId>lichen</artifactId>
     <packaging>pom</packaging>
     <version>0.1.1-SNAPSHOT</version>
-    <name>Application Develope Framework</name>
+    <name>Lichen Framework Parent</name>
+    <description>Lichen是一个基于Java技术的应用框架,非技术框架，提高生产力为第一目标.</description>
     <modules>
         <module>lichen-migration</module>
         <module>lichen-activerecord</module>
         <module>lichen-core</module>
     </modules>
     <scm>
-	    <connection>scm:git:http://github.com/ganshane/lichen.git</connection>
+	    <connection>scm:git:https://dev.egfit.com/git/lichen.git</connection>
 	    <developerConnection>scm:git:https://dev.egfit.com/git/lichen.git</developerConnection>
     </scm>
     <dependencyManagement>
@@ -255,6 +256,40 @@
             </properties>
         </profile>
     </profiles>
+    <url>http://lichen.ganshane.com/${project.artifactId}</url>
+    <inceptionYear>2013</inceptionYear>
+    <organization>
+        <name>Lichen Developer Team</name>
+        <url>http://lichen.ganshane.com</url>
+    </organization>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <issueManagement>
+        <system>redmine</system>
+        <url>https://dev.egfit.com/project/lichen</url>
+    </issueManagement>
+    <ciManagement>
+        <system>jenkins</system>
+        <url>http://ci.egfit.com:8080/job/lichen/</url>
+    </ciManagement>
+    <developers>
+        <developer>
+            <name>Jun Tsai</name>
+            <email>jcai AT ganshane Dot com</email>
+            <id>jcai</id>
+        </developer>
+    </developers>
+    <distributionManagement>
+        <site>
+            <id>website</id>
+            <url>scp://egfit-s01/opt/sites/lichen/</url>
+        </site>
+    </distributionManagement>
     <properties>
         <update-release-info>false</update-release-info>
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
