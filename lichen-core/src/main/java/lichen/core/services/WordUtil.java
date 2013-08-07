@@ -7,16 +7,12 @@
  */
 package lichen.core.services;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 
 /**
  * 此文件来自 http://www.scooterframework.com
- *
+ * <p/>
  * <p>Conversion between singular and plural form of a noun word.</p>
  *
  * @author (Fei) John Chen
@@ -24,20 +20,20 @@ import java.util.StringTokenizer;
 public class WordUtil {
 
     //单数到复数的映射
-	private static final Map<String, String> resolvedSingle2Plurals = new HashMap<String, String>();
+    private static final Map<String, String> resolvedSingle2Plurals = new HashMap<String, String>();
     //已经处理过的复数
-	private static final List<String> resolvedPlurals = new ArrayList<String>();
+    private static final List<String> resolvedPlurals = new ArrayList<String>();
     //复数到单数的映射
-	private static final Map<String, String> resolvedPlural2Singles = new HashMap<String, String>();
-	private static final List<String> resolvedSingles = new ArrayList<String>();
+    private static final Map<String, String> resolvedPlural2Singles = new HashMap<String, String>();
+    private static final List<String> resolvedSingles = new ArrayList<String>();
 
-	public static final Map<String, String> single2plurals = new HashMap<String, String>();
-	public static final List<String> plurals = new ArrayList<String>();
-	public static final Map<String, String> plural2singles = new HashMap<String, String>();
+    public static final Map<String, String> single2plurals = new HashMap<String, String>();
+    public static final List<String> plurals = new ArrayList<String>();
+    public static final Map<String, String> plural2singles = new HashMap<String, String>();
     public static final List<String> singles = new ArrayList<String>();
 
     static {
-    	//Irregular plurals:
+        //Irregular plurals:
         single2plurals.put("child", "children");
         single2plurals.put("corpus", "corpora");
         single2plurals.put("foot", "feet");
@@ -258,22 +254,22 @@ public class WordUtil {
 
         //merge plural2singles with single2plurals
         for (Map.Entry<String, String> entry : single2plurals.entrySet()) {
-        	String sk = entry.getKey();
-        	String sv = entry.getValue();
-        	String pv = plural2singles.get(sv);
-        	if (pv == null) {
-        		plural2singles.put(sv, sk);
-        	}
+            String sk = entry.getKey();
+            String sv = entry.getValue();
+            String pv = plural2singles.get(sv);
+            if (pv == null) {
+                plural2singles.put(sv, sk);
+            }
         }
 
         //merge single2plurals with plural2singles
         for (Map.Entry<String, String> entry : plural2singles.entrySet()) {
-        	String pk = entry.getKey();
-        	String pv = entry.getValue();
-        	String sv = single2plurals.get(pv);
-        	if (sv == null) {
-        		single2plurals.put(pv, pk);
-        	}
+            String pk = entry.getKey();
+            String pv = entry.getValue();
+            String sv = single2plurals.get(pv);
+            if (sv == null) {
+                single2plurals.put(pv, pk);
+            }
         }
     }
 
@@ -284,14 +280,14 @@ public class WordUtil {
      * @return 复数字符串
      */
     public static String pluralize(String word) {
-    	if (word == null || "".equals(word)) return word;
+        if (word == null || "".equals(word)) return word;
 
         //先判断是否处理过了
-    	String plform = resolvedSingle2Plurals.get(word);
-    	if (plform == null && (resolvedPlurals.contains(word) || resolvedPlural2Singles.containsKey(word))) {
-    		plform = word;
-    	}
-    	if (plform != null) return plform;
+        String plform = resolvedSingle2Plurals.get(word);
+        if (plform == null && (resolvedPlurals.contains(word) || resolvedPlural2Singles.containsKey(word))) {
+            plform = word;
+        }
+        if (plform != null) return plform;
 
         String tmp = word.toLowerCase();
         plform = single2plurals.get(tmp);
@@ -299,8 +295,8 @@ public class WordUtil {
             plform = tmp;
         }
 
-    	if (plform != null) {//映射里面已经得到
-    	}
+        if (plform != null) {//映射里面已经得到
+        }
         //Rule #5: For words that end in -is, change the -is to -es to make the plural form
         else if (tmp.endsWith("is")) {
             plform = replaceLast(tmp, "is", "es");
@@ -315,15 +311,14 @@ public class WordUtil {
             plform = replaceLast(tmp, "us", "i");
         }
         //Rule #2: For words that end in a "hissing" sound (-s, -z, -x, -ch, -sh), add an -es to form the plural.
-    	//Note: I removed tmp.endsWith("s") || as this cause "posts"->"postses".
+        //Note: I removed tmp.endsWith("s") || as this cause "posts"->"postses".
         else if (!tmp.endsWith("es") && (tmp.endsWith("z") ||
-        		 tmp.endsWith("x") || tmp.endsWith("ch") || tmp.endsWith("sh"))) {
+                tmp.endsWith("x") || tmp.endsWith("ch") || tmp.endsWith("sh"))) {
             plform = tmp + "es";
-        }
-        else if (tmp.endsWith("y")) {
+        } else if (tmp.endsWith("y")) {
             //Rule #3: If the word ends in a vowel plus -y (-ay, -ey, -iy, -oy, -uy), add an -s to the word.
             if (tmp.endsWith("ay") || tmp.endsWith("ey") || tmp.endsWith("iy") ||
-                tmp.endsWith("oy") || tmp.endsWith("uy")) {
+                    tmp.endsWith("oy") || tmp.endsWith("uy")) {
                 plform = word + "s";
             }
             //Rule #4: If the word ends in a consonant plus -y, change the -y into -ie and add an -s to form the plural.
@@ -334,15 +329,14 @@ public class WordUtil {
         //Rule #6: Some words that end in -f or -fe have plurals that end in -ves.
         else if (tmp.endsWith("f")) {
             plform = replaceLast(tmp, "f", "ves");
-        }
-        else if (tmp.endsWith("fe")) {
+        } else if (tmp.endsWith("fe")) {
             plform = replaceLast(tmp, "fe", "ves");
         }
         //Rule #7: The plurals of words ending in -o are formed by either adding -s or by adding -es
         else if (tmp.endsWith("o")) {
             //All words that end in a vowel plus -o (-ao, -eo, -io, -oo, -uo) have plurals that end in just -s:
             if (tmp.endsWith("ao") || tmp.endsWith("eo") || tmp.endsWith("io") ||
-                tmp.endsWith("oo") || tmp.endsWith("uo")) {
+                    tmp.endsWith("oo") || tmp.endsWith("uo")) {
                 plform = word + "s";
             }
             //All musical terms ending in -o have plurals ending in just -s.
@@ -372,43 +366,41 @@ public class WordUtil {
             plform = replaceLast(tmp, "man", "men");
         }
         //Rule #1: Add an -s to form the plural of most words.
-        else if (!tmp.endsWith("s")){
+        else if (!tmp.endsWith("s")) {
             plform = word + "s";
         }
         //Rule #8: The plurals of single capital letters, acronyms, and Arabic numerals
         //(1,2,3,...) take an -s WITHOUT an apostrophe:
-    	else if (word.toUpperCase().equals(word)) {
+        else if (word.toUpperCase().equals(word)) {
             plform = word + "s";
-        }
-        else {
-        	resolvedPlurals.add(word);
-        	return word;
+        } else {
+            resolvedPlurals.add(word);
+            return word;
         }
 
         //check cases
-    	boolean caseChanged = false;
+        boolean caseChanged = false;
         int wl = word.length();
         int pl = plform.length();
         char[] pChars = plform.toCharArray();
-        int length = (wl < pl)?wl:pl;
+        int length = (wl < pl) ? wl : pl;
         for (int i = 0; i < length; i++) {
-        	char wChar = word.charAt(i);
-        	char pChar = plform.charAt(i);
-        	if (((int)wChar - (int)pChar) == -32) {
-        		pChars[i] = wChar;
-        		caseChanged = true;
-        	}
+            char wChar = word.charAt(i);
+            char pChar = plform.charAt(i);
+            if (((int) wChar - (int) pChar) == -32) {
+                pChars[i] = wChar;
+                caseChanged = true;
+            }
         }
 
         if (caseChanged) plform = new String(pChars);
         if (!plform.equalsIgnoreCase(word)) {
-	        resolvedSingle2Plurals.put(word, plform);
-	        resolvedPlural2Singles.put(plform, word);
+            resolvedSingle2Plurals.put(word, plform);
+            resolvedPlural2Singles.put(plform, word);
         }
 
         return plform;
     }
-
 
 
     /**
@@ -418,103 +410,91 @@ public class WordUtil {
      * @return singularized string
      */
     public static String singularize(String word) {
-    	if (word == null || "".equals(word)) return word;
+        if (word == null || "".equals(word)) return word;
 
-    	String sgform = resolvedPlural2Singles.get(word);
-    	if (sgform == null && (resolvedSingles.contains(word) || resolvedSingle2Plurals.containsKey(word))) {
-    		sgform = word;
-    	}
-    	if (sgform != null) return sgform;
+        String sgform = resolvedPlural2Singles.get(word);
+        if (sgform == null && (resolvedSingles.contains(word) || resolvedSingle2Plurals.containsKey(word))) {
+            sgform = word;
+        }
+        if (sgform != null) return sgform;
 
         String tmp = word.toLowerCase();
         sgform = plural2singles.get(tmp);
         if (sgform == null && (plurals.contains(tmp) || singles.contains(tmp) || single2plurals.containsKey(tmp))) {
-        	sgform = tmp;
+            sgform = tmp;
         }
 
         if (sgform != null) {
-    	}
-        else if (tmp.endsWith("ices")) {
-        	sgform = replaceLast(tmp, "ices", "ix");
-        }
-        else if (tmp.endsWith("i")) {
-        	sgform = replaceLast(tmp, "i", "us");
-        }
-        else if (tmp.endsWith("ses") && !tmp.endsWith("bases") ||
+        } else if (tmp.endsWith("ices")) {
+            sgform = replaceLast(tmp, "ices", "ix");
+        } else if (tmp.endsWith("i")) {
+            sgform = replaceLast(tmp, "i", "us");
+        } else if (tmp.endsWith("ses") && !tmp.endsWith("bases") ||
                 tmp.endsWith("zes") || tmp.endsWith("xes") ||
                 tmp.endsWith("ches") || tmp.endsWith("shes")) {
             sgform = replaceLast(tmp, "es", "");
-        }
-        else if (tmp.endsWith("ays") || tmp.endsWith("eys") || tmp.endsWith("iys") ||
-                 tmp.endsWith("oys") || tmp.endsWith("uys")) {
+        } else if (tmp.endsWith("ays") || tmp.endsWith("eys") || tmp.endsWith("iys") ||
+                tmp.endsWith("oys") || tmp.endsWith("uys")) {
             sgform = replaceLast(tmp, "ys", "y");
-        }
-        else if (tmp.endsWith("ies")) {
-        	sgform = replaceLast(tmp, "ies", "y");
+        } else if (tmp.endsWith("ies")) {
+            sgform = replaceLast(tmp, "ies", "y");
         }
         //Rule #7
         else if (tmp.endsWith("aos") || tmp.endsWith("eos") || tmp.endsWith("ios") ||
-                 tmp.endsWith("oos") || tmp.endsWith("uos")) {
+                tmp.endsWith("oos") || tmp.endsWith("uos")) {
             sgform = replaceLast(tmp, "os", "o");
         }
         //Rule #7
         else if (tmp.endsWith("oes")) {
             sgform = replaceLast(tmp, "oes", "o");
-        }
-        else if (tmp.endsWith("ives")) {
+        } else if (tmp.endsWith("ives")) {
             sgform = replaceLast(tmp, "ves", "fe");
-        }
-        else if (tmp.endsWith("lves") || tmp.endsWith("rves") || tmp.endsWith("aves")) {
+        } else if (tmp.endsWith("lves") || tmp.endsWith("rves") || tmp.endsWith("aves")) {
             sgform = replaceLast(tmp, "ves", "f");
-        }
-        else if (tmp.endsWith("ae")) {
+        } else if (tmp.endsWith("ae")) {
             sgform = replaceLast(tmp, "ae", "a");
-        }
-        else if (tmp.endsWith("eaux")) {
+        } else if (tmp.endsWith("eaux")) {
             sgform = replaceLast(tmp, "eaux", "eau");
-        }
-        else if (tmp.endsWith("men")) {
+        } else if (tmp.endsWith("men")) {
             sgform = replaceLast(tmp, "men", "man");
-        }
-        else if (tmp.endsWith("s")) {
-        	sgform = replaceLast(tmp, "s", "");
-        }
-        else {
-        	sgform = tmp;
-        	resolvedSingles.add(word);
-        	return word;
+        } else if (tmp.endsWith("s")) {
+            sgform = replaceLast(tmp, "s", "");
+        } else {
+            sgform = tmp;
+            resolvedSingles.add(word);
+            return word;
         }
 
         //check cases
-    	boolean caseChanged = false;
+        boolean caseChanged = false;
         int wl = word.length();
         int pl = sgform.length();
         char[] sChars = sgform.toCharArray();
-        int length = (wl < pl)?wl:pl;
+        int length = (wl < pl) ? wl : pl;
         for (int i = 0; i < length; i++) {
-        	char wChar = word.charAt(i);
-        	char pChar = sgform.charAt(i);
-        	if (((int)wChar - (int)pChar) == -32) {
-        		sChars[i] = wChar;
-        		caseChanged = true;
-        	}
+            char wChar = word.charAt(i);
+            char pChar = sgform.charAt(i);
+            if (((int) wChar - (int) pChar) == -32) {
+                sChars[i] = wChar;
+                caseChanged = true;
+            }
         }
 
         if (caseChanged) sgform = new String(sChars);
         if (!sgform.equalsIgnoreCase(word)) {
-	        resolvedPlural2Singles.put(word, sgform);
-	        resolvedSingle2Plurals.put(sgform, word);
+            resolvedPlural2Singles.put(word, sgform);
+            resolvedSingle2Plurals.put(sgform, word);
         }
 
-		return sgform;
+        return sgform;
     }
 
     /**
      * Replaces the last occurance of an old symbol with a new symbol.
      *
-     * @param data              the original string
-     * @param oldSymbol         the old symbols to be replaced
-     * @param newSymbol         the corresponding new symbol
+     * @param data      the original string
+     * @param oldSymbol the old symbols to be replaced
+     * @param newSymbol the corresponding new symbol
      * @return a new string
      */
     public static String replaceLast(String data, String oldSymbol, String newSymbol) {
@@ -523,7 +503,7 @@ public class WordUtil {
         int lastIndex = data.lastIndexOf(oldSymbol);
         int oldLength = oldSymbol.length();
         String result = data.substring(0, lastIndex) + newSymbol +
-                        data.substring(lastIndex + oldLength);
+                data.substring(lastIndex + oldLength);
 
         return result;
     }
@@ -535,24 +515,24 @@ public class WordUtil {
      * @param plural plural form of the word
      */
     public static void addPlural(String single, String plural) {
-    	resolvedSingle2Plurals.put(single, plural);
-    	resolvedPlural2Singles.put(plural, single);
+        resolvedSingle2Plurals.put(single, plural);
+        resolvedPlural2Singles.put(plural, single);
     }
 
     /**
      * Converts string to Camel case.
      *
-     * @param word          the word to be converted to camelized form
+     * @param word the word to be converted to camelized form
      * @return a camelized string
      */
     public static String camelize(String word) {
-    	return camelize(word, false);
+        return camelize(word, false);
     }
 
     /**
      * Converts string to Camel case. If <tt>firstLetterInLowerCase</tt>
      * is true, then the first letter of the result string is in lower case.
-     *
+     * <p/>
      * <pre>
      * Examples:
      *   camelize("hello")               ==> "Hello"
@@ -561,50 +541,48 @@ public class WordUtil {
      *   camelize("active_record", true) ==> "activeRecord"
      * </pre>
      *
-     * @param word                      the word to be converted to camelized form
-     * @param firstLetterInLowerCase    true if the first character should be in lower case
+     * @param word                   the word to be converted to camelized form
+     * @param firstLetterInLowerCase true if the first character should be in lower case
      * @return a camelized string
      */
     public static String camelize(String word, boolean firstLetterInLowerCase) {
-    	if (word == null || "".equals(word)) return word;
+        if (word == null || "".equals(word)) return word;
 
-    	String result = "";
-    	if (word.indexOf('_') != -1) {
-    		StringBuilder sb = new StringBuilder();
-    		int count = 0;
-    		StringTokenizer st = new StringTokenizer(word, "_");
-    		while(st.hasMoreTokens()) {
-    			String token = st.nextToken();
-    			count++;
-    			if (count == 1) {
-    				sb.append(camelizeOneWord(token, firstLetterInLowerCase));
-    			}
-    			else {
-    				sb.append(camelizeOneWord(token, false));
-    			}
-    		}
-    		result = sb.toString();
-    	}
-    	else {
-    		result = camelizeOneWord(word, firstLetterInLowerCase);
-    	}
-    	return result;
+        String result = "";
+        if (word.indexOf('_') != -1) {
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+            StringTokenizer st = new StringTokenizer(word, "_");
+            while (st.hasMoreTokens()) {
+                String token = st.nextToken();
+                count++;
+                if (count == 1) {
+                    sb.append(camelizeOneWord(token, firstLetterInLowerCase));
+                } else {
+                    sb.append(camelizeOneWord(token, false));
+                }
+            }
+            result = sb.toString();
+        } else {
+            result = camelizeOneWord(word, firstLetterInLowerCase);
+        }
+        return result;
     }
 
     private static String camelizeOneWord(String word, boolean firstLetterInLowerCase) {
-    	if (word == null || "".equals(word)) return word;
+        if (word == null || "".equals(word)) return word;
 
-    	String firstChar = word.substring(0,1);
-    	String result = (firstLetterInLowerCase)?firstChar.toLowerCase():firstChar.toUpperCase();
-    	if (word.length() > 1) {
-    		result += word.substring(1);
-    	}
-    	return result;
+        String firstChar = word.substring(0, 1);
+        String result = (firstLetterInLowerCase) ? firstChar.toLowerCase() : firstChar.toUpperCase();
+        if (word.length() > 1) {
+            result += word.substring(1);
+        }
+        return result;
     }
 
     /**
      * <tt>underscore</tt> is the reverse of <tt>camelize</tt> method.
-     *
+     * <p/>
      * <pre>
      * Examples:
      *   underscore("Hello world")  ==> "hello world"
@@ -613,116 +591,109 @@ public class WordUtil {
      *   underscore("ABCD")         ==> "abcd"
      * </pre>
      *
-     * @param phase             the original string
+     * @param phase the original string
      * @return an underscored string
      */
     public static String underscore(String phase) {
-    	if (phase == null || "".equals(phase)) return phase;
+        if (phase == null || "".equals(phase)) return phase;
 
-    	phase = phase.replace('-', '_');
-    	StringBuilder sb = new StringBuilder();
-    	int total = phase.length();
-    	for (int i = 0; i < total; i++)	{
-    		char c = phase.charAt(i);
-    		if (i == 0) {
-    			if (isInA2Z(c)) {
-    				sb.append(("" + c).toLowerCase());
-    			}
-    			else {
-    				sb.append(c);
-    			}
-    		}
-    		else {
-    			if (isInA2Z(c)) {
-    				if (isIna2z(phase.charAt(i-1))) {
-    					sb.append(("_" + c).toLowerCase());
-    				}
-    				else {
-    					sb.append(("" + c).toLowerCase());
-    				}
-    			}
-    			else {
-    				sb.append(c);
-    			}
-    		}
-    	}
-    	return sb.toString();
+        phase = phase.replace('-', '_');
+        StringBuilder sb = new StringBuilder();
+        int total = phase.length();
+        for (int i = 0; i < total; i++) {
+            char c = phase.charAt(i);
+            if (i == 0) {
+                if (isInA2Z(c)) {
+                    sb.append(("" + c).toLowerCase());
+                } else {
+                    sb.append(c);
+                }
+            } else {
+                if (isInA2Z(c)) {
+                    if (isIna2z(phase.charAt(i - 1))) {
+                        sb.append(("_" + c).toLowerCase());
+                    } else {
+                        sb.append(("" + c).toLowerCase());
+                    }
+                } else {
+                    sb.append(c);
+                }
+            }
+        }
+        return sb.toString();
     }
 
     private static String A2Z = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static String a2z = "abcdefghijklmnopqrstuvwxyz";
 
     private static boolean isInA2Z(char c) {
-    	return (A2Z.indexOf(c) != -1)?true:false;
+        return (A2Z.indexOf(c) != -1) ? true : false;
     }
 
     private static boolean isIna2z(char c) {
-    	return (a2z.indexOf(c) != -1)?true:false;
+        return (a2z.indexOf(c) != -1) ? true : false;
     }
 
     /**
      * Replaces all dashes and underscores by spaces and capitalizes all the words.
-     *
+     * <p/>
      * <pre>
      * Examples:
      *   titleize("ch 1:  Java-ActiveRecordIsFun") ==> "Ch 1:  Java Active Record Is Fun"
      * </pre>
      *
-     * @param phase             the original string
+     * @param phase the original string
      * @return a titleized string
      */
     public static String titleize(String phase) {
-    	if (phase == null || "".equals(phase)) return phase;
+        if (phase == null || "".equals(phase)) return phase;
 
-    	phase = humanize(phase);
-    	StringBuilder sb = new StringBuilder();
-    	int total = phase.length();
-    	for (int i = 0; i < total; i++)	{
-    		char c = phase.charAt(i);
-    		if (i == 0) {
-    			if (isIna2z(c)) {
-    				sb.append(("" + c).toUpperCase());
-    			}
-    			else {
-    				sb.append(c);
-    			}
-    		}
-    		else {
-    			if (isIna2z(c) && ' ' == phase.charAt(i-1)) {
-    				sb.append(("" + c).toUpperCase());
-    			}
-    			else {
-    				sb.append(c);
-    			}
-    		}
-    	}
-    	return sb.toString();
+        phase = humanize(phase);
+        StringBuilder sb = new StringBuilder();
+        int total = phase.length();
+        for (int i = 0; i < total; i++) {
+            char c = phase.charAt(i);
+            if (i == 0) {
+                if (isIna2z(c)) {
+                    sb.append(("" + c).toUpperCase());
+                } else {
+                    sb.append(c);
+                }
+            } else {
+                if (isIna2z(c) && ' ' == phase.charAt(i - 1)) {
+                    sb.append(("" + c).toUpperCase());
+                } else {
+                    sb.append(c);
+                }
+            }
+        }
+        return sb.toString();
     }
 
     /**
      * Replaces all dashes and underscores by spaces and capitalizes the first
      * word. Also removes
-     *
+     * <p/>
      * <pre>
      * Examples:
      *   humanize("active_record") ==> "Active record"
      *   humanize("post_id")       ==> "Post"
      * </pre>
      *
-     * @param phase             the original string
+     * @param phase the original string
      * @return a humanized string
      */
     public static String humanize(String phase) {
-    	if (phase == null || "".equals(phase)) return phase;
+        if (phase == null || "".equals(phase)) return phase;
         phase = underscore(phase);
         if (phase.endsWith("_id")) phase += " ";
-    	return camelize(phase.replaceAll("_id ", " ").replace('_', ' ').trim());
+        return camelize(phase.replaceAll("_id ", " ").replace('_', ' ').trim());
     }
 
     /**
      * Returns a database table name corresponding to the input model class
      * name.
-     *
+     * <p/>
      * <pre>
      * Examples:
      *   tableize("Person")   ==> "people"
@@ -733,13 +704,13 @@ public class WordUtil {
      * @return the table name of the java model class name
      */
     public static String tableize(String modelClassName) {
-    	return pluralize(underscore(modelClassName));
+        return pluralize(underscore(modelClassName));
     }
 
     /**
      * Returns a model class name corresponding to the input database
      * table name.
-     *
+     * <p/>
      * <pre>
      * Examples:
      *   classify("people")   ==> "Person"
@@ -750,27 +721,27 @@ public class WordUtil {
      * @return a java model class name
      */
     public static String classify(String tableName) {
-    	return camelize(singularize(tableName));
+        return camelize(singularize(tableName));
     }
 
     /**
      * Returns an ordinalized string.
-     *
+     * <p/>
      * <pre>
      * Examples:
      *   ordinalize(100)  ==> "100th"
      *   ordinalize(1003) ==> "1003rd"
      * </pre>
      *
-     * @param number            the number
+     * @param number the number
      * @return an ordinalized string for the number
      */
     public static String ordinalize(int number) {
-    	String result = "" + number;
-    	if (result.endsWith("1")) result = result + "st";
-    	else if (result.endsWith("2")) result = result + "nd";
-    	else if (result.endsWith("3")) result = result + "rd";
-    	else result = result + "th";
-    	return result;
+        String result = "" + number;
+        if (result.endsWith("1")) result = result + "st";
+        else if (result.endsWith("2")) result = result + "nd";
+        else if (result.endsWith("3")) result = result + "rd";
+        else result = result + "th";
+        return result;
     }
 }
