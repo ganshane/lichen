@@ -246,8 +246,17 @@ public class JdbcHelperImpl implements JdbcHelper {
             }
         }
     }
+    @Override
+	public <T> T withResultSet(String sql, ResultSetCallback<T> callback) {
+    	return internalWithResultSet(sql, callback);
+	}
 	@Override
 	public <T> T withResultSet(String sql, ResultSetCallback<T> callback,
+			PreparedStatementSetter... setters) {
+		return internalWithResultSet(sql, callback, setters);
+	}
+	
+	private <T> T internalWithResultSet(String sql, ResultSetCallback<T> callback,
 			PreparedStatementSetter... setters) {
 		Connection conn = null;
 		PreparedStatement ps = null;

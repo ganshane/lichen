@@ -130,30 +130,15 @@ public class JdbcHelperTest {
 		
 		  assertNotNull(bean);
 		  
-		  Integer currentId = jdbc.withResultSet("select * from jdbctest where id=? and jkey=? and name=?", new ResultSetCallback<Integer>() {
+		  Integer currentId = jdbc.withResultSet("select * from jdbctest", new ResultSetCallback<Integer>() {
 				@Override
 				public Integer doInResultSet(ResultSet rs)
 						throws SQLException {
 			        return rs.getInt("id");
 				}
-			  },new PreparedStatementSetter(){
-				  @Override
-				  public void set(PreparedStatement ps,int index) throws SQLException {
-					  ps.setObject(index, "1");
-				  }
-			  },new PreparedStatementSetter(){
-				  @Override
-				  public void set(PreparedStatement ps,int index) throws SQLException {
-					  ps.setObject(index, "10");
-				  }
-			  },new PreparedStatementSetter(){
-				  @Override
-				  public void set(PreparedStatement ps,int index) throws SQLException {
-					  ps.setObject(index, "erdinc");
-				  }
 			  });
 			
-			  assertEquals(1, currentId.intValue());
+		  assertEquals(1, currentId.intValue());
    }
 
    @Test

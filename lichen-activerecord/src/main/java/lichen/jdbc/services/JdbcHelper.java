@@ -82,5 +82,14 @@ public interface JdbcHelper {
      * @return 通过回调函数处理后结果
      */
     public <T> T withResultSet(String sql,ResultSetCallback<T> callback,PreparedStatementSetter ... setters);
+    
+    /**
+     * 带回调函数的查询
+     * @param <T> 返回的结果对象类型
+     * @param sql 待查询的语句
+     * @param callback 回调函数
+     * @return 通过回调函数处理后结果
+     */
+    public <T> T withResultSet(String sql,ResultSetCallback<T> callback);
 
 }
