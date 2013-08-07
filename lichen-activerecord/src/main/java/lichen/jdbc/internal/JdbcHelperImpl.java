@@ -200,28 +200,15 @@ public class JdbcHelperImpl implements JdbcHelper {
 	}
 
     @Override
-	public <T> T queryForFirst(String sql, ResultSetGetter<T> getter,PreparedStatementSetter... setters) {
-    	Connection conn = null;
-		PreparedStatement ps = null;
-		try {
-			conn = getConnection();
-			ps = conn.prepareStatement(sql);
-			int index = 1;
-			for(PreparedStatementSetter setter : setters) {
-				setter.set(ps, index);
-				index++;
-			}
-			ResultSet rs = ps.executeQuery();
-			while (rs.next()) {
-				return getter.get(rs, 0);
-			}
-			return null;
-		} catch (SQLException e) {
-			throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
-		} finally {
-			JdbcUtil.close(ps);
-			freeConnection(conn);
-		}
+	public <T> T queryForFirst(String sql, final ResultSetGetter<T> getter,PreparedStatementSetter... setters) {
+    	return withResultSet(sql, new ResultSetCallback<T>() {
+			@Override
+			public T doInResultSet(ResultSet rs) throws SQLException {
+				if (rs.next()) {
+					return getter.get(rs, 0);
+				}
+				return null;
+			}}, setters);
 	}
 
     private void freeConnection(Connection con) {
@@ -269,10 +256,7 @@ public class JdbcHelperImpl implements JdbcHelper {
 				index++;
 			}
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()) {
-				return callback.doInResultSet(rs);
-			}
-			return null;
+			return callback.doInResultSet(rs);
 		} catch (SQLException e) {
 			throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
 		} finally {
