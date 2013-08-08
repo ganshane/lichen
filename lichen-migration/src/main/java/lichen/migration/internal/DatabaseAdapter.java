@@ -346,6 +346,27 @@ abstract class DatabaseAdapter {
                        String indexName){
         return removeIndexSql(schemaNameOpt, tableName, indexName);
     }
+    
+    /**
+     * @description: 重载removeIndexSql(tableName,indexName)方法，得到删除索引语句
+     * @param tableName 索引依赖的表名
+     * @param columnNames 索引依赖的字段
+     * @param name 指定索引名称
+     */
+    public String removeIndexSql(String tableName, String[] columnNames,
+			Name... name) {
+    	StringBuffer indexName = new StringBuffer();
+		//如果未指定Name，则默认索引名称为：idx_tableName_字段1_字段2_..._字段n（按照列的升序排列）
+		if(name.length == 0) {
+			Arrays.sort(columnNames);
+			indexName.append("IDX_").append(tableName);
+			indexName.append("_").append(StringUtils.join(columnNames, "_"));
+		}else {
+			indexName.append(name[0].getValue());	//只取第一个值作为索引名称
+		}
+		return removeIndexSql(tableName, indexName.toString());
+    }
+			
     /**
      * Different databases require different SQL to lock a table.
      *

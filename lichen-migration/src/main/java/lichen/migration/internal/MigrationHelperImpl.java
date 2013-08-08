@@ -219,21 +219,11 @@ class MigrationHelperImpl implements MigrationHelper {
 			IndexOption... options) throws Throwable {
 		addIndex(tableName, new String[]{columnName}, options);
 	}
-	
 
 	@Override
 	public void removeIndex(String tableName, String[] columnNames,
 			Name... name) throws Throwable {
-		StringBuffer indexName = new StringBuffer();
-		//如果未指定Name，则默认索引名称为：idx_tableName_字段1_字段2_..._字段n（按照列的升序排列）
-		if(name.length == 0) {
-			Arrays.sort(columnNames);
-			indexName.append("IDX_").append(tableName);
-			indexName.append("_").append(StringUtils.join(columnNames, "_"));
-		}else {
-			indexName.append(name[0].getValue());	//只取第一个值作为索引名称
-		}
-		String removeSql = adapter().removeIndexSql(tableName, indexName.toString());
+		String removeSql = adapter().removeIndexSql(tableName, columnNames, name);
 		execute(removeSql);
 	}
     
