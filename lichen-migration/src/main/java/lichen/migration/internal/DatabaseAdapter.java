@@ -2,8 +2,12 @@
 // site: http://lichen.ganshane.com
 package lichen.migration.internal;
 
+import lichen.migration.internal.util.StringUtils;
 import lichen.migration.model.ColumnOption;
+import lichen.migration.model.IndexOption;
+import lichen.migration.model.Name;
 import lichen.migration.model.SqlType;
+import lichen.migration.model.Unique;
 
 import java.util.Arrays;
 
@@ -254,6 +258,67 @@ abstract class DatabaseAdapter {
                         String columnName){
         return removeColumnSql(schemaNameOpt, tableName, columnName);
     }
+    
+    
+    /**
+     * @description: 产生创建数据库索引的sql语句
+     * @param schemaNameOpt 模式选项，如数据库用户名
+     * @param tableName 索引依赖的表名
+     * @param columnNames 索引依赖的列
+     * @param options 
+     * @return sql语句
+     */
+    public String addIndexSql(Option<String> schemaNameOpt,
+    				String tableName, String[] columnNames,
+    				IndexOption... options) {
+    	StringBuffer sql = new StringBuffer();
+    	StringBuffer indexName = new StringBuffer();
+    	boolean isUnique = false;
+    	for(int i = 0; i < options.length; i++) {
+    		IndexOption option = options[i];
+    		if(option instanceof Name) {	//指定了索引的名称
+    			indexName.append(((Name)option).getValue());
+    		}else if(option instanceof Unique) {	//创建唯一索引
+    			isUnique = true;
+    		}
+    	}
+    	
+    	//如果未指定options，则自动按照idx_tableName_字段1_字段2_..._字段n（按照列的升序排列）
+    	if(indexName.length() == 0) {
+    		Arrays.sort(columnNames);
+    		indexName.append("IDX_").append(tableName);
+    		indexName.append("_").append(StringUtils.join(columnNames, "_"));
+    		for(int i = 0; i < columnNames.length; i++) {	//为列加上特殊修饰符号
+    			columnNames[i] = quoteColumnName(columnNames[i]).trim();
+    		}
+    	}
+    	
+    	sql.append("CREATE")
+	    	.append(isUnique ? " UNIQUE " : " ")
+	    	.append("INDEX ")
+	    	.append(quoteTableName(schemaNameOpt, indexName.toString()))
+	    	.append(" ON ")
+	    	.append(quoteTableName(tableName).trim())
+	    	.append("(")
+	    	.append(StringUtils.join(columnNames, ",").toUpperCase())
+	    	.append(")");
+    	return sql.toString();
+    }
+    
+    
+    /**
+     * @description: 重载addIndexSql(schemaNameOpt, tableName, columnNames, options)方法
+     * @param tableName
+     * @param columnNames
+     * @param options
+     * @return
+     */
+    public String addIndexSql(String tableName, String[] columnNames,
+			IndexOption... options) {
+    	return addIndexSql(schemaNameOpt, tableName, columnNames, options);
+    }
+    
+    
     /**
      * Different databases require different SQL to drop an index.
      *
