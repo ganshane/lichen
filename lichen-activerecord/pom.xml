@@ -37,6 +37,11 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0</version>
+        </dependency>
         <!--
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -119,12 +124,4 @@
 			</plugin>
 		</plugins>
 	</build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </reporting>
 </project>
