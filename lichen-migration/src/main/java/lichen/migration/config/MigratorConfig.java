@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * 针对migrator的配置
+ * 针对migrator的配置.
  * @author jcai
  */
 @XmlRootElement(name = "migrator")
