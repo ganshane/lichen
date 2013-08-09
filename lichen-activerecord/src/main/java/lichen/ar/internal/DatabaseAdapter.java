@@ -21,26 +21,23 @@ public class DatabaseAdapter {
     }
     public void registerTypes(){
         types.put( Types.BIGINT, LichenArTypes.BIG_INTEGER);
-        /*
-        types.put( Types.BINARY, Types.BINARY.getName() );
-        types.put( Types.BIT, Types.BOOLEAN.getName() );
-        types.put( Types.CHAR, Types.CHARACTER.getName() );
-        types.put( Types.DATE, Types.DATE.getName() );
-        types.put( Types.DOUBLE, Types.DOUBLE.getName() );
-        types.put( Types.FLOAT, Types.FLOAT.getName() );
-        types.put( Types.INTEGER, Types.INTEGER.getName() );
-        types.put( Types.SMALLINT, Types.SHORT.getName() );
-        types.put( Types.TINYINT, Types.BYTE.getName() );
-        types.put( Types.TIME, Types.TIME.getName() );
-        types.put( Types.TIMESTAMP, Types.TIMESTAMP.getName() );
-        types.put( Types.VARCHAR, Types.STRING.getName() );
-        types.put( Types.VARBINARY, Types.BINARY.getName() );
-        types.put( Types.NUMERIC, Types.BIG_DECIMAL.getName() );
-        types.put( Types.DECIMAL, Types.BIG_DECIMAL.getName() );
-        types.put( Types.BLOB, Types.BLOB.getName() );
-        types.put( Types.CLOB, Types.CLOB.getName() );
-        types.put( Types.REAL, Types.FLOAT.getName() );
-        */
+        types.put( Types.BINARY, LichenArTypes.BINARY);
+        types.put( Types.BIT, LichenArTypes.BIT);
+        types.put( Types.CHAR, LichenArTypes.CHAR);
+        types.put( Types.DATE, LichenArTypes.DATE);
+        types.put( Types.DOUBLE, LichenArTypes.DOUBLE);
+        types.put( Types.FLOAT, LichenArTypes.FLOAT);
+        types.put( Types.INTEGER, LichenArTypes.INTEGER);
+        types.put( Types.SMALLINT, LichenArTypes.SMALLINT);
+        types.put( Types.TINYINT, LichenArTypes.TINYINT);
+        types.put( Types.TIME, LichenArTypes.TIME);
+        types.put( Types.TIMESTAMP, LichenArTypes.TIMESTAMP);
+        types.put( Types.VARCHAR, LichenArTypes.VARCHAR);
+        types.put( Types.VARBINARY, LichenArTypes.VARBINARY);
+        types.put( Types.NUMERIC, LichenArTypes.NUMERIC);
+        types.put( Types.DECIMAL, LichenArTypes.DECIMAL);
+        types.put( Types.BLOB, LichenArTypes.BLOB);
+        types.put( Types.CLOB, LichenArTypes.CLOB);
     }
 
     JdbcHelper createJdbcHelper() {
