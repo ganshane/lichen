@@ -15,12 +15,12 @@ public interface JdbcHelper {
      * 启动事务,在启动事务的时候需要注意，一定要运行{@link #commitTransaction()}
      * @see #commitTransaction()
      */
-    public void beginTransaction();
+    void beginTransaction();
 
     /**
      * 提交事务,在{@link #beginTransaction()}后需要调用此方法进行提交
      */
-    public void commitTransaction();
+    void commitTransaction();
 
     /**
      * 绑定connection对象到当前线程。
@@ -28,13 +28,13 @@ public interface JdbcHelper {
      * @see #beginTransaction()
      * @see #commitTransaction()
      */
-    public void holdConnection();
+    void holdConnection();
 
     /**
      * 释放连接,如果当前事务为非自动提交模式，则{@link #commitTransaction() 提交事务}
      * 如果为自动提交模式，则关闭当前连接
      */
-    public void releaseConnection();
+    void releaseConnection();
 
     /**
      * 执行sql对象
@@ -42,7 +42,7 @@ public interface JdbcHelper {
      * @param params 待执行的参数
      * @return 执行的结果
      */
-    public int execute(String sql,Object ... params);
+    int execute(String sql,Object ... params);
 
     /**
      * 查询出来一个list对象
@@ -51,7 +51,7 @@ public interface JdbcHelper {
      * @param <T> 返回的结果对象类型
      * @return list对象
      */
-    public <T> List<T> queryForList(String sql,RowMapper<T> mapper);
+    <T> List<T> queryForList(String sql,RowMapper<T> mapper);
     
     /**
      * 可以传递参数的查询，查询结果是一个list
@@ -61,7 +61,7 @@ public interface JdbcHelper {
      * @param setters 给占位符赋值的对象
      * @return list对象
      */
-    public <T> List<T> queryForList(String sql,RowMapper<T> mapper,PreparedStatementSetter ... setters);
+    <T> List<T> queryForList(String sql,RowMapper<T> mapper,PreparedStatementSetter ... setters);
 
     /**
      * 返回查询的第一行
@@ -71,7 +71,7 @@ public interface JdbcHelper {
      * @param setters 给占位符赋值的对象
      * @return getter返回的对象
      */
-    public <T> T queryForFirst(String sql,ResultSetGetter<T> getter,PreparedStatementSetter ... setters);
+    <T> T queryForFirst(String sql,ResultSetGetter<T> getter,PreparedStatementSetter ... setters);
     
     /**
      * 带回调函数的查询
@@ -81,7 +81,7 @@ public interface JdbcHelper {
      * @param setters 给占位符赋值的对象
      * @return 通过回调函数处理后结果
      */
-    public <T> T withResultSet(String sql,ResultSetCallback<T> callback,PreparedStatementSetter ... setters);
+    <T> T withResultSet(String sql,ResultSetCallback<T> callback,PreparedStatementSetter ... setters);
     
     /**
      * 带回调函数的查询
@@ -90,6 +90,6 @@ public interface JdbcHelper {
      * @param callback 回调函数
      * @return 通过回调函数处理后结果
      */
-    public <T> T withResultSet(String sql,ResultSetCallback<T> callback);
+    <T> T withResultSet(String sql,ResultSetCallback<T> callback);
 
 }
