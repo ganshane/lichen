@@ -1,5 +1,8 @@
 package lichen.jdbc.internal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,6 +13,8 @@ import java.sql.ResultSet;
  * @author  jcai
  */
 class JdbcUtil {
+    private final static Logger logger = LoggerFactory.getLogger(JdbcUtil.class);
+
 
    public static void close(Statement stmt, ResultSet rs) {
       close(stmt);
@@ -27,10 +32,10 @@ class JdbcUtil {
 				con.close();
 			}
 			catch (SQLException ex) {
-            //
+                logger.warn(ex.toString());
 			}
 			catch (Throwable ex) {
-            //
+                logger.warn(ex.toString());
 			}
 		}
 	}
@@ -46,10 +51,10 @@ class JdbcUtil {
 				stmt.close();
 			}
 			catch (SQLException ex) {
-				//
+                logger.warn(ex.toString());
 			}
 			catch (Throwable ex) {
-            //
+                logger.warn(ex.toString());
 			}
 		}
 	}
@@ -65,10 +70,10 @@ class JdbcUtil {
 				rs.close();
 			}
 			catch (SQLException ex) {
-				//
+                logger.warn(ex.toString());
 			}
 			catch (Throwable ex) {
-				//
+                logger.warn(ex.toString());
 			}
 		}
 	}

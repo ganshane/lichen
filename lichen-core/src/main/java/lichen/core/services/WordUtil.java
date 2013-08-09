@@ -383,7 +383,7 @@ public class WordUtil {
         int wl = word.length();
         int pl = plform.length();
         char[] pChars = plform.toCharArray();
-        int length = (wl < pl) ? wl : pl;
+        int length = wl < pl ? wl : pl;
         for (int i = 0; i < length; i++) {
             char wChar = word.charAt(i);
             char pChar = plform.charAt(i);
@@ -470,11 +470,11 @@ public class WordUtil {
         int wl = word.length();
         int pl = sgform.length();
         char[] sChars = sgform.toCharArray();
-        int length = (wl < pl) ? wl : pl;
+        int length = wl < pl ? wl : pl;
         for (int i = 0; i < length; i++) {
             char wChar = word.charAt(i);
             char pChar = sgform.charAt(i);
-            if (((int) wChar - (int) pChar) == -32) {
+            if ((int) wChar - (int) pChar == -32) {
                 sChars[i] = wChar;
                 caseChanged = true;
             }
@@ -573,7 +573,7 @@ public class WordUtil {
         if (word == null || "".equals(word)) return word;
 
         String firstChar = word.substring(0, 1);
-        String result = (firstLetterInLowerCase) ? firstChar.toLowerCase() : firstChar.toUpperCase();
+        String result = firstLetterInLowerCase ? firstChar.toLowerCase() : firstChar.toUpperCase();
         if (word.length() > 1) {
             result += word.substring(1);
         }
@@ -604,16 +604,16 @@ public class WordUtil {
             char c = phase.charAt(i);
             if (i == 0) {
                 if (isInA2Z(c)) {
-                    sb.append(("" + c).toLowerCase());
+                    sb.append(String.valueOf(c).toLowerCase());
                 } else {
                     sb.append(c);
                 }
             } else {
                 if (isInA2Z(c)) {
                     if (isIna2z(phase.charAt(i - 1))) {
-                        sb.append(("_" + c).toLowerCase());
+                        sb.append("_").append(String.valueOf(c).toLowerCase());
                     } else {
-                        sb.append(("" + c).toLowerCase());
+                        sb.append(String.valueOf(c).toLowerCase());
                     }
                 } else {
                     sb.append(c);
@@ -655,13 +655,13 @@ public class WordUtil {
             char c = phase.charAt(i);
             if (i == 0) {
                 if (isIna2z(c)) {
-                    sb.append(("" + c).toUpperCase());
+                    sb.append(String.valueOf(c).toUpperCase());
                 } else {
                     sb.append(c);
                 }
             } else {
                 if (isIna2z(c) && ' ' == phase.charAt(i - 1)) {
-                    sb.append(("" + c).toUpperCase());
+                    sb.append(String.valueOf(c).toUpperCase());
                 } else {
                     sb.append(c);
                 }
