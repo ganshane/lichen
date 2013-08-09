@@ -14,5 +14,5 @@ public interface ResultSetCallback<T> {
      * @return 针对{@link ResultSet}的处理结果
      * @throws SQLException 发生数据库操作失败
      */
-    public T doInResultSet(ResultSet resultSet) throws SQLException;
+    T doInResultSet(ResultSet resultSet) throws SQLException;
 }

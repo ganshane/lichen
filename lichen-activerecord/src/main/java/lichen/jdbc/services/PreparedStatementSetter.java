@@ -14,5 +14,5 @@ public interface PreparedStatementSetter {
      * @param index 设置的索引号
      * @throws SQLException 发生数据库操作错误
      */
-    public void set(PreparedStatement ps,int index) throws SQLException;
+    void set(PreparedStatement ps,int index) throws SQLException;
 }

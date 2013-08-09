@@ -16,5 +16,5 @@ public interface RowMapper<T>{
      * @return map行数据之后的结果
      * @throws SQLException 发生数据库操作异常
      */
-    public T mapRow(ResultSet rs,int index) throws SQLException;
+    T mapRow(ResultSet rs,int index) throws SQLException;
 }

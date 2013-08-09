@@ -15,5 +15,5 @@ public interface ResultSetGetter<T> {
      * @return 得到的对象值
      * @throws SQLException 发送数据库操作错误
      */
-    public T get(ResultSet rs,int index) throws SQLException;
+    T get(ResultSet rs,int index) throws SQLException;
 }
