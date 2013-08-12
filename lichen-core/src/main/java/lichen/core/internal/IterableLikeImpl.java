@@ -86,4 +86,16 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
     public Iterator<A> iterator() {
         return underlying.iterator();
     }
+    
+	@Override
+	public boolean exists(Function1<A, Boolean> function) {
+		Iterator<A> it = iterator();
+		while (it.hasNext()) {
+			A obj = it.next();
+			if (function.apply(obj)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
