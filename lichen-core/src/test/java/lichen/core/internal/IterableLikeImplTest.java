@@ -72,4 +72,25 @@ public class IterableLikeImplTest {
         Assert.assertTrue(first.isDefined());
         Assert.assertEquals(32,first.get().age);
     }
+    @Test
+	public void exists() {
+		List<Bean> list = new ArrayList<Bean>();
+		list.add(new Bean("acai", 33));
+		list.add(new Bean("jcai", 32));
+		IterableLikeImpl<Bean> iterableLike = new IterableLikeImpl<Bean>(list);
+		boolean obj1 = iterableLike.exists(new Function1<Bean, Boolean>() {
+			@Override
+			public Boolean apply(Bean value) {
+				return value.age > 30;
+			}
+		});
+		boolean obj2 = iterableLike.exists(new Function1<Bean, Boolean>() {
+			@Override
+			public Boolean apply(Bean value) {
+				return value.age < 30;
+			}
+		});
+		Assert.assertTrue(obj1);
+		Assert.assertFalse(obj2);
+	}
 }

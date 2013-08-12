@@ -33,4 +33,12 @@ public interface IterableLike<A> extends Iterable<A> {
      * @return 第一个符合条件的元素
      */
      Option<A> first(Function1<A, Boolean> function);
+     
+     /**
+      * 查找一个集合中是否存在符合某一条件的函数
+      * 
+      * @param function 符合某一条件的函数
+      * @return boolean
+      */
+     public boolean exists(Function1<A,Boolean> function);
 }

@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import lichen.ar.services.FieldType;
 
 /**
- * 映射数据库中的{@link java.sql.Types#DECIMAL} 成 {@link java.sql.Clob} 对象
+ * 映射数据库中的{@link java.sql.Types#CLOB} 成 {@link java.sql.Clob} 对象
  * @author weiweng
  *
  */
