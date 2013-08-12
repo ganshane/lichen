@@ -1,9 +1,5 @@
 package lichen.ar.internal;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.Reader;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.sql.Blob;
@@ -14,6 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 
+import javax.sql.rowset.serial.SerialBlob;
+import javax.sql.rowset.serial.SerialClob;
+
 import junit.framework.Assert;
 import lichen.jdbc.internal.JdbcHelperImpl;
 import lichen.jdbc.internal.SimpleDataSource;
@@ -21,7 +20,6 @@ import lichen.jdbc.services.JdbcHelper;
 import lichen.jdbc.services.PreparedStatementSetter;
 import lichen.jdbc.services.ResultSetGetter;
 
-import org.h2.jdbc.JdbcBlob;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -278,6 +276,53 @@ public class LichenArTypesTest {
     	Assert.assertEquals(d.floatValue(),10.4f);
     }
 
+    @Test
+    public void test_blob() {
+    	Blob b = jdbc.queryForFirst("select image from jdbctest where id = 1 and image=?", new ResultSetGetter<Blob>() {
+			@Override
+			public Blob get(ResultSet rs, int index) throws SQLException {
+				return LichenArTypes.BLOB.get(rs, 1);
+			}
+		}, new PreparedStatementSetter() {
+			@Override
+			public void set(PreparedStatement ps, int index) throws SQLException {
+				byte[] by = new byte[]{2,3,4,5,6};
+				SerialBlob cl = new SerialBlob(by);
+				LichenArTypes.BLOB.set(ps, 1,cl);
+			}
+		});
+    	
+    	byte[] bb = null;
+    	try {
+    		bb = b.getBytes(1l, (int)b.length());
+		} catch (Exception e) {
+		}
+    	Assert.assertEquals(bb.length,5);
+    	Assert.assertEquals(bb[3],5);
+    }
+
+    @Test
+    public void test_clob() {
+    	Clob d = jdbc.queryForFirst("select context from jdbctest where id = 1 and context=?", new ResultSetGetter<Clob>() {
+			@Override
+			public Clob get(ResultSet rs, int index) throws SQLException {
+				return LichenArTypes.CLOB.get(rs, 1);
+			}
+		}, new PreparedStatementSetter() {
+			@Override
+			public void set(PreparedStatement ps, int index) throws SQLException {
+				char[] ch = new char[]{'c','l','o','b'};
+				SerialClob cl = new SerialClob(ch);
+				LichenArTypes.CLOB.set(ps, 1,cl);
+			}
+		});
+    	String cont = null;
+    	try {
+			cont = d.getSubString(1l, (int)d.length());
+		} catch (Exception e) {
+		}
+    	Assert.assertEquals(cont,"clob");
+    }
     static SimpleDataSource dataSource;
     static JdbcHelper jdbc;
 
