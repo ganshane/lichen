@@ -37,63 +37,65 @@ public class MigratorConfig {
     @XmlElement(name = "package")
     public String migratePackage;
     /**
-	 * @return the driverClassName
-	 */
-	public String getDriverClassName() {
-		return driverClassName;
-	}
-	/**
-	 * @param driverClassName the driverClassName to set
-	 */
-	public void setDriverClassName(String driverClassName) {
-		this.driverClassName = driverClassName;
-	}
-	/**
-	 * @return the username
-	 */
-	public String getUsername() {
-		return username;
-	}
-	/**
-	 * @param username the username to set
-	 */
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	/**
-	 * @return the url
-	 */
-	public String getUrl() {
-		return url;
-	}
-	/**
-	 * @param url the url to set
-	 */
-	public void setUrl(String url) {
-		this.url = url;
-	}
+     * @return the driverClassName
+     */
+    public final String getDriverClassName() {
+        return driverClassName;
+    }
+    /**
+     * @param newDriverClassName the driverClassName to set
+     */
+    public final void setDriverClassName(final String newDriverClassName) {
+        this.driverClassName = newDriverClassName;
+    }
+    /**
+     * @return the username
+     */
+    public final String getUsername() {
+        return username;
+    }
+
+    /**
+     * @param newUsername
+     *            the username to set
+     */
+    public final void setUsername(final String newUsername) {
+        this.username = newUsername;
+    }
+    /**
+     * @return the password
+     */
+    public final String getPassword() {
+        return password;
+    }
+    /**
+     * @param newpassword the password to set
+     */
+    public final void setPassword(final String newpassword) {
+        this.password = newpassword;
+    }
+    /**
+     * @return the url
+     */
+    public final String getUrl() {
+        return url;
+    }
+    /**
+     * @param newurl the url to set
+     */
+    public final void setUrl(final String newurl) {
+        this.url = newurl;
+    }
     /**
      * @return the migratePackage
      */
-    public String getMigratePackage() {
-    	return migratePackage;
-	}
+    public final String getMigratePackage() {
+        return migratePackage;
+    }
     /**
-	 * @param migratePackage the migratePackage to set
-	 */
-	public void setMigratePackage(String migratePackage) {
-		this.migratePackage = migratePackage;
-	}
+     * @param newmigratePackage the migratePackage to set
+     */
+    public final void setMigratePackage(final String newmigratePackage) {
+        this.migratePackage = newmigratePackage;
+    }
 }
