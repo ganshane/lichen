@@ -6,23 +6,34 @@ import lichen.migration.internal.CommandLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-
 /**
- * 提供前端调用的app
+ * 提供前端调用的app.
  * @author jcai
  */
-public class MigratorApp {
-    private final static String BASEDIR="basedir";
-    private final static Logger logger = LoggerFactory.getLogger(MigratorApp.class);
-    public static void main(String[] args){
+public final class MigratorApp {
+    /**
+     * 工具类不应该包含默认或公有构造函数.
+     */
+    private MigratorApp() { }
+//    private final static String BASEDIR="basedir";
+    /**
+     * 创建日志对象.
+     */
+    @SuppressWarnings("unused")
+    private static Logger logger = LoggerFactory.getLogger(MigratorApp.class);
+
+    /**
+     * @param args 主函数参数
+     */
+    public static void main(final String[] args) {
         /*
-        String basedir = System.getProperty(BASEDIR,".");
-        File configFile = new File(basedir,"migrator.xml");
-        if(!configFile.exists()){
-            logger.info("config file {} doesn't exists!",configFile.getAbsolutePath());
-            return;
-        }
+            String basedir = System.getProperty(BASEDIR,".");
+            File configFile = new File(basedir,"migrator.xml");
+            if(!configFile.exists()){
+                logger.info("config file {} doesn't exists!",
+                                configFile.getAbsolutePath());
+                return;
+            }
         */
         new CommandLine(args).execute();
     }

@@ -11,17 +11,32 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "migrator")
 public class MigratorConfig {
+    /**
+     * 数据库驱动类.
+     */
     @XmlElement(name = "driver_class")
     public String driverClassName;
+    /**
+     * 数据库用户名.
+     */
     @XmlElement(name = "user_name")
     public String username;
+    /**
+     * 数据库用户密码.
+     */
     @XmlElement(name = "password")
     public String password;
+    /**
+     * 数据库url地址.
+     */
     @XmlElement(name = "url")
     public String url;
+    /**
+     * java类包名.
+     */
     @XmlElement(name = "package")
     public String migratePackage;
-	/**
+    /**
 	 * @return the driverClassName
 	 */
 	public String getDriverClassName() {
@@ -69,13 +84,13 @@ public class MigratorConfig {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-	/**
-	 * @return the migratePackage
-	 */
-	public String getMigratePackage() {
-		return migratePackage;
+    /**
+     * @return the migratePackage
+     */
+    public String getMigratePackage() {
+    	return migratePackage;
 	}
-	/**
+    /**
 	 * @param migratePackage the migratePackage to set
 	 */
 	public void setMigratePackage(String migratePackage) {
