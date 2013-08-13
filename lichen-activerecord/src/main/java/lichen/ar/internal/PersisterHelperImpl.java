@@ -6,16 +6,17 @@ import lichen.jdbc.services.JdbcHelper;
 import java.util.Map;
 
 /**
- * 针对数据库的操作类
+ * 针对数据库的操作类.
  * @author jcai
  */
 public class PersisterHelperImpl {
     //数据库操作类
     private final DatabaseAdapter databaseAdapter;
-    PersisterHelperImpl(DatabaseAdapter databaseAdapter){
-        this.databaseAdapter = databaseAdapter;
+    PersisterHelperImpl(final DatabaseAdapter vdatabaseAdapter) {
+        this.databaseAdapter = vdatabaseAdapter;
     }
-    Map<String,Field<?>> findTableMapping(String tableName){
+    final Map<String, Field<?>> findTableMapping(final String tableName) {
+        @SuppressWarnings("unused")
         JdbcHelper helper = databaseAdapter.createJdbcHelper();
         return null;
     }

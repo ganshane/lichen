@@ -20,44 +20,44 @@ import lichen.ar.internal.types.VarbinaryType;
 import lichen.ar.internal.types.VarcharType;
 
 /**
- * 默认定义的types
+ * 默认定义的types.
  * @author jcai
  */
 class LichenArTypes {
-    /** 处理 {@link java.sql.Types#BIGINT} 数据对象 **/
-    final static BigIntegerType BIG_INTEGER = new BigIntegerType();
-    /** 处理 {@link java.sql.Types#BINARY} 数据对象 **/
-    final static BinaryType BINARY = new BinaryType();
-    /** 处理 {@link java.sql.Types#BIT} 数据对象 **/
-    final static BitType BIT = new BitType();
-    /** 处理 {@link java.sql.Types#CHAR} 数据对象 **/
-    final static CharType CHAR = new CharType();
-    /** 处理 {@link java.sql.Types#DATE} 数据对象 **/
-    final static DateType DATE = new DateType();
-    /** 处理 {@link java.sql.Types#DOUBLE} 数据对象 **/
-    final static DoubleType DOUBLE = new DoubleType();
-    /** 处理 {@link java.sql.Types#FLOAT} 数据对象 **/
-    final static FloatType FLOAT = new FloatType();
-    /** 处理 {@link java.sql.Types#INTEGER} 数据对象 **/
-    final static IntegerType INTEGER = new IntegerType();
-    /** 处理 {@link java.sql.Types#SMALLINT} 数据对象 **/
-    final static SmallIntType SMALLINT = new SmallIntType();
-    /** 处理 {@link java.sql.Types#TINYINT} 数据对象 **/
-    final static TinyIntType TINYINT = new TinyIntType();
-    /** 处理 {@link java.sql.Types#TIME} 数据对象 **/
-    final static TimeType TIME = new TimeType();
-    /** 处理 {@link java.sql.Types#TIMESTAMP} 数据对象 **/
-    final static TimeStampType TIMESTAMP = new TimeStampType();
-    /** 处理 {@link java.sql.Types#VARCHAR} 数据对象 **/
-    final static VarcharType VARCHAR = new VarcharType();
-    /** 处理 {@link java.sql.Types#VARBINARY} 数据对象 **/
-    final static VarbinaryType VARBINARY = new VarbinaryType();
-    /** 处理 {@link java.sql.Types#NUMERIC} 数据对象 **/
-    final static NumericType NUMERIC = new NumericType();
-    /** 处理 {@link java.sql.Types#DECIMAL} 数据对象 **/
-    final static DecimalType DECIMAL = new DecimalType();
-    /** 处理 {@link java.sql.Types#BLOB} 数据对象 **/
-    final static BlobType BLOB = new BlobType();
-    /** 处理 {@link java.sql.Types#CLOB} 数据对象 **/
-    final static ClobType CLOB = new ClobType();
+    /** 处理 {@link java.sql.Types#BIGINT} 数据对象. **/
+    static final BigIntegerType BIG_INTEGER = new BigIntegerType();
+    /** 处理 {@link java.sql.Types#BINARY} 数据对象 .**/
+    static final BinaryType BINARY = new BinaryType();
+    /** 处理 {@link java.sql.Types#BIT} 数据对象. **/
+    static final BitType BIT = new BitType();
+    /** 处理 {@link java.sql.Types#CHAR} 数据对象. **/
+    static final CharType CHAR = new CharType();
+    /** 处理 {@link java.sql.Types#DATE} 数据对象. **/
+    static final DateType DATE = new DateType();
+    /** 处理 {@link java.sql.Types#DOUBLE} 数据对象. **/
+    static final DoubleType DOUBLE = new DoubleType();
+    /** 处理 {@link java.sql.Types#FLOAT} 数据对象. **/
+    static final FloatType FLOAT = new FloatType();
+    /** 处理 {@link java.sql.Types#INTEGER} 数据对象. **/
+    static final IntegerType INTEGER = new IntegerType();
+    /** 处理 {@link java.sql.Types#SMALLINT} 数据对象. **/
+    static final SmallIntType SMALLINT = new SmallIntType();
+    /** 处理 {@link java.sql.Types#TINYINT} 数据对象. **/
+    static final TinyIntType TINYINT = new TinyIntType();
+    /** 处理 {@link java.sql.Types#TIME} 数据对象. **/
+    static final TimeType TIME = new TimeType();
+    /** 处理 {@link java.sql.Types#TIMESTAMP} 数据对象. **/
+    static final TimeStampType TIMESTAMP = new TimeStampType();
+    /** 处理 {@link java.sql.Types#VARCHAR} 数据对象. **/
+    static final VarcharType VARCHAR = new VarcharType();
+    /** 处理 {@link java.sql.Types#VARBINARY} 数据对象. **/
+    static final VarbinaryType VARBINARY = new VarbinaryType();
+    /** 处理 {@link java.sql.Types#NUMERIC} 数据对象. **/
+    static final NumericType NUMERIC = new NumericType();
+    /** 处理 {@link java.sql.Types#DECIMAL} 数据对象. **/
+    static final DecimalType DECIMAL = new DecimalType();
+    /** 处理 {@link java.sql.Types#BLOB} 数据对象. **/
+    static final BlobType BLOB = new BlobType();
+    /** 处理 {@link java.sql.Types#CLOB} 数据对象. **/
+    static final ClobType CLOB = new ClobType();
 }

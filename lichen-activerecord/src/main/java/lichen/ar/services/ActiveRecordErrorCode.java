@@ -3,7 +3,7 @@ package lichen.ar.services;
 import lichen.core.services.ErrorCode;
 
 /**
- * error code
+ * error code.
  * @author jcai
  */
 public enum ActiveRecordErrorCode implements ErrorCode {
@@ -11,8 +11,8 @@ public enum ActiveRecordErrorCode implements ErrorCode {
 
     private final int number;
 
-    private ActiveRecordErrorCode(int number) {
-        this.number = number;
+    private ActiveRecordErrorCode(final int vnumber) {
+        this.number = vnumber;
     }
     public int getNumber() {
         return number;

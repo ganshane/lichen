@@ -21,7 +21,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * Author: Erdinc YILMAZEL
+ * Author: Erdinc YILMAZEL.
  * Date: Dec 25, 2008
  * Time: 2:09:14 PM
  */
@@ -38,37 +38,43 @@ public class JdbcHelperTest {
       jdbc = new JdbcHelperImpl(dataSource);
 
       jdbc.holdConnection();
-      jdbc.execute("CREATE TABLE IF NOT EXISTS `jdbctest`(" +
-         "`id` int(11) NOT NULL auto_increment,\n" +
-         "`jkey` int(11) NOT NULL DEFAULT 10,\n" +
-         "`name` varchar(16) NOT NULL,\n" +
-         "`creation_date` timestamp NOT NULL,\n" +
-         "`big` bigint(20) NOT NULL,\n" +
-         "`money` decimal(10,2) NOT NULL,\n" +
-         "`sm` tinyint(1) NOT NULL,\n" +
-         "`data` varbinary(128) NOT NULL,\n" +
-         " PRIMARY KEY  (`id`)\n" +
-         ")");
+      jdbc.execute("CREATE TABLE IF NOT EXISTS `jdbctest`("
+              + "`id` int(11) NOT NULL auto_increment,\n"
+              + "`jkey` int(11) NOT NULL DEFAULT 10,\n"
+              + "`name` varchar(16) NOT NULL,\n"
+              + "`creation_date` timestamp NOT NULL,\n"
+              + "`big` bigint(20) NOT NULL,\n"
+              + "`money` decimal(10,2) NOT NULL,\n"
+              + "`sm` tinyint(1) NOT NULL,\n"
+              + "`data` varbinary(128) NOT NULL,\n"
+              + " PRIMARY KEY  (`id`)\n"
+              + ")");
 
       jdbc.execute("TRUNCATE TABLE `jdbctest`");
 
-      jdbc.execute("INSERT INTO `jdbctest` (id, jkey, name, creation_date, big, money, sm, data) " +
-         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-         1, 10, "erdinc",
+      final int ten = 10;
+      final int three = 3;
+      final long l1 = 1923232323L;
+      final float f1 = 10.4F;
+      jdbc.execute("INSERT INTO `jdbctest` (id, jkey, name, "
+              + "creation_date, big, money, sm, data) "
+              + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+         1, ten, "erdinc",
          new Timestamp(System.currentTimeMillis()),
-         1923232323L,
-         new BigDecimal(10.4),
+         l1,
+         new BigDecimal(f1),
          true,
-         new byte[]{1, 2, 3});
+         new byte[]{1, 2, three});
 
-      jdbc.execute("INSERT INTO `jdbctest` (id, jkey, name, creation_date, big, money, sm, data) " +
-         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-         2, 10, "bahar",
+      jdbc.execute("INSERT INTO `jdbctest` (id, jkey, name, "
+              + "creation_date, big, money, sm, data) "
+              + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+         2, ten, "bahar",
          new Timestamp(System.currentTimeMillis()),
-         1923232323L,
-         new BigDecimal(10.4),
+         l1,
+         new BigDecimal(f1),
          true,
-         new byte[]{1, 2, 3});
+         new byte[]{1, 2, three});
    }
 
    @AfterClass
@@ -76,17 +82,19 @@ public class JdbcHelperTest {
       jdbc.execute("DROP TABLE `jdbctest`");
       jdbc.releaseConnection();
    }
-    private class Bean{
-        int id;
-        String name;
-        Timestamp creationDate;
+    private class Bean {
+        private int id;
+        private String name;
+        private Timestamp creationDate;
     }
 
    @Test
-   public void testQueryForList() {
-      List<Bean> list = jdbc.queryForList("select * from jdbctest", new RowMapper<Bean>() {
+   public final void testQueryForList() {
+      List<Bean> list = jdbc.queryForList("select * from jdbctest",
+            new RowMapper<Bean>() {
           @Override
-          public Bean mapRow(ResultSet rs, int index) throws SQLException {
+          public Bean mapRow(final ResultSet rs, final int index)
+          throws SQLException {
               Bean bean = new Bean();
               bean.id = rs.getInt("id");
               bean.name = rs.getString("name");
@@ -98,147 +106,164 @@ public class JdbcHelperTest {
       assertNotNull(list);
       assertEquals("Testing query for list", 2, list.size());
    }
-   
+
    @Test
-   public void testWithResultSet() {
-	  Bean bean = jdbc.withResultSet("select * from jdbctest where id=? and jkey=? and name=?", new ResultSetCallback<Bean>() {
-			@Override
-			public Bean doInResultSet(ResultSet rs)
-					throws SQLException {
-				Bean bean = new Bean();
-		        bean.id = rs.getInt("id");
-		        bean.name = rs.getString("name");
-		        bean.creationDate = rs.getTimestamp("creation_date");
-		        return bean;
-			}
-		  },new PreparedStatementSetter(){
-			  @Override
-			  public void set(PreparedStatement ps,int index) throws SQLException {
-				  ps.setObject(index, "1");
-			  }
-		  },new PreparedStatementSetter(){
-			  @Override
-			  public void set(PreparedStatement ps,int index) throws SQLException {
-				  ps.setObject(index, "10");
-			  }
-		  },new PreparedStatementSetter(){
-			  @Override
-			  public void set(PreparedStatement ps,int index) throws SQLException {
-				  ps.setObject(index, "erdinc");
-			  }
-		  });
-		
-		  assertNotNull(bean);
-		  
-		  Integer currentId = jdbc.withResultSet("select * from jdbctest", new ResultSetCallback<Integer>() {
-				@Override
-				public Integer doInResultSet(ResultSet rs)
-						throws SQLException {
-			        return rs.getInt("id");
-				}
-			  });
-			
-		  assertEquals(1, currentId.intValue());
+   public final void testWithResultSet() {
+      Bean bean = jdbc.withResultSet("select * from jdbctest where id=?"
+             + " and jkey=? and name=?",
+             new ResultSetCallback<Bean>() {
+            @Override
+            public Bean doInResultSet(final ResultSet rs)
+                    throws SQLException {
+                Bean bean = new Bean();
+                bean.id = rs.getInt("id");
+                bean.name = rs.getString("name");
+                bean.creationDate = rs.getTimestamp("creation_date");
+                return bean;
+            }
+          }, new PreparedStatementSetter() {
+              @Override
+              public void set(final PreparedStatement ps, final int index)
+              throws SQLException {
+                  ps.setObject(index, "1");
+              }
+          }, new PreparedStatementSetter() {
+              @Override
+              public void set(final PreparedStatement ps, final int index)
+              throws SQLException {
+                  ps.setObject(index, "10");
+              }
+          }, new PreparedStatementSetter() {
+              @Override
+              public void set(final PreparedStatement ps, final int index)
+              throws SQLException {
+                  ps.setObject(index, "erdinc");
+              }
+          });
+
+          assertNotNull(bean);
+
+          Integer currentId = jdbc.withResultSet("select * from jdbctest",
+                new ResultSetCallback<Integer>() {
+                @Override
+                public Integer doInResultSet(final ResultSet rs)
+                        throws SQLException {
+                    return rs.getInt("id");
+                }
+              });
+
+          assertEquals(1, currentId.intValue());
    }
 
    @Test
-   public void testQueryForList2() {
-      List<Bean> list = jdbc.queryForList("select * from jdbctest where id=? and jkey=? and name=?", new RowMapper<Bean>() {
+   public final void testQueryForList2() {
+      List<Bean> list = jdbc.queryForList("select * from jdbctest where id=? "
+              + " and jkey=? and name=?",
+              new RowMapper<Bean>() {
           @Override
-          public Bean mapRow(ResultSet rs, int index) throws SQLException {
+          public Bean mapRow(final ResultSet rs, final int index)
+          throws SQLException {
               Bean bean = new Bean();
               bean.id = rs.getInt("id");
               bean.name = rs.getString("name");
               bean.creationDate = rs.getTimestamp("creation_date");
               return bean;
           }
-      },new PreparedStatementSetter(){
-    	  @Override
-    	  public void set(PreparedStatement ps,int index) throws SQLException {
-    		  ps.setObject(index, "1");
-    	  }
-      },new PreparedStatementSetter(){
-    	  @Override
-    	  public void set(PreparedStatement ps,int index) throws SQLException {
-    		  ps.setObject(index, "10");
-    	  }
-      },new PreparedStatementSetter(){
-    	  @Override
-    	  public void set(PreparedStatement ps,int index) throws SQLException {
-    		  ps.setObject(index, "erdinc");
-    	  }
+      }, new PreparedStatementSetter() {
+          @Override
+          public void set(final PreparedStatement ps, final int index)
+          throws SQLException {
+              ps.setObject(index, "1");
+          }
+      }, new PreparedStatementSetter() {
+          @Override
+          public void set(final PreparedStatement ps, final int index)
+          throws SQLException {
+              ps.setObject(index, "10");
+          }
+      }, new PreparedStatementSetter() {
+          @Override
+          public void set(final PreparedStatement ps, final int index)
+          throws SQLException {
+              ps.setObject(index, "erdinc");
+          }
       });
 
       assertNotNull(list);
       assertEquals("Testing query for list", 1, list.size());
    }
-   
+
    @Test
-	public void testqueryForFirst() {
-		Bean b = jdbc.queryForFirst("select * from jdbctest where jkey=? order by id",
-				new ResultSetGetter<Bean>() {
-					public Bean get(ResultSet rs, int index)
-							throws SQLException {
-						  Bean bean = new Bean();
-			              bean.id = rs.getInt("id");
-			              bean.name = rs.getString("name");
-			              bean.creationDate = rs.getTimestamp("creation_date");
-			              return bean;
-					}
-				}, new PreparedStatementSetter() {
-					@Override
-					public void set(PreparedStatement ps, int index)
-							throws SQLException {
-						ps.setObject(index, "10");
-					}
-				});
-		assertNotNull(b);
-		assertEquals(1,b.id);
-		
-		int count = jdbc.queryForFirst("select count(*) from jdbctest where jkey=?",
-				new ResultSetGetter<Integer>() {
-					public Integer get(ResultSet rs, int index)
-							throws SQLException {
-						return rs.getInt(1);
-					}
-				}, new PreparedStatementSetter() {
-					@Override
-					public void set(PreparedStatement ps, int index)
-							throws SQLException {
-						ps.setObject(index, "10");
-					}
-				});
-		assertEquals(2,count);
-		
-		long lCount = jdbc.queryForFirst("select count(*) from jdbctest where jkey=?",
-				new ResultSetGetter<Long>() {
-					public Long get(ResultSet rs, int index)
-							throws SQLException {
-						return rs.getLong(1);
-					}
-				}, new PreparedStatementSetter() {
-					@Override
-					public void set(PreparedStatement ps, int index)
-							throws SQLException {
-						ps.setObject(index, "10");
-					}
-				});
-		assertEquals(2,lCount);
-		
-		String s = jdbc.queryForFirst("select name from jdbctest where jkey=? order by id desc ",
-				new ResultSetGetter<String>() {
-					public String get(ResultSet rs, int index) throws SQLException {
-						return rs.getString(1);
-					}
-				}, new PreparedStatementSetter() {
-					@Override
-					public void set(PreparedStatement ps, int index)
-							throws SQLException {
-						ps.setObject(index, "10");
-					}
-				});
-		assertEquals("bahar",s);
-	}
+    public final void testqueryForFirst() {
+        Bean b = jdbc.queryForFirst("select * from jdbctest where jkey=?"
+                + " order by id",
+                new ResultSetGetter<Bean>() {
+                    public Bean get(final ResultSet rs, final int index)
+                            throws SQLException {
+                          Bean bean = new Bean();
+                          bean.id = rs.getInt("id");
+                          bean.name = rs.getString("name");
+                          bean.creationDate = rs.getTimestamp("creation_date");
+                          return bean;
+                    }
+                }, new PreparedStatementSetter() {
+                    @Override
+                    public void set(final PreparedStatement ps, final int index)
+                            throws SQLException {
+                        ps.setObject(index, "10");
+                    }
+                });
+        assertNotNull(b);
+        assertEquals(1, b.id);
+
+        int count = jdbc.queryForFirst("select count(*) from jdbctest"
+                + " where jkey=?",
+                new ResultSetGetter<Integer>() {
+                    public Integer get(final ResultSet rs, final int index)
+                            throws SQLException {
+                        return rs.getInt(1);
+                    }
+                }, new PreparedStatementSetter() {
+                    @Override
+                    public void set(final PreparedStatement ps, final int index)
+                            throws SQLException {
+                        ps.setObject(index, "10");
+                    }
+                });
+        assertEquals(2, count);
+
+        long lCount = jdbc.queryForFirst("select count(*) from jdbctest"
+                + " where jkey=? " ,
+                new ResultSetGetter<Long>() {
+                    public Long get(final ResultSet rs, final int index)
+                            throws SQLException {
+                        return rs.getLong(1);
+                    }
+                }, new PreparedStatementSetter() {
+                    @Override
+                    public void set(final PreparedStatement ps, final int index)
+                            throws SQLException {
+                        ps.setObject(index, "10");
+                    }
+                });
+        assertEquals(2, lCount);
+
+        String s = jdbc.queryForFirst("select name from jdbctest where jkey=?"
+                + " order by id desc ",
+                new ResultSetGetter<String>() {
+                    public String get(final ResultSet rs, final int index)
+                    throws SQLException {
+                        return rs.getString(1);
+                    }
+                }, new PreparedStatementSetter() {
+                    @Override
+                    public void set(final PreparedStatement ps, final int index)
+                            throws SQLException {
+                        ps.setObject(index, "10");
+                    }
+                });
+        assertEquals("bahar", s);
+    }
 
     /*
    @Test

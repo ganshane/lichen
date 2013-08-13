@@ -9,20 +9,21 @@ import java.util.Date;
 import lichen.ar.services.FieldType;
 
 /**
- * 映射数据库中的{@link java.sql.Types#TIME} 成 {@link java.util.Date} 对象
+ * 映射数据库中的{@link java.sql.Types#TIME} 成 {@link java.util.Date} 对象.
  * @author weiweng
  *
  */
 public class TimeType implements FieldType<Date> {
 
-	@Override
-	public Date get(ResultSet rs, int index) throws SQLException {
-		return rs.getTime(index);
-	}
+    @Override
+    public final Date get(final ResultSet rs, final int index)
+        throws SQLException {
+        return rs.getTime(index);
+    }
 
-	@Override
-	public void set(PreparedStatement ps, int index, Date object)
-			throws SQLException {
-		ps.setTime(index, new Time(object.getTime()));
-	}
+    @Override
+    public final void set(final PreparedStatement ps, final int index,
+        final Date object) throws SQLException {
+        ps.setTime(index, new Time(object.getTime()));
+    }
 }
