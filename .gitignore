@@ -18,3 +18,4 @@ build/
 .idea
 support/data
 support/config/*.xml
+*/.checkstyle

@@ -1,3 +1,16 @@
+// Copyright 2013 the original author or authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package lichen.core.internal;
 
 import lichen.core.services.IterableLike;
@@ -17,15 +30,16 @@ import java.util.Iterator;
  */
 public class IterableLikeImpl<A> implements IterableLike<A> {
 
-    //underlying collection
-    private final Collection<A> underlying;
+    //_underlying collection
+    private final Collection<A> _underlying;
 
     /**
      * 通过给定的集合来创建一个{@link IterableLike}对象
+     *
      * @param collection 待操作的集合对象
      */
     public IterableLikeImpl(final Collection<A> collection) {
-        this.underlying = collection;
+        this._underlying = collection;
     }
 
     /**
@@ -36,7 +50,7 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
     }
 
     @Override
-    public <B> IterableLike<B> map(final Function1<A, B> function) {
+    public final <B> IterableLike<B> map(final Function1<A, B> function) {
         final Iterator<A> old = iterator();
         return new IterableLikeImpl<B>() {
             @Override
@@ -63,7 +77,7 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
     }
 
     @Override
-    public void foreach(final Function1<A, Void> function) {
+    public final void foreach(final Function1<A, Void> function) {
         Iterator<A> it = iterator();
         while (it.hasNext()) {
             function.apply(it.next());
@@ -71,19 +85,31 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
     }
 
     @Override
-    public Option<A> first(final Function1<A, Boolean> function) {
+    public final Option<A> first(final Function1<A, Boolean> function) {
         Iterator<A> it = iterator();
         while (it.hasNext()) {
             A obj = it.next();
             if (function.apply(obj)) {
-                return Option.Some(obj);
+                return Option.some(obj);
             }
         }
-        return Option.None();
+        return Option.none();
     }
 
     @Override
     public Iterator<A> iterator() {
-        return underlying.iterator();
+        return _underlying.iterator();
+    }
+
+    @Override
+    public final boolean exists(final Function1<A, Boolean> function) {
+        Iterator<A> it = iterator();
+        while (it.hasNext()) {
+            A obj = it.next();
+            if (function.apply(obj)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
