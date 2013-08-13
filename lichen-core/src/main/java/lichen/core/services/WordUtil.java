@@ -7,322 +7,343 @@
  */
 package lichen.core.services;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 
 /**
- * 此文件来自 http://www.scooterframework.com
+ * 针对英文单词的复数转换.
+ * 此文件来自 http://www.scooterframework.com.
  * <p/>
  * <p>Conversion between singular and plural form of a noun word.</p>
  *
  * @author (Fei) John Chen
  */
-public class WordUtil {
+public final class WordUtil {
 
     //单数到复数的映射
-    private static final Map<String, String> resolvedSingle2Plurals = new HashMap<String, String>();
+    private static final Map<String, String> RESOLVED_SINGLE_2_PLURALS =
+            new HashMap<String, String>();
     //已经处理过的复数
-    private static final List<String> resolvedPlurals = new ArrayList<String>();
+    private static final List<String> RESOLVED_PLURALS =
+            new ArrayList<String>();
     //复数到单数的映射
-    private static final Map<String, String> resolvedPlural2Singles = new HashMap<String, String>();
-    private static final List<String> resolvedSingles = new ArrayList<String>();
+    private static final Map<String, String> RESOLVED_PLURAL_2_SINGLES =
+            new HashMap<String, String>();
+    private static final List<String> RESOLVED_SINGLES =
+            new ArrayList<String>();
 
-    public static final Map<String, String> single2plurals = new HashMap<String, String>();
-    public static final List<String> plurals = new ArrayList<String>();
-    public static final Map<String, String> plural2singles = new HashMap<String, String>();
-    public static final List<String> singles = new ArrayList<String>();
+    public static final Map<String, String> SINGLE_2PLURALS =
+            new HashMap<String, String>();
+    public static final List<String> PLURALS =
+            new ArrayList<String>();
+    public static final Map<String, String> PLURAL_2SINGLES =
+            new HashMap<String, String>();
+    public static final List<String> SINGLES =
+            new ArrayList<String>();
 
     static {
         //Irregular plurals:
-        single2plurals.put("child", "children");
-        single2plurals.put("corpus", "corpora");
-        single2plurals.put("foot", "feet");
-        single2plurals.put("goose", "geese");
-        single2plurals.put("louse", "lice");
-        single2plurals.put("man", "men");
-        single2plurals.put("mouse", "mice");
-        single2plurals.put("ox", "oxen");
-        single2plurals.put("person", "people");
-        single2plurals.put("tooth", "teeth");
-        single2plurals.put("woman", "women");
+        SINGLE_2PLURALS.put("child", "children");
+        SINGLE_2PLURALS.put("corpus", "corpora");
+        SINGLE_2PLURALS.put("foot", "feet");
+        SINGLE_2PLURALS.put("goose", "geese");
+        SINGLE_2PLURALS.put("louse", "lice");
+        SINGLE_2PLURALS.put("man", "men");
+        SINGLE_2PLURALS.put("mouse", "mice");
+        SINGLE_2PLURALS.put("ox", "oxen");
+        SINGLE_2PLURALS.put("person", "people");
+        SINGLE_2PLURALS.put("tooth", "teeth");
+        SINGLE_2PLURALS.put("woman", "women");
 
         //Some nouns do not change at all:
-        single2plurals.put("cod", "cod");
-        single2plurals.put("deer", "deer");
-        single2plurals.put("fish", "fish");
-        single2plurals.put("offspring", "offspring");
-        single2plurals.put("perch", "perch");
-        single2plurals.put("sheep", "sheep");
-        single2plurals.put("trout", "trout");
-        single2plurals.put("species", "species");
-        single2plurals.put("series", "series");
+        SINGLE_2PLURALS.put("cod", "cod");
+        SINGLE_2PLURALS.put("deer", "deer");
+        SINGLE_2PLURALS.put("fish", "fish");
+        SINGLE_2PLURALS.put("offspring", "offspring");
+        SINGLE_2PLURALS.put("perch", "perch");
+        SINGLE_2PLURALS.put("sheep", "sheep");
+        SINGLE_2PLURALS.put("trout", "trout");
+        SINGLE_2PLURALS.put("species", "species");
+        SINGLE_2PLURALS.put("series", "series");
 
         //Other nouns that do not change:
-        single2plurals.put("data", "data");
-        single2plurals.put("dice", "dice");
-        single2plurals.put("media", "media");
+        SINGLE_2PLURALS.put("data", "data");
+        SINGLE_2PLURALS.put("dice", "dice");
+        SINGLE_2PLURALS.put("media", "media");
 
-        //Singular ends in -us, plural ends in -i: alumnus/alumni, focus/foci, nucleus/nuclei,
+        //Singular ends in -us, plural ends in
+        // -i: alumnus/alumni, focus/foci, nucleus/nuclei,
         //octopus/octopi, radius/radii, stimulus/stimuli, virus/viri
         //Exceptions to the above
-        single2plurals.put("bus", "buses");
+        SINGLE_2PLURALS.put("bus", "buses");
 
-        //Singular ends in -ex, plural ends in -ices: appendix/appendices, index/indices
-        single2plurals.put("index", "indices");
-        single2plurals.put("vertex", "vertices");
+        //Singular ends in -ex,
+        // plural ends in -ices: appendix/appendices, index/indices
+        SINGLE_2PLURALS.put("index", "indices");
+        SINGLE_2PLURALS.put("vertex", "vertices");
 
-        //These include nouns that are traditionally plural, but are also used for singular forms:
-        single2plurals.put("barracks", "barracks");
-        single2plurals.put("crossroads", "crossroads");
-        single2plurals.put("die", "dice");
-        single2plurals.put("gallows", "gallows");
-        single2plurals.put("headquarters", "headquarters");
-        single2plurals.put("means", "means");
-        single2plurals.put("series", "series");
-        single2plurals.put("species", "species");
+        //These include nouns that are traditionally plural,
+        // but are also used for singular forms:
+        SINGLE_2PLURALS.put("barracks", "barracks");
+        SINGLE_2PLURALS.put("crossroads", "crossroads");
+        SINGLE_2PLURALS.put("die", "dice");
+        SINGLE_2PLURALS.put("gallows", "gallows");
+        SINGLE_2PLURALS.put("headquarters", "headquarters");
+        SINGLE_2PLURALS.put("means", "means");
+        SINGLE_2PLURALS.put("series", "series");
+        SINGLE_2PLURALS.put("species", "species");
 
         //Exception to Rule 6: Some nouns ending in f or fe are made plural
         //by changing f or fe to ves. with the following exceptions:
-        single2plurals.put("chief", "chiefs");
-        single2plurals.put("chef", "chefs");
-        single2plurals.put("dwarf", "dwarfs");
-        single2plurals.put("hoof", "hoofs");
-        single2plurals.put("kerchief", "kerchiefs");
-        single2plurals.put("fife", "fifes");
-        single2plurals.put("proof", "proofs");//m-w.com
-        single2plurals.put("roof", "roofs");
-        single2plurals.put("safe", "safes");
-        single2plurals.put("mischief", "mischiefs");
-        single2plurals.put("grief", "griefs");
+        SINGLE_2PLURALS.put("chief", "chiefs");
+        SINGLE_2PLURALS.put("chef", "chefs");
+        SINGLE_2PLURALS.put("dwarf", "dwarfs");
+        SINGLE_2PLURALS.put("hoof", "hoofs");
+        SINGLE_2PLURALS.put("kerchief", "kerchiefs");
+        SINGLE_2PLURALS.put("fife", "fifes");
+        SINGLE_2PLURALS.put("proof", "proofs"); //m-w.com
+        SINGLE_2PLURALS.put("roof", "roofs");
+        SINGLE_2PLURALS.put("safe", "safes");
+        SINGLE_2PLURALS.put("mischief", "mischiefs");
+        SINGLE_2PLURALS.put("grief", "griefs");
 
-        //Rule 7b: All musical terms ending in -o have plurals ending in just -s.
-        single2plurals.put("cello", "cellos");
-        single2plurals.put("photo", "photos");
-        single2plurals.put("solo", "solos");
-        single2plurals.put("soprano", "sopranos");
-        single2plurals.put("studio", "studios");
+        //Rule 7b: All musical terms
+        // ending in -o have plurals ending in just -s.
+        SINGLE_2PLURALS.put("cello", "cellos");
+        SINGLE_2PLURALS.put("photo", "photos");
+        SINGLE_2PLURALS.put("solo", "solos");
+        SINGLE_2PLURALS.put("soprano", "sopranos");
+        SINGLE_2PLURALS.put("studio", "studios");
 
         //Exception to Rule 7: Most nouns ending in o preceded by a consonant
         //is formed into a plural by adding es with the following exceptions:
-        single2plurals.put("canto", "cantos");
-        single2plurals.put("lasso", "lassos");
-        single2plurals.put("halo", "halos");
-        single2plurals.put("memento", "mementos");
-        single2plurals.put("photo", "photos");
-        single2plurals.put("sirocco", "siroccos");
+        SINGLE_2PLURALS.put("canto", "cantos");
+        SINGLE_2PLURALS.put("lasso", "lassos");
+        SINGLE_2PLURALS.put("halo", "halos");
+        SINGLE_2PLURALS.put("memento", "mementos");
+        SINGLE_2PLURALS.put("photo", "photos");
+        SINGLE_2PLURALS.put("sirocco", "siroccos");
 
         //Rule 7c: Plural forms of words ending in -o (-os):
-        single2plurals.put("albino", "albinos");
-        single2plurals.put("armadillo", "armadillos");
-        single2plurals.put("auto", "autos");
-        single2plurals.put("bravo", "bravos");
-        single2plurals.put("bronco", "broncos");
-        single2plurals.put("canto", "cantos");
-        single2plurals.put("casino", "casinos");
-        single2plurals.put("combo", "combos");
-        single2plurals.put("gazebo", "gazebos");
-        single2plurals.put("inferno", "infernos");
-        single2plurals.put("kangaroo", "kangaroos");
-        single2plurals.put("kilo", "kilos");
-        single2plurals.put("kimono", "kimonos");
-        single2plurals.put("logo", "logos");
-        single2plurals.put("maraschino", "maraschinos");
-        single2plurals.put("memo", "memos");
-        single2plurals.put("photo", "photos");
-        single2plurals.put("pimento", "pimentos");
-        single2plurals.put("poncho", "ponchos");
-        single2plurals.put("pro", "pros");
-        single2plurals.put("sombrero", "sombreros");
-        single2plurals.put("taco", "tacos");
-        single2plurals.put("tattoo", "tattoos");
-        single2plurals.put("torso", "torsos");
-        single2plurals.put("tobacco", "tobaccos");
-        single2plurals.put("typo", "typos");
+        SINGLE_2PLURALS.put("albino", "albinos");
+        SINGLE_2PLURALS.put("armadillo", "armadillos");
+        SINGLE_2PLURALS.put("auto", "autos");
+        SINGLE_2PLURALS.put("bravo", "bravos");
+        SINGLE_2PLURALS.put("bronco", "broncos");
+        SINGLE_2PLURALS.put("canto", "cantos");
+        SINGLE_2PLURALS.put("casino", "casinos");
+        SINGLE_2PLURALS.put("combo", "combos");
+        SINGLE_2PLURALS.put("gazebo", "gazebos");
+        SINGLE_2PLURALS.put("inferno", "infernos");
+        SINGLE_2PLURALS.put("kangaroo", "kangaroos");
+        SINGLE_2PLURALS.put("kilo", "kilos");
+        SINGLE_2PLURALS.put("kimono", "kimonos");
+        SINGLE_2PLURALS.put("logo", "logos");
+        SINGLE_2PLURALS.put("maraschino", "maraschinos");
+        SINGLE_2PLURALS.put("memo", "memos");
+        SINGLE_2PLURALS.put("photo", "photos");
+        SINGLE_2PLURALS.put("pimento", "pimentos");
+        SINGLE_2PLURALS.put("poncho", "ponchos");
+        SINGLE_2PLURALS.put("pro", "pros");
+        SINGLE_2PLURALS.put("sombrero", "sombreros");
+        SINGLE_2PLURALS.put("taco", "tacos");
+        SINGLE_2PLURALS.put("tattoo", "tattoos");
+        SINGLE_2PLURALS.put("torso", "torsos");
+        SINGLE_2PLURALS.put("tobacco", "tobaccos");
+        SINGLE_2PLURALS.put("typo", "typos");
 
         //Rule 7c: Plural forms of words ending in -o (-oes):
-        single2plurals.put("echo", "echoes");
-        single2plurals.put("embargo", "embargoes");
-        single2plurals.put("hero", "heroes");
-        single2plurals.put("potato", "potatoes");
-        single2plurals.put("tomato", "tomatoes");
-        single2plurals.put("torpedo", "torpedoes");
-        single2plurals.put("veto", "vetoes");
+        SINGLE_2PLURALS.put("echo", "echoes");
+        SINGLE_2PLURALS.put("embargo", "embargoes");
+        SINGLE_2PLURALS.put("hero", "heroes");
+        SINGLE_2PLURALS.put("potato", "potatoes");
+        SINGLE_2PLURALS.put("tomato", "tomatoes");
+        SINGLE_2PLURALS.put("torpedo", "torpedoes");
+        SINGLE_2PLURALS.put("veto", "vetoes");
 
         //Rule 7c: Plural forms of words ending in -o (-os or -oes):
-        single2plurals.put("avocado", "avocados");
-        single2plurals.put("buffalo", "buffaloes");
-        single2plurals.put("cargo", "cargoes");
-        single2plurals.put("desperado", "desperadoes");
-        single2plurals.put("dodo", "dodoes");
-        single2plurals.put("domino", "dominoes");
-        single2plurals.put("ghetto", "ghettos");
-        single2plurals.put("grotto", "grottoes");
-        single2plurals.put("hobo", "hoboes");
-        single2plurals.put("innuendo", "innuendoes");
-        single2plurals.put("lasso", "lassos");
-        single2plurals.put("mango", "mangoes");
-        single2plurals.put("mosquito", "mosquitoes");
-        single2plurals.put("motto", "mottoes");
-        single2plurals.put("mulatto", "mulattos");
-        single2plurals.put("no", "noes");
-        single2plurals.put("peccadillo", "peccadilloes");
-        single2plurals.put("tornado", "tornadoes");
-        single2plurals.put("volcano", "volcanoes");
-        single2plurals.put("zero", "zeros");
+        SINGLE_2PLURALS.put("avocado", "avocados");
+        SINGLE_2PLURALS.put("buffalo", "buffaloes");
+        SINGLE_2PLURALS.put("cargo", "cargoes");
+        SINGLE_2PLURALS.put("desperado", "desperadoes");
+        SINGLE_2PLURALS.put("dodo", "dodoes");
+        SINGLE_2PLURALS.put("domino", "dominoes");
+        SINGLE_2PLURALS.put("ghetto", "ghettos");
+        SINGLE_2PLURALS.put("grotto", "grottoes");
+        SINGLE_2PLURALS.put("hobo", "hoboes");
+        SINGLE_2PLURALS.put("innuendo", "innuendoes");
+        SINGLE_2PLURALS.put("lasso", "lassos");
+        SINGLE_2PLURALS.put("mango", "mangoes");
+        SINGLE_2PLURALS.put("mosquito", "mosquitoes");
+        SINGLE_2PLURALS.put("motto", "mottoes");
+        SINGLE_2PLURALS.put("mulatto", "mulattos");
+        SINGLE_2PLURALS.put("no", "noes");
+        SINGLE_2PLURALS.put("peccadillo", "peccadilloes");
+        SINGLE_2PLURALS.put("tornado", "tornadoes");
+        SINGLE_2PLURALS.put("volcano", "volcanoes");
+        SINGLE_2PLURALS.put("zero", "zeros");
 
         //others
-        single2plurals.put("forum", "forums");
+        SINGLE_2PLURALS.put("forum", "forums");
 
         //Things that come in pairs
-        plurals.add("binoculars");
-        plurals.add("forceps");
-        plurals.add("jeans");
-        plurals.add("glasses");
-        plurals.add("pajamas");
-        plurals.add("pants");
-        plurals.add("scissors");
-        plurals.add("shorts");
-        plurals.add("tongs");
-        plurals.add("trousers");
-        plurals.add("tweezers");
+        PLURALS.add("binoculars");
+        PLURALS.add("forceps");
+        PLURALS.add("jeans");
+        PLURALS.add("glasses");
+        PLURALS.add("pajamas");
+        PLURALS.add("pants");
+        PLURALS.add("scissors");
+        PLURALS.add("shorts");
+        PLURALS.add("tongs");
+        PLURALS.add("trousers");
+        PLURALS.add("tweezers");
 
         //Nouns that end in -s but have no singular (aggregate nouns)
-        plurals.add("accommodations");
-        plurals.add("amends");
-        plurals.add("archives");
-        plurals.add("arms");
-        plurals.add("bellows");
-        plurals.add("bowels");
-        plurals.add("brains");
-        plurals.add("clothes");
-        plurals.add("communications");
-        plurals.add("congratulations");
-        plurals.add("contents");
-        plurals.add("dregs");
-        plurals.add("goods");
-        plurals.add("measles");
-        plurals.add("mumps");
-        plurals.add("oats");
-        plurals.add("pinchers");
-        plurals.add("shears");
-        plurals.add("snuffers");
-        plurals.add("stairs");
-        plurals.add("thanks");
-        plurals.add("vespers");
-        plurals.add("victuals");
+        PLURALS.add("accommodations");
+        PLURALS.add("amends");
+        PLURALS.add("archives");
+        PLURALS.add("arms");
+        PLURALS.add("bellows");
+        PLURALS.add("bowels");
+        PLURALS.add("brains");
+        PLURALS.add("clothes");
+        PLURALS.add("communications");
+        PLURALS.add("congratulations");
+        PLURALS.add("contents");
+        PLURALS.add("dregs");
+        PLURALS.add("goods");
+        PLURALS.add("measles");
+        PLURALS.add("mumps");
+        PLURALS.add("oats");
+        PLURALS.add("pinchers");
+        PLURALS.add("shears");
+        PLURALS.add("snuffers");
+        PLURALS.add("stairs");
+        PLURALS.add("thanks");
+        PLURALS.add("vespers");
+        PLURALS.add("victuals");
 
         //Nouns that are plural but do not end in -s
-        plurals.add("children");
-        plurals.add("cattle");
-        plurals.add("corpora");
-        plurals.add("data");
-        plurals.add("men");
-        plurals.add("people");
-        plurals.add("police");
-        plurals.add("women");
+        PLURALS.add("children");
+        PLURALS.add("cattle");
+        PLURALS.add("corpora");
+        PLURALS.add("data");
+        PLURALS.add("men");
+        PLURALS.add("people");
+        PLURALS.add("police");
+        PLURALS.add("women");
 
         //Nouns that are always singular -- uncountable
-        singles.add("cooper");
-        singles.add("corn");
-        singles.add("cotton");
-        singles.add("gold");
-        singles.add("information");
-        singles.add("money");
-        singles.add("news");
-        singles.add("rice");
-        singles.add("silver");
-        singles.add("sugar");
-        singles.add("wheat");
+        SINGLES.add("cooper");
+        SINGLES.add("corn");
+        SINGLES.add("cotton");
+        SINGLES.add("gold");
+        SINGLES.add("information");
+        SINGLES.add("money");
+        SINGLES.add("news");
+        SINGLES.add("rice");
+        SINGLES.add("silver");
+        SINGLES.add("sugar");
+        SINGLES.add("wheat");
 
-        //plural2singles.put("data", "data");
-        //plural2singles.put("media", "media");
-        plural2singles.put("dice", "dice");
-        plural2singles.put("indices", "index");
-        plural2singles.put("vertices", "vertex");
-        plural2singles.put("movies", "movie");
-        plural2singles.put("viri", "virus");
+        //PLURAL_2SINGLES.put("data", "data");
+        //PLURAL_2SINGLES.put("media", "media");
+        PLURAL_2SINGLES.put("dice", "dice");
+        PLURAL_2SINGLES.put("indices", "index");
+        PLURAL_2SINGLES.put("vertices", "vertex");
+        PLURAL_2SINGLES.put("movies", "movie");
+        PLURAL_2SINGLES.put("viri", "virus");
 
-        plural2singles.put("axes", "axis");
-        plural2singles.put("crises", "crisis");
-        plural2singles.put("analyses", "analysis");
-        plural2singles.put("diagnoses", "diagnosis");
-        plural2singles.put("synopses", "synopsis");
-        plural2singles.put("theses", "thesis");
-        plural2singles.put("moves", "move");
-        plural2singles.put("caves", "cave");
-        plural2singles.put("toes", "toe");
+        PLURAL_2SINGLES.put("axes", "axis");
+        PLURAL_2SINGLES.put("crises", "crisis");
+        PLURAL_2SINGLES.put("analyses", "analysis");
+        PLURAL_2SINGLES.put("diagnoses", "diagnosis");
+        PLURAL_2SINGLES.put("synopses", "synopsis");
+        PLURAL_2SINGLES.put("theses", "thesis");
+        PLURAL_2SINGLES.put("moves", "move");
+        PLURAL_2SINGLES.put("caves", "cave");
+        PLURAL_2SINGLES.put("toes", "toe");
 
-        //merge plural2singles with single2plurals
-        for (Map.Entry<String, String> entry : single2plurals.entrySet()) {
+        //merge PLURAL_2SINGLES with SINGLE_2PLURALS
+        for (Map.Entry<String, String> entry : SINGLE_2PLURALS.entrySet()) {
             String sk = entry.getKey();
             String sv = entry.getValue();
-            String pv = plural2singles.get(sv);
+            String pv = PLURAL_2SINGLES.get(sv);
             if (pv == null) {
-                plural2singles.put(sv, sk);
+                PLURAL_2SINGLES.put(sv, sk);
             }
         }
 
-        //merge single2plurals with plural2singles
-        for (Map.Entry<String, String> entry : plural2singles.entrySet()) {
+        //merge SINGLE_2PLURALS with PLURAL_2SINGLES
+        for (Map.Entry<String, String> entry : PLURAL_2SINGLES.entrySet()) {
             String pk = entry.getKey();
             String pv = entry.getValue();
-            String sv = single2plurals.get(pv);
+            String sv = SINGLE_2PLURALS.get(pv);
             if (sv == null) {
-                single2plurals.put(pv, pk);
+                SINGLE_2PLURALS.put(pv, pk);
             }
         }
     }
 
     /**
-     * 把给定的单词转换为复数
+     * 把给定的单词转换为复数.
      *
      * @param word 待转换的单词
      * @return 复数字符串
      */
     public static String pluralize(String word) {
-        if (word == null || "".equals(word)) return word;
+        if (word == null || "".equals(word)) {
+            return word;
+        }
 
         //先判断是否处理过了
-        String plform = resolvedSingle2Plurals.get(word);
-        if (plform == null && (resolvedPlurals.contains(word) || resolvedPlural2Singles.containsKey(word))) {
+        String plform = RESOLVED_SINGLE_2_PLURALS.get(word);
+        if (plform == null
+                && (RESOLVED_PLURALS.contains(word)
+                        || RESOLVED_PLURAL_2_SINGLES.containsKey(word))) {
             plform = word;
         }
         if (plform != null) return plform;
 
         String tmp = word.toLowerCase();
-        plform = single2plurals.get(tmp);
-        if (plform == null && (plurals.contains(tmp) || singles.contains(tmp) || plural2singles.containsKey(tmp))) {
+        plform = SINGLE_2PLURALS.get(tmp);
+        if (plform == null && (PLURALS.contains(tmp) || SINGLES.contains(tmp) || PLURAL_2SINGLES.containsKey(tmp))) {
             plform = tmp;
         }
 
-        if (plform != null) {//映射里面已经得到
+        if (plform != null) { //映射里面已经得到
         }
-        //Rule #5: For words that end in -is, change the -is to -es to make the plural form
         else if (tmp.endsWith("is")) {
+            //Rule #5: For words that end in -is, change the -is to -es to make the plural form
             plform = replaceLast(tmp, "is", "es");
         }
-        //Singular ends in -ix, plural ends in -ices: appendix/appendices, index/indices
         else if (tmp.endsWith("ix")) {
+            //Singular ends in -ix, plural ends in -ices: appendix/appendices, index/indices
             plform = replaceLast(tmp, "ix", "ices");
         }
-        //Singular ends in -us, plural ends in -i: alumnus/alumni, focus/foci, nucleus/nuclei,
-        //octopus/octopi, radius/radii, stimulus/stimuli, virus/viri
         else if (tmp.endsWith("us")) {
+            //Singular ends in -us, plural ends in -i: alumnus/alumni, focus/foci, nucleus/nuclei,
+            //octopus/octopi, radius/radii, stimulus/stimuli, virus/viri
             plform = replaceLast(tmp, "us", "i");
         }
-        //Rule #2: For words that end in a "hissing" sound (-s, -z, -x, -ch, -sh), add an -es to form the plural.
-        //Note: I removed tmp.endsWith("s") || as this cause "posts"->"postses".
-        else if (!tmp.endsWith("es") && (tmp.endsWith("z") ||
-                tmp.endsWith("x") || tmp.endsWith("ch") || tmp.endsWith("sh"))) {
+        else if (!tmp.endsWith("es") && (tmp.endsWith("z")
+                || tmp.endsWith("x") || tmp.endsWith("ch") || tmp.endsWith("sh"))) {
+            //Rule #2: For words that end in a "hissing" sound (-s, -z, -x, -ch, -sh), add an -es to form the plural.
+            //Note: I removed tmp.endsWith("s") || as this cause "posts"->"postses".
             plform = tmp + "es";
         } else if (tmp.endsWith("y")) {
             //Rule #3: If the word ends in a vowel plus -y (-ay, -ey, -iy, -oy, -uy), add an -s to the word.
-            if (tmp.endsWith("ay") || tmp.endsWith("ey") || tmp.endsWith("iy") ||
-                    tmp.endsWith("oy") || tmp.endsWith("uy")) {
+            if (tmp.endsWith("ay") || tmp.endsWith("ey") || tmp.endsWith("iy")
+                    || tmp.endsWith("oy") || tmp.endsWith("uy")) {
                 plform = word + "s";
             }
-            //Rule #4: If the word ends in a consonant plus -y, change the -y into -ie and add an -s to form the plural.
             else {
+                //Rule #4: If the word ends in a consonant plus -y, change the -y into -ie and add an -s to form the plural.
                 plform = replaceLast(tmp, "y", "ies");
             }
         }
@@ -334,47 +355,49 @@ public class WordUtil {
         }
         //Rule #7: The plurals of words ending in -o are formed by either adding -s or by adding -es
         else if (tmp.endsWith("o")) {
-            //All words that end in a vowel plus -o (-ao, -eo, -io, -oo, -uo) have plurals that end in just -s:
-            if (tmp.endsWith("ao") || tmp.endsWith("eo") || tmp.endsWith("io") ||
-                    tmp.endsWith("oo") || tmp.endsWith("uo")) {
+            //All words that end in a vowel plus -o (-ao, -eo, -io, -oo, -uo)
+            // have plurals that end in just -s:
+            if (tmp.endsWith("ao")
+                    || tmp.endsWith("eo") || tmp.endsWith("io")
+                    || tmp.endsWith("oo") || tmp.endsWith("uo")) {
                 plform = word + "s";
             }
-            //All musical terms ending in -o have plurals ending in just -s.
-            //Most others by adding -es with exceptions
             else {
+                //All musical terms ending in -o have plurals ending in just -s.
+                //Most others by adding -es with exceptions
                 plform = word + "es";
             }
         }
-        //Singular ends in -um, plural ends in -a: datum/data, curriculum/curricula
         else if (tmp.endsWith("um")) {
+            //Singular ends in -um, plural ends in -a: datum/data, curriculum/curricula
             plform = replaceLast(tmp, "um", "a");
         }
-        //Singular ends in -on, plural ends in -a: criterion/criteria, phenomenon/phenomena
         else if (tmp.endsWith("on") && !tmp.endsWith("ation")) {
+            //Singular ends in -on, plural ends in -a: criterion/criteria, phenomenon/phenomena
             plform = replaceLast(tmp, "on", "a");
         }
-        //Singular ends in -a, plural ends in -ae: alumna/alumnae, formula/formulae, antenna/antennae
         else if (tmp.endsWith("a")) {
+            //Singular ends in -a, plural ends in -ae: alumna/alumnae, formula/formulae, antenna/antennae
             plform = replaceLast(tmp, "a", "ae");
         }
-        //Singular ends in -eau, plural ends in -eaux: bureau/bureaux, beau/beaux
         else if (tmp.endsWith("eau")) {
+            //Singular ends in -eau, plural ends in -eaux: bureau/bureaux, beau/beaux
             plform = replaceLast(tmp, "eau", "eaux");
         }
-        //special
         else if (tmp.endsWith("man")) {
+            //special
             plform = replaceLast(tmp, "man", "men");
         }
-        //Rule #1: Add an -s to form the plural of most words.
         else if (!tmp.endsWith("s")) {
+            //Rule #1: Add an -s to form the plural of most words.
             plform = word + "s";
         }
-        //Rule #8: The plurals of single capital letters, acronyms, and Arabic numerals
-        //(1,2,3,...) take an -s WITHOUT an apostrophe:
         else if (word.toUpperCase().equals(word)) {
+            //Rule #8: The plurals of single capital letters, acronyms, and Arabic numerals
+            //(1,2,3,...) take an -s WITHOUT an apostrophe:
             plform = word + "s";
         } else {
-            resolvedPlurals.add(word);
+            RESOLVED_PLURALS.add(word);
             return word;
         }
 
@@ -395,8 +418,8 @@ public class WordUtil {
 
         if (caseChanged) plform = new String(pChars);
         if (!plform.equalsIgnoreCase(word)) {
-            resolvedSingle2Plurals.put(word, plform);
-            resolvedPlural2Singles.put(plform, word);
+            RESOLVED_SINGLE_2_PLURALS.put(word, plform);
+            RESOLVED_PLURAL_2_SINGLES.put(plform, word);
         }
 
         return plform;
@@ -412,15 +435,15 @@ public class WordUtil {
     public static String singularize(String word) {
         if (word == null || "".equals(word)) return word;
 
-        String sgform = resolvedPlural2Singles.get(word);
-        if (sgform == null && (resolvedSingles.contains(word) || resolvedSingle2Plurals.containsKey(word))) {
+        String sgform = RESOLVED_PLURAL_2_SINGLES.get(word);
+        if (sgform == null && (RESOLVED_SINGLES.contains(word) || RESOLVED_SINGLE_2_PLURALS.containsKey(word))) {
             sgform = word;
         }
         if (sgform != null) return sgform;
 
         String tmp = word.toLowerCase();
-        sgform = plural2singles.get(tmp);
-        if (sgform == null && (plurals.contains(tmp) || singles.contains(tmp) || single2plurals.containsKey(tmp))) {
+        sgform = PLURAL_2SINGLES.get(tmp);
+        if (sgform == null && (PLURALS.contains(tmp) || SINGLES.contains(tmp) || SINGLE_2PLURALS.containsKey(tmp))) {
             sgform = tmp;
         }
 
@@ -461,7 +484,7 @@ public class WordUtil {
             sgform = replaceLast(tmp, "s", "");
         } else {
             sgform = tmp;
-            resolvedSingles.add(word);
+            RESOLVED_SINGLES.add(word);
             return word;
         }
 
@@ -482,8 +505,8 @@ public class WordUtil {
 
         if (caseChanged) sgform = new String(sChars);
         if (!sgform.equalsIgnoreCase(word)) {
-            resolvedPlural2Singles.put(word, sgform);
-            resolvedSingle2Plurals.put(sgform, word);
+            RESOLVED_PLURAL_2_SINGLES.put(word, sgform);
+            RESOLVED_SINGLE_2_PLURALS.put(sgform, word);
         }
 
         return sgform;
@@ -515,8 +538,8 @@ public class WordUtil {
      * @param plural plural form of the word
      */
     public static void addPlural(String single, String plural) {
-        resolvedSingle2Plurals.put(single, plural);
-        resolvedPlural2Singles.put(plural, single);
+        RESOLVED_SINGLE_2_PLURALS.put(single, plural);
+        RESOLVED_PLURAL_2_SINGLES.put(plural, single);
     }
 
     /**

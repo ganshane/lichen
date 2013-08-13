@@ -23,7 +23,7 @@ public class WordUtilTest {
     
     @Test
     public void test_map_plural2singles() {
-    	for (Map.Entry<String, String> entry : WordUtil.plural2singles.entrySet()) {
+    	for (Map.Entry<String, String> entry : WordUtil.PLURAL_2SINGLES.entrySet()) {
     		String pword = entry.getKey();
     		String sword = entry.getValue();
     		String result = WordUtil.pluralize(sword);

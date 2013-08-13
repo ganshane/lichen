@@ -77,10 +77,10 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
         while (it.hasNext()) {
             A obj = it.next();
             if (function.apply(obj)) {
-                return Option.Some(obj);
+                return Option.some(obj);
             }
         }
-        return Option.None();
+        return Option.none();
     }
 
     @Override

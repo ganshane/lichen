@@ -8,13 +8,13 @@ package lichen.core.services;
 public enum LichenCoreErrorCode implements ErrorCode {
     UNSUPPORT_REMOVE_ITERATOR(1001);
 
-    private final int number;
+    private final int _number;
 
     private LichenCoreErrorCode(final int number) {
-        this.number = number;
+        this._number = number;
     }
 
     public int getNumber() {
-        return number;
+        return _number;
     }
 }
