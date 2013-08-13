@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * 抽象class的实现类
+ * 抽象class的实现类.
  * active record的基础实现类
  * @author jcai
  * @param <PKValue> 对应的主键值
