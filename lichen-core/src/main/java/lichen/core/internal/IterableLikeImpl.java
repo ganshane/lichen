@@ -17,15 +17,16 @@ import java.util.Iterator;
  */
 public class IterableLikeImpl<A> implements IterableLike<A> {
 
-    //underlying collection
-    private final Collection<A> underlying;
+    //_underlying collection
+    private final Collection<A> _underlying;
 
     /**
      * 通过给定的集合来创建一个{@link IterableLike}对象
+     *
      * @param collection 待操作的集合对象
      */
     public IterableLikeImpl(final Collection<A> collection) {
-        this.underlying = collection;
+        this._underlying = collection;
     }
 
     /**
@@ -36,7 +37,7 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
     }
 
     @Override
-    public <B> IterableLike<B> map(final Function1<A, B> function) {
+    public final <B> IterableLike<B> map(final Function1<A, B> function) {
         final Iterator<A> old = iterator();
         return new IterableLikeImpl<B>() {
             @Override
@@ -63,7 +64,7 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
     }
 
     @Override
-    public void foreach(final Function1<A, Void> function) {
+    public final void foreach(final Function1<A, Void> function) {
         Iterator<A> it = iterator();
         while (it.hasNext()) {
             function.apply(it.next());
@@ -71,7 +72,7 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
     }
 
     @Override
-    public Option<A> first(final Function1<A, Boolean> function) {
+    public final Option<A> first(final Function1<A, Boolean> function) {
         Iterator<A> it = iterator();
         while (it.hasNext()) {
             A obj = it.next();
@@ -84,18 +85,18 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
 
     @Override
     public Iterator<A> iterator() {
-        return underlying.iterator();
+        return _underlying.iterator();
     }
-    
-	@Override
-	public boolean exists(Function1<A, Boolean> function) {
-		Iterator<A> it = iterator();
-		while (it.hasNext()) {
-			A obj = it.next();
-			if (function.apply(obj)) {
-				return true;
-			}
-		}
-		return false;
-	}
+
+    @Override
+    public final boolean exists(final Function1<A, Boolean> function) {
+        Iterator<A> it = iterator();
+        while (it.hasNext()) {
+            A obj = it.next();
+            if (function.apply(obj)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
