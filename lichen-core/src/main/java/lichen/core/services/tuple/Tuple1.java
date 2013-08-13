@@ -5,13 +5,13 @@ package lichen.core.services.tuple;
 * @author jcai
 */
 public class Tuple1<T1> {
-    private T1 value1;
+    private T1 _value1;
 
-    public Tuple1(T1 value1) {
-        this.value1 = value1;
+    public Tuple1(final T1 value1) {
+        this._value1 = value1;
     }
 
-    public T1 _1() {
-        return value1;
+    public final T1 _1() {
+        return _value1;
     }
 }

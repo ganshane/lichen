@@ -5,19 +5,19 @@ package lichen.core.services.tuple;
 * @author jcai
 */
 public class Tuple2<T1, T2> {
-    private T1 value1;
-    private T2 value2;
+    private T1 _value1;
+    private T2 _value2;
 
-    public Tuple2(T1 value1, T2 value2) {
-        this.value1 = value1;
-        this.value2 = value2;
+    public Tuple2(final T1 value1, final T2 value2) {
+        this._value1 = value1;
+        this._value2 = value2;
     }
 
-    public T1 _1() {
-        return value1;
+    public final T1 _1() {
+        return _value1;
     }
 
-    public T2 _2() {
-        return value2;
+    public final T2 _2() {
+        return _value2;
     }
 }
