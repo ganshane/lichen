@@ -16,9 +16,9 @@ public interface FieldType<T> {
      * @param ps     PreparedStatement对象
      * @param index  索引序列
      * @param object 对应的值
-     * @throws SQLException 发生数据库异常
+     * @throws SQLException 发生数据库异常.
      */
-    abstract void set(PreparedStatement ps, int index, T object) throws SQLException;
+    void set(PreparedStatement ps, int index, T object) throws SQLException;
 
     /**
      * 从数据库中得到某一个值.
@@ -28,5 +28,5 @@ public interface FieldType<T> {
      * @return 对象值
      * @throws SQLException 发生数据库异常
      */
-    abstract T get(ResultSet rs, int index) throws SQLException;
+    T get(ResultSet rs, int index) throws SQLException;
 }
