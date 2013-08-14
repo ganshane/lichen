@@ -20,6 +20,7 @@ import lichen.core.services.ErrorCode;
  * @author jcai
  */
 public enum ActiveRecordErrorCode implements ErrorCode {
+    /** 2001 列不存在 **/
     COLUMN_NOT_EXISTS(2001);
 
     private final int _number;

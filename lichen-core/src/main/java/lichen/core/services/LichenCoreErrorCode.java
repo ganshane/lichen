@@ -19,6 +19,7 @@ package lichen.core.services;
  * @author jcai
  */
 public enum LichenCoreErrorCode implements ErrorCode {
+    /** 1001 **/
     UNSUPPORT_REMOVE_ITERATOR(1001);
 
     private final int _number;
