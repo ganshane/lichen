@@ -19,9 +19,9 @@ package lichen.core.services;
  * @author jcai
  */
 public enum LichenCoreErrorCode implements ErrorCode {
-    /** 1001 不支持从iterator中删除元素 **/
+    /** 1001 不支持从iterator中删除元素. **/
     UNSUPPORT_REMOVE_ITERATOR(1001),
-    /** 1002 option元素为空 **/
+    /** 1002 option元素为空. **/
     OPTION_IS_NONE(1002);
 
     private final int _number;
