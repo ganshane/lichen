@@ -1,3 +1,16 @@
+// Copyright 2013 the original author or authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package lichen.jdbc.internal;
 
 import lichen.core.services.LichenException;
@@ -21,9 +34,9 @@ import java.io.PrintWriter;
 public class SimpleDataSource implements DataSource {
 
    public SimpleDataSource(String driverClassName, String url, String username, String password) {
-      this.url = url;
-      this.username = username;
-      this.password = password;
+      this._url = url;
+      this._username = username;
+      this._password = password;
 
       try {
          Class.forName(driverClassName.trim());
@@ -32,45 +45,45 @@ public class SimpleDataSource implements DataSource {
       }
    }
 
-   private String url;
+   private String _url;
 
-	private String username;
+   private String _username;
 
-	private String password;
+   private String _password;
 
 
    public String getUrl() {
-      return url;
+      return _url;
    }
 
    public void setUrl(String url) {
-      this.url = url;
+      this._url = url;
    }
 
    public String getUsername() {
-      return username;
+      return _username;
    }
 
    public void setUsername(String username) {
-      this.username = username;
+      this._username = username;
    }
 
    public String getPassword() {
-      return password;
+      return _password;
    }
 
    public void setPassword(String password) {
-      this.password = password;
+      this._password = password;
    }
 
    public Connection getConnection() throws SQLException {
-      return DriverManager.getConnection(url, username, password);
+      return DriverManager.getConnection(_url, _username, _password);
    }
 
    public Connection getConnection(String username, String password) throws SQLException {
-      this.username = username;
-      this.password = password;
-      return DriverManager.getConnection(url, username, password);
+      this._username = username;
+      this._password = password;
+      return DriverManager.getConnection(_url, _username, _password);
    }
 
    public PrintWriter getLogWriter() throws SQLException {
@@ -90,14 +103,14 @@ public class SimpleDataSource implements DataSource {
 
    @SuppressWarnings("unchecked")
    public Object unwrap(Class iface) throws SQLException {
-		if (!DataSource.class.equals(iface)) {
-			throw new SQLException("DataSource of type [" + getClass().getName() +
-					"] can only be unwrapped as [javax.sql.DataSource], not as [" + iface.getName());
-		}
-		return this;
-	}
+        if (!DataSource.class.equals(iface)) {
+            throw new SQLException("DataSource of type [" + getClass().getName()
+                    + "] can only be unwrapped as [javax.sql.DataSource], not as [" + iface.getName());
+        }
+        return this;
+    }
 
-	public boolean isWrapperFor(Class iface) throws SQLException {
-		return DataSource.class.equals(iface);
-	}
+    public boolean isWrapperFor(Class iface) throws SQLException {
+        return DataSource.class.equals(iface);
+    }
 }

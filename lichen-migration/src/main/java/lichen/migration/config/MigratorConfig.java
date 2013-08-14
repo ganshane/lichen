@@ -1,5 +1,16 @@
 // Copyright 2013 the original author or authors.
-// site: http://lichen.ganshane.com
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 package lichen.migration.config;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -36,66 +47,4 @@ public class MigratorConfig {
      */
     @XmlElement(name = "package")
     public String migratePackage;
-    /**
-     * @return the driverClassName
-     */
-    public final String getDriverClassName() {
-        return driverClassName;
-    }
-    /**
-     * @param newDriverClassName the driverClassName to set
-     */
-    public final void setDriverClassName(final String newDriverClassName) {
-        this.driverClassName = newDriverClassName;
-    }
-    /**
-     * @return the username
-     */
-    public final String getUsername() {
-        return username;
-    }
-
-    /**
-     * @param newUsername
-     *            the username to set
-     */
-    public final void setUsername(final String newUsername) {
-        this.username = newUsername;
-    }
-    /**
-     * @return the password
-     */
-    public final String getPassword() {
-        return password;
-    }
-    /**
-     * @param newpassword the password to set
-     */
-    public final void setPassword(final String newpassword) {
-        this.password = newpassword;
-    }
-    /**
-     * @return the url
-     */
-    public final String getUrl() {
-        return url;
-    }
-    /**
-     * @param newurl the url to set
-     */
-    public final void setUrl(final String newurl) {
-        this.url = newurl;
-    }
-    /**
-     * @return the migratePackage
-     */
-    public final String getMigratePackage() {
-        return migratePackage;
-    }
-    /**
-     * @param newmigratePackage the migratePackage to set
-     */
-    public final void setMigratePackage(final String newmigratePackage) {
-        this.migratePackage = newmigratePackage;
-    }
 }
