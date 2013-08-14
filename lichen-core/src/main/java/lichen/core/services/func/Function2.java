@@ -18,7 +18,7 @@ package lichen.core.services.func;
  *
  * @author jcai
  */
-public interface Function2<A, B, R> {
+public interface Function2<T1, T2, R> {
     /**
      * 针对传入的结果进行处理,返回处理后的结果.
      *
@@ -26,5 +26,5 @@ public interface Function2<A, B, R> {
      * @param value2 值对象
      * @return 处理后的结果
      */
-    R apply(A value1, B value2);
+    R apply(T1 value1, T2 value2);
 }

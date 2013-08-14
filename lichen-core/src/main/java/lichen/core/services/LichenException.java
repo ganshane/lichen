@@ -24,7 +24,7 @@ import java.util.TreeMap;
  * <p>
  * 所有异常消息均可以使用本异常类进行实现,
  * <ul>
- * <li>定义异常代码,{@link LichenCoreErrorCode}</li>
+ * <li>定义异常代码,譬如：{@link LichenCoreErrorCode}</li>
  * <li>throw new LichenException(LichenCoreErrorCode.UNSUPPORT_REMOVE_ITERATOR); </li>
  * <li>还可以设置一些需要观察的值，譬如：<br/>
  * <code>throw new LichenException(LichenCoreErrorCode.UNSUPPORT_REMOVE_ITERATOR).
