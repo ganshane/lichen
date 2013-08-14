@@ -29,7 +29,6 @@ import lichen.ar.internal.types.SmallIntType;
 import lichen.ar.internal.types.TimeStampType;
 import lichen.ar.internal.types.TimeType;
 import lichen.ar.internal.types.TinyIntType;
-import lichen.ar.internal.types.VarbinaryType;
 import lichen.ar.internal.types.VarcharType;
 
 /**
@@ -66,8 +65,6 @@ public final class LichenArTypes {
     static final TimeStampType TIMESTAMP = new TimeStampType();
     /** 处理 {@link java.sql.Types#VARCHAR} 数据对象. **/
     static final VarcharType VARCHAR = new VarcharType();
-    /** 处理 {@link java.sql.Types#VARBINARY} 数据对象. **/
-    static final VarbinaryType VARBINARY = new VarbinaryType();
     /** 处理 {@link java.sql.Types#NUMERIC} 数据对象. **/
     static final NumericType NUMERIC = new NumericType();
     /** 处理 {@link java.sql.Types#DECIMAL} 数据对象. **/

@@ -318,13 +318,13 @@ public class LichenArTypesTest {
             @Override
             public byte[] get(ResultSet rs, int index)
             throws SQLException {
-                return LichenArTypes.VARBINARY.get(rs, 1);
+                return LichenArTypes.BINARY.get(rs, 1);
             }
         }, new PreparedStatementSetter() {
             @Override
             public void set(PreparedStatement ps, int index)
             throws SQLException {
-                LichenArTypes.VARBINARY.set(ps, 1,
+                LichenArTypes.BINARY.set(ps, 1,
                         new byte[]{1, 2, i});
             }
         });

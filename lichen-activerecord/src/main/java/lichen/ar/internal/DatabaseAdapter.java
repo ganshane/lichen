@@ -46,7 +46,7 @@ public class DatabaseAdapter {
         _types.put(Types.TIME, LichenArTypes.TIME);
         _types.put(Types.TIMESTAMP, LichenArTypes.TIMESTAMP);
         _types.put(Types.VARCHAR, LichenArTypes.VARCHAR);
-        _types.put(Types.VARBINARY, LichenArTypes.VARBINARY);
+        _types.put(Types.VARBINARY, LichenArTypes.BINARY);
         _types.put(Types.NUMERIC, LichenArTypes.NUMERIC);
         _types.put(Types.DECIMAL, LichenArTypes.DECIMAL);
         _types.put(Types.BLOB, LichenArTypes.BLOB);
