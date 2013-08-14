@@ -27,14 +27,12 @@ import lichen.ar.services.FieldType;
 public class IntegerType implements FieldType<Integer> {
 
     @Override
-    public final Integer get(final ResultSet rs, final int index)
-        throws SQLException {
+    public Integer get(ResultSet rs, int index) throws SQLException {
         return rs.getInt(index);
     }
 
     @Override
-    public final void set(final PreparedStatement ps, final int index,
-        final Integer object) throws SQLException {
+    public void set(PreparedStatement ps, int index, Integer object) throws SQLException {
         ps.setInt(index, object);
     }
 }

@@ -27,5 +27,5 @@ public interface PersisterHelper {
      * @param tableName 表名
      * @return key为转换为字段名称，Field为对应属性定义值
      */
-    Map<String, Field<?>> findTableFields(final String tableName);
+    Map<String, Field<?>> findTableFields(String tableName);
 }

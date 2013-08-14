@@ -24,13 +24,13 @@ public enum JdbcErrorCode implements ErrorCode {
     DRIVER_NOT_FOUND(3002),
     NO_TRANSACTION_IN_CURRENT_THREAD(3003);
 
-    private int errorCode;
-    private JdbcErrorCode(final int code) {
-        this.errorCode = code;
+    private int _errorCode;
+    private JdbcErrorCode(int code) {
+        this._errorCode = code;
     }
 
     @Override
     public int getNumber() {
-        return this.errorCode;
+        return this._errorCode;
     }
 }

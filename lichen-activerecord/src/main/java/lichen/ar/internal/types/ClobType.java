@@ -28,14 +28,12 @@ import lichen.ar.services.FieldType;
 public class ClobType implements FieldType<Clob> {
 
     @Override
-    public final Clob get(final ResultSet rs, final int index)
-        throws SQLException {
+    public Clob get(ResultSet rs, int index) throws SQLException {
         return rs.getClob(index);
     }
 
     @Override
-    public final void set(final PreparedStatement ps, final int index,
-        final Clob object) throws SQLException {
+    public void set(PreparedStatement ps, int index, Clob object) throws SQLException {
         ps.setClob(index, object);
     }
 }

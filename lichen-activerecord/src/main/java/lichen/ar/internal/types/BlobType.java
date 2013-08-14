@@ -28,14 +28,12 @@ import lichen.ar.services.FieldType;
 public class BlobType implements FieldType<Blob> {
 
     @Override
-    public final Blob get(final ResultSet rs, final int index)
-        throws SQLException {
+    public Blob get(ResultSet rs, int index) throws SQLException {
         return rs.getBlob(index);
     }
 
     @Override
-    public final void set(final PreparedStatement ps, final int index,
-            final Blob object) throws SQLException {
+    public void set(PreparedStatement ps, int index, Blob object) throws SQLException {
         ps.setBlob(index, object);
     }
 }

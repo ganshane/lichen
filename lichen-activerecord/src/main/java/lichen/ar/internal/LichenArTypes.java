@@ -36,7 +36,10 @@ import lichen.ar.internal.types.VarcharType;
  * 默认定义的types.
  * @author jcai
  */
-class LichenArTypes {
+public final class LichenArTypes {
+    private LichenArTypes() {
+
+    }
     /** 处理 {@link java.sql.Types#BIGINT} 数据对象. **/
     static final BigIntegerType BIG_INTEGER = new BigIntegerType();
     /** 处理 {@link java.sql.Types#BINARY} 数据对象 .**/

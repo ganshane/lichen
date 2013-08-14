@@ -32,23 +32,23 @@ import java.util.Set;
  */
 public abstract class ActiveRecordClassImpl<PKValue> {
     /** 主键字段名称. **/
-    private String pkFieldName = "id";
+    private String _pkFieldName = "id";
     /** 对应的表名. **/
-    private String tableName;
+    private String _tableName;
     /** 对应数据库的列名,自动初始化. **/
-    private Set<String> columns;
+    private Set<String> _columns;
     /** 保存实体对应的值. **/
-    private Map<String, Object> values = new HashMap<String, Object>();
+    private Map<String, Object> _values = new HashMap<String, Object>();
     /** 修改后的列的集合. **/
-    private Set<String> columnsModified = new HashSet<String>();
+    private Set<String> _columnsModified = new HashSet<String>();
 
-    private final Map<String, Field<?>> fields;
+    private Map<String, Field<?>> _fields;
     /**
      * @param persisterHelper persisterHelper
      */
-    protected ActiveRecordClassImpl(final PersisterHelper persisterHelper) {
-        tableName = WordUtil.tableize(getClass().getSimpleName());
-        fields = persisterHelper.findTableFields(tableName);
+    protected ActiveRecordClassImpl(PersisterHelper persisterHelper) {
+        _tableName = WordUtil.tableize(getClass().getSimpleName());
+        _fields = persisterHelper.findTableFields(_tableName);
     }
 
     /**
@@ -57,21 +57,20 @@ public abstract class ActiveRecordClassImpl<PKValue> {
      * @param fieldValue 列的值
      * @return 之前设置的值
      */
-    public final Object setData(final String fieldName,
-            final Object fieldValue) {
-        if (!columns.contains(fieldName)) {
+    public Object setData(String fieldName, Object fieldValue) {
+        if (!_columns.contains(fieldName)) {
             throw new LichenException(ActiveRecordErrorCode.COLUMN_NOT_EXISTS);
         }
         //TODO 要不要判断旧的值和新值是否相等?
-        columnsModified.add(fieldName);
-        return values.put(fieldName, fieldValue);
+        _columnsModified.add(fieldName);
+        return _values.put(fieldName, fieldValue);
     }
 
-    public final Map<String, Field<?>> getFields() {
-        return fields;
+    public Map<String, Field<?>> getFields() {
+        return _fields;
     }
 
-    public final String getPkFieldName() {
-        return pkFieldName;
+    public String getPkFieldName() {
+        return _pkFieldName;
     }
 }

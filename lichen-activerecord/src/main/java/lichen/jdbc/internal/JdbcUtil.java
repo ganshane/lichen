@@ -25,21 +25,24 @@ import java.sql.ResultSet;
  * jdbc util class.
  * @author  jcai
  */
-class JdbcUtil {
-    private static Logger logger =
-        LoggerFactory.getLogger(JdbcUtil.class);
+final class JdbcUtil {
 
-   public static void close(final Statement stmt, final ResultSet rs) {
-      close(stmt);
-      close(rs);
-   }
+    private JdbcUtil() {
+
+    }
+    private static Logger logger = LoggerFactory.getLogger(JdbcUtil.class);
+
+    public static void close(Statement stmt, ResultSet rs) {
+        close(stmt);
+        close(rs);
+    }
 
    /**
      * Close the given JDBC Connection and ignore any thrown exception.
      * This is useful for typical finally blocks in manual JDBC code.
      * @param con the JDBC Connection to close (may be <code>null</code>)
      */
-    public static void close(final Connection con) {
+    public static void close(Connection con) {
         if (con != null) {
             try {
                 con.close();
@@ -56,7 +59,7 @@ class JdbcUtil {
      * This is useful for typical finally blocks in manual JDBC code.
      * @param stmt the JDBC Statement to close (may be <code>null</code>)
      */
-    public static void close(final Statement stmt) {
+    public static void close(Statement stmt) {
         if (stmt != null) {
             try {
                 stmt.close();
@@ -73,7 +76,7 @@ class JdbcUtil {
      * This is useful for typical finally blocks in manual JDBC code.
      * @param rs the JDBC ResultSet to close (may be <code>null</code>)
      */
-    public static void close(final ResultSet rs) {
+    public static void close(ResultSet rs) {
         if (rs != null) {
             try {
                 rs.close();

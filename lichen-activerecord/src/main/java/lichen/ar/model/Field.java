@@ -21,28 +21,28 @@ import lichen.ar.services.FieldType;
  */
 public class Field<T> {
     //字段类型
-    private FieldType<T> fieldType;
+    private FieldType<T> _fieldType;
     //字段名称
-    private String fieldName;
+    private String _fieldName;
     //列名
-    private String columnName;
+    private String _columnName;
 
-    public final void setFieldType(final FieldType<T> vfieldType) {
-        this.fieldType = vfieldType;
+    public  void setFieldType(FieldType<T> vfieldType) {
+        this._fieldType = vfieldType;
     }
-    public final FieldType<T> getFieldType() {
-        return fieldType;
+    public  FieldType<T> getFieldType() {
+        return _fieldType;
     }
-    public final void setFieldName(final String vfieldName) {
-        this.fieldName = vfieldName;
+    public  void setFieldName(String vfieldName) {
+        this._fieldName = vfieldName;
     }
-    public final String getFieldName() {
-        return fieldName;
+    public  String getFieldName() {
+        return _fieldName;
     }
-    public final void setColumnName(final String vcolumnName) {
-        this.columnName = vcolumnName;
+    public  void setColumnName(String vcolumnName) {
+        this._columnName = vcolumnName;
     }
-    public final String getColumnName() {
-        return columnName;
+    public  String getColumnName() {
+        return _columnName;
     }
 }

@@ -34,9 +34,9 @@ import java.io.PrintWriter;
 public class SimpleDataSource implements DataSource {
 
    public SimpleDataSource(String driverClassName, String url, String username, String password) {
-      this.url = url;
-      this.username = username;
-      this.password = password;
+      this._url = url;
+      this._username = username;
+      this._password = password;
 
       try {
          Class.forName(driverClassName.trim());
@@ -45,45 +45,45 @@ public class SimpleDataSource implements DataSource {
       }
    }
 
-   private String url;
+   private String _url;
 
-	private String username;
+   private String _username;
 
-	private String password;
+   private String _password;
 
 
    public String getUrl() {
-      return url;
+      return _url;
    }
 
    public void setUrl(String url) {
-      this.url = url;
+      this._url = url;
    }
 
    public String getUsername() {
-      return username;
+      return _username;
    }
 
    public void setUsername(String username) {
-      this.username = username;
+      this._username = username;
    }
 
    public String getPassword() {
-      return password;
+      return _password;
    }
 
    public void setPassword(String password) {
-      this.password = password;
+      this._password = password;
    }
 
    public Connection getConnection() throws SQLException {
-      return DriverManager.getConnection(url, username, password);
+      return DriverManager.getConnection(_url, _username, _password);
    }
 
    public Connection getConnection(String username, String password) throws SQLException {
-      this.username = username;
-      this.password = password;
-      return DriverManager.getConnection(url, username, password);
+      this._username = username;
+      this._password = password;
+      return DriverManager.getConnection(_url, _username, _password);
    }
 
    public PrintWriter getLogWriter() throws SQLException {
@@ -103,14 +103,14 @@ public class SimpleDataSource implements DataSource {
 
    @SuppressWarnings("unchecked")
    public Object unwrap(Class iface) throws SQLException {
-		if (!DataSource.class.equals(iface)) {
-			throw new SQLException("DataSource of type [" + getClass().getName() +
-					"] can only be unwrapped as [javax.sql.DataSource], not as [" + iface.getName());
-		}
-		return this;
-	}
+        if (!DataSource.class.equals(iface)) {
+            throw new SQLException("DataSource of type [" + getClass().getName()
+                    + "] can only be unwrapped as [javax.sql.DataSource], not as [" + iface.getName());
+        }
+        return this;
+    }
 
-	public boolean isWrapperFor(Class iface) throws SQLException {
-		return DataSource.class.equals(iface);
-	}
+    public boolean isWrapperFor(Class iface) throws SQLException {
+        return DataSource.class.equals(iface);
+    }
 }

@@ -24,13 +24,13 @@ import java.util.Map;
  */
 public class PersisterHelperImpl {
     //数据库操作类
-    private final DatabaseAdapter databaseAdapter;
-    PersisterHelperImpl(final DatabaseAdapter vdatabaseAdapter) {
-        this.databaseAdapter = vdatabaseAdapter;
+    private DatabaseAdapter _databaseAdapter;
+    PersisterHelperImpl(DatabaseAdapter vdatabaseAdapter) {
+        this._databaseAdapter = vdatabaseAdapter;
     }
-    final Map<String, Field<?>> findTableMapping(final String tableName) {
+    Map<String, Field<?>> findTableMapping(String tableName) {
         @SuppressWarnings("unused")
-        JdbcHelper helper = databaseAdapter.createJdbcHelper();
+        JdbcHelper helper = _databaseAdapter.createJdbcHelper();
         return null;
     }
 }

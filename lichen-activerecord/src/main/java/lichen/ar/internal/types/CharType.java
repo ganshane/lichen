@@ -28,14 +28,12 @@ import lichen.ar.services.FieldType;
 public class CharType implements FieldType<char[]> {
 
     @Override
-    public final char[] get(final ResultSet rs, final int index)
-        throws SQLException {
+    public char[] get(ResultSet rs, int index) throws SQLException {
         return rs.getString(index).toCharArray();
     }
 
     @Override
-    public final void set(final PreparedStatement ps, final int index,
-        final char[] object) throws SQLException {
+    public void set(PreparedStatement ps, int index, char[] object) throws SQLException {
         ps.setCharacterStream(index, new CharArrayReader(object));
     }
 }

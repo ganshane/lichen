@@ -27,14 +27,12 @@ import lichen.ar.services.FieldType;
 public class SmallIntType implements FieldType<Short> {
 
     @Override
-    public final Short get(final ResultSet rs, final int index)
-        throws SQLException {
+    public Short get(ResultSet rs, int index) throws SQLException {
         return rs.getShort(index);
     }
 
     @Override
-    public final void set(final PreparedStatement ps, final int index,
-        final Short object) throws SQLException {
+    public void set(PreparedStatement ps, int index, Short object) throws SQLException {
         ps.setShort(index, object);
     }
 }

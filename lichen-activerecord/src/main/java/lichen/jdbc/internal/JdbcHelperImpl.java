@@ -34,15 +34,15 @@ import java.util.List;
  *
  * @author jcai
  */
-public final class JdbcHelperImpl implements JdbcHelper {
+public class JdbcHelperImpl implements JdbcHelper {
     //操作的底层数据库
-    private final DataSource _dataSource;
+    private DataSource _dataSource;
     //当前线程绑定的事务
-    private final ThreadLocal<Transaction> currentTransaction;
+    private ThreadLocal<Transaction> _currentTransaction;
 
-    public JdbcHelperImpl(final DataSource dataSource) {
+    public JdbcHelperImpl(DataSource dataSource) {
         this._dataSource = dataSource;
-        currentTransaction = new ThreadLocal<Transaction>();
+        _currentTransaction = new ThreadLocal<Transaction>();
     }
 
     //事务定义
@@ -51,7 +51,7 @@ public final class JdbcHelperImpl implements JdbcHelper {
         private boolean _autoCommit;
         private int _hold;
 
-        Transaction(Connection connection, final boolean autoCommit) {
+        Transaction(Connection connection, boolean autoCommit) {
             this._connection = connection;
             this._autoCommit = autoCommit;
         }
@@ -59,7 +59,7 @@ public final class JdbcHelperImpl implements JdbcHelper {
 
     @Override
     public void holdConnection() {
-        Transaction transaction = currentTransaction.get();
+        Transaction transaction = _currentTransaction.get();
 
         try {
             if (transaction == null) {
@@ -70,7 +70,7 @@ public final class JdbcHelperImpl implements JdbcHelper {
 
             transaction._hold++;
 
-            currentTransaction.set(transaction);
+            _currentTransaction.set(transaction);
         } catch (SQLException e) {
             throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
         }
@@ -78,7 +78,7 @@ public final class JdbcHelperImpl implements JdbcHelper {
 
     @Override
     public void releaseConnection() {
-        Transaction transaction = currentTransaction.get();
+        Transaction transaction = _currentTransaction.get();
         if (transaction == null) {
             throw new RuntimeException("There isn't a current _connection to release");
         }
@@ -94,18 +94,18 @@ public final class JdbcHelperImpl implements JdbcHelper {
                     throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
                 } finally {
                     JdbcUtil.close(transaction._connection);
-                    currentTransaction.remove();
+                    _currentTransaction.remove();
                 }
             } else {
                 JdbcUtil.close(transaction._connection);
-                currentTransaction.remove();
+                _currentTransaction.remove();
             }
         }
     }
 
     @Override
     public void beginTransaction() {
-        Transaction transaction = currentTransaction.get();
+        Transaction transaction = _currentTransaction.get();
         try {
             if (transaction == null) {
                 transaction = new Transaction(_dataSource.getConnection(), false);
@@ -116,7 +116,7 @@ public final class JdbcHelperImpl implements JdbcHelper {
 
             transaction._hold++;
 
-            currentTransaction.set(transaction);
+            _currentTransaction.set(transaction);
         } catch (SQLException e) {
             throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
         }
@@ -124,7 +124,7 @@ public final class JdbcHelperImpl implements JdbcHelper {
 
     @Override
     public void commitTransaction() {
-        Transaction transaction = currentTransaction.get();
+        Transaction transaction = _currentTransaction.get();
 
         if (transaction == null || transaction._autoCommit) {
             throw new LichenException(
@@ -138,13 +138,13 @@ public final class JdbcHelperImpl implements JdbcHelper {
                 throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
             } finally {
                 JdbcUtil.close(transaction._connection);
-                currentTransaction.remove();
+                _currentTransaction.remove();
             }
         }
     }
 
     private Connection getConnection() throws SQLException {
-        Transaction transaction = currentTransaction.get();
+        Transaction transaction = _currentTransaction.get();
 
         if (transaction == null) {
             return _dataSource.getConnection();
@@ -154,16 +154,16 @@ public final class JdbcHelperImpl implements JdbcHelper {
     }
 
     private boolean isConnectionHeld() {
-        return currentTransaction.get() != null;
+        return _currentTransaction.get() != null;
     }
 
     private boolean isInTransaction() {
-        Transaction transaction = currentTransaction.get();
+        Transaction transaction = _currentTransaction.get();
         return transaction != null && !transaction._autoCommit;
     }
 
     @Override
-    public int execute(final String sql, final Object... params) {
+    public int execute(String sql, Object... params) {
         Connection conn = null;
         PreparedStatement ps = null;
         boolean rollBack = false;
@@ -189,16 +189,16 @@ public final class JdbcHelperImpl implements JdbcHelper {
     }
 
     @Override
-    public <T> List<T> queryForList(final String sql, final RowMapper<T> mapper) {
+    public <T> List<T> queryForList(String sql, RowMapper<T> mapper) {
         return internalQueryForList(sql, mapper);
     }
 
     @Override
-    public <T> List<T> queryForList(final String sql, final RowMapper<T> mapper, final PreparedStatementSetter... setters) {
+    public <T> List<T> queryForList(String sql, RowMapper<T> mapper, PreparedStatementSetter... setters) {
         return internalQueryForList(sql, mapper, setters);
     }
 
-    private <T> List<T> internalQueryForList(final String sql, final RowMapper<T> mapper, final PreparedStatementSetter... setters) {
+    private <T> List<T> internalQueryForList(String sql, RowMapper<T> mapper, PreparedStatementSetter... setters) {
         Connection conn = null;
         PreparedStatement ps = null;
         List<T> list = new ArrayList<T>();
@@ -226,7 +226,7 @@ public final class JdbcHelperImpl implements JdbcHelper {
     }
 
     @Override
-    public <T> T queryForFirst(final String sql, final ResultSetGetter<T> getter, final PreparedStatementSetter... setters) {
+    public <T> T queryForFirst(String sql, final ResultSetGetter<T> getter, PreparedStatementSetter... setters) {
         return withResultSet(sql, new ResultSetCallback<T>() {
             @Override
             public T doInResultSet(ResultSet rs) throws SQLException {
@@ -238,14 +238,14 @@ public final class JdbcHelperImpl implements JdbcHelper {
         }, setters);
     }
 
-    private void freeConnection(final Connection con) {
+    private void freeConnection(Connection con) {
         if (!isConnectionHeld()) {
             JdbcUtil.close(con);
         }
     }
 
     private void rollbackTransaction() {
-        Transaction transaction = currentTransaction.get();
+        Transaction transaction = _currentTransaction.get();
 
         if (transaction == null || transaction._autoCommit) {
             throw new RuntimeException("There isn't a current transaction to rollback");
@@ -257,7 +257,7 @@ public final class JdbcHelperImpl implements JdbcHelper {
                 throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
             } finally {
                 JdbcUtil.close(transaction._connection);
-                currentTransaction.remove();
+                _currentTransaction.remove();
             }
         }
     }

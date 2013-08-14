@@ -31,7 +31,7 @@ public class BaseBinaryType implements FieldType<byte[]> {
      * @return 字节数组
      */
     @Override
-    public final byte[] get(final ResultSet rs, final int index)
+    public  byte[] get(ResultSet rs, int index)
         throws SQLException {
         InputStream is = rs.getBinaryStream(index);
         ByteArrayOutputStream bos = null;
@@ -67,8 +67,7 @@ public class BaseBinaryType implements FieldType<byte[]> {
     }
 
     @Override
-    public final void set(final PreparedStatement ps, final int index,
-                final byte[] object)
+    public  void set(PreparedStatement ps, int index, byte[] object)
             throws SQLException {
         ps.setBinaryStream(index, new ByteArrayInputStream(object));
     }

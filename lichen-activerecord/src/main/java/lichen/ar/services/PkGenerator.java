@@ -30,6 +30,5 @@ public interface PkGenerator {
      * @param <T> 操作实体的类型
      * @return 主键值
      */
-    <T extends ActiveRecord> Serializable generate(JdbcHelper jdbcHelper,
-            T entity);
+    <T extends ActiveRecord> Serializable generate(JdbcHelper jdbcHelper, T entity);
 }

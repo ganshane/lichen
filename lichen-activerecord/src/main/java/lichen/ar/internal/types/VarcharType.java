@@ -27,14 +27,12 @@ import lichen.ar.services.FieldType;
 public class VarcharType implements FieldType<String> {
 
     @Override
-    public final String get(final ResultSet rs, final int index)
-        throws SQLException {
+    public String get(ResultSet rs, int index) throws SQLException {
         return rs.getString(index);
     }
 
     @Override
-    public final void set(final PreparedStatement ps, final int index,
-        final String object) throws SQLException {
+    public void set(PreparedStatement ps, int index, String object) throws SQLException {
         ps.setString(index, object);
     }
 }

@@ -28,14 +28,12 @@ import lichen.ar.services.FieldType;
 public class NumericType implements FieldType<BigDecimal> {
 
     @Override
-    public final BigDecimal get(final ResultSet rs, final int index)
-        throws SQLException {
+    public BigDecimal get(ResultSet rs, int index) throws SQLException {
         return rs.getBigDecimal(index);
     }
 
     @Override
-    public final void set(final PreparedStatement ps, final int index,
-        final BigDecimal object) throws SQLException {
+    public void set(PreparedStatement ps, int index, BigDecimal object) throws SQLException {
         ps.setBigDecimal(index, object);
     }
 }

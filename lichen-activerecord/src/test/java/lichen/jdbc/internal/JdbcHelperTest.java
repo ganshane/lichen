@@ -39,17 +39,13 @@ import org.junit.Test;
  * Time: 2:09:14 PM
  */
 public class JdbcHelperTest {
-   static SimpleDataSource dataSource;
-   static JdbcHelper jdbc;
+   private static SimpleDataSource dataSource;
+   private static JdbcHelper jdbc;
 
    @BeforeClass
    public static void setUp() {
-      dataSource = new SimpleDataSource("org.h2.Driver",
-         "jdbc:h2:mem:testdb",
-         "sa", null);
-
+      dataSource = new SimpleDataSource("org.h2.Driver", "jdbc:h2:mem:testdb", "sa", null);
       jdbc = new JdbcHelperImpl(dataSource);
-
       jdbc.holdConnection();
       jdbc.execute("CREATE TABLE IF NOT EXISTS `jdbctest`("
               + "`id` int(11) NOT NULL auto_increment,\n"
@@ -96,9 +92,9 @@ public class JdbcHelperTest {
       jdbc.releaseConnection();
    }
     private class Bean {
-        private int id;
-        private String name;
-        private Timestamp creationDate;
+        private int _id;
+        private String _name;
+        private Timestamp _creationDate;
     }
 
    @Test
@@ -109,9 +105,9 @@ public class JdbcHelperTest {
           public Bean mapRow(final ResultSet rs, final int index)
           throws SQLException {
               Bean bean = new Bean();
-              bean.id = rs.getInt("id");
-              bean.name = rs.getString("name");
-              bean.creationDate = rs.getTimestamp("creation_date");
+              bean._id = rs.getInt("id");
+              bean._name = rs.getString("name");
+              bean._creationDate = rs.getTimestamp("creation_date");
               return bean;
           }
       });
@@ -122,16 +118,15 @@ public class JdbcHelperTest {
 
    @Test
    public final void testWithResultSet() {
-      Bean bean = jdbc.withResultSet("select * from jdbctest where id=?"
-             + " and jkey=? and name=?",
+      Bean bean = jdbc.withResultSet("select * from jdbctest where id=? and jkey=? and name=?",
              new ResultSetCallback<Bean>() {
             @Override
             public Bean doInResultSet(final ResultSet rs)
                     throws SQLException {
                 Bean bean = new Bean();
-                bean.id = rs.getInt("id");
-                bean.name = rs.getString("name");
-                bean.creationDate = rs.getTimestamp("creation_date");
+                bean._id = rs.getInt("id");
+                bean._name = rs.getString("name");
+                bean._creationDate = rs.getTimestamp("creation_date");
                 return bean;
             }
           }, new PreparedStatementSetter() {
@@ -156,8 +151,7 @@ public class JdbcHelperTest {
 
           assertNotNull(bean);
 
-          Integer currentId = jdbc.withResultSet("select * from jdbctest",
-                new ResultSetCallback<Integer>() {
+          Integer currentId = jdbc.withResultSet("select * from jdbctest", new ResultSetCallback<Integer>() {
                 @Override
                 public Integer doInResultSet(final ResultSet rs)
                         throws SQLException {
@@ -170,16 +164,15 @@ public class JdbcHelperTest {
 
    @Test
    public final void testQueryForList2() {
-      List<Bean> list = jdbc.queryForList("select * from jdbctest where id=? "
-              + " and jkey=? and name=?",
+      List<Bean> list = jdbc.queryForList("select * from jdbctest where id=? and jkey=? and name=?",
               new RowMapper<Bean>() {
           @Override
           public Bean mapRow(final ResultSet rs, final int index)
           throws SQLException {
               Bean bean = new Bean();
-              bean.id = rs.getInt("id");
-              bean.name = rs.getString("name");
-              bean.creationDate = rs.getTimestamp("creation_date");
+              bean._id = rs.getInt("id");
+              bean._name = rs.getString("name");
+              bean._creationDate = rs.getTimestamp("creation_date");
               return bean;
           }
       }, new PreparedStatementSetter() {
@@ -208,15 +201,14 @@ public class JdbcHelperTest {
 
    @Test
     public final void testqueryForFirst() {
-        Bean b = jdbc.queryForFirst("select * from jdbctest where jkey=?"
-                + " order by id",
+        Bean b = jdbc.queryForFirst("select * from jdbctest where jkey=? order by id",
                 new ResultSetGetter<Bean>() {
                     public Bean get(final ResultSet rs, final int index)
                             throws SQLException {
                           Bean bean = new Bean();
-                          bean.id = rs.getInt("id");
-                          bean.name = rs.getString("name");
-                          bean.creationDate = rs.getTimestamp("creation_date");
+                          bean._id = rs.getInt("id");
+                          bean._name = rs.getString("name");
+                          bean._creationDate = rs.getTimestamp("creation_date");
                           return bean;
                     }
                 }, new PreparedStatementSetter() {
@@ -227,10 +219,9 @@ public class JdbcHelperTest {
                     }
                 });
         assertNotNull(b);
-        assertEquals(1, b.id);
+        assertEquals(1, b._id);
 
-        int count = jdbc.queryForFirst("select count(*) from jdbctest"
-                + " where jkey=?",
+        int count = jdbc.queryForFirst("select count(*) from jdbctest where jkey=?",
                 new ResultSetGetter<Integer>() {
                     public Integer get(final ResultSet rs, final int index)
                             throws SQLException {
@@ -245,8 +236,7 @@ public class JdbcHelperTest {
                 });
         assertEquals(2, count);
 
-        long lCount = jdbc.queryForFirst("select count(*) from jdbctest"
-                + " where jkey=? " ,
+        long lCount = jdbc.queryForFirst("select count(*) from jdbctest where jkey=? " ,
                 new ResultSetGetter<Long>() {
                     public Long get(final ResultSet rs, final int index)
                             throws SQLException {
@@ -261,8 +251,7 @@ public class JdbcHelperTest {
                 });
         assertEquals(2, lCount);
 
-        String s = jdbc.queryForFirst("select name from jdbctest where jkey=?"
-                + " order by id desc ",
+        String s = jdbc.queryForFirst("select name from jdbctest where jkey=? order by id desc ",
                 new ResultSetGetter<String>() {
                     public String get(final ResultSet rs, final int index)
                     throws SQLException {
@@ -323,7 +312,6 @@ public class JdbcHelperTest {
    @Test
    public void testQueryResult() {
       QueryResult result = jdbc.query("select * from jdbctest");
-      
       while(result.next()) {
          System.out.println("Name: " + result.getString("name"));
       }

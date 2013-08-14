@@ -27,34 +27,33 @@ import java.util.Map;
  * @author jcai
  */
 public class DatabaseAdapter {
-    private final Map<Integer, FieldType<?>> types =
-        new HashMap<Integer, FieldType<?>>();
-    private final DataSource dataSource;
-    DatabaseAdapter(final DataSource tdataSource) {
-        this.dataSource = tdataSource;
+    private Map<Integer, FieldType<?>> _types = new HashMap<Integer, FieldType<?>>();
+    private DataSource _dataSource;
+    DatabaseAdapter(DataSource tdataSource) {
+        this._dataSource = tdataSource;
     }
-    public final void registerTypes() {
-        types.put(Types.BIGINT, LichenArTypes.BIG_INTEGER);
-        types.put(Types.BINARY, LichenArTypes.BINARY);
-        types.put(Types.BIT, LichenArTypes.BIT);
-        types.put(Types.CHAR, LichenArTypes.CHAR);
-        types.put(Types.DATE, LichenArTypes.DATE);
-        types.put(Types.DOUBLE, LichenArTypes.DOUBLE);
-        types.put(Types.FLOAT, LichenArTypes.FLOAT);
-        types.put(Types.INTEGER, LichenArTypes.INTEGER);
-        types.put(Types.SMALLINT, LichenArTypes.SMALLINT);
-        types.put(Types.TINYINT, LichenArTypes.TINYINT);
-        types.put(Types.TIME, LichenArTypes.TIME);
-        types.put(Types.TIMESTAMP, LichenArTypes.TIMESTAMP);
-        types.put(Types.VARCHAR, LichenArTypes.VARCHAR);
-        types.put(Types.VARBINARY, LichenArTypes.VARBINARY);
-        types.put(Types.NUMERIC, LichenArTypes.NUMERIC);
-        types.put(Types.DECIMAL, LichenArTypes.DECIMAL);
-        types.put(Types.BLOB, LichenArTypes.BLOB);
-        types.put(Types.CLOB, LichenArTypes.CLOB);
+    public void registerTypes() {
+        _types.put(Types.BIGINT, LichenArTypes.BIG_INTEGER);
+        _types.put(Types.BINARY, LichenArTypes.BINARY);
+        _types.put(Types.BIT, LichenArTypes.BIT);
+        _types.put(Types.CHAR, LichenArTypes.CHAR);
+        _types.put(Types.DATE, LichenArTypes.DATE);
+        _types.put(Types.DOUBLE, LichenArTypes.DOUBLE);
+        _types.put(Types.FLOAT, LichenArTypes.FLOAT);
+        _types.put(Types.INTEGER, LichenArTypes.INTEGER);
+        _types.put(Types.SMALLINT, LichenArTypes.SMALLINT);
+        _types.put(Types.TINYINT, LichenArTypes.TINYINT);
+        _types.put(Types.TIME, LichenArTypes.TIME);
+        _types.put(Types.TIMESTAMP, LichenArTypes.TIMESTAMP);
+        _types.put(Types.VARCHAR, LichenArTypes.VARCHAR);
+        _types.put(Types.VARBINARY, LichenArTypes.VARBINARY);
+        _types.put(Types.NUMERIC, LichenArTypes.NUMERIC);
+        _types.put(Types.DECIMAL, LichenArTypes.DECIMAL);
+        _types.put(Types.BLOB, LichenArTypes.BLOB);
+        _types.put(Types.CLOB, LichenArTypes.CLOB);
     }
 
-    final JdbcHelper createJdbcHelper() {
-        return new JdbcHelperImpl(dataSource);
+    JdbcHelper createJdbcHelper() {
+        return new JdbcHelperImpl(_dataSource);
     }
 }

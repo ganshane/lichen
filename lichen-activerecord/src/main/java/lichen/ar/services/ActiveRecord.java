@@ -18,24 +18,24 @@ package lichen.ar.services;
  * @author jcai
  */
 public abstract class ActiveRecord {
-    private String tableName;
-    private String pkField = "id";
-    public final Long save() {
+    private String _tableName;
+    private String _pkField = "id";
+    public  Long save() {
         return -1L;
     }
-    public final int delete() {
+    public  int delete() {
         return 1;
     }
-    public final void setPkField(final String vpkField) {
-        this.pkField = vpkField;
+    public  void setPkField(String vpkField) {
+        this._pkField = vpkField;
     }
-    public final String getPkField() {
-        return pkField;
+    public  String getPkField() {
+        return _pkField;
     }
-    public final void setTableName(final String vtableName) {
-        this.tableName = vtableName;
+    public  void setTableName(String vtableName) {
+        this._tableName = vtableName;
     }
-    public final String getTableName() {
-        return tableName;
+    public  String getTableName() {
+        return _tableName;
     }
 }

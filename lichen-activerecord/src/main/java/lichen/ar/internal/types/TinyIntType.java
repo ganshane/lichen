@@ -27,14 +27,12 @@ import lichen.ar.services.FieldType;
 public class TinyIntType implements FieldType<Byte> {
 
     @Override
-    public final Byte get(final ResultSet rs, final int index)
-        throws SQLException {
+    public Byte get(ResultSet rs, int index) throws SQLException {
         return rs.getByte(index);
     }
 
     @Override
-    public final void set(final PreparedStatement ps, final int index,
-        final Byte object) throws SQLException {
+    public void set(PreparedStatement ps, int index, Byte object) throws SQLException {
         ps.setByte(index, object);
     }
 }

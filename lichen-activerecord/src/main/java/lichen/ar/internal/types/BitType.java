@@ -26,14 +26,12 @@ import java.sql.SQLException;
 public class BitType implements FieldType<Boolean> {
 
     @Override
-    public final Boolean get(final ResultSet rs, final int index)
-        throws SQLException {
+    public Boolean get(ResultSet rs, int index) throws SQLException {
         return rs.getBoolean(index);
     }
 
     @Override
-    public final void set(final PreparedStatement ps, final int index,
-            final Boolean object)
+    public void set(PreparedStatement ps, int index, Boolean object)
             throws SQLException {
         ps.setBoolean(index, object);
     }
