@@ -26,6 +26,7 @@
         <module>lichen-migration</module>
         <module>lichen-activerecord</module>
         <module>lichen-core</module>
+        <module>lichen-server</module>
     </modules>
     <scm>
 	    <connection>scm:git:https://dev.egfit.com/git/lichen.git</connection>
