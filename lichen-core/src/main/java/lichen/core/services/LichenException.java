@@ -37,7 +37,7 @@ import java.util.TreeMap;
  * <table border="1">
  * <tr><th>模块</th><th>代码前缀</th><th>代码声明类</th></tr>
  * <tr><td>lichen-core</td><td>1</td><td>{@link lichen.core.services.LichenCoreErrorCode}</td></tr>
- * <tr><td>lichen-activerecord</td><td>2</td><td>{@link lichen.ar.services.AcitveRecordErrorCode}</td></tr>
+ * <tr><td>lichen-activerecord</td><td>2</td><td>{@link lichen.ar.services.ActiveRecordErrorCode}</td></tr>
  * <tr><td>lichen-jdbc</td><td>3</td><td>{@link lichen.jdbc.services.JdbcErrorCode}</td></tr>
  * </table>
  * </p>
