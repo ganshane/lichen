@@ -2,41 +2,86 @@
 // site: http://lichen.ganshane.com
 package lichen.migration.internal;
 
-import lichen.migration.model.*;
-import lichen.migration.model.ColumnOption;
-import lichen.migration.model.Default;
-import lichen.migration.model.Limit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import lichen.migration.model.AutoIncrement;
+import lichen.migration.model.ColumnOption;
+import lichen.migration.model.Default;
+import lichen.migration.model.Limit;
+import lichen.migration.model.NotNull;
+import lichen.migration.model.Nullable;
+import lichen.migration.model.Precision;
+import lichen.migration.model.PrimaryKey;
+import lichen.migration.model.Scale;
+import lichen.migration.model.Unique;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
- * column definition
+ * column definition.
  * @author jcai
  */
 public abstract class ColumnDefinition {
+    /**
+     * 日志对象.
+     */
     protected Logger logger = LoggerFactory.getLogger(getClass());
-    protected List<ColumnOption> options = new ArrayList<ColumnOption>();
+    /**
+     * 列选项数组.
+     */
+    protected List <ColumnOption> options = new ArrayList <ColumnOption>();
+    /**
+     * 该列是否自动增长.
+     */
     protected boolean isAutoIncrement = false;
+    /**
+     * 该列是否有默认值.
+     */
     protected String defaultValue = null;
+    /**
+     * 该列使用的适配器.
+     */
     protected Option<DatabaseAdapter> adapterOpt;
+    /**
+     * 该列所属表的表名.
+     */
     protected Option<String> tableNameOpt;
-    protected String tableName(){return tableNameOpt.get();}
+    /**
+     *表名获取方法.
+     *@return String 表名
+     */
+    protected String tableName() {
+        return tableNameOpt.get();
+    }
+    /**
+     *该列的列名.
+     */
     protected Option<String> columnNameOpt;
-    protected String columnName(){return columnNameOpt.get();}
+    /**
+     *列名获取方法.
+     *@return String 列名
+     */
+    protected String columnName() {
+        return columnNameOpt.get();
+    }
 
+    /**
+     * 列的初始化操作.
+     */
     public void initialize() {
         // Because AutoIncrement adds specific behavior the application
         // depends upon, always check if AutoIncrement is specified and
         // throw an exception if the column does not support it.
         checkForAutoIncrement();
-        if (isAutoIncrement && this.getClass().getAnnotation(ColumnSupportsAutoIncrement.class) == null){
-            String message = "AutoIncrement cannot be used on column '" +
-                    columnName() +
-                    "' because its data type does not support auto-increment.";
+        if (isAutoIncrement && this.getClass()
+                .getAnnotation(ColumnSupportsAutoIncrement.class) == null) {
+            String message = "AutoIncrement cannot be used on column '"
+                           + columnName()
+                           + "' because its data type does not "
+                           + "support auto-increment.";
             throw new UnsupportedOperationException(message);
         }
 
@@ -56,129 +101,179 @@ public abstract class ColumnDefinition {
         }
     }
 
+    /**
+     * 列的刻度选项.
+     */
     protected Option<Integer> scale = Option.None();
+    /**
+     * 检查该列是否定义了刻度.
+     */
     private void checkForScale() {
         Iterator<ColumnOption> it = options.iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             ColumnOption columnOption = it.next();
-            if(columnOption instanceof Scale){
+            if (columnOption instanceof Scale) {
                 it.remove();
                 ((Scale) columnOption).getValue();
-                if(scale.isDefined()){
-                    logger.warn("列{}重复定义了Precision",columnName());
+                if (scale.isDefined()) {
+                    logger.warn("列{}重复定义了Scale", columnName());
                 }
                 scale = Option.Some(((Scale) columnOption).getValue());
             }
         }
     }
 
+    /**
+     * 定义列的精度选项，并默认空值.
+     */
     protected Option<Integer> precision = Option.None();
+    /**
+     * 检查该列是否定义了精度.
+     */
     private void checkForPrecision() {
         Iterator<ColumnOption> it = options.iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             ColumnOption columnOption = it.next();
-            if(columnOption instanceof Precision){
+            if (columnOption instanceof Precision) {
                 it.remove();
                 ((Precision) columnOption).getValue();
-                if(precision.isDefined()){
-                    logger.warn("列{}重复定义了Precision",columnName());
+                if (precision.isDefined()) {
+                    logger.warn("列{}重复定义了Precision", columnName());
                 }
                 precision = Option.Some(((Precision) columnOption).getValue());
             }
         }
     }
 
+    /**
+     * 检查列是否设置了默认值.
+     */
     private void checkForDefault() {
         Iterator<ColumnOption> it = options.iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             ColumnOption columnOption = it.next();
-            if(columnOption instanceof Default){
+            if (columnOption instanceof Default) {
                 it.remove();
-                if(defaultValue != null){
-                    logger.warn("列{}重复定义了默认值",columnName());
+                if (defaultValue != null) {
+                    logger.warn("列{}重复定义了默认值", columnName());
                 }
                 defaultValue = ((Default) columnOption).getValue();
             }
         }
     }
 
+    /**
+     * 定义列的长度选项，默认为空.
+     */
     protected String limitValue = null;
+
+    /**
+     * 检查该列是否定义了长度.
+     */
     private void checkForLimit() {
         Iterator<ColumnOption> it = options.iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             ColumnOption columnOption = it.next();
-            if(columnOption instanceof Limit){
+            if (columnOption instanceof Limit) {
                 it.remove();
-                if(limitValue != null){
-                    logger.warn("列{}重复定义了长度",columnName());
+                if (limitValue != null) {
+                    logger.warn("列{}重复定义了长度", columnName());
                 }
                 limitValue = String.valueOf(((Limit) columnOption).getValue());
             }
         }
     }
 
+    /**
+     * 检查该列是否定义了自动增长选项.
+     */
     private void checkForAutoIncrement() {
         Iterator<ColumnOption> it = options.iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             ColumnOption columnOption = it.next();
-            if(columnOption instanceof AutoIncrement){
+            if (columnOption instanceof AutoIncrement) {
                 it.remove();
-                if(isAutoIncrement){
-                    logger.warn("列{}重复定义了自增长列",columnName());
+                if (isAutoIncrement) {
+                    logger.warn("列{}重复定义了自增长列", columnName());
                 }
                 isAutoIncrement = true;
             }
         }
     }
-    private Option<Boolean> notNull(){
+
+    /**
+     * 检查该列是否定义了非空选项.
+     * @return Option 如果定义了非空，则返回Option.Some(true)
+     */
+    private Option<Boolean> notNull() {
         Option<Boolean> notNull = Option.None();
         Iterator<ColumnOption> it = options.iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             ColumnOption columnOption = it.next();
-            if(columnOption instanceof NotNull){
+            if (columnOption instanceof NotNull) {
                 it.remove();
-                if(notNull.isDefined()){
-                    logger.warn("列{}重复定义了NotNull Or Nullable",columnName());
+                if (notNull.isDefined()) {
+                    logger.warn("列{}重复定义了NotNull Or Nullable", columnName());
                 }
                 notNull = Option.Some(true);
-            }else if(columnOption instanceof Nullable){
+            } else if (columnOption instanceof Nullable) {
                 it.remove();
-                if(notNull.isDefined()){
-                    logger.warn("列{}重复定义了NotNull Or Nullable",columnName());
+                if (notNull.isDefined()) {
+                    logger.warn("列{}重复定义了NotNull Or Nullable", columnName());
                 }
                 notNull = Option.Some(false);
             }
         }
         return notNull;
     }
-    private boolean isPrimaryKey(){
+
+    /**
+     * 检查该列是否定义了主键.
+     * @return boolean
+     */
+    private boolean isPrimaryKey() {
         Iterator<ColumnOption> it = options.iterator();
         boolean isPrimary = false;
-        while(it.hasNext()){
+        while (it.hasNext()) {
             ColumnOption columnOption = it.next();
-            if(columnOption instanceof PrimaryKey){
+            if (columnOption instanceof PrimaryKey) {
                 it.remove();
                 isPrimary = true;
             }
         }
         return isPrimary;
     }
-    private boolean isUnique(){
+
+    /**
+     * 检查该列是否定义了唯一约束.
+     * @return boolean
+     */
+    private boolean isUnique() {
         Iterator<ColumnOption> it = options.iterator();
         boolean isUnique = false;
-        while(it.hasNext()){
+        while (it.hasNext()) {
             ColumnOption columnOption = it.next();
-            if(columnOption instanceof Unique){
+            if (columnOption instanceof Unique) {
                 it.remove();
                 isUnique = true;
             }
         }
         return isUnique;
     }
+
+    /**
+     * 获取定义该列的标准sql语句，如"fieldName varchar2(10)"在子类中实现.
+     * @return String sql语句
+     */
     protected abstract String sql();
+
+    /**
+     * 获取定义一列的完整sql语句，包括标准定义、各种约束等.
+     * @return String
+     */
     final public String toSql(){
-        StringBuilder sb = new StringBuilder(512)
-                .append(sql());
+        int capacity = 512;
+        StringBuilder sb = new StringBuilder(capacity).append(sql());
 
         if (defaultValue != null) {
             sb.append(" DEFAULT ");
@@ -197,18 +292,19 @@ public abstract class ColumnDefinition {
         // Not all databases, such as Derby, support specifying NULL for a
         // column that may have NULL values.
         Option<Boolean> notNull = notNull();
-        if(notNull.isDefined()){
+        if (notNull.isDefined()) {
             sb.append(" NOT NULL");
         }
         // Warn for any unused options.
         if (!options.isEmpty()) {
-            logger.warn("The following options for the '{}' column are unused: {}.",columnName(), options);
+            logger.warn("The following options for the '{}' "
+                    + "column are unused: {}.", columnName(), options);
         }
 
         // Warn about illegal combinations in some databases.
         if (isPrimaryKey && notNull.isDefined() && !notNull.get()) {
-            logger.warn("Specifying PrimaryKey and Nullable in a column is not " +
-                    "supported in all databases.");
+            logger.warn("Specifying PrimaryKey and Nullable in"
+                    + "a column is not supported in all databases.");
         }
 
         // Warn when different options are used that specify the same
@@ -233,17 +329,20 @@ public abstract class ColumnDefinition {
      *         given
      */
     protected String optionallyAddLimitToDataType(String columnTypeName,
-                                               String limit){
-        if(limit != null){
-            return columnTypeName + "("+limit+")";
-        }else{
+            String limit) {
+        if (limit != null) {
+            return columnTypeName + "(" + limit + ")";
+        } else {
             return columnTypeName;
         }
     }
-    protected String optionallyAddLimitToDataType(String columnTypeName){
+
+    protected String optionallyAddLimitToDataType(String columnTypeName) {
         return optionallyAddLimitToDataType(columnTypeName, limitValue);
     }
 }
+
+
 @ColumnSupportsScale
 @ColumnSupportsPrecision
 @ColumnSupportsDefault
