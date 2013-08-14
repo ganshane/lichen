@@ -34,7 +34,7 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
     private final Collection<A> _underlying;
 
     /**
-     * 通过给定的集合来创建一个{@link IterableLike}对象
+     * 通过给定的集合来创建一个{@link IterableLike}对象.
      *
      * @param collection 待操作的集合对象
      */
@@ -43,7 +43,7 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
     }
 
     /**
-     * 私有创建，仅仅供内部调用
+     * 私有创建，仅仅供内部调用.
      */
     private IterableLikeImpl() {
         this(null);
