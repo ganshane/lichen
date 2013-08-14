@@ -29,7 +29,7 @@ public class XmlLoaderTest {
         MigratorConfig config = XmlLoader.parseXML(MigratorConfig.class,
                 getClass().getResourceAsStream("/test_config.xml"),
                 Option.Some(getClass().getResourceAsStream("/migrator-config.xsd")));
-        Assert.assertEquals("org.h2.Driver",config.driverClassName);
-        Assert.assertEquals("lichen.migration.testdb",config.migratePackage);
+        Assert.assertEquals("org.h2.Driver",config._driverClassName);
+        Assert.assertEquals("lichen.migration.testdb",config._migratePackage);
     }
 }

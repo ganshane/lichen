@@ -92,9 +92,9 @@ final class UpCommand implements Command{
             InputStream configInputStream = new FileInputStream(selectedOptions.getPaths().getConfigPath());
             MigratorConfig config = XmlLoader.parseXML(MigratorConfig.class,configInputStream,Option.Some(getClass().getResourceAsStream("/migrator-config.xsd")));
 
-            DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(DatabaseVendor.forDriver(config.driverClassName), Option.<String>None());
-            Migrator migrator = new Migrator(config.url,config.username,config.password,databaseAdapter);
-            migrator.migrate(MigratorOperation.InstallAllMigrations,config.migratePackage, false);
+            DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(DatabaseVendor.forDriver(config._driverClassName), Option.<String>None());
+            Migrator migrator = new Migrator(config._url,config._username,config._password,databaseAdapter);
+            migrator.migrate(MigratorOperation.InstallAllMigrations,config._migratePackage, false);
         } catch (FileNotFoundException e) {
             throw new MigrationException(String.format("config file %s doesn't exists!",
                     selectedOptions.getPaths().getConfigPath().getAbsolutePath()));
