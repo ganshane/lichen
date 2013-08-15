@@ -14,9 +14,9 @@
 package lichen.migration.model;
 
 /**
- * 对名称的定义
+ * 对名称的定义.
  * @author jcai
  */
-public interface Name extends ForeignKeyOption,IndexOption{
-    public String getValue();
+public interface Name extends ForeignKeyOption, IndexOption {
+    String getValue();
 }
