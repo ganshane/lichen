@@ -13,10 +13,14 @@
 // limitations under the License.
 package lichen.migration.internal;
 
-import lichen.migration.config.MigratorConfig;
-
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.Properties;
+
+import lichen.migration.config.MigratorConfig;
 
 public enum Commands {
   INFO,
@@ -76,28 +80,39 @@ public enum Commands {
 interface Command {
     void execute(String... params);
 }
-final class UpCommand implements Command{
-    private SelectedOptions selectedOptions;
 
-    UpCommand(SelectedOptions selectedOptions){
-        this.selectedOptions = selectedOptions;
+final class UpCommand implements Command {
+    private SelectedOptions _selectedOptions;
+
+    UpCommand(SelectedOptions selectedOptions) {
+        this._selectedOptions = selectedOptions;
     }
+
     @Override
     public void execute(String... params) {
-        if(!selectedOptions.getPaths().getConfigPath().exists()){
-            throw new MigrationException(String.format("config file %s doesn't exists!",
-                    selectedOptions.getPaths().getConfigPath().getAbsolutePath()));
+        if (!_selectedOptions.getPaths().getConfigPath().exists()) {
+            throw new MigrationException(String.format(
+                    "config file %s doesn't exists!", _selectedOptions
+                            .getPaths().getConfigPath().getAbsolutePath()));
         }
         try {
-            InputStream configInputStream = new FileInputStream(selectedOptions.getPaths().getConfigPath());
-            MigratorConfig config = XmlLoader.parseXML(MigratorConfig.class,configInputStream,Option.Some(getClass().getResourceAsStream("/migrator-config.xsd")));
+            InputStream configInputStream = new FileInputStream(_selectedOptions
+                    .getPaths().getConfigPath());
+            MigratorConfig config = XmlLoader.parseXML(MigratorConfig.class,
+                    configInputStream, Option.Some(getClass()
+                            .getResourceAsStream("/migrator-config.xsd")));
 
-            DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(DatabaseVendor.forDriver(config._driverClassName), Option.<String>None());
-            Migrator migrator = new Migrator(config._url,config._username,config._password,databaseAdapter);
-            migrator.migrate(MigratorOperation.InstallAllMigrations,config._migratePackage, false);
+            DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(
+                    DatabaseVendor.forDriver(config._driverClassName), Option
+                            .<String> None());
+            Migrator migrator = new Migrator(config._url, config._username,
+                    config._password, databaseAdapter);
+            migrator.migrate(MigratorOperation.InstallAllMigrations,
+                    config._migratePackage, false);
         } catch (FileNotFoundException e) {
-            throw new MigrationException(String.format("config file %s doesn't exists!",
-                    selectedOptions.getPaths().getConfigPath().getAbsolutePath()));
+            throw new MigrationException(String.format(
+                    "config file %s doesn't exists!", _selectedOptions
+                            .getPaths().getConfigPath().getAbsolutePath()));
         } catch (Throwable throwable) {
             throw new MigrationException(throwable);
         }
@@ -105,10 +120,10 @@ final class UpCommand implements Command{
 }
 
 final class InfoCommand implements Command {
-    private final PrintStream out;
+    private final PrintStream _out;
 
     public InfoCommand(PrintStream out) {
-        this.out = out;
+        this._out = out;
     }
 
     public void execute(String... params) {
@@ -120,36 +135,38 @@ final class InfoCommand implements Command {
             try {
                 properties.load(input);
             } catch (IOException e) {
+                e.printStackTrace();
                 // ignore, just don't load the properties
             } finally {
                 try {
                     input.close();
                 } catch (IOException e) {
+                    e.printStackTrace();
                     // close quietly
                 }
             }
         }
 
-        out.printf("%s %s (%s)%n",
+        _out.printf("%s %s (%s)%n",
                 properties.getProperty("name"),
                 properties.getProperty("version"),
                 properties.getProperty("build"));
-        out.printf("Java version: %s, vendor: %s%n",
+        _out.printf("Java version: %s, vendor: %s%n",
                 System.getProperty("java.version"),
                 System.getProperty("java.vendor"));
-        out.printf("Java home: %s%n", System.getProperty("java.home"));
-        out.printf("Default locale: %s_%s, platform encoding: %s%n",
+        _out.printf("Java home: %s%n", System.getProperty("java.home"));
+        _out.printf("Default locale: %s_%s, platform encoding: %s%n",
                 System.getProperty("user.language"),
                 System.getProperty("user.country"),
                 System.getProperty("sun.jnu.encoding"));
-        out.printf("OS name: \"%s\", version: \"%s\", arch: \"%s\", family: \"%s\"%n",
+        _out.printf("OS name: \"%s\", version: \"%s\", arch: \"%s\", family: \"%s\"%n",
                 System.getProperty("os.name"),
                 System.getProperty("os.version"),
                 System.getProperty("os.arch"),
                 getOsFamily());
     }
 
-    private static final String getOsFamily() {
+    private static String getOsFamily() {
         String osName = System.getProperty("os.name").toLowerCase();
         String pathSep = System.getProperty("path.separator");
 

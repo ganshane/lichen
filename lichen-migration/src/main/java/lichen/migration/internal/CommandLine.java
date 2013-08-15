@@ -19,15 +19,15 @@ import java.util.Date;
 
 
 public class CommandLine {
-    private final PrintStream console = System.out;
-    private final String[] args;
+    private final PrintStream _console = System.out;
+    private final String[] _args;
 
     public CommandLine(String[] args) {
-        this.args = args;
+        this._args = args;
     }
 
     public void execute() {
-        final SelectedOptions selectedOptions = CommandOptionParser.parse(args);
+        final SelectedOptions selectedOptions = CommandOptionParser.parse(_args);
         try {
             if (!validOptions(selectedOptions) || selectedOptions.needsHelp()) {
                 printUsage();
@@ -35,7 +35,7 @@ public class CommandLine {
                 runCommand(selectedOptions);
             }
         } catch (Exception e) {
-            console.printf("\nERROR: %s", e.getMessage());
+            _console.printf("\nERROR: %s", e.getMessage());
             if (selectedOptions.isTrace()) {
                 e.printStackTrace();
             }
@@ -46,9 +46,9 @@ public class CommandLine {
     private void runCommand(SelectedOptions selectedOptions) {
         final String commandString = selectedOptions.getCommand();
 
-        console.printf("------------------------------------------------------------------------%n");
-        console.printf("-- Lichen Migrations - %s%n", commandString);
-        console.printf("------------------------------------------------------------------------%n");
+        _console.printf("------------------------------------------------------------------------%n");
+        _console.printf("-- Lichen Migrations - %s%n", commandString);
+        _console.printf("------------------------------------------------------------------------%n");
 
         long start = System.currentTimeMillis();
         boolean exceptionCaught = false;
@@ -64,12 +64,17 @@ public class CommandLine {
                 throw new MigrationException(t);
             }
         } finally {
-            console.printf("------------------------------------------------------------------------%n");
-            console.printf("-- Lichen Migrations %s%n", (exceptionCaught) ? "FAILURE" : "SUCCESS");
-            console.printf("-- Total time: %ss%n", ((System.currentTimeMillis() - start) / 1000));
-            console.printf("-- Finished at: %s%n", new Date());
+            _console.printf("------------------------------------------------------------------------%n");
+            String result = "SUCCESS";
+            if (exceptionCaught) {
+                result = "FAILURE";
+            }
+            _console.printf("-- Lichen Migrations %s%n", result);
+            final int size = 1000;
+            _console.printf("-- Total time: %ss%n", ((System.currentTimeMillis() - start) / size));
+            _console.printf("-- Finished at: %s%n", new Date());
             printMemoryUsage();
-            console.printf("------------------------------------------------------------------------%n");
+            _console.printf("------------------------------------------------------------------------%n");
         }
     }
 
@@ -79,12 +84,12 @@ public class CommandLine {
         final long usedMemory = (runtime.totalMemory() - runtime.freeMemory()) / megaUnit;
         final long totalMemory = runtime.totalMemory() / megaUnit;
 
-        console.printf("-- Final Memory: %sM/%sM%n", usedMemory, totalMemory);
+        _console.printf("-- Final Memory: %sM/%sM%n", usedMemory, totalMemory);
     }
 
     private boolean validOptions(SelectedOptions selectedOptions) {
         if (!selectedOptions.needsHelp() && selectedOptions.getCommand() == null) {
-            console.printf("No command specified.%n");
+            _console.printf("No command specified.%n");
             return false;
         }
 
@@ -95,31 +100,31 @@ public class CommandLine {
         final boolean validDirectory = basePath.exists() && basePath.isDirectory();
 
         if (!validDirectory) {
-            console.printf("Migrations path must be a directory: %s%n", basePath.getAbsolutePath());
+            _console.printf("Migrations path must be a directory: %s%n", basePath.getAbsolutePath());
         }
 
         return validDirectory;
     }
 
     private void printUsage() {
-        console.printf(
+        _console.printf(
                 "%nUsage: migrate command [parameter] [--path=<file>] %n%n");
-        console.printf("--path=<file>        Path to repository.  Default current working directory.%n");
-        console.printf("--config=<file>      Path to config file. Default basedir/config/migrator.xml.%n");
-        console.printf("--help               Displays this usage message.%n");
-        console.printf("--trace              Shows additional error details (if any).%n");
-        console.printf("%n");
-        console.printf("Commands:%n");
-        console.printf("  info               Display build version informations.%n");
-        console.printf("  new <description>  Creates a new migration with the provided description.%n");
-        console.printf("  up [n]             Run unapplied migrations, ALL by default, or 'n' specified.%n");
-        console.printf(
+        _console.printf("--path=<file>        Path to repository.  Default current working directory.%n");
+        _console.printf("--config=<file>      Path to config file. Default basedir/config/migrator.xml.%n");
+        _console.printf("--help               Displays this usage message.%n");
+        _console.printf("--trace              Shows additional error details (if any).%n");
+        _console.printf("%n");
+        _console.printf("Commands:%n");
+        _console.printf("  info               Display build version informations.%n");
+        _console.printf("  new <description>  Creates a new migration with the provided description.%n");
+        _console.printf("  up [n]             Run unapplied migrations, ALL by default, or 'n' specified.%n");
+        _console.printf(
                 "  down [n]           Undoes migrations applied to the database. ONE by default or 'n' specified.%n");
-        console.printf("  version <version>  Migrates the database up or down to the specified version.%n");
-        console.printf("  pending            Force executes pending migrations out of order (not recommended).%n");
-        console.printf("  status             Prints the changelog from the database if the changelog table exists.%n");
-        console.printf("%n");
-        console.printf("  * Shortcuts are accepted by using the first few (unambiguous) letters of each command..%n");
-        console.printf("%n");
+        _console.printf("  version <version>  Migrates the database up or down to the specified version.%n");
+        _console.printf("  pending            Force executes pending migrations out of order (not recommended).%n");
+        _console.printf("  status             Prints the changelog from the database if the changelog table exists.%n");
+        _console.printf("%n");
+        _console.printf("  * Shortcuts are accepted by using the first few (unambiguous) letters of each command..%n");
+        _console.printf("%n");
     }
 }

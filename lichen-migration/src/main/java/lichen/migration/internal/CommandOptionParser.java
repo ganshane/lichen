@@ -37,8 +37,13 @@ enum CommandOptionParser {
     if (options.getCommand() == null) {
       options.setCommand(arg);
     } else {
-      final String myParams = options.getParams() == null ? arg : options.getParams() + " " + arg;
-      options.setParams(myParams);
+        final String myParams;
+        if (options.getParams() == null) {
+            myParams = arg;
+        } else {
+            myParams = options.getParams() + " " + arg;
+        }
+        options.setParams(myParams);
     }
   }
 
@@ -62,6 +67,8 @@ enum CommandOptionParser {
                 case HELP:
                     options.setHelp(true);
                     break;
+                default:
+                    break;
             }
         }
 
@@ -76,74 +83,75 @@ enum CommandOptionParser {
     }
 }
 class SelectedPaths {
-    private File basePath = new File("./");
-    private File configPath;
+    private File _basePath = new File("./");
+    private File _configPath;
 
     public File getBasePath() {
-        return basePath;
+        return _basePath;
     }
     public void setBasePath(File aBasePath) {
-        basePath = aBasePath;
+        _basePath = aBasePath;
     }
 
     public File getLibPath() {
-        return new File(basePath,"./lib");
+        return new File(_basePath, "./lib");
     }
 
     public File getConfigPath() {
-        if(configPath == null)
-            return new File(basePath,"./config/migrator.xml");
-        return configPath;
+        if (_configPath == null) {
+            return new File(_basePath, "./config/migrator.xml");
+        }
+        return _configPath;
     }
 
     public void setConfigPath(File configPath) {
-        this.configPath = configPath;
+        this._configPath = configPath;
     }
 }
 class SelectedOptions {
-    private SelectedPaths paths = new SelectedPaths();
-    private String command;
-    private String params;
-    private boolean trace;
-    private boolean help;
-    private File configPath;
+    private SelectedPaths _paths = new SelectedPaths();
+    private String _command;
+    private String _params;
+    private boolean _trace;
+    private boolean _help;
+    private File _configPath;
 
 
     public SelectedPaths getPaths() {
-        return paths;
+        return _paths;
     }
 
 
     public String getCommand() {
-        return command;
+        return _command;
     }
 
     public void setCommand(String aCommand) {
-        command = aCommand;
+        _command = aCommand;
     }
 
     public String getParams() {
-        return params;
+        return _params;
     }
 
     public void setParams(String aParams) {
-        params = aParams;
+        _params = aParams;
     }
 
     public boolean needsHelp() {
-        return help;
+        return _help;
     }
 
     public void setHelp(boolean aHelp) {
-        help = aHelp;
+        _help = aHelp;
     }
 
     public boolean isTrace() {
-        return trace;
+        return _trace;
     }
 
     public void setTrace(boolean trace) {
-        this.trace = trace;
+        this._trace = trace;
     }
 
 }
