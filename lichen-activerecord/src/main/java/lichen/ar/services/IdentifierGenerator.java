@@ -19,10 +19,10 @@ import lichen.jdbc.services.JdbcHelper;
 import java.io.Serializable;
 
 /**
- * 主键的生成器.
+ * 唯一键生成器.
  * @author jcai
  */
-public interface PkGenerator {
+public interface IdentifierGenerator {
     /**
      * 生成一个ID.
      * @param jdbcHelper jdbc helper class
