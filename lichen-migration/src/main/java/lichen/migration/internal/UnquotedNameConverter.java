@@ -14,12 +14,12 @@
 package lichen.migration.internal;
 
 /**
- * converter
+ * converter.
  * @author jcai
  */
 abstract class UnquotedNameConverter {
     abstract String apply(String name);
-    static UnquotedNameConverter CasePreservingUnquotedNameConverter = new UnquotedNameConverter(){
+    static UnquotedNameConverter CasePreservingUnquotedNameConverter = new UnquotedNameConverter() {
         @Override
         String apply(String name) {
             return name;
