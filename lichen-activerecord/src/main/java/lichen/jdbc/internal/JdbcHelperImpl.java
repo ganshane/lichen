@@ -189,40 +189,19 @@ public class JdbcHelperImpl implements JdbcHelper {
     }
 
     @Override
-    public <T> List<T> queryForList(String sql, RowMapper<T> mapper) {
-        return internalQueryForList(sql, mapper);
-    }
-
-    @Override
-    public <T> List<T> queryForList(String sql, RowMapper<T> mapper, PreparedStatementSetter... setters) {
-        return internalQueryForList(sql, mapper, setters);
-    }
-
-    private <T> List<T> internalQueryForList(String sql, RowMapper<T> mapper, PreparedStatementSetter... setters) {
-        Connection conn = null;
-        PreparedStatement ps = null;
-        List<T> list = new ArrayList<T>();
-        try {
-            conn = getConnection();
-            ps = conn.prepareStatement(sql);
-            int index = 1;
-            for (PreparedStatementSetter setter : setters) {
-                setter.set(ps, index);
-                index++;
+    public <T> List<T> queryForList(String sql, final RowMapper<T> mapper, PreparedStatementSetter... setters) {
+        return withResultSet(sql, new ResultSetCallback<List<T>>() {
+            @Override
+            public List<T> doInResultSet(ResultSet rs) throws SQLException {
+            	int index = 0;
+            	List<T> list = new ArrayList<T>();
+                if (rs.next()) {
+                	list.add(mapper.mapRow(rs, index));
+                    index++;
+                }
+                return list;
             }
-            ResultSet rs = ps.executeQuery();
-            index = 0;
-            while (rs.next()) {
-                list.add(mapper.mapRow(rs, index));
-                index++;
-            }
-            return list;
-        } catch (SQLException e) {
-            throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
-        } finally {
-            JdbcUtil.close(ps);
-            freeConnection(conn);
-        }
+        }, setters);
     }
 
     @Override
@@ -263,20 +242,11 @@ public class JdbcHelperImpl implements JdbcHelper {
     }
 
     @Override
-    public <T> T withResultSet(String sql, ResultSetCallback<T> callback) {
-        return internalWithResultSet(sql, callback);
-    }
-
-    @Override
     public <T> T withResultSet(String sql, ResultSetCallback<T> callback,
-                               PreparedStatementSetter... setters) {
-        return internalWithResultSet(sql, callback, setters);
-    }
-
-    private <T> T internalWithResultSet(String sql, ResultSetCallback<T> callback,
                                         PreparedStatementSetter... setters) {
         Connection conn = null;
         PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             conn = getConnection();
             ps = conn.prepareStatement(sql);
@@ -285,12 +255,14 @@ public class JdbcHelperImpl implements JdbcHelper {
                 setter.set(ps, index);
                 index++;
             }
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
             return callback.doInResultSet(rs);
         } catch (SQLException e) {
             throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
         } finally {
+            JdbcUtil.close(rs);
             JdbcUtil.close(ps);
+
             freeConnection(conn);
         }
     }

@@ -32,11 +32,6 @@ final class JdbcUtil {
     }
     private static Logger logger = LoggerFactory.getLogger(JdbcUtil.class);
 
-    public static void close(Statement stmt, ResultSet rs) {
-        close(stmt);
-        close(rs);
-    }
-
    /**
      * Close the given JDBC Connection and ignore any thrown exception.
      * This is useful for typical finally blocks in manual JDBC code.

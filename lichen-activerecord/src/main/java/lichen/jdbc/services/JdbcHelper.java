@@ -56,15 +56,6 @@ public interface JdbcHelper {
      * @return 执行的结果
      */
     int execute(String sql, Object ... params);
-
-    /**
-     * 查询出来一个list对象.
-     * @param sql 待查询语句
-     * @param mapper 行的mapper对象
-     * @param <T> 返回的结果对象类型
-     * @return list对象
-     */
-    <T> List<T> queryForList(String sql, RowMapper<T> mapper);
     /**
      * 可以传递参数的查询，查询结果是一个list.
      * @param <T> 返回的结果对象类型
@@ -96,13 +87,5 @@ public interface JdbcHelper {
      */
     <T> T withResultSet(String sql, ResultSetCallback<T> callback,
                 PreparedStatementSetter ... setters);
-    /**.
-     * 带回调函数的查询.
-     * @param <T> 返回的结果对象类型
-     * @param sql 待查询的语句
-     * @param callback 回调函数
-     * @return 通过回调函数处理后结果
-     */
-    <T> T withResultSet(String sql, ResultSetCallback<T> callback);
 
 }

@@ -64,6 +64,7 @@ public abstract class Option<T> {
      * @param <T> 值类型
      * @return 空值对象
      */
+    @SuppressWarnings("unchecked")
     public static <T> Option<T> none() {
         return (Option<T>) NONE;
     }
