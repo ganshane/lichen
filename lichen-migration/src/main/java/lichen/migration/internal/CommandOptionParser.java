@@ -16,7 +16,7 @@ package lichen.migration.internal;
 import java.io.File;
 
 enum CommandOptionParser {
-    ;
+     ;
 
     public static SelectedOptions parse(String[] args) {
         final SelectedOptions selectedOptions = new SelectedOptions();

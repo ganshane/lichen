@@ -15,7 +15,11 @@ package lichen.migration.internal;
 
 import lichen.migration.config.MigratorConfig;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintStream;
 import java.util.Properties;
 
 public enum Commands {
