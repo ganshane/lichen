@@ -45,18 +45,6 @@ public class JdbcHelperImpl implements JdbcHelper {
         _currentTransaction = new ThreadLocal<Transaction>();
     }
 
-    //事务定义
-    private static class Transaction {
-        private Connection _connection;
-        private boolean _autoCommit;
-        private int _hold;
-
-        Transaction(Connection connection, boolean autoCommit) {
-            this._connection = connection;
-            this._autoCommit = autoCommit;
-        }
-    }
-
     @Override
     public void holdConnection() {
         Transaction transaction = _currentTransaction.get();
@@ -193,10 +181,10 @@ public class JdbcHelperImpl implements JdbcHelper {
         return withResultSet(sql, new ResultSetCallback<List<T>>() {
             @Override
             public List<T> doInResultSet(ResultSet rs) throws SQLException {
-            	int index = 0;
-            	List<T> list = new ArrayList<T>();
+                int index = 0;
+                List<T> list = new ArrayList<T>();
                 if (rs.next()) {
-                	list.add(mapper.mapRow(rs, index));
+                    list.add(mapper.mapRow(rs, index));
                     index++;
                 }
                 return list;
@@ -243,7 +231,7 @@ public class JdbcHelperImpl implements JdbcHelper {
 
     @Override
     public <T> T withResultSet(String sql, ResultSetCallback<T> callback,
-                                        PreparedStatementSetter... setters) {
+                               PreparedStatementSetter... setters) {
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -264,6 +252,18 @@ public class JdbcHelperImpl implements JdbcHelper {
             JdbcUtil.close(ps);
 
             freeConnection(conn);
+        }
+    }
+
+    //事务定义
+    private static class Transaction {
+        private Connection _connection;
+        private boolean _autoCommit;
+        private int _hold;
+
+        Transaction(Connection connection, boolean autoCommit) {
+            this._connection = connection;
+            this._autoCommit = autoCommit;
         }
     }
 }

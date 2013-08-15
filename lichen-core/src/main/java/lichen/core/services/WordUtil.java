@@ -20,11 +20,7 @@
  */
 package lichen.core.services;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 
 /**
@@ -318,7 +314,7 @@ public final class WordUtil {
         String plform = RESOLVED_SINGLE_2_PLURALS.get(word);
         if (plform == null
                 && (RESOLVED_PLURALS.contains(word)
-                        || RESOLVED_PLURAL_2_SINGLES.containsKey(word))) {
+                || RESOLVED_PLURAL_2_SINGLES.containsKey(word))) {
             plform = word;
         }
         if (plform != null) return plform;
@@ -330,21 +326,17 @@ public final class WordUtil {
         }
 
         if (plform != null) { //映射里面已经得到
-        }
-        else if (tmp.endsWith("is")) {
+        } else if (tmp.endsWith("is")) {
             //Rule #5: For words that end in -is, change the -is to -es to make the plural form
             plform = replaceLast(tmp, "is", "es");
-        }
-        else if (tmp.endsWith("ix")) {
+        } else if (tmp.endsWith("ix")) {
             //Singular ends in -ix, plural ends in -ices: appendix/appendices, index/indices
             plform = replaceLast(tmp, "ix", "ices");
-        }
-        else if (tmp.endsWith("us")) {
+        } else if (tmp.endsWith("us")) {
             //Singular ends in -us, plural ends in -i: alumnus/alumni, focus/foci, nucleus/nuclei,
             //octopus/octopi, radius/radii, stimulus/stimuli, virus/viri
             plform = replaceLast(tmp, "us", "i");
-        }
-        else if (!tmp.endsWith("es") && (tmp.endsWith("z")
+        } else if (!tmp.endsWith("es") && (tmp.endsWith("z")
                 || tmp.endsWith("x") || tmp.endsWith("ch") || tmp.endsWith("sh"))) {
             //Rule #2: For words that end in a "hissing" sound (-s, -z, -x, -ch, -sh), add an -es to form the plural.
             //Note: I removed tmp.endsWith("s") || as this cause "posts"->"postses".
@@ -354,8 +346,7 @@ public final class WordUtil {
             if (tmp.endsWith("ay") || tmp.endsWith("ey") || tmp.endsWith("iy")
                     || tmp.endsWith("oy") || tmp.endsWith("uy")) {
                 plform = word + "s";
-            }
-            else {
+            } else {
                 //Rule #4: If the word ends in a consonant plus -y, change the -y into -ie and add an -s to form the plural.
                 plform = replaceLast(tmp, "y", "ies");
             }
@@ -374,38 +365,30 @@ public final class WordUtil {
                     || tmp.endsWith("eo") || tmp.endsWith("io")
                     || tmp.endsWith("oo") || tmp.endsWith("uo")) {
                 plform = word + "s";
-            }
-            else {
+            } else {
                 //All musical terms ending in -o have plurals ending in just -s.
                 //Most others by adding -es with exceptions
                 plform = word + "es";
             }
-        }
-        else if (tmp.endsWith("um")) {
+        } else if (tmp.endsWith("um")) {
             //Singular ends in -um, plural ends in -a: datum/data, curriculum/curricula
             plform = replaceLast(tmp, "um", "a");
-        }
-        else if (tmp.endsWith("on") && !tmp.endsWith("ation")) {
+        } else if (tmp.endsWith("on") && !tmp.endsWith("ation")) {
             //Singular ends in -on, plural ends in -a: criterion/criteria, phenomenon/phenomena
             plform = replaceLast(tmp, "on", "a");
-        }
-        else if (tmp.endsWith("a")) {
+        } else if (tmp.endsWith("a")) {
             //Singular ends in -a, plural ends in -ae: alumna/alumnae, formula/formulae, antenna/antennae
             plform = replaceLast(tmp, "a", "ae");
-        }
-        else if (tmp.endsWith("eau")) {
+        } else if (tmp.endsWith("eau")) {
             //Singular ends in -eau, plural ends in -eaux: bureau/bureaux, beau/beaux
             plform = replaceLast(tmp, "eau", "eaux");
-        }
-        else if (tmp.endsWith("man")) {
+        } else if (tmp.endsWith("man")) {
             //special
             plform = replaceLast(tmp, "man", "men");
-        }
-        else if (!tmp.endsWith("s")) {
+        } else if (!tmp.endsWith("s")) {
             //Rule #1: Add an -s to form the plural of most words.
             plform = word + "s";
-        }
-        else if (word.toUpperCase().equals(word)) {
+        } else if (word.toUpperCase().equals(word)) {
             //Rule #8: The plurals of single capital letters, acronyms, and Arabic numerals
             //(1,2,3,...) take an -s WITHOUT an apostrophe:
             plform = word + "s";

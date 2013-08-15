@@ -13,17 +13,17 @@
 // limitations under the License.
 package lichen.ar.internal.types;
 
+import lichen.ar.services.FieldType;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
-import lichen.ar.services.FieldType;
-
 /**
  * 映射数据库中的{@link java.sql.Types#DATE} 成 {@link java.util.Date} 对象.
- * @author weiweng
  *
+ * @author weiweng
  */
 public class DateType implements FieldType<Date> {
 

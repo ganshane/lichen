@@ -27,22 +27,34 @@ import java.util.Set;
 /**
  * 抽象class的实现类.
  * active record的基础实现类
- * @author jcai
+ *
  * @param <PKValue> 对应的主键值
+ * @author jcai
  */
 public abstract class ActiveRecordClassImpl<PKValue> {
-    /** 主键字段名称. **/
+    /**
+     * 主键字段名称.
+     */
     private String _pkFieldName = "id";
-    /** 对应的表名. **/
+    /**
+     * 对应的表名.
+     */
     private String _tableName;
-    /** 对应数据库的列名,自动初始化. **/
+    /**
+     * 对应数据库的列名,自动初始化.
+     */
     private Set<String> _columns;
-    /** 保存实体对应的值. **/
+    /**
+     * 保存实体对应的值.
+     */
     private Map<String, Object> _values = new HashMap<String, Object>();
-    /** 修改后的列的集合. **/
+    /**
+     * 修改后的列的集合.
+     */
     private Set<String> _columnsModified = new HashSet<String>();
 
     private Map<String, Field<?>> _fields;
+
     /**
      * @param persisterHelper persisterHelper
      */
@@ -53,7 +65,8 @@ public abstract class ActiveRecordClassImpl<PKValue> {
 
     /**
      * 设置数据.
-     * @param fieldName 列名
+     *
+     * @param fieldName  列名
      * @param fieldValue 列的值
      * @return 之前设置的值
      */

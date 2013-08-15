@@ -13,16 +13,16 @@
 // limitations under the License.
 package lichen.ar.internal.types;
 
+import lichen.ar.services.FieldType;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import lichen.ar.services.FieldType;
-
 /**
  * 映射数据库中的{@link java.sql.Types#TINYINT} 成 {@link java.lang.Byte} 对象.
- * @author weiweng
  *
+ * @author weiweng
  */
 public class TinyIntType implements FieldType<Byte> {
 

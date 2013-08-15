@@ -29,7 +29,7 @@ import java.sql.SQLException;
 public class BigIntegerType implements FieldType<BigInteger> {
     @Override
     public void set(PreparedStatement ps, int index, BigInteger value)
-        throws SQLException {
+            throws SQLException {
         ps.setBigDecimal(index, new BigDecimal(value));
     }
 

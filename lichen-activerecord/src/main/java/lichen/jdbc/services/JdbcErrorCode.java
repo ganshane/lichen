@@ -17,17 +17,25 @@ import lichen.core.services.ErrorCode;
 
 /**
  * jdbc module error code definition.
+ *
  * @author jcai
  */
 public enum JdbcErrorCode implements ErrorCode {
-    /** 3001 数据访问错误. **/
+    /**
+     * 3001 数据访问错误. *
+     */
     DATA_ACCESS_ERROR(3001),
-    /** 3002 驱动未找到. **/
+    /**
+     * 3002 驱动未找到. *
+     */
     DRIVER_NOT_FOUND(3002),
-    /** 3003 当前线程中未发现事务. **/
+    /**
+     * 3003 当前线程中未发现事务. *
+     */
     NO_TRANSACTION_IN_CURRENT_THREAD(3003);
 
     private int _errorCode;
+
     private JdbcErrorCode(int code) {
         this._errorCode = code;
     }

@@ -1,5 +1,7 @@
 package lichen.ar.internal.types;
 
+import lichen.ar.services.FieldType;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -9,12 +11,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import lichen.ar.services.FieldType;
-
 /**
  * binary抽象类.
- * @author Administrator
  *
+ * @author Administrator
  */
 public class BinaryType implements FieldType<byte[]> {
 
@@ -25,14 +25,15 @@ public class BinaryType implements FieldType<byte[]> {
 
     /**
      * get方法.
-     * @param rs 结果集
+     *
+     * @param rs    结果集
      * @param index 列
-     * @throws SQLException 异常
      * @return 字节数组
+     * @throws SQLException 异常
      */
     @Override
-    public  byte[] get(ResultSet rs, int index)
-        throws SQLException {
+    public byte[] get(ResultSet rs, int index)
+            throws SQLException {
         InputStream is = rs.getBinaryStream(index);
         ByteArrayOutputStream bos = null;
         try {
@@ -67,7 +68,7 @@ public class BinaryType implements FieldType<byte[]> {
     }
 
     @Override
-    public  void set(PreparedStatement ps, int index, byte[] object)
+    public void set(PreparedStatement ps, int index, byte[] object)
             throws SQLException {
         ps.setBinaryStream(index, new ByteArrayInputStream(object));
     }

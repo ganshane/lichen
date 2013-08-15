@@ -17,6 +17,7 @@ import lichen.ar.services.FieldType;
 
 /**
  * 针对对象的字段定义.
+ *
  * @author jcai
  */
 public class Field<T> {
@@ -27,22 +28,27 @@ public class Field<T> {
     //列名
     private String _columnName;
 
-    public  void setFieldType(FieldType<T> fieldType) {
+    public void setFieldType(FieldType<T> fieldType) {
         this._fieldType = fieldType;
     }
-    public  FieldType<T> getFieldType() {
+
+    public FieldType<T> getFieldType() {
         return _fieldType;
     }
-    public  void setFieldName(String fieldName) {
+
+    public void setFieldName(String fieldName) {
         this._fieldName = fieldName;
     }
-    public  String getFieldName() {
+
+    public String getFieldName() {
         return _fieldName;
     }
-    public  void setColumnName(String columnName) {
+
+    public void setColumnName(String columnName) {
         this._columnName = columnName;
     }
-    public  String getColumnName() {
+
+    public String getColumnName() {
         return _columnName;
     }
 }

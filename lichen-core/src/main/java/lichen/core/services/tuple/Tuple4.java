@@ -15,8 +15,9 @@ package lichen.core.services.tuple;
 
 /**
  * 包装四个值对象.
-* @author jcai
-*/
+ *
+ * @author jcai
+ */
 public final class Tuple4<T1, T2, T3, T4> {
     private T1 _value1;
     private T2 _value2;

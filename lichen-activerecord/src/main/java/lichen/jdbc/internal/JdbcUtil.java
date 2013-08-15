@@ -17,24 +17,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.ResultSet;
 
 /**
  * jdbc util class.
- * @author  jcai
+ *
+ * @author jcai
  */
 final class JdbcUtil {
+
+    private static Logger logger = LoggerFactory.getLogger(JdbcUtil.class);
 
     private JdbcUtil() {
 
     }
-    private static Logger logger = LoggerFactory.getLogger(JdbcUtil.class);
 
-   /**
+    /**
      * Close the given JDBC Connection and ignore any thrown exception.
      * This is useful for typical finally blocks in manual JDBC code.
+     *
      * @param con the JDBC Connection to close (may be <code>null</code>)
      */
     public static void close(Connection con) {
@@ -52,6 +55,7 @@ final class JdbcUtil {
     /**
      * Close the given JDBC Statement and ignore any thrown exception.
      * This is useful for typical finally blocks in manual JDBC code.
+     *
      * @param stmt the JDBC Statement to close (may be <code>null</code>)
      */
     public static void close(Statement stmt) {
@@ -69,6 +73,7 @@ final class JdbcUtil {
     /**
      * Close the given JDBC ResultSet and ignore any thrown exception.
      * This is useful for typical finally blocks in manual JDBC code.
+     *
      * @param rs the JDBC ResultSet to close (may be <code>null</code>)
      */
     public static void close(ResultSet rs) {

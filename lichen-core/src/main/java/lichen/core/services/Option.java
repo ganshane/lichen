@@ -16,20 +16,20 @@ package lichen.core.services;
 /**
  * 针对返回的值对象，可能有可能没有的值进行操作.
  * <p>
- *     整个框架中尽量减少null值的出现，尽量采用Option进行替代.<br/>
- *     譬如：<br/>
- *     <pre>
+ * 整个框架中尽量减少null值的出现，尽量采用Option进行替代.<br/>
+ * 譬如：<br/>
+ * <pre>
  *      public A findByName(String name);
  *     </pre>
- *     这种函数有可能返回null，有可能返回真正的值,
- *     为了减少系统出现{@link java.lang.NullPointerException}的现象,方法声明为：
- *     <pre>
+ * 这种函数有可能返回null，有可能返回真正的值,
+ * 为了减少系统出现{@link java.lang.NullPointerException}的现象,方法声明为：
+ * <pre>
  *      public Option&lt;A&gt; findByName(String name);
  *     </pre>
- *     <br/>
- *     当查询到值的时候，采用 Option.some(value)返回，如果没有值则采用Option.none()进行返回.
- *     客户端通过下面代码进行取值
- *     <pre>
+ * <br/>
+ * 当查询到值的时候，采用 Option.some(value)返回，如果没有值则采用Option.none()进行返回.
+ * 客户端通过下面代码进行取值
+ * <pre>
  *         Option&lt;A&gt; objOpt = findByName("name");
  *         if(objOpt.isDefined()){
  *             //DO something
@@ -38,7 +38,7 @@ package lichen.core.services;
  *
  *         }
  *     </pre>
- *     如果直接调用 objOpt.get()，将抛出LichenException(OPTIONS_IS_NONE)的异常消息,将通过堆栈定位消息.
+ * 如果直接调用 objOpt.get()，将抛出LichenException(OPTIONS_IS_NONE)的异常消息,将通过堆栈定位消息.
  * </p>
  *
  * @author jcai
@@ -84,6 +84,7 @@ public abstract class Option<T> {
         public boolean isDefined() {
             return false;
         }
+
         public Object get() {
             return new LichenException(LichenCoreErrorCode.OPTION_IS_NONE);
         }

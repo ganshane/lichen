@@ -21,6 +21,7 @@ import java.sql.SQLException;
 
 /**
  * 映射数据库中的{@link java.sql.Types#BIT} 成 {@link java.lang.Boolean} 对象.
+ *
  * @author weiweng
  */
 public class BitType implements FieldType<Boolean> {

@@ -15,27 +15,34 @@ package lichen.ar.services;
 
 /**
  * active record基础类.
+ *
  * @author jcai
  */
 public abstract class ActiveRecord {
     private String _tableName;
     private String _pkField = "id";
-    public  Long save() {
+
+    public Long save() {
         return -1L;
     }
-    public  int delete() {
+
+    public int delete() {
         return 1;
     }
-    public  void setPkField(String vpkField) {
+
+    public void setPkField(String vpkField) {
         this._pkField = vpkField;
     }
-    public  String getPkField() {
+
+    public String getPkField() {
         return _pkField;
     }
-    public  void setTableName(String vtableName) {
+
+    public void setTableName(String vtableName) {
         this._tableName = vtableName;
     }
-    public  String getTableName() {
+
+    public String getTableName() {
         return _tableName;
     }
 }
