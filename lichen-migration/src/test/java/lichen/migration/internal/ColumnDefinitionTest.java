@@ -23,16 +23,16 @@ import org.junit.Test;
  */
 public class ColumnDefinitionTest {
     @Test
-    public void test_autoincrement(){
+    public void testAutotoIncrement() {
         A a = new A();
         a.columnNameOpt = Option.Some("test_column");
         a.initialize();
         Assert.assertTrue(a.isAutoIncrement);
-        Assert.assertEquals(a.options.size(),0);
+        Assert.assertEquals(a.options.size(), 0);
     }
     @ColumnSupportsAutoIncrement
-    class A extends ColumnDefinition{
-        public A(){
+    class A extends ColumnDefinition {
+        public A() {
             Options optionsService = new OptionsImpl();
             options.add(optionsService.AutoIncrement());
             options.add(optionsService.AutoIncrement());

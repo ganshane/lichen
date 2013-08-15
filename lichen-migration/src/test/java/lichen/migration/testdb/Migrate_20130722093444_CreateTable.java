@@ -25,15 +25,16 @@ import javax.inject.Inject;
 /**
  * @author jcai
  */
-public class Migrate_20130722093444_CreateTable implements Migration{
+public class Migrate_20130722093444_CreateTable implements Migration {
     @Inject
-    private MigrationHelper helper;
+    private MigrationHelper _helper;
     @Inject
-    private Options options;
+    private Options _options;
 
     @Override
     public void up() throws Throwable {
-        helper.createTable("test_table",new TableCallback() {
+        final int size = 10;
+        _helper.createTable("test_table", new TableCallback() {
             @Override
             public void doInTable(TableDefinition t) throws Throwable {
                 t.bigint("bigint");
@@ -42,21 +43,21 @@ public class Migrate_20130722093444_CreateTable implements Migration{
                 t.char_("char_");
                 t.column("column_", SqlType.BigintType);
                 //t.decimal("decimal_",Op);
-                t.integer("int_",options.Unique());
+                t.integer("int_", _options.Unique());
                 t.smallint("sint_");
                 t.timestamp("ts");
                 t.varbinary("vb");
-                t.varchar("vc",options.Limit(10),options.Default("'asdf'"));
+                t.varchar("vc", _options.Limit(size), _options.Default("'asdf'"));
             }
         });
 
-        helper.addColumn("test_table","test_col",SqlType.VarcharType,options.NotNull());
+        _helper.addColumn("test_table", "test_col", SqlType.VarcharType, _options.NotNull());
 
     }
 
     @Override
     public void down() throws Throwable {
-        helper.removeColumn("test_table","test_col");
-        helper.dropTable("test_table");
+        _helper.removeColumn("test_table", "test_col");
+        _helper.dropTable("test_table");
     }
 }

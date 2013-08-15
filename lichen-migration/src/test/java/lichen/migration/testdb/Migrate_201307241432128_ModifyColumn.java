@@ -14,34 +14,33 @@
 package lichen.migration.testdb;
 
 import lichen.migration.model.SqlType;
-import lichen.migration.model.TableDefinition;
 import lichen.migration.services.Migration;
 import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.Options;
-import lichen.migration.services.TableCallback;
 
 import javax.inject.Inject;
 
 /**
  * @author jcai
  */
-public class Migrate_201307241432128_ModifyColumn implements Migration{
+public class Migrate_201307241432128_ModifyColumn implements Migration {
     @Inject
-    private MigrationHelper helper;
+    private MigrationHelper _helper;
     @Inject
-    private Options options;
+    private Options _options;
 
     @Override
     public void up() throws Throwable {
-        helper.alterColumn("test_table","test_col",
+        final int size = 10;
+        _helper.alterColumn("test_table", "test_col",
                 SqlType.DecimalType,
-                options.NotNull(),
-                options.Precision(10),
-                options.Scale(2));
+                _options.NotNull(),
+                _options.Precision(size),
+                _options.Scale(2));
     }
 
     @Override
     public void down() throws Throwable {
-        helper.alterColumn("test_table","test_col",SqlType.VarcharType,options.NotNull());
+        _helper.alterColumn("test_table", "test_col", SqlType.VarcharType, _options.NotNull());
     }
 }

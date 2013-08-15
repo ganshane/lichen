@@ -13,7 +13,6 @@
 // limitations under the License.
 package lichen.migration.testdb.index;
 
-import lichen.migration.model.SqlType;
 import lichen.migration.model.TableDefinition;
 import lichen.migration.services.Migration;
 import lichen.migration.services.MigrationHelper;
@@ -25,15 +24,15 @@ import javax.inject.Inject;
 /**
  * @author jcai
  */
-public class Migrate_20130804213344_CreateTable implements Migration{
+public class Migrate_20130804213344_CreateTable implements Migration {
     @Inject
-    private MigrationHelper helper;
+    private MigrationHelper _helper;
     @Inject
-    private Options options;
+    private Options _options;
 
     @Override
     public void up() throws Throwable {
-        helper.createTable("test_table", new TableCallback() {
+        _helper.createTable("test_table", new TableCallback() {
             @Override
             public void doInTable(TableDefinition t) throws Throwable {
                 t.varchar("field1");
@@ -49,6 +48,6 @@ public class Migrate_20130804213344_CreateTable implements Migration{
 
     @Override
     public void down() throws Throwable {
-        helper.dropTable("test_table");
+        _helper.dropTable("test_table");
     }
 }

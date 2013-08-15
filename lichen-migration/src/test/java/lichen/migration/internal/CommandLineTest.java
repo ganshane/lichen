@@ -16,14 +16,14 @@ package lichen.migration.internal;
 import org.junit.Test;
 
 /**
- * command line test
+ * command line test.
  * @author jcai
  */
 public class CommandLineTest {
     @Test
-    public void test_up(){
+    public void testUp() {
         String file = getClass().getResource("/test_rep").getFile();
-        new CommandLine(new String[]{"--path="+file,"up"}).execute();
+        new CommandLine(new String[]{"--path=" + file, "up"}).execute();
         //new CommandLine(new String[]{"--path=support","down"}).execute();
     }
 }
