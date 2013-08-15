@@ -19,41 +19,43 @@ import lichen.migration.model.SqlType;
  * @author jcai
  */
 @ColumnSupportsDefault
-class H2TimestampColumnDefinition
-        extends ColumnDefinition{
+class H2TimestampColumnDefinition extends ColumnDefinition {
     // H2 does not take a limit specifier for TIMESTAMP types.
     @Override
-    protected String sql(){return "TIMESTAMP";}
+    protected String sql() {
+        return "TIMESTAMP";
+    }
 }
 
 @ColumnSupportsLimit
-class H2VarbinaryColumnDefinition
-        extends ColumnDefinition{
+class H2VarbinaryColumnDefinition extends ColumnDefinition {
     @Override
-    protected String sql(){return "CLOB";}
+    protected String sql() {
+        return "CLOB";
+    }
 }
 
-class H2DatabaseAdapter extends DatabaseAdapter{
-    public H2DatabaseAdapter(Option<String> schemaNameOpt){
+class H2DatabaseAdapter extends DatabaseAdapter {
+    public H2DatabaseAdapter(Option<String> schemaNameOpt) {
         super(schemaNameOpt);
         unquotedNameConverter = UnquotedNameConverter.UppercaseUnquotedNameConverter;
         addingForeignKeyConstraintCreatesIndex = true;
     }
-    protected String alterColumnSql(Option<String> schema_name_opt,ColumnDefinition column_definition){
-        return new java.lang.StringBuilder(512)
-                .append("ALTER TABLE ")
-                .append(quoteTableName(schema_name_opt, column_definition.tableName()))
-                .append(" ALTER COLUMN ")
-                .append(quoteColumnName(column_definition.columnName()))
-                .append(" ")
-                .append(column_definition.toSql())
-                .toString();
+
+    protected String alterColumnSql(Option<String> schemaNameOpt,
+            ColumnDefinition columnDefinition) {
+        final int size = 512;
+        return new java.lang.StringBuilder(size).append("ALTER TABLE ").append(
+                quoteTableName(schemaNameOpt, columnDefinition.tableName()))
+                .append(" ALTER COLUMN ").append(
+                        quoteColumnName(columnDefinition.columnName()))
+                .append(" ").append(columnDefinition.toSql()).toString();
     }
 
     @Override
     protected ColumnDefinition columnDefinitionFactory(
-            SqlType column_type){
-        switch (column_type){
+            SqlType columnType) {
+        switch (columnType) {
             case BigintType:
                 return new DefaultBigintColumnDefinition();
             case BlobType:
@@ -74,24 +76,22 @@ class H2DatabaseAdapter extends DatabaseAdapter{
                 return new H2VarbinaryColumnDefinition();
             case VarcharType:
                 return new DefaultVarcharColumnDefinition();
+            default:
+                break;
         }
         throw new IllegalArgumentException("Not support type");
     }
 
 
     @Override
-    public String removeIndexSql(Option<String> schema_name_opt,
-                                 String table_name,
-                                 String index_name)
-    {
-        return "DROP INDEX " +
-                quoteColumnName(index_name);
+    public String removeIndexSql(Option<String> schemaNameOpt,
+            String tableName, String indexName) {
+        return "DROP INDEX " + quoteColumnName(indexName);
     }
 
     @Override
     public String lockTableSql(Option<String> schemaNameOpt, String tableName) {
-        return "SELECT * FROM " +
-                quoteTableName(schemaNameOpt, tableName) +
-                " FOR UPDATE";
+        return "SELECT * FROM " + quoteTableName(schemaNameOpt, tableName)
+                + " FOR UPDATE";
     }
 }

@@ -23,7 +23,7 @@ import lichen.migration.model.Unique;
 import java.util.Arrays;
 
 /**
- * 数据库适配器
+ * 数据库适配器.
  * @author jcai
  */
 abstract class DatabaseAdapter {
@@ -39,12 +39,13 @@ abstract class DatabaseAdapter {
      * @return a DatabaseAdapter suitable to use for the database
      */
     public static DatabaseAdapter forVendor(DatabaseVendor vendor,
-                  Option<String> schemaNameOpt){
-        switch (vendor){
+            Option<String> schemaNameOpt) {
+        switch (vendor) {
             case H2:
                 return new H2DatabaseAdapter(schemaNameOpt);
             default:
-                throw new UnsupportedOperationException("not support adapter "+vendor);
+                throw new UnsupportedOperationException("not support adapter "
+                        + vendor);
         }
     }
     Option<String> schemaNameOpt;
@@ -65,8 +66,7 @@ abstract class DatabaseAdapter {
      */
     protected UnquotedNameConverter unquotedNameConverter;
     /**
-     * 		如Derby, Oracle and PostgreSQL使用CONSTRAINT，而MySQL使用FOREIGN KEY
-     * 
+     * 如Derby, Oracle and PostgreSQL使用CONSTRAINT，而MySQL使用FOREIGN KEY.
      * The SQL keyword(s) or "phrase" used to drop a foreign key
      * constraint.  For example, Derby, Oracle and PostgreSQL use
      *
@@ -96,13 +96,13 @@ abstract class DatabaseAdapter {
      */
     protected boolean addingForeignKeyConstraintCreatesIndex;
 
-    public DatabaseAdapter(Option<String> schemaNameOpt){
-        this.schemaNameOpt = schemaNameOpt;
+    public DatabaseAdapter(Option<String> newSchemaNameOpt) {
+        this.schemaNameOpt = newSchemaNameOpt;
     }
     public ColumnDefinition newColumnDefinition(String tableName,
                             String columnName,
                             SqlType columnType,
-                            ColumnOption ... options){
+                            ColumnOption ... options) {
 
         ColumnDefinition d = columnDefinitionFactory(columnType);
         d.adapterOpt = Option.Some(this);
@@ -122,27 +122,28 @@ abstract class DatabaseAdapter {
      * @param schemaName the name of the schema to quote
      * @return a properly quoted schema name
      */
-    public String quoteSchemaName(String schemaName){
+    public String quoteSchemaName(String schemaName) {
         return quoteCharacter + unquotedNameConverter(schemaName) + quoteCharacter;
     }
     /**
      * Quote a table name, prepending the quoted schema name to the
      * quoted table name along with a '.' if a schema name is provided.
      *
-     * @param schemaNameOpt an optional schema name
+     * @param newSchemaNameOpt an optional schema name
      * @param tableName the name of the table to quote
      * @return the table name properly quoted for the database,
      *         prepended with the quoted schema name and a '.' if a
      *         schema name is provided
      */
-    public String quoteTableName(Option<String> schemaNameOpt,String tableName){
-        StringBuilder sb = new StringBuilder(128);
+    public String quoteTableName(Option<String> newSchemaNameOpt, String tableName) {
+        final int size = 128;
+        StringBuilder sb = new StringBuilder(size);
 
-        if(schemaNameOpt.isDefined()){
-            sb.append(quoteSchemaName(schemaNameOpt.get()))
+        if (newSchemaNameOpt.isDefined()) {
+            sb.append(quoteSchemaName(newSchemaNameOpt.get()))
                     .append('.');
         }
-        
+
         return sb.append(quoteCharacter)
                 .append(unquotedNameConverter(tableName))
                 .append(quoteCharacter)
@@ -158,22 +159,23 @@ abstract class DatabaseAdapter {
      *         prepended with the quoted schema name and a '.' if the
      *         database adapter was provided with a default schema name
      */
-    public String quoteTableName(String tableName){
+    public String quoteTableName(String tableName) {
         // use the default schemaNameOpt defined in the adapter
         return quoteTableName(schemaNameOpt, tableName);
     }
     /**
      * Quote an index name.
      *
-     * @param schemaNameOpt an optional schema name
+     * @param newSchemaNameOpt an optional schema name
      * @param indexName the name of the index to quote
      * @return a properly quoted index name
      */
-    public String quoteIndexName(Option<String> schemaNameOpt,String indexName){
-        StringBuilder sb = new StringBuilder(128);
+    public String quoteIndexName(Option<String> newSchemaNameOpt, String indexName) {
+        final int size = 128;
+        StringBuilder sb = new StringBuilder(size);
 
-        if(schemaNameOpt.isDefined()){
-                sb.append(quoteSchemaName(schemaNameOpt.get()))
+        if (newSchemaNameOpt.isDefined()) {
+                sb.append(quoteSchemaName(newSchemaNameOpt.get()))
                         .append('.');
         }
         return sb.append(quoteCharacter)
@@ -187,7 +189,7 @@ abstract class DatabaseAdapter {
     * @param columnName the name of the column to quote
     * @return a properly quoted column name
     */
-    public String quoteColumnName(String columnName){
+    public String quoteColumnName(String columnName) {
         return quoteCharacter + unquotedNameConverter(columnName) + quoteCharacter;
     }
 
@@ -195,12 +197,12 @@ abstract class DatabaseAdapter {
         return unquotedNameConverter.apply(columnName);
     }
 
-    protected abstract String alterColumnSql(Option<String> schemaNameOpt, ColumnDefinition columnDefinition);
+    protected abstract String alterColumnSql(Option<String> newSchemaNameOpt, ColumnDefinition newColumnDefinition);
     /**
      * Different databases require different SQL to alter a column's
      * definition.
      *
-     * @param schemaNameOpt the optional schema name to qualify the
+     * @param newSchemaNameOpt the optional schema name to qualify the
      *        table name
      * @param tableName the name of the table with the column
      * @param columnName the name of the column
@@ -209,12 +211,12 @@ abstract class DatabaseAdapter {
      *        customize the column
      * @return the SQL to alter the column
      */
-    public String alterColumnSql(Option<String> schemaNameOpt,
+    public String alterColumnSql(Option<String> newSchemaNameOpt,
                        String tableName,
                        String columnName,
                        SqlType columnType,
-                       ColumnOption ... options){
-        return alterColumnSql(schemaNameOpt,
+                       ColumnOption ... options) {
+        return alterColumnSql(newSchemaNameOpt,
                 newColumnDefinition(tableName, columnName, columnType, options));
     }
     /**
@@ -231,7 +233,7 @@ abstract class DatabaseAdapter {
     public String alterColumnSql(String tableName,
                        String columnName,
                        SqlType columnType,
-                       ColumnOption ... options){
+                       ColumnOption ... options) {
         return alterColumnSql(schemaNameOpt,
                 tableName,
                 columnName,
@@ -241,18 +243,19 @@ abstract class DatabaseAdapter {
     /**
      * Different databases require different SQL to drop a column.
      *
-     * @param schemaNameOpt the optional schema name to qualify the
+     * @param newSchemaNameOpt the optional schema name to qualify the
      *        table name
      * @param tableName the name of the table with the column
      * @param columnName the name of the column
      * @return the SQL to drop the column
      */
-    public String removeColumnSql(Option<String> schemaNameOpt,
+    public String removeColumnSql(Option<String> newSchemaNameOpt,
                         String tableName,
-                        String columnName){
-        return new StringBuilder(512)
+                        String columnName) {
+        final int size = 512;
+        return new StringBuilder(size)
                 .append("ALTER TABLE ")
-                .append(quoteTableName(schemaNameOpt, tableName))
+                .append(quoteTableName(newSchemaNameOpt, tableName))
                 .append(" DROP ")
                 .append(quoteColumnName(columnName))
                 .toString();
@@ -266,57 +269,59 @@ abstract class DatabaseAdapter {
      * @return the SQL to drop the column
      */
     public String removeColumnSql(String tableName,
-                        String columnName){
+                        String columnName) {
         return removeColumnSql(schemaNameOpt, tableName, columnName);
     }
-    
-    
+
+
     /**
-     * @description: 产生创建数据库索引的sql语句
-     * @param schemaNameOpt 模式选项，如数据库用户名
+     * @description: 产生创建数据库索引的sql语句.
+     * @param newSchemaNameOpt 模式选项，如数据库用户名
      * @param tableName 索引依赖的表名
      * @param columnNames 索引依赖的列
-     * @param options 
+     * @param options
      * @return sql语句
      */
-    public String addIndexSql(Option<String> schemaNameOpt,
-    				String tableName, String[] columnNames,
-    				IndexOption... options) {
-    	StringBuffer sql = new StringBuffer();
-    	StringBuffer indexName = new StringBuffer();
-    	boolean isUnique = false;
-    	for(int i = 0; i < options.length; i++) {
-    		IndexOption option = options[i];
-    		if(option instanceof Name) {	//指定了索引的名称
-    			indexName.append(((Name)option).getValue());
-    		}else if(option instanceof Unique) {	//创建唯一索引
-    			isUnique = true;
-    		}
-    	}
-    	
-    	//如果未指定options，则自动按照idx_tableName_字段1_字段2_..._字段n（按照列的升序排列）
-    	if(indexName.length() == 0) {
-    		Arrays.sort(columnNames);
-    		indexName.append("IDX_").append(tableName);
-    		indexName.append("_").append(StringUtils.join(columnNames, "_"));
-    		for(int i = 0; i < columnNames.length; i++) {	//为列加上特殊修饰符号
-    			columnNames[i] = quoteColumnName(columnNames[i]).trim();
-    		}
-    	}
-    	
-    	sql.append("CREATE")
-	    	.append(isUnique ? " UNIQUE " : " ")
-	    	.append("INDEX ")
-	    	.append(quoteTableName(schemaNameOpt, indexName.toString()))
-	    	.append(" ON ")
-	    	.append(quoteTableName(tableName).trim())
-	    	.append("(")
-	    	.append(StringUtils.join(columnNames, ",").toUpperCase())
-	    	.append(")");
-    	return sql.toString();
+    public String addIndexSql(Option<String> newSchemaNameOpt,
+            String tableName, String[] columnNames, IndexOption... options) {
+        StringBuffer sql = new StringBuffer();
+        StringBuffer indexName = new StringBuffer();
+        boolean isUnique = false;
+        for (int i = 0; i < options.length; i++) {
+            IndexOption option = options[i];
+            if (option instanceof Name) { // 指定了索引的名称
+                indexName.append(((Name) option).getValue());
+            } else if (option instanceof Unique) { // 创建唯一索引
+                isUnique = true;
+            }
+        }
+
+        // 如果未指定options，则自动按照idx_tableName_字段1_字段2_..._字段n（按照列的升序排列）
+        if (indexName.length() == 0) {
+            Arrays.sort(columnNames);
+            indexName.append("IDX_").append(tableName);
+            indexName.append("_").append(StringUtils.join(columnNames, "_"));
+            for (int i = 0; i < columnNames.length; i++) { // 为列加上特殊修饰符号
+                columnNames[i] = quoteColumnName(columnNames[i]).trim();
+            }
+        }
+
+        String uniqueStr = " ";
+        if (isUnique) {
+            uniqueStr = " UNIQUE ";
+        }
+        sql.append("CREATE")
+           .append(uniqueStr)
+           .append("INDEX ")
+           .append(quoteTableName(newSchemaNameOpt, indexName.toString()))
+           .append(" ON ")
+           .append(quoteTableName(tableName).trim())
+           .append("(")
+           .append(StringUtils.join(columnNames, ",").toUpperCase())
+           .append(")");
+        return sql.toString();
     }
-    
-    
+
     /**
      * @description: 重载addIndexSql(schemaNameOpt, tableName, columnNames, options)方法
      * @param tableName
@@ -325,25 +330,24 @@ abstract class DatabaseAdapter {
      * @return
      */
     public String addIndexSql(String tableName, String[] columnNames,
-			IndexOption... options) {
-    	return addIndexSql(schemaNameOpt, tableName, columnNames, options);
+            IndexOption... options) {
+        return addIndexSql(schemaNameOpt, tableName, columnNames, options);
     }
-    
-    
+
     /**
      * Different databases require different SQL to drop an index.
      *
-     * @param schemaNameOpt the optional schema name to qualify the
-     *        table name
-     * @param tableName the name of the table with the index
-     * @param indexName the name of the index
+     * @param newSchemaNameOpt
+     *            the optional schema name to qualify the table name
+     * @param tableName
+     *            the name of the table with the index
+     * @param indexName
+     *            the name of the index
      * @return the SQL to drop the index
      */
-    public String removeIndexSql(Option<String> schemaNameOpt,
-                       String tableName,
-                       String indexName){
-        return "DROP INDEX " +
-                quoteTableName(schemaNameOpt, indexName);
+    public String removeIndexSql(Option<String> newSchemaNameOpt,
+            String tableName, String indexName) {
+        return "DROP INDEX " + quoteTableName(newSchemaNameOpt, indexName);
     }
     /**
      * Different databases require different SQL to drop an index.
@@ -354,10 +358,10 @@ abstract class DatabaseAdapter {
      * @return the SQL to drop the index
      */
     public String removeIndexSql(String tableName,
-                       String indexName){
+                       String indexName) {
         return removeIndexSql(schemaNameOpt, tableName, indexName);
     }
-    
+
     /**
      * @description: 重载removeIndexSql(tableName,indexName)方法，得到删除索引语句
      * @param tableName 索引依赖的表名
@@ -365,39 +369,38 @@ abstract class DatabaseAdapter {
      * @param name 指定索引名称
      */
     public String removeIndexSql(String tableName, String[] columnNames,
-			Name... name) {
-    	StringBuffer indexName = new StringBuffer();
-		//如果未指定Name，则默认索引名称为：idx_tableName_字段1_字段2_..._字段n（按照列的升序排列）
-		if(name.length == 0) {
-			Arrays.sort(columnNames);
-			indexName.append("IDX_").append(tableName);
-			indexName.append("_").append(StringUtils.join(columnNames, "_"));
-		}else {
-			indexName.append(name[0].getValue());	//只取第一个值作为索引名称
-		}
-		return removeIndexSql(tableName, indexName.toString());
+            Name... name) {
+        StringBuffer indexName = new StringBuffer();
+        // 如果未指定Name，则默认索引名称为：idx_tableName_字段1_字段2_..._字段n（按照列的升序排列）
+        if (name.length == 0) {
+            Arrays.sort(columnNames);
+            indexName.append("IDX_").append(tableName);
+            indexName.append("_").append(StringUtils.join(columnNames, "_"));
+        } else {
+            indexName.append(name[0].getValue()); // 只取第一个值作为索引名称
+        }
+        return removeIndexSql(tableName, indexName.toString());
     }
-			
+
     /**
      * Different databases require different SQL to lock a table.
      *
      * @param tableName the name of the table to lock
      * @return the SQL to lock the table
      */
-    public String lockTableSql(String tableName){
+    public String lockTableSql(String tableName) {
         return lockTableSql(schemaNameOpt, tableName);
     }
     /**
      * Different databases require different SQL to lock a table.
      *
-     * @param schemaNameOpt the optional schema name to qualify the
+     * @param newSchemaNameOpt the optional schema name to qualify the
      *        table name
      * @param tableName the name of the table to lock
      * @return the SQL to lock the table
      */
-    public String lockTableSql(Option<String> schemaNameOpt,String tableName){
-        return "LOCK TABLE " +
-                quoteTableName(schemaNameOpt, tableName) +
-                " IN EXCLUSIVE MODE";
+    public String lockTableSql(Option<String> newSchemaNameOpt, String tableName) {
+        return "LOCK TABLE " + quoteTableName(newSchemaNameOpt, tableName)
+                + " IN EXCLUSIVE MODE";
     }
 }

@@ -14,11 +14,11 @@
 package lichen.migration.internal;
 
 /**
- * migration exception
+ * migration exception.
  * @author jcai
  */
-public class MigrationException extends RuntimeException{
-    public MigrationException(String message){
+public class MigrationException extends RuntimeException {
+    public MigrationException(String message) {
         super(message);
     }
 

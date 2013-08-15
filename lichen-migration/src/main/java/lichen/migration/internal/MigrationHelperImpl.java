@@ -17,27 +17,24 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.Arrays;
 
 import lichen.migration.model.ColumnOption;
 import lichen.migration.model.IndexOption;
 import lichen.migration.model.Name;
 import lichen.migration.model.SqlType;
 import lichen.migration.model.TableOption;
-import lichen.migration.model.Unique;
 import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.TableCallback;
-import lichen.migration.internal.util.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 数据库升级抽象类
+ * 数据库升级抽象类.
  * @author jcai
  */
 class MigrationHelperImpl implements MigrationHelper {
-    private final static Logger logger = LoggerFactory.getLogger(MigrationHelperImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(MigrationHelperImpl.class);
 
     /**
      * The raw connection to the database that underlies the logging
@@ -62,7 +59,9 @@ class MigrationHelperImpl implements MigrationHelper {
      * good state, as all of the other migration methods defined in
      * MigrationHelper use the same connection.
      */
-    public Connection rawConnection(){ return rawConnectionOpt.get();}
+    public Connection rawConnection() {
+        return rawConnectionOpt.get();
+    }
 
     /**
      * The connection to the database that is used for the migration.
@@ -81,7 +80,9 @@ class MigrationHelperImpl implements MigrationHelper {
      * and leave it in a good state, as all of the other migration
      * methods defined in MigrationHelper use the same connection.
      */
-    public Connection connection(){return connectionOpt.get();}
+    public Connection connection() {
+        return connectionOpt.get();
+    }
 
     /**
      * The database adapter that will be used for the migration.
@@ -95,12 +96,16 @@ class MigrationHelperImpl implements MigrationHelper {
     /**
      * The database adapter that will be used for the migration.
      */
-    private DatabaseAdapter adapter(){return adapterOpt.get();}
+    private DatabaseAdapter adapter() {
+        return adapterOpt.get();
+    }
 
     /**
      * The vendor of the database the migration is being run on.
      */
-    public DatabaseVendor databaseVendor(){return adapter().databaseVendor;}
+    public DatabaseVendor databaseVendor() {
+        return adapter().databaseVendor;
+    }
 
 
     /**
@@ -118,7 +123,7 @@ class MigrationHelperImpl implements MigrationHelper {
      *     references parent (pk);
      *   create index idx_child_pk_parent on child (pk_parent);
      */
-    public boolean addingForeignKeyConstraintCreatesIndex(){
+    public boolean addingForeignKeyConstraintCreatesIndex() {
         return adapter().addingForeignKeyConstraintCreatesIndex;
     }
 
@@ -127,10 +132,10 @@ class MigrationHelperImpl implements MigrationHelper {
      *
      * @param sql the SQL to execute
      */
-    final public void execute(final String sql) throws Throwable{
+    public final void execute(final String sql) throws Throwable {
         ResourceUtils.autoClosingStatement(connection().createStatement(), new Function1<Statement, Void>() {
             public Void apply(Statement parameter) throws Throwable {
-                logger.debug("execute sql:{}",sql);
+                logger.debug("execute sql:{}", sql);
                 parameter.execute(sql);
                 return null;
             }
@@ -152,12 +157,12 @@ class MigrationHelperImpl implements MigrationHelper {
      * @param f the Function1[PreparedStatement,Unit] that will be given
      *        a new prepared statement
      */
-    final public void withPreparedStatement(final String sql, final Function1<PreparedStatement,Void> f) {
+    public final void withPreparedStatement(final String sql, final Function1<PreparedStatement, Void> f) {
         ResourceUtils.autoCommittingConnection(connection(),
                 ResourceUtils.CommitBehavior.CommitUponReturnOrRollbackUponException,
                 new Function1<Connection, Object>() {
                     public Object apply(Connection parameter) throws Throwable {
-                        return ResourceUtils.autoClosingStatement(parameter.prepareStatement(sql),f);
+                        return ResourceUtils.autoClosingStatement(parameter.prepareStatement(sql), f);
                     }
                 }
         );
@@ -174,11 +179,11 @@ class MigrationHelperImpl implements MigrationHelper {
      *        set
      * @return the result of f if f returns normally
      */
-    final public <R> R withResultSet(ResultSet rs,Function1<ResultSet,R> f){
-        return ResourceUtils.autoClosingResultSet(rs,f);
+    public final <R> R withResultSet(ResultSet rs, Function1<ResultSet, R> f) {
+        return ResourceUtils.autoClosingResultSet(rs, f);
     }
 
-    final public void createTable(String tableName, TableCallback body, TableOption... options) throws Throwable {
+    public final void createTable(String tableName, TableCallback body, TableOption... options) throws Throwable {
         TableDefinitionImpl tableDefinition = new TableDefinitionImpl(adapter(), tableName);
 
         body.doInTable(tableDefinition);
@@ -187,7 +192,7 @@ class MigrationHelperImpl implements MigrationHelper {
         execute(sql);
     }
 
-    final public void addColumn(String tableName,
+    public final void addColumn(String tableName,
                                 String columnName,
                                 SqlType columnType,
                                 ColumnOption... options) throws Throwable {
@@ -198,7 +203,7 @@ class MigrationHelperImpl implements MigrationHelper {
         execute(sql);
     }
 
-    final public void alterColumn(String tableName,
+    public final void alterColumn(String tableName,
                                   String columnName,
                                   SqlType columnType,
                                   ColumnOption... options) throws Throwable {
@@ -208,38 +213,37 @@ class MigrationHelperImpl implements MigrationHelper {
                 options));
     }
 
-    final public void removeColumn(String tableName,
+    public final void removeColumn(String tableName,
                                    String columnName) throws Throwable {
         execute(adapter().removeColumnSql(tableName, columnName));
     }
-    final public void dropTable(String tableName) throws Throwable {
+    public final void dropTable(String tableName) throws Throwable {
         String sql = "DROP TABLE " + adapter().quoteTableName(tableName);
         execute(sql);
     }
 
-    
     @Override
     public void addIndex(String tableName, String[] columnNames,
-    		IndexOption... options) throws Throwable {
-    	String addIndexSql = adapter().addIndexSql(tableName, columnNames, options);
-    	execute(addIndexSql);
+            IndexOption... options) throws Throwable {
+        String addIndexSql = adapter().addIndexSql(tableName, columnNames, options);
+        execute(addIndexSql);
     }
-    
+
     @Override
     public void addIndex(String tableName, String columnName,
-			IndexOption... options) throws Throwable {
-		addIndex(tableName, new String[]{columnName}, options);
-	}
+            IndexOption... options) throws Throwable {
+        addIndex(tableName, new String[]{columnName}, options);
+    }
 
-	@Override
-	public void removeIndex(String tableName, String[] columnNames,
-			Name... name) throws Throwable {
-		String removeSql = adapter().removeIndexSql(tableName, columnNames, name);
-		execute(removeSql);
-	}
-    
-	@Override
-	public void removeIndex(String tableName, String columnName, Name... name) throws Throwable {
-		removeIndex(tableName, new String[]{columnName}, name);
-	}
+    @Override
+    public void removeIndex(String tableName, String[] columnNames,
+            Name... name) throws Throwable {
+        String removeSql = adapter().removeIndexSql(tableName, columnNames, name);
+        execute(removeSql);
+    }
+
+    @Override
+    public void removeIndex(String tableName, String columnName, Name... name) throws Throwable {
+        removeIndex(tableName, new String[]{columnName}, name);
+    }
 }

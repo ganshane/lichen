@@ -19,38 +19,39 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 /**
- * build connection
+ * build connection.
  * @author jcai
  */
 class ConnectionBuilder {
-    private String url;
-    private String username;
-    private String password;
-    private DataSource dataSource;
+    private String _url;
+    private String _username;
+    private String _password;
+    private DataSource _dataSource;
 
-    ConnectionBuilder(String url,String username,String password){
-        this.url = url;
-        this.username = username;
-        this.password = password;
+    ConnectionBuilder(String url, String username, String password) {
+        this._url = url;
+        this._username = username;
+        this._password = password;
     }
 
     public ConnectionBuilder(DataSource dataSource) {
-        this.dataSource = dataSource;
+        this._dataSource = dataSource;
     }
 
-    <R> R withConnection(final ResourceUtils.CommitBehavior commitBehavior, final Function1<Connection, R> f){
+    <R> R withConnection(final ResourceUtils.CommitBehavior commitBehavior, final Function1<Connection, R> f) {
         Connection connection;
         try {
-            if(dataSource != null){
-                connection = dataSource.getConnection();
-            }else
-                connection = DriverManager.getConnection(url, username, password);
+            if (_dataSource != null) {
+                connection = _dataSource.getConnection();
+            } else {
+                connection = DriverManager.getConnection(_url, _username, _password);
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return ResourceUtils.autoClosingConnection(connection,new Function1<Connection, R>() {
+        return ResourceUtils.autoClosingConnection(connection, new Function1<Connection, R>() {
             public R apply(Connection parameter) throws Throwable {
-                return ResourceUtils.autoCommittingConnection(parameter,commitBehavior,f);
+                return ResourceUtils.autoCommittingConnection(parameter, commitBehavior, f);
             }
         });
     }

@@ -13,25 +13,29 @@
 // limitations under the License.
 package lichen.migration.internal;
 
-import lichen.migration.model.TableDefinition;
-import lichen.migration.services.*;
-
 import javax.inject.Inject;
 
+import lichen.migration.model.TableDefinition;
+import lichen.migration.services.Migration;
+import lichen.migration.services.MigrationHelper;
+import lichen.migration.services.Options;
+import lichen.migration.services.TableCallback;
+
 /**
- * 创建数据库初始化脚本
+ * 创建数据库初始化脚本.
  * @author jcai
  */
 public class CreateSchemaMigrationsTableMigration  implements Migration {
     @Inject
-    private MigrationHelper helper;
+    private MigrationHelper _helper;
     @Inject
-    private Options options;
+    private Options _options;
 
     public void up() throws Throwable {
-        helper.createTable(Migrator.schemaMigrationsTableName, new TableCallback() {
+        _helper.createTable(Migrator.schemaMigrationsTableName, new TableCallback() {
             public void doInTable(TableDefinition t) throws Throwable {
-                t.varchar("version", options.Limit(32), options.NotNull());
+                final int size = 32;
+                t.varchar("version", _options.Limit(size), _options.NotNull());
             }
         });
 

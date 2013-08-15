@@ -23,9 +23,9 @@ import java.util.SortedSet;
  * migration.
  */
 enum MigrationDirection {
-    Up,Down
+    Up, Down
 }
-enum MigratorOperation{
+enum MigratorOperation {
     InstallAllMigrations,
     RemoveAllMigrations,
     MigrateToVersion,
@@ -33,7 +33,7 @@ enum MigratorOperation{
     int version;
     int count;
 }
-class MigrationStatuses{
+class MigrationStatuses {
     final SortedMap<Long, Class<? extends Migration>> notInstalled;
     final SortedMap<Long, Class<? extends Migration>> installedWithAvailableImplementation;
     final SortedSet<Long> installedWithoutAvailableImplementation;
@@ -42,21 +42,21 @@ class MigrationStatuses{
      * Container for the state of all the available and installed
      * migrations.
      *
-     * @param notInstalled a sorted map of migration version numbers to
+     * @param newNotInstalled a sorted map of migration version numbers to
      *        MigrationHelper subclasses that are not installed in the database
-     * @param installedWithAvailableImplementation a sorted map of
+     * @param newInstalledWithAvailableImplementation a sorted map of
      *        migration version numbers to MigrationHelper subclasses that are
      *        currently installed in the database that have a matching a
      *        MigrationHelper subclass
-     * @param installedWithoutAvailableImplementation a sorted set of
+     * @param newInstalledWithoutAvailableImplementation a sorted set of
      *        migration version numbers that are currently installed in
      *        the database but do not have a matching a MigrationHelper subclass
      */
-    MigrationStatuses(SortedMap<Long, Class<? extends Migration>> notInstalled,
-                      SortedMap<Long, Class<? extends Migration>> installedWithAvailableImplementation,
-                      SortedSet<Long> installedWithoutAvailableImplementation){
-        this.notInstalled = notInstalled;
-        this.installedWithAvailableImplementation = installedWithAvailableImplementation;
-        this.installedWithoutAvailableImplementation = installedWithoutAvailableImplementation;
+    MigrationStatuses(SortedMap<Long, Class<? extends Migration>> newNotInstalled,
+                      SortedMap<Long, Class<? extends Migration>> newInstalledWithAvailableImplementation,
+                      SortedSet<Long> newInstalledWithoutAvailableImplementation) {
+        this.notInstalled = newNotInstalled;
+        this.installedWithAvailableImplementation = newInstalledWithAvailableImplementation;
+        this.installedWithoutAvailableImplementation = newInstalledWithoutAvailableImplementation;
     }
 }
