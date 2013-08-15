@@ -14,7 +14,7 @@
 package lichen.migration.model;
 
 /**
- * sqltype
+ * sqltype.
  * @author jcai
  */
 public enum SqlType {

@@ -14,8 +14,8 @@
 package lichen.migration.model;
 
 /**
- * 主键列
+ * 主键列.
  * @author jcai
  */
-public interface PrimaryKey extends ColumnOption{
+public interface PrimaryKey extends ColumnOption {
 }

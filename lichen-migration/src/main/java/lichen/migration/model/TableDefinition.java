@@ -80,8 +80,7 @@ public interface TableDefinition {
      *        column
      * @return the same instance
      */
-    TableDefinition char_(String name,
-                          ColumnOption... options);
+    TableDefinition char_(String name, ColumnOption... options);
 
     /**
      * Add a DECIMAL column type to the table.  The actual SQL text used
