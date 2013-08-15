@@ -282,8 +282,8 @@ public abstract class ColumnDefinition {
      * 获取定义一列的完整sql语句，包括标准定义、各种约束等.
      * @return String
      */
-    final public String toSql(){
-        int capacity = 512;
+    public final String toSql() {
+        final int capacity = 512;
         StringBuilder sb = new StringBuilder(capacity).append(sql());
 
         if (defaultValue != null) {
@@ -357,85 +357,103 @@ public abstract class ColumnDefinition {
 @ColumnSupportsScale
 @ColumnSupportsPrecision
 @ColumnSupportsDefault
-abstract class AbstractDecimalColumnDefinition extends ColumnDefinition{
+abstract class AbstractDecimalColumnDefinition extends ColumnDefinition {
     /**
      * Concrete subclasses must define this to the name of the DECIMAL
      * or NUMERIC data type specific for the database.
      */
     protected abstract String decimalSqlName();
 
-    protected String sql(){
-        if(precision.isDefined()){
-            if(scale.isDefined()){
-                return decimalSqlName()+ "(" + precision.get() + ", " + scale.get() + ")";
-            }else{
-                return decimalSqlName() + "(" + precision.get()+")";
+    protected String sql() {
+       if (precision.isDefined()) {
+            if (scale.isDefined()) {
+                return decimalSqlName() + "(" + precision.get() + ", " + scale.get() + ")";
+            } else {
+                return decimalSqlName() + "(" + precision.get() + ")";
             }
-        }else{
-            if(scale.isDefined())
-                throw new IllegalArgumentException("Cannot specify a scale without " +
-                        "also specifying a precision.");
-            else
+       } else {
+            if (scale.isDefined()) {
+                throw new IllegalArgumentException(
+                        "Cannot specify a scale without also specifying a precision.");
+            } else {
                 return decimalSqlName();
+            }
         }
     }
 }
 @ColumnSupportsDefault
 class DefaultBigintColumnDefinition
-        extends ColumnDefinition{
-    protected String sql(){return "BIGINT";}
+        extends ColumnDefinition {
+    protected String sql() {
+        return "BIGINT";
+    }
 }
 
 class DefaultBlobColumnDefinition
         extends ColumnDefinition {
-    protected String sql() { return "BLOB";}
+    protected String sql() {
+        return "BLOB";
+    }
 }
 
 @ColumnSupportsDefault
 class DefaultBooleanColumnDefinition
-        extends ColumnDefinition{
-    protected String sql() {return "BOOLEAN";}
+        extends ColumnDefinition {
+    protected String sql() {
+        return "BOOLEAN";
+    }
 }
 
 @ColumnSupportsDefault
 @ColumnSupportsLimit
 class DefaultCharColumnDefinition
-        extends ColumnDefinition{
-    protected String sql(){return optionallyAddLimitToDataType("CHAR");}
+        extends ColumnDefinition {
+    protected String sql() {
+        return optionallyAddLimitToDataType("CHAR");
+    }
 }
 class DefaultDecimalColumnDefinition
         extends AbstractDecimalColumnDefinition {
-    protected String decimalSqlName(){ return "DECIMAL";}
-}
-@ColumnSupportsDefault
-class DefaultIntegerColumnDefinition
-        extends ColumnDefinition{
-    protected String sql() {return "INTEGER";}
+    protected String decimalSqlName() {
+        return "DECIMAL";
+    }
 }
 
 @ColumnSupportsDefault
-class DefaultSmallintColumnDefinition
-        extends ColumnDefinition{
-    protected String sql(){ return "SMALLINT";}
+class DefaultIntegerColumnDefinition extends ColumnDefinition {
+    protected String sql() {
+        return "INTEGER";
+    }
 }
 
-@ColumnSupportsLimit
 @ColumnSupportsDefault
-class DefaultTimestampColumnDefinition
-        extends ColumnDefinition{
-    protected String sql() { return optionallyAddLimitToDataType("TIMESTAMP");}
-}
-@ColumnSupportsLimit
-@ColumnSupportsDefault
-class DefaultVarbinaryColumnDefinition
-        extends ColumnDefinition{
-    protected String sql(){return optionallyAddLimitToDataType("VARBINARY");}
+class DefaultSmallintColumnDefinition extends ColumnDefinition {
+    protected String sql() {
+        return "SMALLINT";
+    }
 }
 
 @ColumnSupportsLimit
 @ColumnSupportsDefault
-class DefaultVarcharColumnDefinition
-        extends ColumnDefinition{
-    protected String sql(){ return optionallyAddLimitToDataType("VARCHAR");}
+class DefaultTimestampColumnDefinition extends ColumnDefinition {
+    protected String sql() {
+        return optionallyAddLimitToDataType("TIMESTAMP");
+    }
+}
+
+@ColumnSupportsLimit
+@ColumnSupportsDefault
+class DefaultVarbinaryColumnDefinition extends ColumnDefinition {
+    protected String sql() {
+        return optionallyAddLimitToDataType("VARBINARY");
+    }
+}
+
+@ColumnSupportsLimit
+@ColumnSupportsDefault
+class DefaultVarcharColumnDefinition extends ColumnDefinition {
+    protected String sql() {
+        return optionallyAddLimitToDataType("VARCHAR");
+    }
 }
 
