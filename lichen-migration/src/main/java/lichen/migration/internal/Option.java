@@ -14,11 +14,11 @@
 package lichen.migration.internal;
 
 /**
- * 定义参数
+ * 定义参数.
  * @author jcai
  */
 public abstract class Option<T> {
-    private final static Option<Object> None = new Option<Object>() {
+    private static final Option<Object> None = new Option<Object>() {
         public boolean isDefined() {
             return false;
         }
@@ -27,25 +27,25 @@ public abstract class Option<T> {
             return null;
         }
     };
-    public static <T extends Object> Option<T> None(){
+    public static <T extends Object> Option<T> None() {
         return (Option<T>) None;
     }
-    public static <T> Option<T> Some(T value){
+    public static <T> Option<T> Some(T value) {
         return new Some(value);
     }
 
     public abstract boolean isDefined();
     public abstract T get();
-    private static class Some<T> extends Option<T>{
-        private T value;
-        public Some(T value){
-            this.value = value;
+    private static class Some<T> extends Option<T> {
+        private T _value;
+        public Some(T value) {
+            this._value = value;
         }
         public boolean isDefined() {
             return true;
         }
         public T get() {
-            return value;
+            return _value;
         }
     }
 }

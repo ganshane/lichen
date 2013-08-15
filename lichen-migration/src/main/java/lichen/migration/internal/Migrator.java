@@ -13,18 +13,6 @@
 // limitations under the License.
 package lichen.migration.internal;
 
-import lichen.migration.services.Migration;
-import lichen.migration.services.MigrationHelper;
-import lichen.migration.services.Options;
-import org.apache.tapestry5.internal.plastic.PlasticClassPool;
-import org.apache.tapestry5.plastic.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
-
-import javax.inject.Inject;
-import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -33,24 +21,58 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Migrator{
+import javax.inject.Inject;
+import javax.sql.DataSource;
+
+import lichen.migration.services.Migration;
+import lichen.migration.services.MigrationHelper;
+import lichen.migration.services.Options;
+
+import org.apache.tapestry5.internal.plastic.PlasticClassPool;
+import org.apache.tapestry5.plastic.ClassInstantiator;
+import org.apache.tapestry5.plastic.ClassType;
+import org.apache.tapestry5.plastic.PlasticClass;
+import org.apache.tapestry5.plastic.PlasticClassEvent;
+import org.apache.tapestry5.plastic.PlasticClassListener;
+import org.apache.tapestry5.plastic.PlasticField;
+import org.apache.tapestry5.plastic.PlasticManagerDelegate;
+import org.apache.tapestry5.plastic.TransformationOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+
+public class Migrator {
     /**
      * The name of the table that stores all the installed migration
      * version numbers.
      */
-    final static String schemaMigrationsTableName = "schema_migrations";
-    final static Logger logger = LoggerFactory.getLogger(Migrator.class);
-    private final static Options options = new OptionsImpl();
-    final static Set<String> packages = new HashSet<String>();
-    final static PlasticClassPool plasticClassPool = new PlasticClassPool(Thread.currentThread().getContextClassLoader(), new PlasticManagerDelegate(){
+    static final String schemaMigrationsTableName = "schema_migrations";
+    static final Logger logger = LoggerFactory.getLogger(Migrator.class);
+    private static final Options options = new OptionsImpl();
+    static final Set<String> packages = new HashSet<String>();
+    static final PlasticClassPool plasticClassPool = new PlasticClassPool(
+            Thread.currentThread().getContextClassLoader(), new PlasticManagerDelegate() {
                 @Override
-                public <T> ClassInstantiator<T> configureInstantiator(String className, ClassInstantiator<T> instantiator) {
+                public <T> ClassInstantiator<T> configureInstantiator(String className,
+                        ClassInstantiator<T> instantiator) {
                     return instantiator;
                 }
 
@@ -58,15 +80,15 @@ public class Migrator{
                 public void transform(PlasticClass plasticClass) {
                     List<PlasticField> fields = plasticClass.getFieldsWithAnnotation(Inject.class);
                     for (PlasticField field : fields) {
-                        if (field.getTypeName().equals(MigrationHelper.class.getName()) ||
-                                field.getTypeName().equals(Options.class.getName())) {
+                        if (field.getTypeName().equals(MigrationHelper.class.getName())
+                                || field.getTypeName().equals(Options.class.getName())) {
                             field.injectFromInstanceContext();
                         } else {
                             throw new RuntimeException("wrong inject " + field.getName());
                         }
                     }
                 }
-            },packages,new HashSet<TransformationOption>());
+            }, packages, new HashSet<TransformationOption>());
     {
         packages.add("lichen.migration.internal");
         //plasticManager.addPlasticClassListener(new PlasticClassListenerLogger(logger));
@@ -91,7 +113,7 @@ public class Migrator{
         final String pn = packageName.replace('.', '/') + '/';
 
         final HashSet<String> classNames = new HashSet<String>();
-        ResourceUtils.jarFile(new JarFile(path, false),new Function1<JarFile, Object>() {
+        ResourceUtils.jarFile(new JarFile(path, false), new Function1<JarFile, Object>() {
             public Object apply(JarFile jar) throws Throwable {
                 Enumeration<JarEntry> entries = jar.entries();
                 while (entries.hasMoreElements()) {
@@ -101,8 +123,7 @@ public class Migrator{
                                 .replace('/', '.');
                         if (searchSubPackages) {
                             classNames.add(className);
-                        }
-                        else if (!className.substring(pn.length()).contains(".")) {
+                        } else if (!className.substring(pn.length()).contains(".")) {
                             classNames.add(className);
                         }
                     }
@@ -127,33 +148,35 @@ public class Migrator{
      */
     private static HashSet<String> classNamesInDir(File file,
                                                    String packageName,
-                                                   boolean searchSubPackages){
+                                                   boolean searchSubPackages) {
         HashSet<String> classNames = new HashSet<String>();
 
 
 
-        scan(classNames,file, packageName,searchSubPackages);
+        scan(classNames, file, packageName, searchSubPackages);
 
         return classNames;
     }
     private static void scan(HashSet<String> classNames,
                              File f,
                              String pn,
-                             boolean searchSubPackages){
+                             boolean searchSubPackages) {
         File[] childFiles = f.listFiles();
-        for(File childFile: childFiles != null ? childFiles : new File[0]){
+        File[] files = childFiles;
+        if (childFiles == null) {
+            files = new File[0];
+        }
+        for (File childFile : files) {
             if (searchSubPackages && childFile.isDirectory()) {
                 String childPackageName = childFile.getName();
-                if (pn.length() > 0)
+                if (pn.length() > 0) {
                     childPackageName = pn + '.' + childFile.getName();
-                scan(classNames,childFile, childPackageName,searchSubPackages);
-            }
-            else if (childFile.isFile()) {
+                }
+                scan(classNames, childFile, childPackageName, searchSubPackages);
+            } else if (childFile.isFile()) {
                 String name = childFile.getName();
                 if (name.endsWith(".class")) {
-                    String className = pn +
-                            '.' +
-                            name.substring(0, name.length() - ".class".length());
+                    String className = pn + '.' + name.substring(0, name.length() - ".class".length());
                     classNames.add(className);
                 }
             }
@@ -182,30 +205,24 @@ public class Migrator{
             // resource in the jar file, so just get the jar file path.
             int index = u.lastIndexOf('!');
             String path;
-            if (index == -1)
+            if (index == -1) {
                 path = u.substring("jar:file:".length());
-            else
+            } else {
                 path = u.substring("jar:file:".length(), index);
+            }
             return classNamesInJar(path, packageName, searchSubPackages);
-        }
-        else if (u.startsWith("file:")) {
+        } else if (u.startsWith("file:")) {
             String dir = u.substring("file:".length());
             File file = new File(dir);
             if (!file.isDirectory()) {
-                String message = "The resource URL '" +
-                        u +
-                        "' should be a directory but is not.";
+                String message = "The resource URL '" + u + "' should be a directory but is not.";
                 throw new RuntimeException(message);
             }
             return classNamesInDir(file, packageName, searchSubPackages);
-        }
-        else {
-            String message = "Do not know how to get a list of classes in the " +
-                    "resource at '" +
-                    u +
-                    "' corresponding to the package '" +
-                    packageName +
-                    "'.";
+        } else {
+            String message = "Do not know how to get a list of classes in the "
+                    + "resource at '" + u + "' corresponding to the package '"
+                    + packageName + "'.";
             throw new RuntimeException(message);
         }
     }
@@ -228,9 +245,9 @@ public class Migrator{
      * @return a sorted map with version number keys and the concrete
      *         Migration subclasses as the value
      */
-    private static SortedMap<Long,Class<? extends Migration>> findMigrations(
+    private static SortedMap<Long, Class<? extends Migration>> findMigrations(
             String packageName,
-            boolean searchSubPackages) throws IOException{
+            boolean searchSubPackages) throws IOException {
         // Ask the current class loader for the resources corresponding to
         // the package, which can refer to directories, jar files
         // accessible via the local filesystem or remotely accessible jar
@@ -239,9 +256,7 @@ public class Migrator{
 
         Enumeration<URL> urls = Migrator.class.getClassLoader().getResources(pn);
         if (!urls.hasMoreElements()) {
-            throw new RuntimeException("Cannot find a resource for package '" +
-                    packageName +
-                    "'.");
+            throw new RuntimeException("Cannot find a resource for package '" + packageName + "'.");
         }
 
         HashSet<String> classNames = new HashSet<String>();
@@ -258,7 +273,7 @@ public class Migrator{
         // subclasses of Migration that have a no argument constructor.
         // Use a sorted map mapping the version to the class name so the
         // final results will be sorted in numerically increasing order.
-        TreeMap<Long,String> seenVersions = new TreeMap<Long, String>();
+        TreeMap<Long, String> seenVersions = new TreeMap<Long, String>();
         HashMap<String, String> seenDescriptions = new HashMap<String, String>();
 
         // Search for classes that have the proper format.
@@ -269,54 +284,49 @@ public class Migrator{
         // inside the for loop below or not all elements in classNames may be
         // visited (iterator corruption).
         HashSet<String> skipNames = new HashSet<String>();
-        for(String className:classNames){
+        for (String className : classNames) {
             int index = className.lastIndexOf('.');
             String baseName;
-            if (index == -1)
+            if (index == -1) {
                 baseName = className;
-            else
+            } else {
                 baseName = className.substring(index + 1);
+            }
             Matcher matcher = re.matcher(baseName);
             if (matcher.matches()) {
                 String versionStr = matcher.group(1);
                 Option<Long> versionOpt = Option.None();
                 try {
                     versionOpt = Option.Some(java.lang.Long.parseLong(versionStr));
-                }
-                catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     skipNames.add(className);
-                    logger.debug("Skipping '{}' because the version string '{}' could not " +
-                            "be parsed as a long integer.",className, versionStr);
+                    logger.debug("Skipping '{}' because the version string '{}' could not "
+                            + "be parsed as a long integer.", className, versionStr);
                 }
 
-                if(versionOpt.isDefined()){
+                if (versionOpt.isDefined()) {
                     Long version = versionOpt.get();
-                    if(seenVersions.get(version) != null){
-                        String message = "The '" +
-                                className +
-                                "' migration defines a duplicate version number " +
-                                "with '" +
-                                seenVersions.get(version) +
-                                "'.";
+                    if (seenVersions.get(version) != null) {
+                        String message = "The '"
+                                + className
+                                + "' migration defines a duplicate version number "
+                                + "with '" + seenVersions.get(version) + "'.";
                         throw new IllegalArgumentException(message);
-                    }else{
+                    } else {
                         seenVersions.put(version, className);
                     }
 
                     String description = matcher.group(2);
-                    if(seenDescriptions.get(description) != null){
-                        String message = "The '" +
-                                className +
-                                "' defines a duplicate description with '" +
-                                seenDescriptions.get(description) +
-                                "'.";
+                    if (seenDescriptions.get(description) != null) {
+                        String message = "The '" + className
+                                + "' defines a duplicate description with '"
+                                + seenDescriptions.get(description) + "'.";
                         throw new IllegalArgumentException(message);
-                    }else{
+                    } else {
                         seenDescriptions.put(description, className);
                     }
                 }
-            }
-            else {
+            } else {
                 skipNames.add(className);
                 //logger.debug("Skipping '{}' because it does not match '{}'.",className, reStr);
             }
@@ -327,34 +337,26 @@ public class Migrator{
 
         TreeMap<Long, Class<? extends Migration>> results = new TreeMap<Long, Class<? extends Migration>>();
         Set<Map.Entry<Long, String>> entrySet = seenVersions.entrySet();
-        for(Map.Entry<Long,String> entry:entrySet){
+        for (Map.Entry<Long, String> entry : entrySet) {
             Long version = entry.getKey();
             String className = entry.getValue();
             Class<?> c = null;
             try {
                 c = Class.forName(className);
-                if (Migration.class.isAssignableFrom(c) &&
-                        !c.isInterface() &&
-                        !java.lang.reflect.Modifier.isAbstract(c.getModifiers())) {
+                if (Migration.class.isAssignableFrom(c)
+                        && !c.isInterface()
+                        && !java.lang.reflect.Modifier.isAbstract(c.getModifiers())) {
                     try {
                         // Ensure that there is a no-argument constructor.
                         c.getConstructor();
                         Class<? extends Migration> castedClass = c.asSubclass(Migration.class);
                         results.put(version, castedClass);
-                    }
-                    catch (NoSuchMethodException e) {
-                        logger.debug("Unable to find a no-argument constructor for '" +
-                                className +
-                                "'",
-                                e);
+                    } catch (NoSuchMethodException e) {
+                        logger.debug("Unable to find a no-argument constructor for '" + className + "'", e);
                     }
                 }
-            }
-            catch (Exception e) {
-                logger.debug("Unable to load class '" +
-                        className +
-                        "'.",
-                        e);
+            } catch (Exception e) {
+                logger.debug("Unable to load class '" + className + "'.", e);
             }
         }
 
@@ -365,12 +367,12 @@ public class Migrator{
     /**
      * This class migrates the database into the desired state.
      */
-    public Migrator(ConnectionBuilder connectionBuilder,DatabaseAdapter adapter){
-        this.connectionBuilder = connectionBuilder;
-        this.adapter = adapter;
+    public Migrator(ConnectionBuilder newConnectionBuilder, DatabaseAdapter newAdapter) {
+        this.connectionBuilder = newConnectionBuilder;
+        this.adapter = newAdapter;
     }
     public Migrator(DataSource dataSource, DatabaseAdapter databaseAdapter) {
-        this(new ConnectionBuilder(dataSource),databaseAdapter);
+        this(new ConnectionBuilder(dataSource), databaseAdapter);
     }
     /**
      * Construct a migrator to a database that needs a username and password.
@@ -379,14 +381,14 @@ public class Migrator{
      * @param jdbcUsername the username to log into the database
      * @param jdbcPassword the password associated with the database
      *        username
-     * @param adapter a concrete DatabaseAdapter that the migrator uses
+     * @param newAdapter a concrete DatabaseAdapter that the migrator uses
      *        to handle database specific features
      */
     public Migrator(String jdbcUrl,
                     String jdbcUsername,
                     String jdbcPassword,
-                    DatabaseAdapter adapter) {
-        this(new ConnectionBuilder(jdbcUrl, jdbcUsername, jdbcPassword), adapter);
+                    DatabaseAdapter newAdapter) {
+        this(new ConnectionBuilder(jdbcUrl, jdbcUsername, jdbcPassword), newAdapter);
     }
 
 
@@ -398,22 +400,24 @@ public class Migrator{
      * @return a set of table names; no modifications of the case of
      *         table names is done
      */
-    public Set<String> getTableNames(){
-        return connectionBuilder.withConnection(ResourceUtils.CommitBehavior.AutoCommit,new Function1<Connection, Set<String>>() {
+    public Set<String> getTableNames() {
+        return connectionBuilder.withConnection(ResourceUtils.CommitBehavior.AutoCommit,
+                new Function1<Connection, Set<String>>() {
             public Set<String> apply(Connection connection) throws Throwable {
                 String schemaPattern = null;
-                if(adapter.schemaNameOpt.isDefined()){
+                if (adapter.schemaNameOpt.isDefined()) {
                     schemaPattern = adapter.unquotedNameConverter(adapter.schemaNameOpt.get());
                 }
                 DatabaseMetaData metadata = connection.getMetaData();
                 return ResourceUtils.autoClosingResultSet(metadata.getTables(null,
                         schemaPattern,
                         null,
-                        new String[]{"TABLE"}),new Function1<ResultSet, Set<String>>() {
+                        new String[]{"TABLE"}), new Function1<ResultSet, Set<String>>() {
                     public Set<String> apply(ResultSet rs) throws Throwable {
                         Set<String> names = new HashSet<String>();
+                        final int index = 3;
                         while (rs.next()) {
-                            names.add(rs.getString(3).trim());
+                            names.add(rs.getString(index).trim());
                         }
                         return names;
                     }
@@ -431,46 +435,50 @@ public class Migrator{
      *        is updated using the given connection and migration
      *        version number; this allows this method to
      */
-    private void runMigration(Connection connection,Class<? extends Migration> migrationClass,
+    private void runMigration(Connection connection, Class<? extends Migration> migrationClass,
                               final MigrationDirection direction,
-                              Option<Long> versionUpdateOpt) throws Throwable{
+                              Option<Long> versionUpdateOpt) throws Throwable {
         //logger.info("Migrating {} with '{}'.",direction, migrationClass.getName());
-        System.out.println(horizontalLine("Applying: " + migrationClass.getSimpleName(), 80));
+        final int size = 80;
+        System.out.println(horizontalLine("Applying: " + migrationClass.getSimpleName(), size));
 
-        ClassInstantiator<? extends Migration> classInstantiator = plasticClassPool.getClassInstantiator(migrationClass.getName());
+        ClassInstantiator<? extends Migration> classInstantiator
+                = plasticClassPool.getClassInstantiator(migrationClass.getName());
         final MigrationHelperImpl helper = new MigrationHelperImpl();
         helper.adapterOpt = Option.Some(adapter);
         helper.rawConnectionOpt = Option.Some(connection);
         helper.connectionOpt = Option.Some(connection);
-        Migration migration = classInstantiator.with(Options.class,options).with(MigrationHelper.class, helper).newInstance();
+        Migration migration = classInstantiator.with(Options.class,
+                options).with(MigrationHelper.class, helper).newInstance();
 
-        switch (direction){
+        switch (direction) {
             case Up:
                 migration.up();
                 break;
             case Down:
                 migration.down();
                 break;
+            default:
+                break;
         }
 
-        if(versionUpdateOpt.isDefined()){
+        if (versionUpdateOpt.isDefined()) {
             final Long version = versionUpdateOpt.get();
             String tableName = adapter.quoteTableName(schemaMigrationsTableName);
-            String sql="";
-            switch (direction){
+            String sql = "";
+            switch (direction) {
                 case Up:
-                    sql = "INSERT INTO " +
-                            tableName +
-                            " ("+adapter.quoteColumnName("version")+") VALUES (?)";
+                    sql = "INSERT INTO " + tableName + " (" + adapter.quoteColumnName("version") + ") VALUES (?)";
                     break;
                 case Down:
-                    sql= "DELETE FROM " +
-                            tableName +
-                            " WHERE "+adapter.quoteColumnName("version")+"= ?";
+                    sql = "DELETE FROM " + tableName + " WHERE " + adapter.quoteColumnName("version") + "= ?";
+                    break;
+                default:
                     break;
             }
 
-            ResourceUtils.autoClosingStatement(connection.prepareStatement(sql),new Function1<PreparedStatement, Object>() {
+            ResourceUtils.autoClosingStatement(connection.prepareStatement(sql),
+                    new Function1<PreparedStatement, Object>() {
                 public Object apply(PreparedStatement statement) throws Throwable {
                     statement.setString(1, version.toString());
                     statement.execute();
@@ -486,10 +494,10 @@ public class Migrator{
      *
      * @return true if the "schema_migration" table exists
      */
-    private boolean doesSchemaMigrationsTableExist(){
+    private boolean doesSchemaMigrationsTableExist() {
         String smtn = Migrator.schemaMigrationsTableName.toLowerCase();
-        for(String name:getTableNames()){
-            if(name.equalsIgnoreCase(smtn)){
+        for (String name:getTableNames()) {
+            if (name.equalsIgnoreCase(smtn)) {
                 return true;
             }
         }
@@ -502,9 +510,10 @@ public class Migrator{
     private void initializeSchemaMigrationsTable() throws Throwable {
         if (!doesSchemaMigrationsTableExist()) {
             final Option<Long> version = Option.None();
-            connectionBuilder.withConnection(ResourceUtils.CommitBehavior.AutoCommit, new Function1<Connection, Object>() {
+            connectionBuilder.withConnection(ResourceUtils.CommitBehavior.AutoCommit,
+                    new Function1<Connection, Object>() {
                 public Object apply(Connection parameter) throws Throwable {
-                    runMigration(parameter,CreateSchemaMigrationsTableMigration.class, MigrationDirection.Up, version);
+                    runMigration(parameter, CreateSchemaMigrationsTableMigration.class, MigrationDirection.Up, version);
                     return null;
                 }
             });
@@ -518,39 +527,48 @@ public class Migrator{
      * @return a sorted set of version numbers of the installed
      *         migrations
      */
-    private SortedSet<Long> getInstalledVersions() throws Throwable{
-        return connectionBuilder.withConnection(ResourceUtils.CommitBehavior.AutoCommit,new Function1<Connection, SortedSet<Long>>() {
-            public SortedSet<Long> apply(Connection parameter) throws Throwable {
-                return getInstalledVersions(parameter);
-            }
-        });
-    }
-
-    private SortedSet<Long> getInstalledVersions(Connection connection) throws Throwable{
-        final String sql = "SELECT "+adapter.quoteColumnName("version")+" FROM " +
-                adapter.quoteTableName(schemaMigrationsTableName);
-        return ResourceUtils.autoClosingStatement(connection.prepareStatement(sql), new Function1<PreparedStatement, SortedSet<Long>>() {
-            public SortedSet<Long> apply(PreparedStatement parameter) throws Throwable {
-                return ResourceUtils.autoClosingResultSet(parameter.executeQuery(), new Function1<ResultSet, SortedSet<Long>>() {
-                    public SortedSet<Long> apply(ResultSet rs) throws Throwable {
-                        TreeSet<Long> versions = new TreeSet<Long>();
-                        while (rs.next()) {
-                            String versionStr = rs.getString(1);
-                            try {
-                                Long version = java.lang.Long.parseLong(versionStr);
-                                versions.add(version);
-                            } catch (NumberFormatException e) {
-                                logger.warn("Ignoring installed migration with unparsable " +
-                                        "version number '" +
-                                        versionStr +
-                                        "'.", e);
-                            }
-                        }
-                        return versions;
+    private SortedSet<Long> getInstalledVersions() throws Throwable {
+        return connectionBuilder.withConnection(
+                ResourceUtils.CommitBehavior.AutoCommit,
+                new Function1<Connection, SortedSet<Long>>() {
+                    public SortedSet<Long> apply(Connection parameter)
+                            throws Throwable {
+                        return getInstalledVersions(parameter);
                     }
                 });
-            }
-        });
+    }
+
+    private SortedSet<Long> getInstalledVersions(Connection connection) throws Throwable {
+        final String sql = "SELECT " + adapter.quoteColumnName("version")
+                + " FROM " + adapter.quoteTableName(schemaMigrationsTableName);
+        return ResourceUtils.autoClosingStatement(connection
+                .prepareStatement(sql),
+                new Function1<PreparedStatement, SortedSet<Long>>() {
+                    public SortedSet<Long> apply(PreparedStatement parameter)
+                            throws Throwable {
+                        return ResourceUtils.autoClosingResultSet(parameter
+                                .executeQuery(),
+                                new Function1<ResultSet, SortedSet<Long>>() {
+                                    public SortedSet<Long> apply(ResultSet rs)
+                                            throws Throwable {
+                                        TreeSet<Long> versions = new TreeSet<Long>();
+                                        while (rs.next()) {
+                                            String versionStr = rs.getString(1);
+                                            try {
+                                                Long version = java.lang.Long
+                                                        .parseLong(versionStr);
+                                                versions.add(version);
+                                            } catch (NumberFormatException e) {
+                                                logger.warn("Ignoring installed migration with unparsable "
+                                                                + "version number '" + versionStr
+                                                                + "'.", e);
+                                            }
+                                        }
+                                        return versions;
+                                    }
+                                });
+                    }
+                });
     }
 
 
@@ -573,25 +591,25 @@ public class Migrator{
                         final boolean searchSubPackages) throws Throwable {
         packages.add(packageName);
         //initializeSchemaMigrationsTable();
-
         // Get a new connection that locks the schema_migrations table.
         // This will prevent concurrent migrations from running.  Commit
         // any modifications to schema_migrations regardless if an
         // exception is thrown or not, this ensures that any migrations
         // that were successfully run are recorded.
-
-        connectionBuilder.withConnection(ResourceUtils.CommitBehavior.CommitUponReturnOrException,new Function1<Connection, Object>() {
+        connectionBuilder.withConnection(ResourceUtils.CommitBehavior.CommitUponReturnOrException,
+                new Function1<Connection, Object>() {
             public Object apply(Connection schemaConnection) throws Throwable {
                 initializeSchemaMigrationsTable();
 
                 //logger.debug("Getting an exclusive lock on the '{}' table.",schemaMigrationsTableName);
-                ResourceUtils.autoClosingStatement(schemaConnection.prepareStatement(adapter.lockTableSql(schemaMigrationsTableName)),new Function1<PreparedStatement, Object>() {
+                ResourceUtils.autoClosingStatement(schemaConnection.prepareStatement(
+                        adapter.lockTableSql(schemaMigrationsTableName)),
+                        new Function1<PreparedStatement, Object>() {
                     @Override
                     public Object apply(PreparedStatement parameter) throws Throwable {
                         return parameter.execute();
                     }
                 });
-
                 // Get a list of all available and installed migrations.  Check
                 // that all installed migrations have a migration class
                 // available to migrate out of that migration.  This can happen
@@ -601,29 +619,25 @@ public class Migrator{
                 // missing migration for an installed migration is not fatal
                 // unless the migration needs to be rolled back.
                 SortedSet<Long> installedVersions = getInstalledVersions(schemaConnection);
-                SortedMap<Long,Class<? extends Migration>> availableMigrations = findMigrations(packageName, searchSubPackages);
+                SortedMap<Long, Class<? extends Migration>> availableMigrations
+                            = findMigrations(packageName, searchSubPackages);
                 Set<Long> availableVersions = availableMigrations.keySet();
 
                 for (Long installedVersion :installedVersions) {
                     if (!availableVersions.contains(installedVersion)) {
-                        logger.warn("The migration version '{}' is installed but " +
-                                "there is no migration class available to back " +
-                                "it out.",
-                                installedVersion);
+                        logger.warn("The migration version '{}' is installed but "
+                                + "there is no migration class available to back " + "it out.", installedVersion);
                     }
                 }
-
                 if (availableMigrations.isEmpty()) {
                     logger.info("No migrations found, nothing to do.");
                 }
-
                 Long[] installVersions = new Long[0];
                 Long[] removeVersions = new Long[0];
 
-
                 // From the operation, determine the migrations to install and
                 // the ones to uninstall.
-                switch (operation){
+                switch (operation) {
                     case InstallAllMigrations:
                         installVersions = availableVersions.toArray(new Long[availableVersions.size()]);
                         removeVersions = new Long[]{};
@@ -634,10 +648,10 @@ public class Migrator{
                         removeVersions = new Long[installedVersions.size()];
                         Iterator<Long> it = installedVersions.iterator();
                         int size = removeVersions.length;
-                        int i=0;
-                        while(it.hasNext()){
-                            i+=1;
-                            removeVersions[size-i] = it.next();
+                        int i = 0;
+                        while (it.hasNext()) {
+                            i += 1;
+                            removeVersions[size - i] = it.next();
                         }
                         break;
                     case MigrateToVersion:
@@ -645,19 +659,20 @@ public class Migrator{
                         List<Long> prepareRemoveVersions = new ArrayList<Long>();
                         Iterator<Long> aIt = availableVersions.iterator();
                         boolean versionFound = false;
-                        while(aIt.hasNext()){
+                        while (aIt.hasNext()) {
                             Long version = aIt.next();
-                            if(version <= operation.version){
+                            if (version <= operation.version) {
                                 prepareInstallVersions.add(version);
-                            }else{
-                                prepareRemoveVersions.add(0,version);
+                            } else {
+                                prepareRemoveVersions.add(0, version);
                             }
-                            if(version == operation.version){
+                            if (version == operation.version) {
                                 versionFound = true;
                             }
                         }
-                        if (! versionFound) {
-                            String message = "The target version " + operation.version + " does not exist as a migration.";
+                        if (!versionFound) {
+                            String message = "The target version " + operation.version
+                                            + " does not exist as a migration.";
                             throw new RuntimeException(message);
                         }
                         installVersions = prepareInstallVersions.toArray(new Long[prepareInstallVersions.size()]);
@@ -665,21 +680,21 @@ public class Migrator{
                         break;
                     case RollbackMigration:
                         if (operation.count > installedVersions.size()) {
-                            String message = "Attempting to rollback " +
-                                    operation.count +
-                                    " migrations but the database only has " +
-                                    installedVersions.size()+
-                                    " installed in it.";
+                            String message = "Attempting to rollback " + operation.count
+                                    + " migrations but the database only has " + installedVersions.size()
+                                    + " installed in it.";
                             throw new RuntimeException(message);
                         }
                         installVersions = new Long[]{};
                         removeVersions = new Long[operation.count];
                         it = installedVersions.iterator();
-                        i=0;
-                        while(it.hasNext()){
+                        i = 0;
+                        while (it.hasNext()) {
                             i++;
                             removeVersions[operation.count - i] = it.next();
                         }
+                        break;
+                    default:
                         break;
                 }
 
@@ -690,13 +705,11 @@ public class Migrator{
                     // have a missing migration class for an installed migration,
                     // but when it cannot be removed, it is.
                     clazz = availableMigrations.get(removeVersion);
-                    if(clazz != null){
-                        runMigration(schemaConnection,clazz,MigrationDirection.Down,Option.Some(removeVersion));
-                    }else{
-                        String message = "The database has migration version '" +
-                                removeVersion +
-                                "' installed but there is no migration class " +
-                                "available with that version.";
+                    if (clazz != null) {
+                        runMigration(schemaConnection, clazz, MigrationDirection.Down, Option.Some(removeVersion));
+                    } else {
+                        String message = "The database has migration version '" + removeVersion
+                                + "' installed but there is no migration class " + "available with that version.";
                         logger.error(message);
                         throw new IllegalStateException(message);
                     }
@@ -705,15 +718,11 @@ public class Migrator{
                 for (Long installVersion:installVersions) {
                     if (!installedVersions.contains(installVersion)) {
                         clazz = availableMigrations.get(installVersion);
-                        if(clazz != null){
-                            runMigration(schemaConnection,clazz,
-                                    MigrationDirection.Up,
-                                    Option.Some(installVersion));
-                        }else{
-                            String message = "Illegal state: trying to install a migration " +
-                                    "with version '" +
-                                    installVersion +
-                                    "' that should exist.";
+                        if (clazz != null) {
+                            runMigration(schemaConnection, clazz, MigrationDirection.Up, Option.Some(installVersion));
+                        } else {
+                            String message = "Illegal state: trying to install a migration "
+                                + "with version '" + installVersion + "' that should exist.";
                             throw new IllegalStateException(message);
                         }
                     }
@@ -729,7 +738,8 @@ public class Migrator{
             caption = " " + caption + " ";
             builder.append(caption);
         }
-        for (int i = 0; i < length - caption.length() - 10; i++) {
+        final int size = 10;
+        for (int i = 0; i < length - caption.length() - size; i++) {
             builder.append("=");
         }
         return builder.toString();
@@ -749,23 +759,26 @@ public class Migrator{
      */
     public MigrationStatuses getMigrationStatuses(String packageName,
                                                   boolean searchSubPackages) throws Throwable {
-        SortedMap<Long, Class<? extends Migration>> availableMigrations = findMigrations(packageName, searchSubPackages);
+        SortedMap<Long, Class<? extends Migration>> availableMigrations
+                = findMigrations(packageName, searchSubPackages);
         SortedSet<Long> installedVersions;
-        if (doesSchemaMigrationsTableExist())
+        if (doesSchemaMigrationsTableExist()) {
             installedVersions = getInstalledVersions();
-        else
+        } else {
             installedVersions = new TreeSet<Long>();
+        }
 
         SortedMap<Long, Class<? extends Migration>> notInstalled = availableMigrations;
-        SortedMap<Long, Class<? extends Migration>> installedWithAvailableImplementation = new TreeMap<Long, Class<? extends Migration>>();
+        SortedMap<Long, Class<? extends Migration>> installedWithAvailableImplementation
+                = new TreeMap<Long, Class<? extends Migration>>();
         TreeSet<Long> installedWithoutAvailableImplementation = new TreeSet<Long>();
 
         for (Long installedVersion : installedVersions) {
             notInstalled.remove(installedVersion);
             Class<? extends Migration> clazz = availableMigrations.get(installedVersion);
-            if(clazz != null){
-                installedWithAvailableImplementation.put(installedVersion,clazz);
-            }else{
+            if (clazz != null) {
+                installedWithAvailableImplementation.put(installedVersion, clazz);
+            } else {
                 installedWithoutAvailableImplementation.add(installedVersion);
             }
         }
@@ -796,16 +809,17 @@ public class Migrator{
      *         installed migrations that do not have a matching
      *         Migration subclass
      */
-    public Option<String> whyNotMigrated(String packageName,boolean searchSubPackages) throws Throwable {
+    public Option<String> whyNotMigrated(String packageName, boolean searchSubPackages) throws Throwable {
         MigrationStatuses migrationStatuses = getMigrationStatuses(packageName, searchSubPackages);
         SortedMap<Long, Class<? extends Migration>> notInstalled = migrationStatuses.notInstalled;
-        SortedSet<Long> installedWithoutAvailableImplementation = migrationStatuses.installedWithoutAvailableImplementation;
+        SortedSet<Long> installedWithoutAvailableImplementation
+                = migrationStatuses.installedWithoutAvailableImplementation;
 
         if (notInstalled.isEmpty() && installedWithoutAvailableImplementation.isEmpty()) {
             return Option.None();
-        }
-        else {
-            StringBuilder sb = new StringBuilder(256);
+        } else {
+            final int size = 256;
+            StringBuilder sb = new StringBuilder(size);
             sb.append("The database is not fully migrated because ");
 
             if (!notInstalled.isEmpty()) {
@@ -820,10 +834,10 @@ public class Migrator{
             }
 
             if (!installedWithoutAvailableImplementation.isEmpty()) {
-                sb.append("the following migrations are installed without a " +
-                        "matching Migration subclass: ");
-                for (Long anInstalledWithoutAvailableImplementation : installedWithoutAvailableImplementation)
+                sb.append("the following migrations are installed without a " + "matching Migration subclass: ");
+                for (Long anInstalledWithoutAvailableImplementation : installedWithoutAvailableImplementation) {
                     sb.append(anInstalledWithoutAvailableImplementation).append(",");
+                }
             }
 
             sb.append('.');
@@ -831,25 +845,27 @@ public class Migrator{
             return Option.Some(sb.toString());
         }
     }
-    public class PlasticClassListenerLogger implements PlasticClassListener
-    {
-        private final Logger logger;
 
-        public PlasticClassListenerLogger(Logger logger)
-        {
-            this.logger = logger;
+    public class PlasticClassListenerLogger implements PlasticClassListener {
+        private final Logger _logger;
+
+        public PlasticClassListenerLogger(Logger newLogger) {
+            this._logger = newLogger;
         }
 
-        public void classWillLoad(PlasticClassEvent event)
-        {
-            if (logger.isDebugEnabled())
-            {
+        public void classWillLoad(PlasticClassEvent event) {
+            if (_logger.isDebugEnabled()) {
                 Marker marker = MarkerFactory.getMarker(event.getPrimaryClassName());
 
-                String extendedClassName = event.getType() == ClassType.PRIMARY ? event.getPrimaryClassName() : String
-                        .format("%s (%s for %s)", event.getClassName(), event.getType(), event.getPrimaryClassName());
+                String extendedClassName = "";
+                if (event.getType() == ClassType.PRIMARY) {
+                    extendedClassName = event.getPrimaryClassName();
+                } else {
+                    extendedClassName = String.format("%s (%s for %s)", event.getClassName(),
+                            event.getType(), event.getPrimaryClassName());
 
-                logger.debug(marker,
+                }
+                _logger.debug(marker,
                         String.format("Loading class %s:\n%s", extendedClassName, event.getDissasembledBytecode()));
             }
         }

@@ -13,17 +13,26 @@
 // limitations under the License.
 package lichen.migration.internal;
 
-import lichen.migration.model.*;
+import lichen.migration.model.AutoIncrement;
+import lichen.migration.model.Default;
+import lichen.migration.model.Limit;
+import lichen.migration.model.Name;
+import lichen.migration.model.NotNull;
+import lichen.migration.model.Nullable;
+import lichen.migration.model.Precision;
+import lichen.migration.model.PrimaryKey;
+import lichen.migration.model.Scale;
+import lichen.migration.model.Unique;
 import lichen.migration.services.Options;
 
 /**
- * 定义所有的接口
+ * 定义所有的接口.
  * @author jcai
  */
 public class OptionsImpl implements Options {
     @Override
-    public Default Default(final String value){
-        return new Default(){
+    public Default Default(final String value) {
+        return new Default() {
             public String getValue() {
                 return value;
             }
@@ -31,7 +40,7 @@ public class OptionsImpl implements Options {
     }
 
     @Override
-    public Limit Limit(final int length){
+    public Limit Limit(final int length) {
         return new Limit() {
             public int getValue() {
                 return length;
@@ -39,16 +48,16 @@ public class OptionsImpl implements Options {
         };
     }
     /**
-     * 指定列不能为空
+     * 指定列不能为空.
      */
-    private final static NotNull NotNull = new NotNull() {};
+    private static final NotNull NotNull = new NotNull() { };
     /**
-     * 指定列可以为空
+     * 指定列可以为空.
      */
-    private final static Nullable Nullable= new Nullable() {};
+    private static final Nullable Nullable = new Nullable() { };
 
     @Override
-    public Precision Precision(final int precision){
+    public Precision Precision(final int precision) {
         return new Precision() {
             public int getValue() {
                 return precision;
@@ -57,7 +66,7 @@ public class OptionsImpl implements Options {
     }
 
     @Override
-    public Scale Scale(final int scale){
+    public Scale Scale(final int scale) {
         return new Scale() {
             public int getValue() {
                 return scale;
@@ -92,7 +101,7 @@ public class OptionsImpl implements Options {
 
     @Override
     public Name Name(final String name) {
-        return new Name(){
+        return new Name() {
 
             @Override
             public String getValue() {
@@ -102,11 +111,11 @@ public class OptionsImpl implements Options {
     }
 
     /**
-     * 定义主键列
+     * 定义主键列.
      */
-    private final static PrimaryKey PrimaryKey = new PrimaryKey() {};
-    /** 定义列或者键的唯一性 **/
-    private final static Unique Unique = new Unique() {};
-    /** 定义某一列为自增长字段 **/
-    private final static AutoIncrement AutoIncrement = new AutoIncrement() {};
+    private static final PrimaryKey PrimaryKey = new PrimaryKey() { };
+    /** 定义列或者键的唯一性. **/
+    private static final Unique Unique = new Unique() { };
+    /** 定义某一列为自增长字段. **/
+    private static final AutoIncrement AutoIncrement = new AutoIncrement() { };
 }

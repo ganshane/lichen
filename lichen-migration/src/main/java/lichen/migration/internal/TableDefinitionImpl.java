@@ -28,9 +28,9 @@ class TableDefinitionImpl implements TableDefinition {
     private List<ColumnDefinition> columnDefinitions = new ArrayList<ColumnDefinition>();
     private DatabaseAdapter adapter;
     private String tableName;
-    public TableDefinitionImpl(DatabaseAdapter adapter,String tableName){
-        this.adapter = adapter;
-        this.tableName = tableName;
+    public TableDefinitionImpl(DatabaseAdapter newAdapter, String newTableName) {
+        this.adapter = newAdapter;
+        this.tableName = newTableName;
     }
 
   /**
@@ -38,15 +38,15 @@ class TableDefinitionImpl implements TableDefinition {
    *
    * @return the SQL text that defines the columns in the table
    */
-  final public String toSql(){
-      StringBuilder sb = new StringBuilder(512);
+   public final String toSql() {
+      final int size = 512;
+      StringBuilder sb = new StringBuilder(size);
       boolean firstColumn = true;
-      for(ColumnDefinition columnDefinition:columnDefinitions){
+      for (ColumnDefinition columnDefinition : columnDefinitions) {
 
           if (firstColumn) {
               firstColumn = false;
-          }
-          else {
+          } else {
               sb.append(", ");
           }
           sb.append(adapter.quoteColumnName(columnDefinition.columnName()))
@@ -56,9 +56,8 @@ class TableDefinitionImpl implements TableDefinition {
       return sb.toString();
   }
 
-  final public TableDefinition column(String name,
-                   SqlType columnType,
-                   ColumnOption ... options){
+   public final TableDefinition column(String name, SqlType columnType,
+                   ColumnOption ... options) {
       ColumnDefinition columnDefinition = adapter.newColumnDefinition(tableName,
               name,
               columnType,
@@ -67,51 +66,45 @@ class TableDefinitionImpl implements TableDefinition {
     return this;
   }
 
-  final public TableDefinition bigint(String name,
-                                      ColumnOption ...options){
+  public final TableDefinition bigint(String name, ColumnOption ...options) {
       return column(name, SqlType.BigintType, options);
   }
 
-  final public TableDefinition blob(String name,
-                                    ColumnOption ...options){
+  public final TableDefinition blob(String name, ColumnOption ...options) {
       return column(name, SqlType.BlobType, options);
   }
 
-  final public TableDefinition bool(String name,ColumnOption ... options){
+  public final TableDefinition bool(String name, ColumnOption ... options) {
     return column(name, SqlType.BooleanType, options);
   }
 
-  final public TableDefinition char_(String name,
-                 ColumnOption ... options){
+  public final TableDefinition char_(String name, ColumnOption ... options) {
     return column(name, SqlType.CharType, options);
   }
 
-  final public TableDefinition decimal(String name,
-                    ColumnOption ... options){
+  public final TableDefinition decimal(String name, ColumnOption ... options) {
     return column(name, SqlType.DecimalType, options);
   }
 
-  final public TableDefinition integer(String name,
-                    ColumnOption ... options){
+  public final TableDefinition integer(String name, ColumnOption ... options) {
     return column(name, SqlType.IntegerType, options);
   }
 
-  final public TableDefinition smallint(String name ,
-                    ColumnOption ... options){
+  public final TableDefinition smallint(String name, ColumnOption ... options) {
     return column(name, SqlType.SmallintType, options);
   }
 
-  final public TableDefinition timestamp(String name,
-                      ColumnOption ... options){
+  public final TableDefinition timestamp(String name,
+                      ColumnOption ... options) {
     return column(name, SqlType.TimestampType, options);
   }
 
-  final public TableDefinition varbinary(String name,ColumnOption ... options){
+  public final TableDefinition varbinary(String name, ColumnOption ... options) {
     return column(name, SqlType.VarbinaryType, options);
   }
 
-  final public TableDefinition varchar(String name,
-                    ColumnOption ... options){
+  public final TableDefinition varchar(String name,
+                    ColumnOption ... options) {
     return column(name, SqlType.VarcharType, options);
   }
 }

@@ -31,8 +31,9 @@ import java.util.jar.JarFile;
  * has completed, either normally via a return or by throwing an
  * exception, the resource is released.
  */
-final class ResourceUtils{
-  private final static Logger logger = LoggerFactory.getLogger(ResourceUtils.class);
+final class ResourceUtils {
+    private ResourceUtils() { }
+  private static final Logger logger = LoggerFactory.getLogger(ResourceUtils.class);
 
   /**
    * Given a resource and two functions, the first, a closer function
@@ -53,32 +54,25 @@ final class ResourceUtils{
    * @return the result of invoking body on the resource
    * @throws RuntimeException any exception that invoking body on the resource throws
    */
-  static <A,B> B resource(A resource, String closerDescription,Function1<A,Void> closer,Function1<A,B> body){
+  static <A, B> B resource(A resource, String closerDescription, Function1<A, Void> closer, Function1<A, B> body) {
     Throwable primaryException = null;
     try {
       return body.apply(resource);
-    }
-    catch(Throwable e) {
+    } catch (Throwable e) {
         primaryException = e;
         throw new RuntimeException(e);
-    }
-    finally {
+    } finally {
       if (primaryException != null) {
           try {
               closer.apply(resource);
           } catch (Throwable throwable) {
-              logger.warn("Fail to Close when "+closerDescription,throwable);
+              logger.warn("Fail to Close when " + closerDescription, throwable);
           }
-      }
-      else {
+      } else {
         try {
           closer.apply(resource);
-        }
-        catch (Throwable e){
-            logger.warn("Suppressing exception when " +
-              closerDescription +
-              ':',
-              e);
+        } catch (Throwable e) {
+            logger.warn("Suppressing exception when " + closerDescription + ':', e);
         }
       }
     }
@@ -95,8 +89,8 @@ final class ResourceUtils{
    *        connection
    * @return the result of f
    */
-  static <C extends Connection,R> R autoClosingConnection(C connection,Function1<C,R>f){
-    return resource(connection, "closing connection",new Function1<C,Void>() {
+  static <C extends Connection, R> R autoClosingConnection(C connection, Function1<C, R> f) {
+    return resource(connection, "closing connection", new Function1<C, Void>() {
         public Void apply(C parameter) {
             try {
                 parameter.close();
@@ -105,7 +99,7 @@ final class ResourceUtils{
             }
             return null;
         }
-    },f);
+    }, f);
   }
 
   /**
@@ -128,28 +122,29 @@ final class ResourceUtils{
    *        connection
    * @return the result of f
    */
-  static <C extends Connection,R> R autoRestoringConnection(final C connection, final boolean mode, final Function1<C,R> f){
+  static <C extends Connection, R> R autoRestoringConnection(final C connection,
+          final boolean mode, final Function1<C, R> f) {
       final boolean currentMode;
       try {
           currentMode = connection.getAutoCommit();
       } catch (SQLException e) {
           throw new RuntimeException(e);
       }
-      return resource(connection, "restoring connection auto-commit",new Function1<C, Void>() {
-          public Void apply(C parameter) throws Throwable{
+      return resource(connection, "restoring connection auto-commit", new Function1<C, Void>() {
+          public Void apply(C parameter) throws Throwable {
               parameter.setAutoCommit(currentMode);
               return null;
           }
-      },new Function1<C, R>() {
-              public R apply(C parameter) throws Throwable{
+      }, new Function1<C, R>() {
+              public R apply(C parameter) throws Throwable {
                   parameter.setAutoCommit(mode);
                   return f.apply(parameter);
               }
       });
   }
 
-    static enum CommitBehavior{
-        AutoCommit,CommitUponReturnOrException,CommitUponReturnOrRollbackUponException
+    static enum CommitBehavior {
+        AutoCommit, CommitUponReturnOrException, CommitUponReturnOrRollbackUponException
     }
   /**
    * Take a SQL connection, pass it to a closure and ensure that any
@@ -166,7 +161,8 @@ final class ResourceUtils{
    *        connection
    * @return the result of f
    */
-  static <C extends Connection,R> R autoCommittingConnection(C connection, final CommitBehavior commitBehavior, final Function1<C,R> f){
+  static <C extends Connection, R> R autoCommittingConnection(C connection,
+          final CommitBehavior commitBehavior, final Function1<C, R> f) {
     boolean newCommitBehavior = false;
     switch (commitBehavior) {
         case AutoCommit :
@@ -178,6 +174,8 @@ final class ResourceUtils{
         case CommitUponReturnOrRollbackUponException :
             newCommitBehavior = false;
             break;
+        default:
+            break;
       }
 
       return autoRestoringConnection(connection, newCommitBehavior, new Function1<C, R>() {
@@ -186,29 +184,28 @@ final class ResourceUtils{
                   case AutoCommit :
                       return f.apply(parameter);
                   case CommitUponReturnOrException :
-                      return resource(parameter,"committing transaction",new Function1<C, Void>() {
+                      return resource(parameter, "committing transaction", new Function1<C, Void>() {
                           public Void apply(C parameter) throws Throwable {
                               parameter.commit();
                               return null;
                           }
-                      },f);
+                      }, f);
                   case CommitUponReturnOrRollbackUponException :
                       R result;
                       try {
                           result = f.apply(parameter);
                           parameter.commit();
-                      }
-                      catch (Throwable e1){
+                      } catch (Throwable e1) {
                           try {
                               parameter.rollback();
-                          }
-                          catch(Throwable e2) {
-                              logger.warn("Suppressing exception when rolling back" +
-                                      "transaction:", e2);
+                          } catch (Throwable e2) {
+                              logger.warn("Suppressing exception when rolling back" + "transaction:", e2);
                           }
                           throw e1;
                       }
                       return result;
+                   default:
+                       break;
               }
               throw new IllegalStateException("Wrong Commit Type");
           }
@@ -226,13 +223,13 @@ final class ResourceUtils{
    *        statement
    * @return the result of f
    */
-  static <S extends Statement,R> R autoClosingStatement(S statement,Function1<S,R> f){
-      return resource(statement, "closing statement",new Function1<S, Void>() {
+  static <S extends Statement, R> R autoClosingStatement(S statement, Function1<S, R> f) {
+      return resource(statement, "closing statement", new Function1<S, Void>() {
           public Void apply(S parameter) throws Throwable {
               parameter.close();
               return null;
           }
-      },f);
+      }, f);
   }
 
   /**
@@ -246,13 +243,13 @@ final class ResourceUtils{
    *        result set
    * @return the result of f
    */
-  static <RS extends ResultSet,R> R autoClosingResultSet(RS resultSet,Function1<RS,R> f){
-    return resource(resultSet, "closing result set",new Function1<RS, Void>() {
+  static <RS extends ResultSet, R> R autoClosingResultSet(RS resultSet, Function1<RS, R> f) {
+    return resource(resultSet, "closing result set", new Function1<RS, Void>() {
         public Void apply(RS parameter) throws Throwable {
             parameter.close();
             return null;
         }
-    },f);
+    }, f);
   }
 
   /**
@@ -266,12 +263,12 @@ final class ResourceUtils{
    *        file
    * @return the result of f
    */
-  static <J extends JarFile,R> R jarFile(J jarFile,Function1<J,R> f){
-      return resource(jarFile, "closing jar file",new Function1<J, Void>() {
+  static <J extends JarFile, R> R jarFile(J jarFile, Function1<J, R> f) {
+      return resource(jarFile, "closing jar file", new Function1<J, Void>() {
           public Void apply(J parameter) throws Throwable {
               parameter.close();
               return null;
           }
-      },f);
+      }, f);
   }
 }
