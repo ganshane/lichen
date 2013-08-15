@@ -29,8 +29,8 @@ import java.util.Map;
 public class DatabaseAdapter {
     private Map<Integer, FieldType<?>> _types = new HashMap<Integer, FieldType<?>>();
     private DataSource _dataSource;
-    DatabaseAdapter(DataSource tdataSource) {
-        this._dataSource = tdataSource;
+    DatabaseAdapter(DataSource dataSource) {
+        this._dataSource = dataSource;
     }
     public void registerTypes() {
         _types.put(Types.BIGINT, LichenArTypes.BIG_INTEGER);

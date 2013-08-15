@@ -27,20 +27,20 @@ public class Field<T> {
     //列名
     private String _columnName;
 
-    public  void setFieldType(FieldType<T> vfieldType) {
-        this._fieldType = vfieldType;
+    public  void setFieldType(FieldType<T> fieldType) {
+        this._fieldType = fieldType;
     }
     public  FieldType<T> getFieldType() {
         return _fieldType;
     }
-    public  void setFieldName(String vfieldName) {
-        this._fieldName = vfieldName;
+    public  void setFieldName(String fieldName) {
+        this._fieldName = fieldName;
     }
     public  String getFieldName() {
         return _fieldName;
     }
-    public  void setColumnName(String vcolumnName) {
-        this._columnName = vcolumnName;
+    public  void setColumnName(String columnName) {
+        this._columnName = columnName;
     }
     public  String getColumnName() {
         return _columnName;
