@@ -20,12 +20,12 @@ import lichen.migration.model.SqlType;
 import lichen.migration.model.TableOption;
 
 /**
- * 数据库升级脚本的帮助类
+ * 数据库升级脚本的帮助类.
  * @author jcai
  */
 public interface MigrationHelper {
     /**
-     * 创建一张表
+     * 创建一张表.
      * @param tableName 表名
      * @param body 创建表的回调函数
      * @param options 表的属性定义
@@ -34,14 +34,14 @@ public interface MigrationHelper {
     void createTable(String tableName, TableCallback body, TableOption... options) throws Throwable;
 
     /**
-     * 删除表
+     * 删除表.
      * @param tableName 待删除的表名
      * @throws Throwable 任何错误，将抛出异常
      */
     void dropTable(String tableName) throws Throwable;
 
     /**
-     * 向表中加入某一列
+     * 向表中加入某一列.
      * @param tableName 表名
      * @param columnName 列名
      * @param columnType 列的类型
@@ -54,7 +54,7 @@ public interface MigrationHelper {
                    ColumnOption... options) throws Throwable;
 
     /**
-     * 删除列
+     * 删除列.
      * @param tableName 表名
      * @param columnName 列名
      * @throws Throwable 任何错误，将抛出此异常
@@ -63,7 +63,7 @@ public interface MigrationHelper {
                       String columnName) throws Throwable;
 
     /**
-     * 修改一个存在的列
+     * 修改一个存在的列.
      *
      * @param tableName 表名
      * @param columnName 列名
@@ -75,20 +75,16 @@ public interface MigrationHelper {
                      SqlType columnType,
                      ColumnOption... options) throws Throwable;
 
-    
     /**
-     * 针对某一列，创建数据库索引
+     * 针对某一列，创建数据库索引.
      * @param tableName 表名
      * @param columnName 字段名称数据
      * @param options
      */
-    void addIndex(String tableName,
-            String columnName,
-            IndexOption... options) throws Throwable; 
-    
-    
+    void addIndex(String tableName, String columnName, IndexOption... options) throws Throwable;
+
     /**
-     * 针对多个列，创建数据库索引
+     * 针对多个列，创建数据库索引.
      * @param tableName 表名
      * @param columnNames 字段名称数组
      * @param options
@@ -96,10 +92,9 @@ public interface MigrationHelper {
     void addIndex(String tableName,
             String [] columnNames,
             IndexOption... options) throws Throwable;
-    
-    
+
     /**
-     * 删除单个列创建的索引
+     * 删除单个列创建的索引.
      * @param tableName 表名
      * @param columnNames 字段名称数组
      * @param name
@@ -107,9 +102,9 @@ public interface MigrationHelper {
     void removeIndex(String tableName,
             String columnName,
             Name ... name) throws Throwable;
-    
+
     /**
-     * 删除多个列创建的索引
+     * 删除多个列创建的索引.
      * @param tableName 表名
      * @param columnNames 字段名称数组
      * @param name
@@ -117,5 +112,5 @@ public interface MigrationHelper {
     void removeIndex(String tableName,
             String [] columnNames,
             Name ... name) throws Throwable;
-    
+
 }
