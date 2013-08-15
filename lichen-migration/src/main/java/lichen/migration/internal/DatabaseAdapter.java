@@ -14,16 +14,13 @@
 package lichen.migration.internal;
 
 import lichen.migration.internal.util.StringUtils;
-import lichen.migration.model.ColumnOption;
-import lichen.migration.model.IndexOption;
-import lichen.migration.model.Name;
-import lichen.migration.model.SqlType;
-import lichen.migration.model.Unique;
+import lichen.migration.model.*;
 
 import java.util.Arrays;
 
 /**
  * 数据库适配器.
+ *
  * @author jcai
  */
 abstract class DatabaseAdapter {
@@ -31,15 +28,15 @@ abstract class DatabaseAdapter {
      * Return the appropriate database adapter for the given database
      * vendor.
      *
-     * @param vendor the database vendor
+     * @param vendor        the database vendor
      * @param schemaNameOpt an optional schema name used to qualify all
-     *        table names in the generated SQL; if Some(), then all
-     *        table names are qualified with the name, otherwise, table
-     *        names are unqualified
+     *                      table names in the generated SQL; if Some(), then all
+     *                      table names are qualified with the name, otherwise, table
+     *                      names are unqualified
      * @return a DatabaseAdapter suitable to use for the database
      */
     public static DatabaseAdapter forVendor(DatabaseVendor vendor,
-            Option<String> schemaNameOpt) {
+                                            Option<String> schemaNameOpt) {
         switch (vendor) {
             case H2:
                 return new H2DatabaseAdapter(schemaNameOpt);
@@ -48,6 +45,7 @@ abstract class DatabaseAdapter {
                         + vendor);
         }
     }
+
     Option<String> schemaNameOpt;
     /**
      * The vendor of the database.
@@ -69,40 +67,41 @@ abstract class DatabaseAdapter {
      * 如Derby, Oracle and PostgreSQL使用CONSTRAINT，而MySQL使用FOREIGN KEY.
      * The SQL keyword(s) or "phrase" used to drop a foreign key
      * constraint.  For example, Derby, Oracle and PostgreSQL use
-     *
-     *   ALTER TABLE child DROP CONSTRAINT idx_child_pk_parent;
-     *                          ^^^^^^^^^^
-     *
+     * <p/>
+     * ALTER TABLE child DROP CONSTRAINT idx_child_pk_parent;
+     * ^^^^^^^^^^
+     * <p/>
      * while MySQL uses
-     *
-     *   ALTER TABLE child DROP FOREIGN KEY idx_child_pk_parent;
-     *                          ^^^^^^^^^^^
+     * <p/>
+     * ALTER TABLE child DROP FOREIGN KEY idx_child_pk_parent;
+     * ^^^^^^^^^^^
      */
     protected String alterTableDropForeignKeyConstraintPhrase;
     /**
      * This value is true if the database implicitly adds an index on
      * the column that has a foreign key constraint added to it.
-     *
+     * <p/>
      * The following SQL can be used to test the database.  The last
      * statement will fail with a message that there already is an index
      * on the column.
-     *
-     *   CREATE TABLE parent (pk INT PRIMARY KEY);
-     *   CREATE TABLE child (pk INT PRIMARY KEY, pk_parent INT NOT NULL);
-     *   ALTER TABLE child
-     *     ADD CONSTRAINT idx_child_pk_parent FOREIGN KEY (pk_parent)
-     *     REFERENCES parent (pk);
-     *   CREATE INDEX idx_child_pk_parent ON child (pk_parent);
+     * <p/>
+     * CREATE TABLE parent (pk INT PRIMARY KEY);
+     * CREATE TABLE child (pk INT PRIMARY KEY, pk_parent INT NOT NULL);
+     * ALTER TABLE child
+     * ADD CONSTRAINT idx_child_pk_parent FOREIGN KEY (pk_parent)
+     * REFERENCES parent (pk);
+     * CREATE INDEX idx_child_pk_parent ON child (pk_parent);
      */
     protected boolean addingForeignKeyConstraintCreatesIndex;
 
     public DatabaseAdapter(Option<String> newSchemaNameOpt) {
         this.schemaNameOpt = newSchemaNameOpt;
     }
+
     public ColumnDefinition newColumnDefinition(String tableName,
-                            String columnName,
-                            SqlType columnType,
-                            ColumnOption ... options) {
+                                                String columnName,
+                                                SqlType columnType,
+                                                ColumnOption... options) {
 
         ColumnDefinition d = columnDefinitionFactory(columnType);
         d.adapterOpt = Option.Some(this);
@@ -116,6 +115,7 @@ abstract class DatabaseAdapter {
     }
 
     protected abstract ColumnDefinition columnDefinitionFactory(SqlType columnType);
+
     /**
      * Quote a schema name.
      *
@@ -125,12 +125,13 @@ abstract class DatabaseAdapter {
     public String quoteSchemaName(String schemaName) {
         return quoteCharacter + unquotedNameConverter(schemaName) + quoteCharacter;
     }
+
     /**
      * Quote a table name, prepending the quoted schema name to the
      * quoted table name along with a '.' if a schema name is provided.
      *
      * @param newSchemaNameOpt an optional schema name
-     * @param tableName the name of the table to quote
+     * @param tableName        the name of the table to quote
      * @return the table name properly quoted for the database,
      *         prepended with the quoted schema name and a '.' if a
      *         schema name is provided
@@ -149,6 +150,7 @@ abstract class DatabaseAdapter {
                 .append(quoteCharacter)
                 .toString();
     }
+
     /**
      * Quote a table name.  If the database adapter was provided with a
      * default schema name, then the quoted table name is prepended with
@@ -163,11 +165,12 @@ abstract class DatabaseAdapter {
         // use the default schemaNameOpt defined in the adapter
         return quoteTableName(schemaNameOpt, tableName);
     }
+
     /**
      * Quote an index name.
      *
      * @param newSchemaNameOpt an optional schema name
-     * @param indexName the name of the index to quote
+     * @param indexName        the name of the index to quote
      * @return a properly quoted index name
      */
     public String quoteIndexName(Option<String> newSchemaNameOpt, String indexName) {
@@ -175,20 +178,21 @@ abstract class DatabaseAdapter {
         StringBuilder sb = new StringBuilder(size);
 
         if (newSchemaNameOpt.isDefined()) {
-                sb.append(quoteSchemaName(newSchemaNameOpt.get()))
-                        .append('.');
+            sb.append(quoteSchemaName(newSchemaNameOpt.get()))
+                    .append('.');
         }
         return sb.append(quoteCharacter)
                 .append(unquotedNameConverter(indexName))
                 .append(quoteCharacter)
                 .toString();
     }
+
     /**
-    * Quote a column name.
-    *
-    * @param columnName the name of the column to quote
-    * @return a properly quoted column name
-    */
+     * Quote a column name.
+     *
+     * @param columnName the name of the column to quote
+     * @return a properly quoted column name
+     */
     public String quoteColumnName(String columnName) {
         return quoteCharacter + unquotedNameConverter(columnName) + quoteCharacter;
     }
@@ -198,60 +202,63 @@ abstract class DatabaseAdapter {
     }
 
     protected abstract String alterColumnSql(Option<String> newSchemaNameOpt, ColumnDefinition newColumnDefinition);
+
     /**
      * Different databases require different SQL to alter a column's
      * definition.
      *
      * @param newSchemaNameOpt the optional schema name to qualify the
-     *        table name
-     * @param tableName the name of the table with the column
-     * @param columnName the name of the column
-     * @param columnType the type the column is being altered to
-     * @param options a possibly empty array of column options to
-     *        customize the column
+     *                         table name
+     * @param tableName        the name of the table with the column
+     * @param columnName       the name of the column
+     * @param columnType       the type the column is being altered to
+     * @param options          a possibly empty array of column options to
+     *                         customize the column
      * @return the SQL to alter the column
      */
     public String alterColumnSql(Option<String> newSchemaNameOpt,
-                       String tableName,
-                       String columnName,
-                       SqlType columnType,
-                       ColumnOption ... options) {
+                                 String tableName,
+                                 String columnName,
+                                 SqlType columnType,
+                                 ColumnOption... options) {
         return alterColumnSql(newSchemaNameOpt,
                 newColumnDefinition(tableName, columnName, columnType, options));
     }
+
     /**
      * Different databases require different SQL to alter a column's
      * definition.  Uses the schemaNameOpt defined in the adapter.
      *
-     * @param tableName the name of the table with the column
+     * @param tableName  the name of the table with the column
      * @param columnName the name of the column
      * @param columnType the type the column is being altered to
-     * @param options a possibly empty array of column options to
-     *        customize the column
+     * @param options    a possibly empty array of column options to
+     *                   customize the column
      * @return the SQL to alter the column
      */
     public String alterColumnSql(String tableName,
-                       String columnName,
-                       SqlType columnType,
-                       ColumnOption ... options) {
+                                 String columnName,
+                                 SqlType columnType,
+                                 ColumnOption... options) {
         return alterColumnSql(schemaNameOpt,
                 tableName,
                 columnName,
                 columnType,
                 options);
     }
+
     /**
      * Different databases require different SQL to drop a column.
      *
      * @param newSchemaNameOpt the optional schema name to qualify the
-     *        table name
-     * @param tableName the name of the table with the column
-     * @param columnName the name of the column
+     *                         table name
+     * @param tableName        the name of the table with the column
+     * @param columnName       the name of the column
      * @return the SQL to drop the column
      */
     public String removeColumnSql(Option<String> newSchemaNameOpt,
-                        String tableName,
-                        String columnName) {
+                                  String tableName,
+                                  String columnName) {
         final int size = 512;
         return new StringBuilder(size)
                 .append("ALTER TABLE ")
@@ -260,30 +267,31 @@ abstract class DatabaseAdapter {
                 .append(quoteColumnName(columnName))
                 .toString();
     }
+
     /**
      * Different databases require different SQL to drop a column.
      * Uses the schemaNameOpt defined in the adapter.
      *
-     * @param tableName the name of the table with the column
+     * @param tableName  the name of the table with the column
      * @param columnName the name of the column
      * @return the SQL to drop the column
      */
     public String removeColumnSql(String tableName,
-                        String columnName) {
+                                  String columnName) {
         return removeColumnSql(schemaNameOpt, tableName, columnName);
     }
 
 
     /**
-     * @description: 产生创建数据库索引的sql语句.
      * @param newSchemaNameOpt 模式选项，如数据库用户名
-     * @param tableName 索引依赖的表名
-     * @param columnNames 索引依赖的列
+     * @param tableName        索引依赖的表名
+     * @param columnNames      索引依赖的列
      * @param options
      * @return sql语句
+     * @description: 产生创建数据库索引的sql语句.
      */
     public String addIndexSql(Option<String> newSchemaNameOpt,
-            String tableName, String[] columnNames, IndexOption... options) {
+                              String tableName, String[] columnNames, IndexOption... options) {
         StringBuffer sql = new StringBuffer();
         StringBuffer indexName = new StringBuffer();
         boolean isUnique = false;
@@ -311,44 +319,42 @@ abstract class DatabaseAdapter {
             uniqueStr = " UNIQUE ";
         }
         sql.append("CREATE")
-           .append(uniqueStr)
-           .append("INDEX ")
-           .append(quoteTableName(newSchemaNameOpt, indexName.toString()))
-           .append(" ON ")
-           .append(quoteTableName(tableName).trim())
-           .append("(")
-           .append(StringUtils.join(columnNames, ",").toUpperCase())
-           .append(")");
+                .append(uniqueStr)
+                .append("INDEX ")
+                .append(quoteTableName(newSchemaNameOpt, indexName.toString()))
+                .append(" ON ")
+                .append(quoteTableName(tableName).trim())
+                .append("(")
+                .append(StringUtils.join(columnNames, ",").toUpperCase())
+                .append(")");
         return sql.toString();
     }
 
     /**
-     * @description: 重载addIndexSql(schemaNameOpt, tableName, columnNames, options)方法
      * @param tableName
      * @param columnNames
      * @param options
      * @return
+     * @description: 重载addIndexSql(schemaNameOpt, tableName, columnNames, options)方法
      */
     public String addIndexSql(String tableName, String[] columnNames,
-            IndexOption... options) {
+                              IndexOption... options) {
         return addIndexSql(schemaNameOpt, tableName, columnNames, options);
     }
 
     /**
      * Different databases require different SQL to drop an index.
      *
-     * @param newSchemaNameOpt
-     *            the optional schema name to qualify the table name
-     * @param tableName
-     *            the name of the table with the index
-     * @param indexName
-     *            the name of the index
+     * @param newSchemaNameOpt the optional schema name to qualify the table name
+     * @param tableName        the name of the table with the index
+     * @param indexName        the name of the index
      * @return the SQL to drop the index
      */
     public String removeIndexSql(Option<String> newSchemaNameOpt,
-            String tableName, String indexName) {
+                                 String tableName, String indexName) {
         return "DROP INDEX " + quoteTableName(newSchemaNameOpt, indexName);
     }
+
     /**
      * Different databases require different SQL to drop an index.
      * Uses the schemaNameOpt defined in the adapter.
@@ -358,18 +364,18 @@ abstract class DatabaseAdapter {
      * @return the SQL to drop the index
      */
     public String removeIndexSql(String tableName,
-                       String indexName) {
+                                 String indexName) {
         return removeIndexSql(schemaNameOpt, tableName, indexName);
     }
 
     /**
-     * @description: 重载removeIndexSql(tableName,indexName)方法，得到删除索引语句
-     * @param tableName 索引依赖的表名
+     * @param tableName   索引依赖的表名
      * @param columnNames 索引依赖的字段
-     * @param name 指定索引名称
+     * @param name        指定索引名称
+     * @description: 重载removeIndexSql(tableName, indexName)方法，得到删除索引语句
      */
     public String removeIndexSql(String tableName, String[] columnNames,
-            Name... name) {
+                                 Name... name) {
         StringBuffer indexName = new StringBuffer();
         // 如果未指定Name，则默认索引名称为：idx_tableName_字段1_字段2_..._字段n（按照列的升序排列）
         if (name.length == 0) {
@@ -391,12 +397,13 @@ abstract class DatabaseAdapter {
     public String lockTableSql(String tableName) {
         return lockTableSql(schemaNameOpt, tableName);
     }
+
     /**
      * Different databases require different SQL to lock a table.
      *
      * @param newSchemaNameOpt the optional schema name to qualify the
-     *        table name
-     * @param tableName the name of the table to lock
+     *                         table name
+     * @param tableName        the name of the table to lock
      * @return the SQL to lock the table
      */
     public String lockTableSql(Option<String> newSchemaNameOpt, String tableName) {

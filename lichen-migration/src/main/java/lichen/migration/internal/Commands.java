@@ -13,43 +13,39 @@
 // limitations under the License.
 package lichen.migration.internal;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.util.Properties;
-
 import lichen.migration.config.MigratorConfig;
 
-public enum Commands {
-  INFO,
-  INIT,
-  BOOTSTRAP,
-  NEW,
-  UP,
-  DOWN,
-  PENDING,
-  SCRIPT,
-  VERSION,
-  STATUS;
+import java.io.*;
+import java.util.Properties;
 
-  public static Command resolveCommand(String commandString, SelectedOptions selectedOptions) {
-    for (Commands command : values()) {
-      if (command.name().startsWith(commandString)) {
-        return createCommand(command, selectedOptions);
-      }
+public enum Commands {
+    INFO,
+    INIT,
+    BOOTSTRAP,
+    NEW,
+    UP,
+    DOWN,
+    PENDING,
+    SCRIPT,
+    VERSION,
+    STATUS;
+
+    public static Command resolveCommand(String commandString, SelectedOptions selectedOptions) {
+        for (Commands command : values()) {
+            if (command.name().startsWith(commandString)) {
+                return createCommand(command, selectedOptions);
+            }
+        }
+
+        throw new MigrationException("Attempt to execute unknown command: " + commandString);
     }
 
-    throw new MigrationException("Attempt to execute unknown command: " + commandString);
-  }
-
-  private static Command createCommand(Commands aResolvedCommand, SelectedOptions selectedOptions) {
-      switch (aResolvedCommand) {
-          case INFO:
-              return new InfoCommand(System.out);
-          case UP:
-              return new UpCommand(selectedOptions);
+    private static Command createCommand(Commands aResolvedCommand, SelectedOptions selectedOptions) {
+        switch (aResolvedCommand) {
+            case INFO:
+                return new InfoCommand(System.out);
+            case UP:
+                return new UpCommand(selectedOptions);
       /*
       case INIT:
         return new InitializeCommand(selectedOptions);
@@ -68,15 +64,16 @@ public enum Commands {
       case STATUS:
         return new StatusCommand(selectedOptions);
         */
-      default:
-        return new Command() {
-          public void execute(String... params) {
-            System.out.println("unknown command");
-          }
-        };
+            default:
+                return new Command() {
+                    public void execute(String... params) {
+                        System.out.println("unknown command");
+                    }
+                };
+        }
     }
-  }
 }
+
 interface Command {
     void execute(String... params);
 }
@@ -93,18 +90,18 @@ final class UpCommand implements Command {
         if (!_selectedOptions.getPaths().getConfigPath().exists()) {
             throw new MigrationException(String.format(
                     "config file %s doesn't exists!", _selectedOptions
-                            .getPaths().getConfigPath().getAbsolutePath()));
+                    .getPaths().getConfigPath().getAbsolutePath()));
         }
         try {
             InputStream configInputStream = new FileInputStream(_selectedOptions
                     .getPaths().getConfigPath());
             MigratorConfig config = XmlLoader.parseXML(MigratorConfig.class,
                     configInputStream, Option.Some(getClass()
-                            .getResourceAsStream("/migrator-config.xsd")));
+                    .getResourceAsStream("/migrator-config.xsd")));
 
             DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(
                     DatabaseVendor.forDriver(config._driverClassName), Option
-                            .<String> None());
+                    .<String>None());
             Migrator migrator = new Migrator(config._url, config._username,
                     config._password, databaseAdapter);
             migrator.migrate(MigratorOperation.InstallAllMigrations,
@@ -112,7 +109,7 @@ final class UpCommand implements Command {
         } catch (FileNotFoundException e) {
             throw new MigrationException(String.format(
                     "config file %s doesn't exists!", _selectedOptions
-                            .getPaths().getConfigPath().getAbsolutePath()));
+                    .getPaths().getConfigPath().getAbsolutePath()));
         } catch (Throwable throwable) {
             throw new MigrationException(throwable);
         }

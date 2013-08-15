@@ -13,6 +13,18 @@
 // limitations under the License.
 package lichen.migration.internal;
 
+import lichen.migration.services.Migration;
+import lichen.migration.services.MigrationHelper;
+import lichen.migration.services.Options;
+import org.apache.tapestry5.internal.plastic.PlasticClassPool;
+import org.apache.tapestry5.plastic.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
+
+import javax.inject.Inject;
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -21,43 +33,11 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.inject.Inject;
-import javax.sql.DataSource;
-
-import lichen.migration.services.Migration;
-import lichen.migration.services.MigrationHelper;
-import lichen.migration.services.Options;
-
-import org.apache.tapestry5.internal.plastic.PlasticClassPool;
-import org.apache.tapestry5.plastic.ClassInstantiator;
-import org.apache.tapestry5.plastic.ClassType;
-import org.apache.tapestry5.plastic.PlasticClass;
-import org.apache.tapestry5.plastic.PlasticClassEvent;
-import org.apache.tapestry5.plastic.PlasticClassListener;
-import org.apache.tapestry5.plastic.PlasticField;
-import org.apache.tapestry5.plastic.PlasticManagerDelegate;
-import org.apache.tapestry5.plastic.TransformationOption;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
 
 public class Migrator {
     /**
@@ -70,37 +50,39 @@ public class Migrator {
     static final Set<String> packages = new HashSet<String>();
     static final PlasticClassPool plasticClassPool = new PlasticClassPool(
             Thread.currentThread().getContextClassLoader(), new PlasticManagerDelegate() {
-                @Override
-                public <T> ClassInstantiator<T> configureInstantiator(String className,
-                        ClassInstantiator<T> instantiator) {
-                    return instantiator;
-                }
+        @Override
+        public <T> ClassInstantiator<T> configureInstantiator(String className,
+                                                              ClassInstantiator<T> instantiator) {
+            return instantiator;
+        }
 
-                @Override
-                public void transform(PlasticClass plasticClass) {
-                    List<PlasticField> fields = plasticClass.getFieldsWithAnnotation(Inject.class);
-                    for (PlasticField field : fields) {
-                        if (field.getTypeName().equals(MigrationHelper.class.getName())
-                                || field.getTypeName().equals(Options.class.getName())) {
-                            field.injectFromInstanceContext();
-                        } else {
-                            throw new RuntimeException("wrong inject " + field.getName());
-                        }
-                    }
+        @Override
+        public void transform(PlasticClass plasticClass) {
+            List<PlasticField> fields = plasticClass.getFieldsWithAnnotation(Inject.class);
+            for (PlasticField field : fields) {
+                if (field.getTypeName().equals(MigrationHelper.class.getName())
+                        || field.getTypeName().equals(Options.class.getName())) {
+                    field.injectFromInstanceContext();
+                } else {
+                    throw new RuntimeException("wrong inject " + field.getName());
                 }
-            }, packages, new HashSet<TransformationOption>());
+            }
+        }
+    }, packages, new HashSet<TransformationOption>());
+
     {
         packages.add("lichen.migration.internal");
         //plasticManager.addPlasticClassListener(new PlasticClassListenerLogger(logger));
     }
+
     /**
      * Given a path to a JAR file, return a set of all the names of all
      * the classes the JAR file contains.
      *
-     * @param path path to the JAR file
-     * @param packageName the package name that the classes should be in
+     * @param path              path to the JAR file
+     * @param packageName       the package name that the classes should be in
      * @param searchSubPackages true if sub-packages of packageName
-     *        should be searched
+     *                          should be searched
      * @return a set of the class names the JAR file contains
      */
     private static HashSet<String> classNamesInJar(String path,
@@ -139,11 +121,11 @@ public class Migrator {
      * Scala classes, return a set of all names of the classes the
      * directory contains.
      *
-     * @param file the java.io.File corresponding to the directory
-     * @param packageName the package name that the classes should be
-     *        in
+     * @param file              the java.io.File corresponding to the directory
+     * @param packageName       the package name that the classes should be
+     *                          in
      * @param searchSubPackages true if sub-packages of packageName
-     *        should be searched
+     *                          should be searched
      * @return a set of the class names the directory contains
      */
     private static HashSet<String> classNamesInDir(File file,
@@ -152,11 +134,11 @@ public class Migrator {
         HashSet<String> classNames = new HashSet<String>();
 
 
-
         scan(classNames, file, packageName, searchSubPackages);
 
         return classNames;
     }
+
     private static void scan(HashSet<String> classNames,
                              File f,
                              String pn,
@@ -187,11 +169,11 @@ public class Migrator {
      * Given a resource's URL, return the names of all the classes in
      * the resource.
      *
-     * @param url the resource's URL
-     * @param packageName the Java package name to search for Migration
-     *        subclasses
+     * @param url               the resource's URL
+     * @param packageName       the Java package name to search for Migration
+     *                          subclasses
      * @param searchSubPackages true if sub-packages of packageName
-     *        should be searched
+     *                          should be searched
      * @return a set of class names in the resource
      */
     private static HashSet<String> classNamesInResource(
@@ -230,18 +212,18 @@ public class Migrator {
     /**
      * Given a Java package name, return a set of concrete classes with
      * a no argument constructor that implement Migration.
-     *
+     * <p/>
      * Limitations:
      * 1) This function assumes that only a single directory or jar file
-     *    provides classes in the Java package.
+     * provides classes in the Java package.
      * 2) It will descend into non-child directories of the package
-     *    directory or other jars to find other migrations.
+     * directory or other jars to find other migrations.
      * 3) It does not support remotely loaded classes and jar files.
      *
-     * @param packageName the Java package name to search for Migration
-     *        subclasses
+     * @param packageName       the Java package name to search for Migration
+     *                          subclasses
      * @param searchSubPackages true if sub-packages of packageName
-     *        should be searched
+     *                          should be searched
      * @return a sorted map with version number keys and the concrete
      *         Migration subclasses as the value
      */
@@ -362,8 +344,10 @@ public class Migrator {
 
         return results;
     }
+
     private ConnectionBuilder connectionBuilder;
     private DatabaseAdapter adapter;
+
     /**
      * This class migrates the database into the desired state.
      */
@@ -371,18 +355,20 @@ public class Migrator {
         this.connectionBuilder = newConnectionBuilder;
         this.adapter = newAdapter;
     }
+
     public Migrator(DataSource dataSource, DatabaseAdapter databaseAdapter) {
         this(new ConnectionBuilder(dataSource), databaseAdapter);
     }
+
     /**
      * Construct a migrator to a database that needs a username and password.
      *
-     * @param jdbcUrl the JDBC URL to connect to the database
+     * @param jdbcUrl      the JDBC URL to connect to the database
      * @param jdbcUsername the username to log into the database
      * @param jdbcPassword the password associated with the database
-     *        username
-     * @param newAdapter a concrete DatabaseAdapter that the migrator uses
-     *        to handle database specific features
+     *                     username
+     * @param newAdapter   a concrete DatabaseAdapter that the migrator uses
+     *                     to handle database specific features
      */
     public Migrator(String jdbcUrl,
                     String jdbcUsername,
@@ -390,7 +376,6 @@ public class Migrator {
                     DatabaseAdapter newAdapter) {
         this(new ConnectionBuilder(jdbcUrl, jdbcUsername, jdbcPassword), newAdapter);
     }
-
 
 
     /**
@@ -403,37 +388,37 @@ public class Migrator {
     public Set<String> getTableNames() {
         return connectionBuilder.withConnection(ResourceUtils.CommitBehavior.AutoCommit,
                 new Function1<Connection, Set<String>>() {
-            public Set<String> apply(Connection connection) throws Throwable {
-                String schemaPattern = null;
-                if (adapter.schemaNameOpt.isDefined()) {
-                    schemaPattern = adapter.unquotedNameConverter(adapter.schemaNameOpt.get());
-                }
-                DatabaseMetaData metadata = connection.getMetaData();
-                return ResourceUtils.autoClosingResultSet(metadata.getTables(null,
-                        schemaPattern,
-                        null,
-                        new String[]{"TABLE"}), new Function1<ResultSet, Set<String>>() {
-                    public Set<String> apply(ResultSet rs) throws Throwable {
-                        Set<String> names = new HashSet<String>();
-                        final int index = 3;
-                        while (rs.next()) {
-                            names.add(rs.getString(index).trim());
+                    public Set<String> apply(Connection connection) throws Throwable {
+                        String schemaPattern = null;
+                        if (adapter.schemaNameOpt.isDefined()) {
+                            schemaPattern = adapter.unquotedNameConverter(adapter.schemaNameOpt.get());
                         }
-                        return names;
+                        DatabaseMetaData metadata = connection.getMetaData();
+                        return ResourceUtils.autoClosingResultSet(metadata.getTables(null,
+                                schemaPattern,
+                                null,
+                                new String[]{"TABLE"}), new Function1<ResultSet, Set<String>>() {
+                            public Set<String> apply(ResultSet rs) throws Throwable {
+                                Set<String> names = new HashSet<String>();
+                                final int index = 3;
+                                while (rs.next()) {
+                                    names.add(rs.getString(index).trim());
+                                }
+                                return names;
+                            }
+                        });
                     }
                 });
-            }
-        });
     }
 
     /**
      * Execute a migration in the given direction.
      *
-     * @param migrationClass the class of migration to execute
-     * @param direction the direction the migration should be run
+     * @param migrationClass   the class of migration to execute
+     * @param direction        the direction the migration should be run
      * @param versionUpdateOpt if provided, the schema_migrations table
-     *        is updated using the given connection and migration
-     *        version number; this allows this method to
+     *                         is updated using the given connection and migration
+     *                         version number; this allows this method to
      */
     private void runMigration(Connection connection, Class<? extends Migration> migrationClass,
                               final MigrationDirection direction,
@@ -479,12 +464,12 @@ public class Migrator {
 
             ResourceUtils.autoClosingStatement(connection.prepareStatement(sql),
                     new Function1<PreparedStatement, Object>() {
-                public Object apply(PreparedStatement statement) throws Throwable {
-                    statement.setString(1, version.toString());
-                    statement.execute();
-                    return null;
-                }
-            });
+                        public Object apply(PreparedStatement statement) throws Throwable {
+                            statement.setString(1, version.toString());
+                            statement.execute();
+                            return null;
+                        }
+                    });
         }
         //System.out.println(horizontalLine("OK", 80));
     }
@@ -496,7 +481,7 @@ public class Migrator {
      */
     private boolean doesSchemaMigrationsTableExist() {
         String smtn = Migrator.schemaMigrationsTableName.toLowerCase();
-        for (String name:getTableNames()) {
+        for (String name : getTableNames()) {
             if (name.equalsIgnoreCase(smtn)) {
                 return true;
             }
@@ -512,11 +497,11 @@ public class Migrator {
             final Option<Long> version = Option.None();
             connectionBuilder.withConnection(ResourceUtils.CommitBehavior.AutoCommit,
                     new Function1<Connection, Object>() {
-                public Object apply(Connection parameter) throws Throwable {
-                    runMigration(parameter, CreateSchemaMigrationsTableMigration.class, MigrationDirection.Up, version);
-                    return null;
-                }
-            });
+                        public Object apply(Connection parameter) throws Throwable {
+                            runMigration(parameter, CreateSchemaMigrationsTableMigration.class, MigrationDirection.Up, version);
+                            return null;
+                        }
+                    });
         }
     }
 
@@ -560,8 +545,8 @@ public class Migrator {
                                                 versions.add(version);
                                             } catch (NumberFormatException e) {
                                                 logger.warn("Ignoring installed migration with unparsable "
-                                                                + "version number '" + versionStr
-                                                                + "'.", e);
+                                                        + "version number '" + versionStr
+                                                        + "'.", e);
                                             }
                                         }
                                         return versions;
@@ -574,17 +559,17 @@ public class Migrator {
 
     /**
      * Migrate the database.
-     *
+     * <p/>
      * Running this method, even if no concrete Migration subclasses are
      * found in the given package name, will result in the creation of
      * the schema_migrations table in the database, if it does not
      * currently exist.
      *
-     * @param packageName the Java package name to search for migration
-     *        subclasses
+     * @param packageName       the Java package name to search for migration
+     *                          subclasses
      * @param searchSubPackages true if sub-packages of packageName
-     *        should be searched
-     * @param operation the migration operation that should be performed
+     *                          should be searched
+     * @param operation         the migration operation that should be performed
      */
     public void migrate(final MigratorOperation operation,
                         final String packageName,
@@ -598,139 +583,140 @@ public class Migrator {
         // that were successfully run are recorded.
         connectionBuilder.withConnection(ResourceUtils.CommitBehavior.CommitUponReturnOrException,
                 new Function1<Connection, Object>() {
-            public Object apply(Connection schemaConnection) throws Throwable {
-                initializeSchemaMigrationsTable();
+                    public Object apply(Connection schemaConnection) throws Throwable {
+                        initializeSchemaMigrationsTable();
 
-                //logger.debug("Getting an exclusive lock on the '{}' table.",schemaMigrationsTableName);
-                ResourceUtils.autoClosingStatement(schemaConnection.prepareStatement(
-                        adapter.lockTableSql(schemaMigrationsTableName)),
-                        new Function1<PreparedStatement, Object>() {
-                    @Override
-                    public Object apply(PreparedStatement parameter) throws Throwable {
-                        return parameter.execute();
+                        //logger.debug("Getting an exclusive lock on the '{}' table.",schemaMigrationsTableName);
+                        ResourceUtils.autoClosingStatement(schemaConnection.prepareStatement(
+                                adapter.lockTableSql(schemaMigrationsTableName)),
+                                new Function1<PreparedStatement, Object>() {
+                                    @Override
+                                    public Object apply(PreparedStatement parameter) throws Throwable {
+                                        return parameter.execute();
+                                    }
+                                });
+                        // Get a list of all available and installed migrations.  Check
+                        // that all installed migrations have a migration class
+                        // available to migrate out of that migration.  This can happen
+                        // if the migration is applied by one copy of an application but
+                        // another copy does not have that migration, say the migration
+                        // was not checked into a source control system.  Having a
+                        // missing migration for an installed migration is not fatal
+                        // unless the migration needs to be rolled back.
+                        SortedSet<Long> installedVersions = getInstalledVersions(schemaConnection);
+                        SortedMap<Long, Class<? extends Migration>> availableMigrations
+                                = findMigrations(packageName, searchSubPackages);
+                        Set<Long> availableVersions = availableMigrations.keySet();
+
+                        for (Long installedVersion : installedVersions) {
+                            if (!availableVersions.contains(installedVersion)) {
+                                logger.warn("The migration version '{}' is installed but "
+                                        + "there is no migration class available to back " + "it out.", installedVersion);
+                            }
+                        }
+                        if (availableMigrations.isEmpty()) {
+                            logger.info("No migrations found, nothing to do.");
+                        }
+                        Long[] installVersions = new Long[0];
+                        Long[] removeVersions = new Long[0];
+
+                        // From the operation, determine the migrations to install and
+                        // the ones to uninstall.
+                        switch (operation) {
+                            case InstallAllMigrations:
+                                installVersions = availableVersions.toArray(new Long[availableVersions.size()]);
+                                removeVersions = new Long[]{};
+                                break;
+                            case RemoveAllMigrations:
+                                installVersions = new Long[]{};
+
+                                removeVersions = new Long[installedVersions.size()];
+                                Iterator<Long> it = installedVersions.iterator();
+                                int size = removeVersions.length;
+                                int i = 0;
+                                while (it.hasNext()) {
+                                    i += 1;
+                                    removeVersions[size - i] = it.next();
+                                }
+                                break;
+                            case MigrateToVersion:
+                                List<Long> prepareInstallVersions = new ArrayList<Long>();
+                                List<Long> prepareRemoveVersions = new ArrayList<Long>();
+                                Iterator<Long> aIt = availableVersions.iterator();
+                                boolean versionFound = false;
+                                while (aIt.hasNext()) {
+                                    Long version = aIt.next();
+                                    if (version <= operation.version) {
+                                        prepareInstallVersions.add(version);
+                                    } else {
+                                        prepareRemoveVersions.add(0, version);
+                                    }
+                                    if (version == operation.version) {
+                                        versionFound = true;
+                                    }
+                                }
+                                if (!versionFound) {
+                                    String message = "The target version " + operation.version
+                                            + " does not exist as a migration.";
+                                    throw new RuntimeException(message);
+                                }
+                                installVersions = prepareInstallVersions.toArray(new Long[prepareInstallVersions.size()]);
+                                removeVersions = prepareRemoveVersions.toArray(new Long[prepareRemoveVersions.size()]);
+                                break;
+                            case RollbackMigration:
+                                if (operation.count > installedVersions.size()) {
+                                    String message = "Attempting to rollback " + operation.count
+                                            + " migrations but the database only has " + installedVersions.size()
+                                            + " installed in it.";
+                                    throw new RuntimeException(message);
+                                }
+                                installVersions = new Long[]{};
+                                removeVersions = new Long[operation.count];
+                                it = installedVersions.iterator();
+                                i = 0;
+                                while (it.hasNext()) {
+                                    i++;
+                                    removeVersions[operation.count - i] = it.next();
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+
+                        // Always remove migrations before installing new ones.
+                        Class<? extends Migration> clazz;
+                        for (Long removeVersion : removeVersions) {
+                            // At the beginning of the method it wasn't a fatal error to
+                            // have a missing migration class for an installed migration,
+                            // but when it cannot be removed, it is.
+                            clazz = availableMigrations.get(removeVersion);
+                            if (clazz != null) {
+                                runMigration(schemaConnection, clazz, MigrationDirection.Down, Option.Some(removeVersion));
+                            } else {
+                                String message = "The database has migration version '" + removeVersion
+                                        + "' installed but there is no migration class " + "available with that version.";
+                                logger.error(message);
+                                throw new IllegalStateException(message);
+                            }
+                        }
+
+                        for (Long installVersion : installVersions) {
+                            if (!installedVersions.contains(installVersion)) {
+                                clazz = availableMigrations.get(installVersion);
+                                if (clazz != null) {
+                                    runMigration(schemaConnection, clazz, MigrationDirection.Up, Option.Some(installVersion));
+                                } else {
+                                    String message = "Illegal state: trying to install a migration "
+                                            + "with version '" + installVersion + "' that should exist.";
+                                    throw new IllegalStateException(message);
+                                }
+                            }
+                        }
+                        return null;
                     }
                 });
-                // Get a list of all available and installed migrations.  Check
-                // that all installed migrations have a migration class
-                // available to migrate out of that migration.  This can happen
-                // if the migration is applied by one copy of an application but
-                // another copy does not have that migration, say the migration
-                // was not checked into a source control system.  Having a
-                // missing migration for an installed migration is not fatal
-                // unless the migration needs to be rolled back.
-                SortedSet<Long> installedVersions = getInstalledVersions(schemaConnection);
-                SortedMap<Long, Class<? extends Migration>> availableMigrations
-                            = findMigrations(packageName, searchSubPackages);
-                Set<Long> availableVersions = availableMigrations.keySet();
-
-                for (Long installedVersion :installedVersions) {
-                    if (!availableVersions.contains(installedVersion)) {
-                        logger.warn("The migration version '{}' is installed but "
-                                + "there is no migration class available to back " + "it out.", installedVersion);
-                    }
-                }
-                if (availableMigrations.isEmpty()) {
-                    logger.info("No migrations found, nothing to do.");
-                }
-                Long[] installVersions = new Long[0];
-                Long[] removeVersions = new Long[0];
-
-                // From the operation, determine the migrations to install and
-                // the ones to uninstall.
-                switch (operation) {
-                    case InstallAllMigrations:
-                        installVersions = availableVersions.toArray(new Long[availableVersions.size()]);
-                        removeVersions = new Long[]{};
-                        break;
-                    case RemoveAllMigrations:
-                        installVersions = new Long[]{};
-
-                        removeVersions = new Long[installedVersions.size()];
-                        Iterator<Long> it = installedVersions.iterator();
-                        int size = removeVersions.length;
-                        int i = 0;
-                        while (it.hasNext()) {
-                            i += 1;
-                            removeVersions[size - i] = it.next();
-                        }
-                        break;
-                    case MigrateToVersion:
-                        List<Long> prepareInstallVersions = new ArrayList<Long>();
-                        List<Long> prepareRemoveVersions = new ArrayList<Long>();
-                        Iterator<Long> aIt = availableVersions.iterator();
-                        boolean versionFound = false;
-                        while (aIt.hasNext()) {
-                            Long version = aIt.next();
-                            if (version <= operation.version) {
-                                prepareInstallVersions.add(version);
-                            } else {
-                                prepareRemoveVersions.add(0, version);
-                            }
-                            if (version == operation.version) {
-                                versionFound = true;
-                            }
-                        }
-                        if (!versionFound) {
-                            String message = "The target version " + operation.version
-                                            + " does not exist as a migration.";
-                            throw new RuntimeException(message);
-                        }
-                        installVersions = prepareInstallVersions.toArray(new Long[prepareInstallVersions.size()]);
-                        removeVersions = prepareRemoveVersions.toArray(new Long[prepareRemoveVersions.size()]);
-                        break;
-                    case RollbackMigration:
-                        if (operation.count > installedVersions.size()) {
-                            String message = "Attempting to rollback " + operation.count
-                                    + " migrations but the database only has " + installedVersions.size()
-                                    + " installed in it.";
-                            throw new RuntimeException(message);
-                        }
-                        installVersions = new Long[]{};
-                        removeVersions = new Long[operation.count];
-                        it = installedVersions.iterator();
-                        i = 0;
-                        while (it.hasNext()) {
-                            i++;
-                            removeVersions[operation.count - i] = it.next();
-                        }
-                        break;
-                    default:
-                        break;
-                }
-
-                // Always remove migrations before installing new ones.
-                Class<? extends Migration> clazz;
-                for (Long removeVersion : removeVersions) {
-                    // At the beginning of the method it wasn't a fatal error to
-                    // have a missing migration class for an installed migration,
-                    // but when it cannot be removed, it is.
-                    clazz = availableMigrations.get(removeVersion);
-                    if (clazz != null) {
-                        runMigration(schemaConnection, clazz, MigrationDirection.Down, Option.Some(removeVersion));
-                    } else {
-                        String message = "The database has migration version '" + removeVersion
-                                + "' installed but there is no migration class " + "available with that version.";
-                        logger.error(message);
-                        throw new IllegalStateException(message);
-                    }
-                }
-
-                for (Long installVersion:installVersions) {
-                    if (!installedVersions.contains(installVersion)) {
-                        clazz = availableMigrations.get(installVersion);
-                        if (clazz != null) {
-                            runMigration(schemaConnection, clazz, MigrationDirection.Up, Option.Some(installVersion));
-                        } else {
-                            String message = "Illegal state: trying to install a migration "
-                                + "with version '" + installVersion + "' that should exist.";
-                            throw new IllegalStateException(message);
-                        }
-                    }
-                }
-                return null;
-            }
-        });
     }
+
     protected String horizontalLine(String caption, int length) {
         StringBuilder builder = new StringBuilder();
         builder.append("==========");
@@ -752,10 +738,10 @@ public class Migrator {
      * subclass, installed migration without an associated Migration
      * subclass and Migration subclasses that are not installed.
      *
-     * @param packageName the Java package name to search for Migration
-     *        subclasses
+     * @param packageName       the Java package name to search for Migration
+     *                          subclasses
      * @param searchSubPackages true if sub-packages of packageName
-     *        should be searched
+     *                          should be searched
      */
     public MigrationStatuses getMigrationStatuses(String packageName,
                                                   boolean searchSubPackages) throws Throwable {
@@ -794,14 +780,14 @@ public class Migrator {
      * corresponding concrete Migration subclass; that is, the database
      * must have only those migrations installed that are found by
      * searching the package name for concrete Migration subclasses.
-     *
+     * <p/>
      * Running this method does not modify the database in any way.  The
      * schema migrations table is not created.
      *
-     * @param packageName the Java package name to search for Migration
-     *        subclasses
+     * @param packageName       the Java package name to search for Migration
+     *                          subclasses
      * @param searchSubPackages true if sub-packages of packageName
-     *        should be searched
+     *                          should be searched
      * @return None if all available migrations are installed and all
      *         installed migrations have a corresponding Migration
      *         subclass; Some(message) with a message suitable for

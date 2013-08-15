@@ -13,19 +13,20 @@
 // limitations under the License.
 package lichen.migration.internal;
 
-import javax.inject.Inject;
-
 import lichen.migration.model.TableDefinition;
 import lichen.migration.services.Migration;
 import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.Options;
 import lichen.migration.services.TableCallback;
 
+import javax.inject.Inject;
+
 /**
  * 创建数据库初始化脚本.
+ *
  * @author jcai
  */
-public class CreateSchemaMigrationsTableMigration  implements Migration {
+public class CreateSchemaMigrationsTableMigration implements Migration {
     @Inject
     private MigrationHelper _helper;
     @Inject

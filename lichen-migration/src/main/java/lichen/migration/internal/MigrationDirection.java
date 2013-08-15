@@ -25,6 +25,7 @@ import java.util.SortedSet;
 enum MigrationDirection {
     Up, Down
 }
+
 enum MigratorOperation {
     InstallAllMigrations,
     RemoveAllMigrations,
@@ -33,6 +34,7 @@ enum MigratorOperation {
     int version;
     int count;
 }
+
 class MigrationStatuses {
     final SortedMap<Long, Class<? extends Migration>> notInstalled;
     final SortedMap<Long, Class<? extends Migration>> installedWithAvailableImplementation;
@@ -43,14 +45,16 @@ class MigrationStatuses {
      * migrations.
      *
      * @param newNotInstalled a sorted map of migration version numbers to
-     *        MigrationHelper subclasses that are not installed in the database
-     * @param newInstalledWithAvailableImplementation a sorted map of
-     *        migration version numbers to MigrationHelper subclasses that are
-     *        currently installed in the database that have a matching a
-     *        MigrationHelper subclass
-     * @param newInstalledWithoutAvailableImplementation a sorted set of
-     *        migration version numbers that are currently installed in
-     *        the database but do not have a matching a MigrationHelper subclass
+     *                        MigrationHelper subclasses that are not installed in the database
+     * @param newInstalledWithAvailableImplementation
+     *                        a sorted map of
+     *                        migration version numbers to MigrationHelper subclasses that are
+     *                        currently installed in the database that have a matching a
+     *                        MigrationHelper subclass
+     * @param newInstalledWithoutAvailableImplementation
+     *                        a sorted set of
+     *                        migration version numbers that are currently installed in
+     *                        the database but do not have a matching a MigrationHelper subclass
      */
     MigrationStatuses(SortedMap<Long, Class<? extends Migration>> newNotInstalled,
                       SortedMap<Long, Class<? extends Migration>> newInstalledWithAvailableImplementation,

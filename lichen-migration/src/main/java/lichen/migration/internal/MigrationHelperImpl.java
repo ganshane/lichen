@@ -13,24 +13,20 @@
 // limitations under the License.
 package lichen.migration.internal;
 
+import lichen.migration.model.*;
+import lichen.migration.services.MigrationHelper;
+import lichen.migration.services.TableCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-import lichen.migration.model.ColumnOption;
-import lichen.migration.model.IndexOption;
-import lichen.migration.model.Name;
-import lichen.migration.model.SqlType;
-import lichen.migration.model.TableOption;
-import lichen.migration.services.MigrationHelper;
-import lichen.migration.services.TableCallback;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * 数据库升级抽象类.
+ *
  * @author jcai
  */
 class MigrationHelperImpl implements MigrationHelper {
@@ -42,7 +38,7 @@ class MigrationHelperImpl implements MigrationHelper {
      * connection is needed because the logging connection does not
      * provide a required feature.  This connection should not be used
      * in normal use.
-     *
+     * <p/>
      * This is set using property style dependency injection instead of
      * constructor style injection, which makes for cleaner code for the
      * users of this migration framework.
@@ -66,7 +62,7 @@ class MigrationHelperImpl implements MigrationHelper {
     /**
      * The connection to the database that is used for the migration.
      * This connection also logs all operations performed on it.
-     *
+     * <p/>
      * This is set using property style dependency injection instead of
      * constructor style injection, which makes for cleaner code for the
      * users of this migration framework.
@@ -86,7 +82,7 @@ class MigrationHelperImpl implements MigrationHelper {
 
     /**
      * The database adapter that will be used for the migration.
-     *
+     * <p/>
      * This is set using property style dependency injection instead of
      * constructor style injection, which makes for cleaner code for the
      * users of this migration framework.
@@ -111,17 +107,17 @@ class MigrationHelperImpl implements MigrationHelper {
     /**
      * This value is true if the database implicitly adds an index on
      * the column that has a foreign key constraint added to it.
-     *
+     * <p/>
      * The following SQL can be used to test the database.  The last
      * statement will fail with a message that there already is an index
      * on the column.
-     *
-     *   create table parent (pk int primary key);
-     *   create table child (pk int primary key, pk_parent int not null);
-     *   alter table child
-     *     add constraint idx_child_pk_parent foreign key (pk_parent)
-     *     references parent (pk);
-     *   create index idx_child_pk_parent on child (pk_parent);
+     * <p/>
+     * create table parent (pk int primary key);
+     * create table child (pk int primary key, pk_parent int not null);
+     * alter table child
+     * add constraint idx_child_pk_parent foreign key (pk_parent)
+     * references parent (pk);
+     * create index idx_child_pk_parent on child (pk_parent);
      */
     public boolean addingForeignKeyConstraintCreatesIndex() {
         return adapter().addingForeignKeyConstraintCreatesIndex;
@@ -154,8 +150,8 @@ class MigrationHelperImpl implements MigrationHelper {
      * to the value the connection had before this method was called.
      *
      * @param sql the SQL text that will be prepared
-     * @param f the Function1[PreparedStatement,Unit] that will be given
-     *        a new prepared statement
+     * @param f   the Function1[PreparedStatement,Unit] that will be given
+     *            a new prepared statement
      */
     public final void withPreparedStatement(final String sql, final Function1<PreparedStatement, Void> f) {
         ResourceUtils.autoCommittingConnection(connection(),
@@ -175,8 +171,8 @@ class MigrationHelperImpl implements MigrationHelper {
      * the result set.
      *
      * @param rs the SQL result set
-     * @param f the Function1[ResultSet,R] that will be given the result
-     *        set
+     * @param f  the Function1[ResultSet,R] that will be given the result
+     *           set
      * @return the result of f if f returns normally
      */
     public final <R> R withResultSet(ResultSet rs, Function1<ResultSet, R> f) {
@@ -217,6 +213,7 @@ class MigrationHelperImpl implements MigrationHelper {
                                    String columnName) throws Throwable {
         execute(adapter().removeColumnSql(tableName, columnName));
     }
+
     public final void dropTable(String tableName) throws Throwable {
         String sql = "DROP TABLE " + adapter().quoteTableName(tableName);
         execute(sql);
@@ -224,20 +221,20 @@ class MigrationHelperImpl implements MigrationHelper {
 
     @Override
     public void addIndex(String tableName, String[] columnNames,
-            IndexOption... options) throws Throwable {
+                         IndexOption... options) throws Throwable {
         String addIndexSql = adapter().addIndexSql(tableName, columnNames, options);
         execute(addIndexSql);
     }
 
     @Override
     public void addIndex(String tableName, String columnName,
-            IndexOption... options) throws Throwable {
+                         IndexOption... options) throws Throwable {
         addIndex(tableName, new String[]{columnName}, options);
     }
 
     @Override
     public void removeIndex(String tableName, String[] columnNames,
-            Name... name) throws Throwable {
+                            Name... name) throws Throwable {
         String removeSql = adapter().removeIndexSql(tableName, columnNames, name);
         execute(removeSql);
     }

@@ -16,36 +16,36 @@ package lichen.migration.internal;
 import java.io.File;
 
 enum CommandOptionParser {
-  ;
+    ;
 
-  public static SelectedOptions parse(String[] args) {
-    final SelectedOptions selectedOptions = new SelectedOptions();
+    public static SelectedOptions parse(String[] args) {
+        final SelectedOptions selectedOptions = new SelectedOptions();
 
-    for (String arg : args) {
-      final boolean isOption = isOption(arg);
-      if (isOption) {
-        parseOptions(arg, selectedOptions);
-      } else {
-        setCommandOrAppendParams(arg, selectedOptions);
-      }
-    }
-
-    return selectedOptions;
-  }
-
-  private static void setCommandOrAppendParams(String arg, SelectedOptions options) {
-    if (options.getCommand() == null) {
-      options.setCommand(arg);
-    } else {
-        final String myParams;
-        if (options.getParams() == null) {
-            myParams = arg;
-        } else {
-            myParams = options.getParams() + " " + arg;
+        for (String arg : args) {
+            final boolean isOption = isOption(arg);
+            if (isOption) {
+                parseOptions(arg, selectedOptions);
+            } else {
+                setCommandOrAppendParams(arg, selectedOptions);
+            }
         }
-        options.setParams(myParams);
+
+        return selectedOptions;
     }
-  }
+
+    private static void setCommandOrAppendParams(String arg, SelectedOptions options) {
+        if (options.getCommand() == null) {
+            options.setCommand(arg);
+        } else {
+            final String myParams;
+            if (options.getParams() == null) {
+                myParams = arg;
+            } else {
+                myParams = options.getParams() + " " + arg;
+            }
+            options.setParams(myParams);
+        }
+    }
 
     private static boolean parseOptions(String arg, SelectedOptions options) {
         final boolean isOption = isOption(arg);
@@ -74,6 +74,7 @@ enum CommandOptionParser {
 
         return isOption;
     }
+
     public static boolean isOption(String arg) {
         return arg.startsWith("--") && !arg.trim().endsWith("=");
     }
@@ -82,6 +83,7 @@ enum CommandOptionParser {
         return new File(path.getAbsolutePath() + File.separator + fileName);
     }
 }
+
 class SelectedPaths {
     private File _basePath = new File("./");
     private File _configPath;
@@ -89,6 +91,7 @@ class SelectedPaths {
     public File getBasePath() {
         return _basePath;
     }
+
     public void setBasePath(File aBasePath) {
         _basePath = aBasePath;
     }
@@ -108,6 +111,7 @@ class SelectedPaths {
         this._configPath = configPath;
     }
 }
+
 class SelectedOptions {
     private SelectedPaths _paths = new SelectedPaths();
     private String _command;
@@ -155,6 +159,7 @@ class SelectedOptions {
     }
 
 }
+
 enum CommandOption {
     PATH,
     TRACE,

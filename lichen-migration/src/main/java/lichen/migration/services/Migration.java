@@ -16,6 +16,7 @@ package lichen.migration.services;
 /**
  * 数据升级操作接口
  * migration.
+ *
  * @author jcai
  */
 public interface Migration {

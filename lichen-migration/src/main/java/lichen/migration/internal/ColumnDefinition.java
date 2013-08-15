@@ -13,26 +13,17 @@
 // limitations under the License.
 package lichen.migration.internal;
 
+import lichen.migration.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import lichen.migration.model.AutoIncrement;
-import lichen.migration.model.ColumnOption;
-import lichen.migration.model.Default;
-import lichen.migration.model.Limit;
-import lichen.migration.model.NotNull;
-import lichen.migration.model.Nullable;
-import lichen.migration.model.Precision;
-import lichen.migration.model.PrimaryKey;
-import lichen.migration.model.Scale;
-import lichen.migration.model.Unique;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * column definition.
+ *
  * @author jcai
  */
 public abstract class ColumnDefinition {
@@ -43,7 +34,7 @@ public abstract class ColumnDefinition {
     /**
      * 列选项数组.
      */
-    protected List <ColumnOption> options = new ArrayList <ColumnOption>();
+    protected List<ColumnOption> options = new ArrayList<ColumnOption>();
     /**
      * 该列是否自动增长.
      */
@@ -60,20 +51,25 @@ public abstract class ColumnDefinition {
      * 该列所属表的表名.
      */
     protected Option<String> tableNameOpt;
+
     /**
-     *表名获取方法.
-     *@return String 表名
+     * 表名获取方法.
+     *
+     * @return String 表名
      */
     protected String tableName() {
         return tableNameOpt.get();
     }
+
     /**
-     *该列的列名.
+     * 该列的列名.
      */
     protected Option<String> columnNameOpt;
+
     /**
-     *列名获取方法.
-     *@return String 列名
+     * 列名获取方法.
+     *
+     * @return String 列名
      */
     protected String columnName() {
         return columnNameOpt.get();
@@ -90,9 +86,9 @@ public abstract class ColumnDefinition {
         if (isAutoIncrement && this.getClass()
                 .getAnnotation(ColumnSupportsAutoIncrement.class) == null) {
             String message = "AutoIncrement cannot be used on column '"
-                           + columnName()
-                           + "' because its data type does not "
-                           + "support auto-increment.";
+                    + columnName()
+                    + "' because its data type does not "
+                    + "support auto-increment.";
             throw new UnsupportedOperationException(message);
         }
 
@@ -116,6 +112,7 @@ public abstract class ColumnDefinition {
      * 列的刻度选项.
      */
     protected Option<Integer> scale = Option.None();
+
     /**
      * 检查该列是否定义了刻度.
      */
@@ -138,6 +135,7 @@ public abstract class ColumnDefinition {
      * 定义列的精度选项，并默认空值.
      */
     protected Option<Integer> precision = Option.None();
+
     /**
      * 检查该列是否定义了精度.
      */
@@ -214,6 +212,7 @@ public abstract class ColumnDefinition {
 
     /**
      * 检查该列是否定义了非空选项.
+     *
      * @return Option 如果定义了非空，则返回Option.Some(true)
      */
     private Option<Boolean> notNull() {
@@ -240,6 +239,7 @@ public abstract class ColumnDefinition {
 
     /**
      * 检查该列是否定义了主键.
+     *
      * @return boolean
      */
     private boolean isPrimaryKey() {
@@ -257,6 +257,7 @@ public abstract class ColumnDefinition {
 
     /**
      * 检查该列是否定义了唯一约束.
+     *
      * @return boolean
      */
     private boolean isUnique() {
@@ -274,12 +275,14 @@ public abstract class ColumnDefinition {
 
     /**
      * 获取定义该列的标准sql语句，如"fieldName varchar2(10)"在子类中实现.
+     *
      * @return String sql语句
      */
     protected abstract String sql();
 
     /**
      * 获取定义一列的完整sql语句，包括标准定义、各种约束等.
+     *
      * @return String
      */
     public final String toSql() {
@@ -329,18 +332,19 @@ public abstract class ColumnDefinition {
 
         return sb.toString();
     }
+
     /**
      * Given the SQL for a column data type, return it with the LIMIT
      * syntax appended if a limit is given, otherwise return SQL
      * unmodified.
      *
      * @param columnTypeName the column type name
-     * @param limit optional column limit
+     * @param limit          optional column limit
      * @return the column type name with the limit syntax if a limit was
      *         given
      */
     protected String optionallyAddLimitToDataType(String columnTypeName,
-            String limit) {
+                                                  String limit) {
         if (limit != null) {
             return columnTypeName + "(" + limit + ")";
         } else {
@@ -365,13 +369,13 @@ abstract class AbstractDecimalColumnDefinition extends ColumnDefinition {
     protected abstract String decimalSqlName();
 
     protected String sql() {
-       if (precision.isDefined()) {
+        if (precision.isDefined()) {
             if (scale.isDefined()) {
                 return decimalSqlName() + "(" + precision.get() + ", " + scale.get() + ")";
             } else {
                 return decimalSqlName() + "(" + precision.get() + ")";
             }
-       } else {
+        } else {
             if (scale.isDefined()) {
                 throw new IllegalArgumentException(
                         "Cannot specify a scale without also specifying a precision.");
@@ -381,6 +385,7 @@ abstract class AbstractDecimalColumnDefinition extends ColumnDefinition {
         }
     }
 }
+
 @ColumnSupportsDefault
 class DefaultBigintColumnDefinition
         extends ColumnDefinition {
@@ -412,6 +417,7 @@ class DefaultCharColumnDefinition
         return optionallyAddLimitToDataType("CHAR");
     }
 }
+
 class DefaultDecimalColumnDefinition
         extends AbstractDecimalColumnDefinition {
     protected String decimalSqlName() {

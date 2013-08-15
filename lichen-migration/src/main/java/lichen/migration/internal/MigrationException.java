@@ -15,6 +15,7 @@ package lichen.migration.internal;
 
 /**
  * migration exception.
+ *
  * @author jcai
  */
 public class MigrationException extends RuntimeException {

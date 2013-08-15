@@ -20,6 +20,7 @@ import java.sql.SQLException;
 
 /**
  * build connection.
+ *
  * @author jcai
  */
 class ConnectionBuilder {

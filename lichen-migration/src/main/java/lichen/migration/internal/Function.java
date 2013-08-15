@@ -14,7 +14,6 @@
 package lichen.migration.internal;
 
 /**
- *
  * @author jcai
  */
 interface Function<R> {

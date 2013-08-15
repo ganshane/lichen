@@ -18,10 +18,12 @@ import java.sql.DriverManager;
 
 /**
  * 数据库的厂商.
+ *
  * @author jcai
  */
 enum DatabaseVendor {
     H2;
+
     public static DatabaseVendor forDriver(String driverClassName) {
         if (driverClassName.equals("org.h2.Driver")) {
             try {

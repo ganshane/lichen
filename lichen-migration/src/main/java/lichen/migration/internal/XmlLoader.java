@@ -13,21 +13,16 @@
 // limitations under the License.
 package lichen.migration.internal;
 
-import java.io.ByteArrayOutputStream;
-import java.io.Closeable;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 import javax.xml.XMLConstants;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.ValidationEvent;
-import javax.xml.bind.ValidationEventLocator;
+import javax.xml.bind.*;
 import javax.xml.bind.util.ValidationEventCollector;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
+import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * @author jcai
@@ -55,7 +50,7 @@ public final class XmlLoader {
             }
             return clazz.cast(unmarshaller.unmarshal(reader));
         } catch (Throwable e) {
-                throw new RuntimeException(e);
+            throw new RuntimeException(e);
         } finally {
             close(is);
             if (xsd.isDefined()) {
@@ -72,6 +67,7 @@ public final class XmlLoader {
             }
         }
     }
+
     private static void close(Closeable io) {
         try {
             io.close();

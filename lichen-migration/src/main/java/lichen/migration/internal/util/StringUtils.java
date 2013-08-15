@@ -15,18 +15,20 @@ package lichen.migration.internal.util;
 
 /**
  * 字符串操作类.
- * @author zhaoyong
  *
+ * @author zhaoyong
  */
 public final class StringUtils {
     /**
      * 构造函数.
      */
-    private StringUtils() { }
+    private StringUtils() {
+    }
 
     /**
      * 将指定的字符串数组，通过指定的分隔符连接.
-     * @param array 源字符串数组
+     *
+     * @param array    源字符串数组
      * @param sperator 指定的分隔符
      * @return String 拼接后的字符串
      */

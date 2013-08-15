@@ -43,7 +43,7 @@ class H2DatabaseAdapter extends DatabaseAdapter {
     }
 
     protected String alterColumnSql(Option<String> schemaNameOpt,
-            ColumnDefinition columnDefinition) {
+                                    ColumnDefinition columnDefinition) {
         final int size = 512;
         return new java.lang.StringBuilder(size).append("ALTER TABLE ").append(
                 quoteTableName(schemaNameOpt, columnDefinition.tableName()))
@@ -85,7 +85,7 @@ class H2DatabaseAdapter extends DatabaseAdapter {
 
     @Override
     public String removeIndexSql(Option<String> schemaNameOpt,
-            String tableName, String indexName) {
+                                 String tableName, String indexName) {
         return "DROP INDEX " + quoteColumnName(indexName);
     }
 
