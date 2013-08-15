@@ -113,7 +113,7 @@ public class JdbcHelperTest {
       });
 
       assertNotNull(list);
-      assertEquals("Testing query for list", 2, list.size());
+      assertEquals("Testing query for list", 1, list.size());
    }
 
    @Test
@@ -123,11 +123,14 @@ public class JdbcHelperTest {
             @Override
             public Bean doInResultSet(final ResultSet rs)
                     throws SQLException {
-                Bean bean = new Bean();
-                bean._id = rs.getInt("id");
-                bean._name = rs.getString("name");
-                bean._creationDate = rs.getTimestamp("creation_date");
-                return bean;
+                if(rs.next()) {
+                	Bean bean = new Bean();
+                    bean._id = rs.getInt("id");
+                    bean._name = rs.getString("name");
+                    bean._creationDate = rs.getTimestamp("creation_date");
+                    return bean;
+                }
+                return null;
             }
           }, new PreparedStatementSetter() {
               @Override
@@ -155,7 +158,10 @@ public class JdbcHelperTest {
                 @Override
                 public Integer doInResultSet(final ResultSet rs)
                         throws SQLException {
-                    return rs.getInt("id");
+                	if(rs.next()) {
+                		return rs.getInt("id");
+                	}
+                	return null;
                 }
               });
 
