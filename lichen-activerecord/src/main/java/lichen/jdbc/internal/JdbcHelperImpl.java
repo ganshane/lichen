@@ -190,7 +190,7 @@ public class JdbcHelperImpl implements JdbcHelper {
 
     @Override
     public <T> List<T> queryForList(String sql, final RowMapper<T> mapper, PreparedStatementSetter... setters) {
-    	return withResultSet(sql, new ResultSetCallback<List<T>>() {
+        return withResultSet(sql, new ResultSetCallback<List<T>>() {
             @Override
             public List<T> doInResultSet(ResultSet rs) throws SQLException {
             	int index = 0;
