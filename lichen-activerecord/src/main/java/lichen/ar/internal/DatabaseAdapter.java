@@ -24,14 +24,17 @@ import java.util.Map;
 
 /**
  * 针对不通数据库的适配器.
+ *
  * @author jcai
  */
 public class DatabaseAdapter {
     private Map<Integer, FieldType<?>> _types = new HashMap<Integer, FieldType<?>>();
     private DataSource _dataSource;
+
     DatabaseAdapter(DataSource dataSource) {
         this._dataSource = dataSource;
     }
+
     public void registerTypes() {
         _types.put(Types.BIGINT, LichenArTypes.BIG_INTEGER);
         _types.put(Types.BINARY, LichenArTypes.BINARY);

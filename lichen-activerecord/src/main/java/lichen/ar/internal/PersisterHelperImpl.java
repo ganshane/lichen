@@ -14,7 +14,6 @@
 package lichen.ar.internal;
 
 import lichen.ar.model.Field;
-
 import lichen.ar.services.PersisterHelper;
 import lichen.jdbc.services.JdbcHelper;
 
@@ -22,15 +21,18 @@ import java.util.Map;
 
 /**
  * 持久化的帮助类.
+ *
  * @author jcai
  */
-public class PersisterHelperImpl implements PersisterHelper{
+public class PersisterHelperImpl implements PersisterHelper {
 
     //数据库操作类
     private DatabaseAdapter _databaseAdapter;
+
     public PersisterHelperImpl(DatabaseAdapter databaseAdapter) {
         this._databaseAdapter = databaseAdapter;
     }
+
     @Override
     public Map<String, Field<?>> findTableFields(String tableName) {
         //TODO 利用jdbchelper中的方法来获得数据库中某一张表的字段定义
