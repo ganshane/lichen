@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * [内部实现] lichen内部实现类，实现了{@link lichen.core.services}的接口.
+ * activerecord的模型定义，用于各个接口之间传递数据.
  */
-package lichen.core.internal;
+package lichen.ar.model;
 

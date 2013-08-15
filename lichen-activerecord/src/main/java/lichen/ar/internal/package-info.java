@@ -13,7 +13,7 @@
 // limitations under the License.
 
 /**
- * [内部实现] lichen内部实现类，实现了{@link lichen.core.services}的接口.
+ * [内部实现] activerecord的内部实现.
  */
-package lichen.core.internal;
+package lichen.ar.internal;
 
