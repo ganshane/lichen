@@ -260,7 +260,9 @@ public class JdbcHelperImpl implements JdbcHelper {
         } catch (SQLException e) {
             throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
         } finally {
-            JdbcUtil.close(ps,rs);
+            JdbcUtil.close(rs);
+            JdbcUtil.close(ps);
+
             freeConnection(conn);
         }
     }
