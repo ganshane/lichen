@@ -13,6 +13,16 @@
 // limitations under the License.
 package lichen.jdbc.internal;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.sql.DataSource;
+
 import lichen.core.services.LichenException;
 import lichen.jdbc.services.ConnectionCallback;
 import lichen.jdbc.services.JdbcErrorCode;
@@ -22,14 +32,7 @@ import lichen.jdbc.services.PreparedStatementSetter;
 import lichen.jdbc.services.ResultSetCallback;
 import lichen.jdbc.services.ResultSetGetter;
 import lichen.jdbc.services.RowMapper;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import lichen.jdbc.services.StatementCallback;
 
 /**
  * 实现JdbcHelper,此类非线程安全，只能在某一个线程中运行.
@@ -235,58 +238,74 @@ public class JdbcHelperImpl implements JdbcHelper {
     public <T> T withResultSet(String sql, final ResultSetCallback<T> callback,
                                PreparedStatementSetter... setters) {
         return withPreparedStatement(sql, new PreparedStatementCallback<T>() {
-			@Override
-			public T doInPreparedStatement(PreparedStatement ps)
-					throws SQLException {
-				ResultSet rs = null;
-				try {
-					rs = ps.executeQuery();
-					return callback.doInResultSet(rs);
-				} catch (SQLException e) {
-		            throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
-		        } finally {
-		        	JdbcUtil.close(rs);
-		        }
-			}
-        	
-		}, setters);
+            @Override
+            public T doInPreparedStatement(PreparedStatement ps) throws SQLException {
+                ResultSet rs = null;
+                try {
+                    rs = ps.executeQuery();
+                    return callback.doInResultSet(rs);
+                } catch (SQLException e) {
+                    throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
+                } finally {
+                    JdbcUtil.close(rs);
+                }
+            }
+        }, setters);
     }
-    
+
     @Override
     public <T> T withConnection(ConnectionCallback<T> callback) {
-    	Connection conn = null;
-    	try {
-    		conn = getConnection();
-    		return callback.doInConnection(conn);
-    	} catch (SQLException e) {
+        Connection conn = null;
+        try {
+            conn = getConnection();
+            return callback.doInConnection(conn);
+        } catch (SQLException e) {
             throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
         } finally {
             freeConnection(conn);
         }
     }
-    
+
     @Override
     public <T> T withPreparedStatement(final String sql, final PreparedStatementCallback<T> callback,
-    		final PreparedStatementSetter... setters) {
-    	return withConnection(new ConnectionCallback<T>() {
-			@Override
-			public T doInConnection(Connection conn) throws SQLException {
-				PreparedStatement ps = null;
-				try {
-					ps = conn.prepareStatement(sql);
-					int index = 1;
-		            for (PreparedStatementSetter setter : setters) {
-		                setter.set(ps, index);
-		                index++;
-		            }
-					return callback.doInPreparedStatement(ps);
-				} catch (SQLException e) {
-		            throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
-		        } finally {
-		            JdbcUtil.close(ps);
-		        }
-			}
-		});
+           final PreparedStatementSetter... setters) {
+        return withConnection(new ConnectionCallback<T>() {
+            @Override
+            public T doInConnection(Connection conn) throws SQLException {
+                PreparedStatement ps = null;
+                try {
+                    ps = conn.prepareStatement(sql);
+                    int index = 1;
+                    for (PreparedStatementSetter setter : setters) {
+                        setter.set(ps, index);
+                        index++;
+                    }
+                    return callback.doInPreparedStatement(ps);
+                } catch (SQLException e) {
+                    throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
+                } finally {
+                    JdbcUtil.close(ps);
+                }
+            }
+        });
+    }
+
+    @Override
+    public <T> T withStatement(final String sql, final StatementCallback<T> callback) {
+        return withConnection(new ConnectionCallback<T>() {
+            @Override
+            public T doInConnection(Connection conn) throws SQLException {
+                Statement stmt = null;
+                try {
+                    stmt = conn.createStatement();
+                    return callback.doInStatement(stmt);
+                } catch (SQLException e) {
+                    throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
+                } finally {
+                    JdbcUtil.close(stmt);
+                }
+             }
+        });
     }
 
     //事务定义
