@@ -96,5 +96,24 @@ public interface JdbcHelper {
      */
     <T> T withResultSet(String sql, ResultSetCallback<T> callback,
                         PreparedStatementSetter... setters);
+    
+    /**
+     * 针对Connection的处理
+     * @param <T> 返回结果的对象类型
+     * @param callback 回调函数
+     * @return 查询结果
+     */
+    public <T> T withConnection(ConnectionCallback<T> callback);
+    
+    /**
+     * 针对PreparedStatement的查询
+     * @param <T> 返回结果的对象类型
+     * @param sql 查询语句
+     * @param callback 回调函数
+     * @param setters 给占位符赋值的对象
+     * @return 查询结果
+     */
+    public <T> T withPreparedStatement(final String sql, final PreparedStatementCallback<T> callback,
+    		final PreparedStatementSetter... setters);
 
 }
