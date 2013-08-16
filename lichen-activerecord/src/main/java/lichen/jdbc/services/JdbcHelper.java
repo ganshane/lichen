@@ -15,6 +15,8 @@ package lichen.jdbc.services;
 
 import java.util.List;
 
+import lichen.core.services.Option;
+
 /**
  * 针对数据库操作的帮助类.
  * 常用方法
@@ -82,7 +84,7 @@ public interface JdbcHelper {
      * @param setters 给占位符赋值的对象
      * @return getter返回的对象
      */
-    <T> T queryForFirst(String sql, ResultSetGetter<T> getter,
+    <T> Option<T> queryForFirst(String sql, ResultSetGetter<T> getter,
                         PreparedStatementSetter... setters);
 
     /**

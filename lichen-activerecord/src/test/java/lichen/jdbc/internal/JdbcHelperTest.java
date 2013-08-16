@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
+import lichen.core.services.Option;
 import lichen.jdbc.services.JdbcHelper;
 import lichen.jdbc.services.PreparedStatementSetter;
 import lichen.jdbc.services.ResultSetCallback;
@@ -207,7 +208,7 @@ public class JdbcHelperTest {
 
    @Test
     public final void testqueryForFirst() {
-        Bean b = jdbc.queryForFirst("select * from jdbctest where jkey=? order by id",
+	   Option<Bean> first = jdbc.queryForFirst("select * from jdbctest where jkey=? order by id",
                 new ResultSetGetter<Bean>() {
                     public Bean get(final ResultSet rs, final int index)
                             throws SQLException {
@@ -224,10 +225,10 @@ public class JdbcHelperTest {
                         ps.setObject(index, "10");
                     }
                 });
-        assertNotNull(b);
-        assertEquals(1, b._id);
+        assertNotNull(first);
+        assertEquals(1, first.get()._id);
 
-        int count = jdbc.queryForFirst("select count(*) from jdbctest where jkey=?",
+        Option<Integer> count = jdbc.queryForFirst("select count(*) from jdbctest where jkey=?",
                 new ResultSetGetter<Integer>() {
                     public Integer get(final ResultSet rs, final int index)
                             throws SQLException {
@@ -240,9 +241,9 @@ public class JdbcHelperTest {
                         ps.setObject(index, "10");
                     }
                 });
-        assertEquals(2, count);
+        assertEquals(2, count.get().intValue());
 
-        long lCount = jdbc.queryForFirst("select count(*) from jdbctest where jkey=? " ,
+        Option<Long> lCount = jdbc.queryForFirst("select count(*) from jdbctest where jkey=? " ,
                 new ResultSetGetter<Long>() {
                     public Long get(final ResultSet rs, final int index)
                             throws SQLException {
@@ -255,9 +256,9 @@ public class JdbcHelperTest {
                         ps.setObject(index, "10");
                     }
                 });
-        assertEquals(2, lCount);
+        assertEquals(2, lCount.get().longValue());
 
-        String s = jdbc.queryForFirst("select name from jdbctest where jkey=? order by id desc ",
+        Option<String> s = jdbc.queryForFirst("select name from jdbctest where jkey=? order by id desc ",
                 new ResultSetGetter<String>() {
                     public String get(final ResultSet rs, final int index)
                     throws SQLException {
@@ -270,7 +271,7 @@ public class JdbcHelperTest {
                         ps.setObject(index, "10");
                     }
                 });
-        assertEquals("bahar", s);
+        assertEquals("bahar", s.get());
     }
 
     /*

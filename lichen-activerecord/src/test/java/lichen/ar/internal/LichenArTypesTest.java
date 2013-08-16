@@ -27,6 +27,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialClob;
 
 import junit.framework.Assert;
+import lichen.core.services.Option;
 import lichen.jdbc.internal.JdbcHelperImpl;
 import lichen.jdbc.internal.SimpleDataSource;
 import lichen.jdbc.services.JdbcHelper;
@@ -44,7 +45,7 @@ import org.junit.Test;
 public class LichenArTypesTest {
     @Test
     public void testbigint() {
-        BigInteger r = jdbc.queryForFirst("select big from jdbctest where id = 1 and big=?",
+    	Option<BigInteger> r = jdbc.queryForFirst("select big from jdbctest where id = 1 and big=?",
             new ResultSetGetter<BigInteger>() {
             @Override
             public BigInteger get(ResultSet rs, int index) throws SQLException {
@@ -58,12 +59,12 @@ public class LichenArTypesTest {
                     }
                 });
         final long c = 1923232323L;
-        Assert.assertEquals(r.longValue(), c);
+        Assert.assertEquals(r.get().longValue(), c);
     }
 
     @Test
     public void testbinary() {
-        byte[] t = jdbc.queryForFirst("select data from jdbctest where id = 1 and data=?",
+    	Option<byte[]> t = jdbc.queryForFirst("select data from jdbctest where id = 1 and data=?",
             new ResultSetGetter<byte[]>() {
             @Override
             public byte[] get(ResultSet rs, int index)
@@ -80,12 +81,12 @@ public class LichenArTypesTest {
             }
         });
         final int len = 3;
-        Assert.assertEquals(t.length, len);
+        Assert.assertEquals(t.get().length, len);
     }
 
     @Test
     public void testbit() {
-        boolean b = jdbc.queryForFirst(
+    	Option<Boolean> b = jdbc.queryForFirst(
                 "select flag from jdbctest where id = 1 and flag=?",
                 new ResultSetGetter<Boolean>() {
             @Override
@@ -100,11 +101,11 @@ public class LichenArTypesTest {
                 LichenArTypes.BIT.set(ps, 1, true);
             }
         });
-        Assert.assertEquals(b, true);
+        Assert.assertEquals(b.get().booleanValue(), true);
     }
     @Test
     public void testchar() {
-        char[] s = jdbc.queryForFirst(
+        Option<char[]> s = jdbc.queryForFirst(
             "select descrip from jdbctest where id = 1 and descrip = ?",
             new ResultSetGetter<char[]>() {
 
@@ -121,14 +122,14 @@ public class LichenArTypesTest {
                     new char[] {'c', 'b', 'd', 'd', 'd', 'd'});
             }
         });
-        Assert.assertEquals(s[0], 'c');
+        Assert.assertEquals(s.get()[0], 'c');
         final int len = 6;
-        Assert.assertEquals(s.length, len);
+        Assert.assertEquals(s.get().length, len);
     }
     @Test
     public void testdate() {
         final long t = 13000000000000L;
-        java.util.Date d = jdbc.queryForFirst(
+        Option<java.util.Date> d = jdbc.queryForFirst(
         "select create_date2 from jdbctest where id = 1 and create_date2 = ?",
         new ResultSetGetter<java.util.Date>() {
             @Override
@@ -143,13 +144,13 @@ public class LichenArTypesTest {
                 LichenArTypes.DATE.set(ps, 1, new Date(t));
             }
         });
-        Assert.assertEquals(new Date(t).before(d), false);
+        Assert.assertEquals(d.get().after(new Date(t)), false);
     }
 
     @Test
     public void testdouble() {
         final double dbl = 1.002;
-        Double d = jdbc.queryForFirst(
+        Option<Double> d = jdbc.queryForFirst(
                 "select ra from jdbctest where id = 1 and ra = ?",
                 new ResultSetGetter<Double>() {
             @Override
@@ -164,13 +165,13 @@ public class LichenArTypesTest {
                 LichenArTypes.DOUBLE.set(ps, 1, dbl);
             }
         });
-        Assert.assertEquals(d, dbl);
+        Assert.assertEquals(d.get().doubleValue(), dbl);
     }
 
     @Test
     public void testfloat() {
         final float fat = 3.2f;
-        Float d = jdbc.queryForFirst(
+        Option<Float> d = jdbc.queryForFirst(
                 "select fl from jdbctest where id = 1 and fl = ?",
                 new ResultSetGetter<Float>() {
             @Override
@@ -185,13 +186,13 @@ public class LichenArTypesTest {
                 LichenArTypes.FLOAT.set(ps, 1, fat);
             }
         });
-        Assert.assertEquals(d, fat);
+        Assert.assertEquals(d.get().floatValue(), fat);
     }
 
     @Test
     public void testinteger() {
         final int i = 10;
-        Integer d = jdbc.queryForFirst(
+        Option<Integer> d = jdbc.queryForFirst(
                 "select jkey from jdbctest where id = 1 and jkey = ?",
                 new ResultSetGetter<Integer>() {
             @Override
@@ -206,11 +207,11 @@ public class LichenArTypesTest {
                 LichenArTypes.INTEGER.set(ps, 1, i);
             }
         });
-        Assert.assertEquals(d.intValue(), i);
+        Assert.assertEquals(d.get().intValue(), i);
     }
     @Test
     public void testsmallint() {
-        Short d = jdbc.queryForFirst(
+        Option<Short> d = jdbc.queryForFirst(
                 "select smi from jdbctest where id = 1 and smi = ?",
                 new ResultSetGetter<Short>() {
             @Override
@@ -226,11 +227,11 @@ public class LichenArTypesTest {
                         Short.valueOf("2"));
             }
         });
-        Assert.assertEquals(d.intValue(), 2);
+        Assert.assertEquals(d.get().intValue(), 2);
     }
     @Test
     public void testtinyint() {
-        Byte b = jdbc.queryForFirst(
+        Option<Byte> b = jdbc.queryForFirst(
                 "select sm from jdbctest where id = 1 and sm=?",
                 new ResultSetGetter<Byte>() {
             @Override
@@ -245,11 +246,11 @@ public class LichenArTypesTest {
                 LichenArTypes.TINYINT.set(ps, 1, new Byte("1"));
             }
         });
-        Assert.assertEquals(b.byteValue(), 1);
+        Assert.assertEquals(b.get().byteValue(), 1);
     }
     @Test
     public void testtime() {
-        java.util.Date d = jdbc.queryForFirst(
+        Option<java.util.Date> d = jdbc.queryForFirst(
         "select create_time from jdbctest where id = 1 and create_time < ?",
         new ResultSetGetter<java.util.Date>() {
             @Override
@@ -266,11 +267,11 @@ public class LichenArTypesTest {
             }
         });
         Assert.assertEquals(
-                new Date(System.currentTimeMillis()).before(d), false);
+                d.get().after(new Date(System.currentTimeMillis())), false);
     }
     @Test
     public void testtimestamp() {
-        java.util.Date d = jdbc.queryForFirst(
+        Option<java.util.Date> d = jdbc.queryForFirst(
         "select creation_date from jdbctest where id = 1 and creation_date < ?",
         new ResultSetGetter<java.util.Date>() {
             @Override
@@ -288,11 +289,11 @@ public class LichenArTypesTest {
             }
         });
         Assert.assertEquals(
-                new Date(System.currentTimeMillis()).before(d), false);
+                d.get().after(new Date(System.currentTimeMillis())), false);
     }
     @Test
     public void testvarchar() {
-        String d = jdbc.queryForFirst(
+        Option<String> d = jdbc.queryForFirst(
                 "select name from jdbctest where id = 1 and name = ?",
                 new ResultSetGetter<String>() {
             @Override
@@ -307,12 +308,12 @@ public class LichenArTypesTest {
                 LichenArTypes.VARCHAR.set(ps, 1, "erdinc");
             }
         });
-        Assert.assertEquals(d, "erdinc");
+        Assert.assertEquals(d.get(), "erdinc");
     }
     @Test
     public void testvarbinary() {
         final int i = 3;
-        byte[] d = jdbc.queryForFirst(
+        Option<byte[]> d = jdbc.queryForFirst(
                 "select data from jdbctest where id = 1 and data = ?",
                 new ResultSetGetter<byte[]>() {
             @Override
@@ -328,12 +329,12 @@ public class LichenArTypesTest {
                         new byte[]{1, 2, i});
             }
         });
-        Assert.assertEquals(d.length, i);
+        Assert.assertEquals(d.get().length, i);
     }
     @Test
     public void testnumeric() {
         final int i = 1000;
-        BigDecimal d = jdbc.queryForFirst(
+        Option<BigDecimal> d = jdbc.queryForFirst(
                 "select nmc from jdbctest where id = 1 and nmc = ?",
                 new ResultSetGetter<BigDecimal>() {
             @Override
@@ -349,12 +350,12 @@ public class LichenArTypesTest {
                         new BigDecimal(i));
             }
         });
-        Assert.assertEquals(d.intValue(), i);
+        Assert.assertEquals(d.get().intValue(), i);
     }
     @Test
     public void testdecimal() {
         final float f = 10.4f;
-        BigDecimal d = jdbc.queryForFirst(
+        Option<BigDecimal> d = jdbc.queryForFirst(
                 "select money from jdbctest where id = 1 and money=?",
                 new ResultSetGetter<BigDecimal>() {
             @Override
@@ -370,7 +371,7 @@ public class LichenArTypesTest {
                         new BigDecimal("10.4"));
             }
         });
-        Assert.assertEquals(d.floatValue(), f);
+        Assert.assertEquals(d.get().floatValue(), f);
     }
 
     @Test
@@ -379,7 +380,7 @@ public class LichenArTypesTest {
         final int y = 4;
         final int z = 5;
         final int t = 6;
-        Blob b = jdbc.queryForFirst(
+        Option<Blob> b = jdbc.queryForFirst(
                 "select image from jdbctest where id = 1 and image=?",
                 new ResultSetGetter<Blob>() {
             @Override
@@ -399,7 +400,7 @@ public class LichenArTypesTest {
 
         byte[] bb = null;
         try {
-            bb = b.getBytes(1L, (int) b.length());
+            bb = b.get().getBytes(1L, (int) b.get().length());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -409,7 +410,7 @@ public class LichenArTypesTest {
 
     @Test
     public void testclob() {
-        Clob d = jdbc.queryForFirst(
+        Option<Clob> d = jdbc.queryForFirst(
         "select context from jdbctest where id = 1 and context=?",
         new ResultSetGetter<Clob>() {
             @Override
@@ -428,7 +429,7 @@ public class LichenArTypesTest {
         });
         String cont = null;
         try {
-            cont = d.getSubString(1L, (int) d.length());
+            cont = d.get().getSubString(1L, (int) d.get().length());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -24,6 +24,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import lichen.core.services.LichenException;
+import lichen.core.services.Option;
 import lichen.jdbc.services.ConnectionCallback;
 import lichen.jdbc.services.JdbcErrorCode;
 import lichen.jdbc.services.JdbcHelper;
@@ -198,14 +199,14 @@ public class JdbcHelperImpl implements JdbcHelper {
     }
 
     @Override
-    public <T> T queryForFirst(String sql, final ResultSetGetter<T> getter, PreparedStatementSetter... setters) {
-        return withResultSet(sql, new ResultSetCallback<T>() {
+    public <T> Option<T> queryForFirst(String sql, final ResultSetGetter<T> getter, PreparedStatementSetter... setters) {
+        return withResultSet(sql, new ResultSetCallback<Option<T>>() {
             @Override
-            public T doInResultSet(ResultSet rs) throws SQLException {
+            public Option<T> doInResultSet(ResultSet rs) throws SQLException {
                 if (rs.next()) {
-                    return getter.get(rs, 0);
+                    return Option.some(getter.get(rs, 0));
                 }
-                return null;
+                return Option.none();
             }
         }, setters);
     }
