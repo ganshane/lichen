@@ -45,6 +45,7 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-jsp</artifactId>
             <version>${jettyVersion}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     <build>
@@ -64,6 +65,6 @@
         </plugins>
     </build>
     <properties>
-        <jettyVersion>8.1.9.v20130131</jettyVersion>
+        <jettyVersion>7.6.9.v20130131</jettyVersion>
     </properties>
 </project>
