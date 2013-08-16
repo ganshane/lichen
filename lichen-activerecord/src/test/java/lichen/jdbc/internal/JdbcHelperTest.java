@@ -113,7 +113,7 @@ public class JdbcHelperTest {
       });
 
       assertNotNull(list);
-      assertEquals("Testing query for list", 1, list.size());
+      assertEquals("Testing query for list", 2, list.size());
    }
 
    @Test

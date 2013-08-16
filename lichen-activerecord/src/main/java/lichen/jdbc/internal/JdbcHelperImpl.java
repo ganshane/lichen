@@ -188,7 +188,7 @@ public class JdbcHelperImpl implements JdbcHelper {
             public List<T> doInResultSet(ResultSet rs) throws SQLException {
                 int index = 0;
                 List<T> list = new ArrayList<T>();
-                if (rs.next()) {
+                while (rs.next()) {
                     list.add(mapper.mapRow(rs, index));
                     index++;
                 }
