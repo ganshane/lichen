@@ -40,7 +40,7 @@ public class Migrate_20130722093444_CreateTable implements Migration {
                 t.bigint("bigint");
                 t.blob("blob");
                 t.bool("bool");
-                t.char_("char_");
+                t.charColumn("charColumn");
                 t.column("column_", SqlType.BigintType);
                 //t.decimal("decimal_",Op);
                 t.integer("int_", _options.Unique());

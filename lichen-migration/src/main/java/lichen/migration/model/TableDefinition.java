@@ -14,6 +14,8 @@
 package lichen.migration.model;
 
 /**
+ * 表的定义，提供方便的增加列的办法.
+ *
  * @author jcai
  */
 public interface TableDefinition {
@@ -22,10 +24,10 @@ public interface TableDefinition {
      * to create the column is chosen by the database adapter and may be
      * different than the name of the columnType argument.
      *
-     * @param name the column's name
+     * @param name       the column's name
      * @param columnType the type of column being added
-     * @param options a possibly empty array of column options to customize the
-     *        column
+     * @param options    a possibly empty array of column options to customize the
+     *                   column
      * @return the same instance
      */
     TableDefinition column(String name,
@@ -37,9 +39,9 @@ public interface TableDefinition {
      * to create the column is chosen by the database adapter and may be
      * different than the name of the columnType argument.
      *
-     * @param name the column's name
+     * @param name    the column's name
      * @param options a possibly empty array of column options to customize the
-     *        column
+     *                column
      * @return the same instance
      */
     TableDefinition bigint(String name,
@@ -50,9 +52,9 @@ public interface TableDefinition {
      * create the column is chosen by the database adapter and may be
      * different than the name of the columnType argument.
      *
-     * @param name the column's name
+     * @param name    the column's name
      * @param options a possibly empty array of column options to customize the
-     *        column
+     *                column
      * @return the same instance
      */
     TableDefinition blob(String name,
@@ -63,9 +65,9 @@ public interface TableDefinition {
      * to create the column is chosen by the database adapter and may be
      * different than the name of the columnType argument.
      *
-     * @param name the column's name
+     * @param name    the column's name
      * @param options a possibly empty array of column options to customize the
-     *        column
+     *                column
      * @return the same instance
      */
     TableDefinition bool(String name, ColumnOption... options);
@@ -75,21 +77,21 @@ public interface TableDefinition {
      * create the column is chosen by the database adapter and may be
      * different than the name of the columnType argument.
      *
-     * @param name the column's name
+     * @param name    the column's name
      * @param options a possibly empty array of column options to customize the
-     *        column
+     *                column
      * @return the same instance
      */
-    TableDefinition char_(String name, ColumnOption... options);
+    TableDefinition charColumn(String name, ColumnOption... options);
 
     /**
      * Add a DECIMAL column type to the table.  The actual SQL text used
      * to create the column is chosen by the database adapter and may be
      * different than the name of the columnType argument.
      *
-     * @param name the column's name
+     * @param name    the column's name
      * @param options a possibly empty array of column options to customize the
-     *        column
+     *                column
      * @return the same instance
      */
     TableDefinition decimal(String name,
@@ -100,9 +102,9 @@ public interface TableDefinition {
      * to create the column is chosen by the database adapter and may be
      * different than the name of the columnType argument.
      *
-     * @param name the column's name
+     * @param name    the column's name
      * @param options a possibly empty array of column options to customize the
-     *        column
+     *                column
      * @return the same instance
      */
     TableDefinition integer(String name,
@@ -113,9 +115,9 @@ public interface TableDefinition {
      * used to create the column is chosen by the database adapter and
      * may be different than the name of the columnType argument.
      *
-     * @param name the column's name
+     * @param name    the column's name
      * @param options a possibly empty array of column options to customize the
-     *        column
+     *                column
      * @return the same instance
      */
     TableDefinition smallint(String name,
@@ -126,9 +128,9 @@ public interface TableDefinition {
      * used to create the column is chosen by the database adapter and
      * may be different than the name of the columnType argument.
      *
-     * @param name the column's name
+     * @param name    the column's name
      * @param options a possibly empty array of column options to customize the
-     *        column
+     *                column
      * @return the same instance
      */
     TableDefinition timestamp(String name,
@@ -139,9 +141,9 @@ public interface TableDefinition {
      * used to create the column is chosen by the database adapter and
      * may be different than the name of the columnType argument.
      *
-     * @param name the column's name
+     * @param name    the column's name
      * @param options a possibly empty array of column options to customize the
-     *        column
+     *                column
      * @return the same instance
      */
     TableDefinition varbinary(String name, ColumnOption... options);
@@ -151,9 +153,9 @@ public interface TableDefinition {
      * to create the column is chosen by the database adapter and may be
      * different than the name of the columnType argument.
      *
-     * @param name the column's name
+     * @param name    the column's name
      * @param options a possibly empty array of column options to customize the
-     *        column
+     *                column
      * @return the same instance
      */
     TableDefinition varchar(String name,

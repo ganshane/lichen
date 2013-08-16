@@ -79,7 +79,7 @@ class TableDefinitionImpl implements TableDefinition {
         return column(name, SqlType.BooleanType, options);
     }
 
-    public final TableDefinition char_(String name, ColumnOption... options) {
+    public final TableDefinition charColumn(String name, ColumnOption... options) {
         return column(name, SqlType.CharType, options);
     }
 
