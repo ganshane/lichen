@@ -13,16 +13,21 @@
 // limitations under the License.
 package lichen.migration.internal;
 
-import lichen.migration.model.*;
-import lichen.migration.services.MigrationHelper;
-import lichen.migration.services.TableCallback;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+
+import lichen.migration.model.ColumnOption;
+import lichen.migration.model.IndexOption;
+import lichen.migration.model.Name;
+import lichen.migration.model.SqlType;
+import lichen.migration.model.TableOption;
+import lichen.migration.services.MigrationHelper;
+import lichen.migration.services.TableCallback;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 数据库升级抽象类.
@@ -30,7 +35,7 @@ import java.sql.Statement;
  * @author jcai
  */
 class MigrationHelperImpl implements MigrationHelper {
-    private static final Logger logger = LoggerFactory.getLogger(MigrationHelperImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MigrationHelperImpl.class);
 
     /**
      * The raw connection to the database that underlies the logging
@@ -43,7 +48,7 @@ class MigrationHelperImpl implements MigrationHelper {
      * constructor style injection, which makes for cleaner code for the
      * users of this migration framework.
      */
-    Option<Connection> rawConnectionOpt = Option.None();
+    private Option<Connection> _rawConnectionOpt = Option.None();
 
     /**
      * Get the raw connection to the database the migration can use for
@@ -56,7 +61,7 @@ class MigrationHelperImpl implements MigrationHelper {
      * MigrationHelper use the same connection.
      */
     public Connection rawConnection() {
-        return rawConnectionOpt.get();
+        return _rawConnectionOpt.get();
     }
 
     /**
@@ -67,7 +72,7 @@ class MigrationHelperImpl implements MigrationHelper {
      * constructor style injection, which makes for cleaner code for the
      * users of this migration framework.
      */
-    Option<Connection> connectionOpt = Option.None();
+    private Option<Connection> _connectionOpt = Option.None();
 
     /**
      * Get the connection to the database the migration can use for any
@@ -77,7 +82,7 @@ class MigrationHelperImpl implements MigrationHelper {
      * methods defined in MigrationHelper use the same connection.
      */
     public Connection connection() {
-        return connectionOpt.get();
+        return _connectionOpt.get();
     }
 
     /**
@@ -87,13 +92,13 @@ class MigrationHelperImpl implements MigrationHelper {
      * constructor style injection, which makes for cleaner code for the
      * users of this migration framework.
      */
-    Option<DatabaseAdapter> adapterOpt = Option.None();
+    private Option<DatabaseAdapter> _adapterOpt = Option.None();
 
     /**
      * The database adapter that will be used for the migration.
      */
     private DatabaseAdapter adapter() {
-        return adapterOpt.get();
+        return _adapterOpt.get();
     }
 
     /**
@@ -131,7 +136,7 @@ class MigrationHelperImpl implements MigrationHelper {
     public final void execute(final String sql) throws Throwable {
         ResourceUtils.autoClosingStatement(connection().createStatement(), new Function1<Statement, Void>() {
             public Void apply(Statement parameter) throws Throwable {
-                logger.debug("execute sql:{}", sql);
+                LOGGER.debug("execute sql:{}", sql);
                 parameter.execute(sql);
                 return null;
             }
@@ -243,4 +248,38 @@ class MigrationHelperImpl implements MigrationHelper {
     public void removeIndex(String tableName, String columnName, Name... name) throws Throwable {
         removeIndex(tableName, new String[]{columnName}, name);
     }
+
+    /**
+     * setter和getter方法.
+     * @return
+     */
+
+    protected Option<Connection> getRawConnectionOpt() {
+        return _rawConnectionOpt;
+    }
+
+    protected void setRawConnectionOpt(Option<Connection> rawConnectionOpt) {
+        this._rawConnectionOpt = rawConnectionOpt;
+    }
+
+    protected Option<Connection> getConnectionOpt() {
+        return _connectionOpt;
+    }
+
+    protected void setConnectionOpt(Option<Connection> connectionOpt) {
+        this._connectionOpt = connectionOpt;
+    }
+
+    protected Option<DatabaseAdapter> getAdapterOpt() {
+        return _adapterOpt;
+    }
+
+    protected void setAdapterOpt(Option<DatabaseAdapter> adapterOpt) {
+        this._adapterOpt = adapterOpt;
+    }
+
+    protected static Logger getLogger() {
+        return LOGGER;
+    }
+
 }

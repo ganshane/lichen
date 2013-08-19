@@ -430,9 +430,10 @@ public class Migrator {
         ClassInstantiator<? extends Migration> classInstantiator
                 = plasticClassPool.getClassInstantiator(migrationClass.getName());
         final MigrationHelperImpl helper = new MigrationHelperImpl();
-        helper.adapterOpt = Option.Some(adapter);
-        helper.rawConnectionOpt = Option.Some(connection);
-        helper.connectionOpt = Option.Some(connection);
+        helper.setAdapterOpt(Option.Some(adapter));
+        helper.setRawConnectionOpt(Option.Some(connection));
+        helper.setConnectionOpt(Option.Some(connection));
+        
         Migration migration = classInstantiator.with(Options.class,
                 options).with(MigrationHelper.class, helper).newInstance();
 
