@@ -33,7 +33,7 @@ public class CreateSchemaMigrationsTableMigration implements Migration {
     private Options _options;
 
     public void up() throws Throwable {
-        _helper.createTable(Migrator.schemaMigrationsTableName, new TableCallback() {
+        _helper.createTable(Migrator.SCHEMA_MIGRATIONS_TABLENAME, new TableCallback() {
             public void doInTable(TableDefinition t) throws Throwable {
                 final int size = 32;
                 t.varchar("version", _options.Limit(size), _options.NotNull());

@@ -13,18 +13,6 @@
 // limitations under the License.
 package lichen.migration.internal;
 
-import lichen.migration.services.Migration;
-import lichen.migration.services.MigrationHelper;
-import lichen.migration.services.Options;
-import org.apache.tapestry5.internal.plastic.PlasticClassPool;
-import org.apache.tapestry5.plastic.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
-import org.slf4j.MarkerFactory;
-
-import javax.inject.Inject;
-import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -33,22 +21,54 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.SortedSet;
+import java.util.TreeMap;
+import java.util.TreeSet;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
+import javax.sql.DataSource;
+
+import lichen.migration.services.Migration;
+import lichen.migration.services.MigrationHelper;
+import lichen.migration.services.Options;
+
+import org.apache.tapestry5.internal.plastic.PlasticClassPool;
+import org.apache.tapestry5.plastic.ClassInstantiator;
+import org.apache.tapestry5.plastic.ClassType;
+import org.apache.tapestry5.plastic.PlasticClass;
+import org.apache.tapestry5.plastic.PlasticClassEvent;
+import org.apache.tapestry5.plastic.PlasticClassListener;
+import org.apache.tapestry5.plastic.PlasticField;
+import org.apache.tapestry5.plastic.PlasticManagerDelegate;
+import org.apache.tapestry5.plastic.TransformationOption;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 public class Migrator {
     /**
      * The name of the table that stores all the installed migration
      * version numbers.
      */
-    static final String schemaMigrationsTableName = "schema_migrations";
-    static final Logger logger = LoggerFactory.getLogger(Migrator.class);
-    private static final Options options = new OptionsImpl();
-    static final Set<String> packages = new HashSet<String>();
-    static final PlasticClassPool plasticClassPool = new PlasticClassPool(
+    static final String SCHEMA_MIGRATIONS_TABLENAME = "schema_migrations";
+    static final Logger LOGGER = LoggerFactory.getLogger(Migrator.class);
+    private static final Options OPTIONS = new OptionsImpl();
+    static final Set<String> PACKAGES = new HashSet<String>();
+    static final PlasticClassPool PLASTIC_CLASS_POOL = new PlasticClassPool(
             Thread.currentThread().getContextClassLoader(), new PlasticManagerDelegate() {
         @Override
         public <T> ClassInstantiator<T> configureInstantiator(String className,
@@ -68,10 +88,10 @@ public class Migrator {
                 }
             }
         }
-    }, packages, new HashSet<TransformationOption>());
+    }, PACKAGES, new HashSet<TransformationOption>());
 
     {
-        packages.add("lichen.migration.internal");
+        PACKAGES.add("lichen.migration.internal");
         //plasticManager.addPlasticClassListener(new PlasticClassListenerLogger(logger));
     }
 
@@ -282,7 +302,7 @@ public class Migrator {
                     versionOpt = Option.Some(java.lang.Long.parseLong(versionStr));
                 } catch (NumberFormatException e) {
                     skipNames.add(className);
-                    logger.debug("Skipping '{}' because the version string '{}' could not "
+                    LOGGER.debug("Skipping '{}' because the version string '{}' could not "
                             + "be parsed as a long integer.", className, versionStr);
                 }
 
@@ -334,26 +354,26 @@ public class Migrator {
                         Class<? extends Migration> castedClass = c.asSubclass(Migration.class);
                         results.put(version, castedClass);
                     } catch (NoSuchMethodException e) {
-                        logger.debug("Unable to find a no-argument constructor for '" + className + "'", e);
+                        LOGGER.debug("Unable to find a no-argument constructor for '" + className + "'", e);
                     }
                 }
             } catch (Exception e) {
-                logger.debug("Unable to load class '" + className + "'.", e);
+                LOGGER.debug("Unable to load class '" + className + "'.", e);
             }
         }
 
         return results;
     }
 
-    private ConnectionBuilder connectionBuilder;
-    private DatabaseAdapter adapter;
+    private ConnectionBuilder _connectionBuilder;
+    private DatabaseAdapter _adapter;
 
     /**
      * This class migrates the database into the desired state.
      */
     public Migrator(ConnectionBuilder newConnectionBuilder, DatabaseAdapter newAdapter) {
-        this.connectionBuilder = newConnectionBuilder;
-        this.adapter = newAdapter;
+        this._connectionBuilder = newConnectionBuilder;
+        this._adapter = newAdapter;
     }
 
     public Migrator(DataSource dataSource, DatabaseAdapter databaseAdapter) {
@@ -386,12 +406,12 @@ public class Migrator {
      *         table names is done
      */
     public Set<String> getTableNames() {
-        return connectionBuilder.withConnection(ResourceUtils.CommitBehavior.AutoCommit,
+        return _connectionBuilder.withConnection(ResourceUtils.CommitBehavior.AutoCommit,
                 new Function1<Connection, Set<String>>() {
                     public Set<String> apply(Connection connection) throws Throwable {
                         String schemaPattern = null;
-                        if (adapter.getSchemaNameOpt().isDefined()) {
-                            schemaPattern = adapter.unquotedNameConverter(adapter.getSchemaNameOpt().get());
+                        if (_adapter.getSchemaNameOpt().isDefined()) {
+                            schemaPattern = _adapter.unquotedNameConverter(_adapter.getSchemaNameOpt().get());
                         }
                         DatabaseMetaData metadata = connection.getMetaData();
                         return ResourceUtils.autoClosingResultSet(metadata.getTables(null,
@@ -428,14 +448,14 @@ public class Migrator {
         System.out.println(horizontalLine("Applying: " + migrationClass.getSimpleName(), size));
 
         ClassInstantiator<? extends Migration> classInstantiator
-                = plasticClassPool.getClassInstantiator(migrationClass.getName());
+                = PLASTIC_CLASS_POOL.getClassInstantiator(migrationClass.getName());
         final MigrationHelperImpl helper = new MigrationHelperImpl();
-        helper.setAdapterOpt(Option.Some(adapter));
+        helper.setAdapterOpt(Option.Some(_adapter));
         helper.setRawConnectionOpt(Option.Some(connection));
         helper.setConnectionOpt(Option.Some(connection));
-        
+
         Migration migration = classInstantiator.with(Options.class,
-                options).with(MigrationHelper.class, helper).newInstance();
+                OPTIONS).with(MigrationHelper.class, helper).newInstance();
 
         switch (direction) {
             case Up:
@@ -450,14 +470,14 @@ public class Migrator {
 
         if (versionUpdateOpt.isDefined()) {
             final Long version = versionUpdateOpt.get();
-            String tableName = adapter.quoteTableName(schemaMigrationsTableName);
+            String tableName = _adapter.quoteTableName(SCHEMA_MIGRATIONS_TABLENAME);
             String sql = "";
             switch (direction) {
                 case Up:
-                    sql = "INSERT INTO " + tableName + " (" + adapter.quoteColumnName("version") + ") VALUES (?)";
+                    sql = "INSERT INTO " + tableName + " (" + _adapter.quoteColumnName("version") + ") VALUES (?)";
                     break;
                 case Down:
-                    sql = "DELETE FROM " + tableName + " WHERE " + adapter.quoteColumnName("version") + "= ?";
+                    sql = "DELETE FROM " + tableName + " WHERE " + _adapter.quoteColumnName("version") + "= ?";
                     break;
                 default:
                     break;
@@ -481,7 +501,7 @@ public class Migrator {
      * @return true if the "schema_migration" table exists
      */
     private boolean doesSchemaMigrationsTableExist() {
-        String smtn = Migrator.schemaMigrationsTableName.toLowerCase();
+        String smtn = Migrator.SCHEMA_MIGRATIONS_TABLENAME.toLowerCase();
         for (String name : getTableNames()) {
             if (name.equalsIgnoreCase(smtn)) {
                 return true;
@@ -496,10 +516,11 @@ public class Migrator {
     private void initializeSchemaMigrationsTable() throws Throwable {
         if (!doesSchemaMigrationsTableExist()) {
             final Option<Long> version = Option.None();
-            connectionBuilder.withConnection(ResourceUtils.CommitBehavior.AutoCommit,
+            _connectionBuilder.withConnection(ResourceUtils.CommitBehavior.AutoCommit,
                     new Function1<Connection, Object>() {
                         public Object apply(Connection parameter) throws Throwable {
-                            runMigration(parameter, CreateSchemaMigrationsTableMigration.class, MigrationDirection.Up, version);
+                            runMigration(parameter, CreateSchemaMigrationsTableMigration.class,
+                                    MigrationDirection.Up, version);
                             return null;
                         }
                     });
@@ -514,7 +535,7 @@ public class Migrator {
      *         migrations
      */
     private SortedSet<Long> getInstalledVersions() throws Throwable {
-        return connectionBuilder.withConnection(
+        return _connectionBuilder.withConnection(
                 ResourceUtils.CommitBehavior.AutoCommit,
                 new Function1<Connection, SortedSet<Long>>() {
                     public SortedSet<Long> apply(Connection parameter)
@@ -525,8 +546,8 @@ public class Migrator {
     }
 
     private SortedSet<Long> getInstalledVersions(Connection connection) throws Throwable {
-        final String sql = "SELECT " + adapter.quoteColumnName("version")
-                + " FROM " + adapter.quoteTableName(schemaMigrationsTableName);
+        final String sql = "SELECT " + _adapter.quoteColumnName("version")
+                + " FROM " + _adapter.quoteTableName(SCHEMA_MIGRATIONS_TABLENAME);
         return ResourceUtils.autoClosingStatement(connection
                 .prepareStatement(sql),
                 new Function1<PreparedStatement, SortedSet<Long>>() {
@@ -545,7 +566,7 @@ public class Migrator {
                                                         .parseLong(versionStr);
                                                 versions.add(version);
                                             } catch (NumberFormatException e) {
-                                                logger.warn("Ignoring installed migration with unparsable "
+                                                LOGGER.warn("Ignoring installed migration with unparsable "
                                                         + "version number '" + versionStr
                                                         + "'.", e);
                                             }
@@ -575,21 +596,21 @@ public class Migrator {
     public void migrate(final MigratorOperation operation,
                         final String packageName,
                         final boolean searchSubPackages) throws Throwable {
-        packages.add(packageName);
+        PACKAGES.add(packageName);
         //initializeSchemaMigrationsTable();
         // Get a new connection that locks the schema_migrations table.
         // This will prevent concurrent migrations from running.  Commit
         // any modifications to schema_migrations regardless if an
         // exception is thrown or not, this ensures that any migrations
         // that were successfully run are recorded.
-        connectionBuilder.withConnection(ResourceUtils.CommitBehavior.CommitUponReturnOrException,
+        _connectionBuilder.withConnection(ResourceUtils.CommitBehavior.CommitUponReturnOrException,
                 new Function1<Connection, Object>() {
                     public Object apply(Connection schemaConnection) throws Throwable {
                         initializeSchemaMigrationsTable();
 
-                        //logger.debug("Getting an exclusive lock on the '{}' table.",schemaMigrationsTableName);
+                        //logger.debug("Getting an exclusive lock on the '{}' table.",SCHEMA_MIGRATIONS_TABLENAME);
                         ResourceUtils.autoClosingStatement(schemaConnection.prepareStatement(
-                                adapter.lockTableSql(schemaMigrationsTableName)),
+                                _adapter.lockTableSql(SCHEMA_MIGRATIONS_TABLENAME)),
                                 new Function1<PreparedStatement, Object>() {
                                     @Override
                                     public Object apply(PreparedStatement parameter) throws Throwable {
@@ -611,12 +632,13 @@ public class Migrator {
 
                         for (Long installedVersion : installedVersions) {
                             if (!availableVersions.contains(installedVersion)) {
-                                logger.warn("The migration version '{}' is installed but "
-                                        + "there is no migration class available to back " + "it out.", installedVersion);
+                                LOGGER.warn("The migration version '{}' is installed but "
+                                        + "there is no migration class available to back " + "it out.",
+                                        installedVersion);
                             }
                         }
                         if (availableMigrations.isEmpty()) {
-                            logger.info("No migrations found, nothing to do.");
+                            LOGGER.info("No migrations found, nothing to do.");
                         }
                         Long[] installVersions = new Long[0];
                         Long[] removeVersions = new Long[0];
@@ -661,7 +683,8 @@ public class Migrator {
                                             + " does not exist as a migration.";
                                     throw new RuntimeException(message);
                                 }
-                                installVersions = prepareInstallVersions.toArray(new Long[prepareInstallVersions.size()]);
+                                installVersions = prepareInstallVersions.toArray(
+                                                new Long[prepareInstallVersions.size()]);
                                 removeVersions = prepareRemoveVersions.toArray(new Long[prepareRemoveVersions.size()]);
                                 break;
                             case RollbackMigration:
@@ -692,11 +715,13 @@ public class Migrator {
                             // but when it cannot be removed, it is.
                             clazz = availableMigrations.get(removeVersion);
                             if (clazz != null) {
-                                runMigration(schemaConnection, clazz, MigrationDirection.Down, Option.Some(removeVersion));
+                                runMigration(schemaConnection, clazz, MigrationDirection.Down,
+                                        Option.Some(removeVersion));
                             } else {
                                 String message = "The database has migration version '" + removeVersion
-                                        + "' installed but there is no migration class " + "available with that version.";
-                                logger.error(message);
+                                        + "' installed but there is no migration class "
+                                        + "available with that version.";
+                                LOGGER.error(message);
                                 throw new IllegalStateException(message);
                             }
                         }
@@ -705,7 +730,8 @@ public class Migrator {
                             if (!installedVersions.contains(installVersion)) {
                                 clazz = availableMigrations.get(installVersion);
                                 if (clazz != null) {
-                                    runMigration(schemaConnection, clazz, MigrationDirection.Up, Option.Some(installVersion));
+                                    runMigration(schemaConnection, clazz, MigrationDirection.Up,
+                                            Option.Some(installVersion));
                                 } else {
                                     String message = "Illegal state: trying to install a migration "
                                             + "with version '" + installVersion + "' that should exist.";
