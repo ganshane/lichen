@@ -112,10 +112,10 @@ abstract class DatabaseAdapter {
                                                 ColumnOption... options) {
 
         ColumnDefinition d = columnDefinitionFactory(columnType);
-        d.adapterOpt = Option.Some(this);
-        d.tableNameOpt = Option.Some(tableName);
-        d.columnNameOpt = Option.Some(columnName);
-        d.options.addAll(Arrays.asList(options));
+        d.setAdapterOpt(Option.Some(this));
+        d.setTableNameOpt(Option.Some(tableName));
+        d.setColumnNameOpt(Option.Some(columnName));
+        d.setOptions(Arrays.asList(options));
 
         d.initialize();
 

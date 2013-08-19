@@ -25,17 +25,17 @@ public class ColumnDefinitionTest {
     @Test
     public void testAutotoIncrement() {
         A a = new A();
-        a.columnNameOpt = Option.Some("test_column");
+        a.setColumnNameOpt(Option.Some("test_column"));
         a.initialize();
-        Assert.assertTrue(a.isAutoIncrement);
-        Assert.assertEquals(a.options.size(), 0);
+        Assert.assertTrue(a.isAutoIncrement());
+        Assert.assertEquals(a.getOptions().size(), 0);
     }
     @ColumnSupportsAutoIncrement
     class A extends ColumnDefinition {
         public A() {
             Options optionsService = new OptionsImpl();
-            options.add(optionsService.AutoIncrement());
-            options.add(optionsService.AutoIncrement());
+            getOptions().add(optionsService.AutoIncrement());
+            getOptions().add(optionsService.AutoIncrement());
         }
 
         @Override

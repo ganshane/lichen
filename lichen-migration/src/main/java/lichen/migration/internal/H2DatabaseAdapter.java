@@ -38,8 +38,8 @@ class H2VarbinaryColumnDefinition extends ColumnDefinition {
 class H2DatabaseAdapter extends DatabaseAdapter {
     public H2DatabaseAdapter(Option<String> schemaNameOpt) {
         super(schemaNameOpt);
-        super.setUnquotedNameConverter(UnquotedNameConverter.UppercaseUnquotedNameConverter);
-        super.setAddingForeignKeyConstraintCreatesIndex(true);
+        setUnquotedNameConverter(UnquotedNameConverter.UppercaseUnquotedNameConverter);
+        setAddingForeignKeyConstraintCreatesIndex(true);
     }
 
     protected String alterColumnSql(Option<String> schemaNameOpt,
