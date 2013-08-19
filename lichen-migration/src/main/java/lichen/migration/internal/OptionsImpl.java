@@ -57,7 +57,7 @@ public class OptionsImpl implements Options {
     /**
      * 指定列可以为空.
      */
-    private static final Nullable NULL_ABLE = new Nullable() {
+    private static final Nullable NULLABLE = new Nullable() {
     };
 
     @Override
@@ -85,7 +85,7 @@ public class OptionsImpl implements Options {
 
     @Override
     public Nullable Nullable() {
-        return NULL_ABLE;
+        return NULLABLE;
     }
 
     @Override
