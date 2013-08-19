@@ -13,7 +13,17 @@
 // limitations under the License.
 package lichen.migration.services;
 
-import lichen.migration.model.*;
+import lichen.migration.model.AutoIncrement;
+import lichen.migration.model.Default;
+import lichen.migration.model.Limit;
+import lichen.migration.model.Name;
+import lichen.migration.model.NotNull;
+import lichen.migration.model.Nullable;
+import lichen.migration.model.Precision;
+import lichen.migration.model.PrimaryKey;
+import lichen.migration.model.Scale;
+import lichen.migration.model.Unique;
+
 
 
 /**
