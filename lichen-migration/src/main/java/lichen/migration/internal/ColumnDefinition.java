@@ -13,13 +13,23 @@
 // limitations under the License.
 package lichen.migration.internal;
 
-import lichen.migration.model.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import lichen.migration.model.AutoIncrement;
+import lichen.migration.model.ColumnOption;
+import lichen.migration.model.Default;
+import lichen.migration.model.Limit;
+import lichen.migration.model.NotNull;
+import lichen.migration.model.Nullable;
+import lichen.migration.model.Precision;
+import lichen.migration.model.PrimaryKey;
+import lichen.migration.model.Scale;
+import lichen.migration.model.Unique;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * column definition.

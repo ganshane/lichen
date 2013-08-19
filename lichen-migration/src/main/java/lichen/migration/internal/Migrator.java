@@ -390,8 +390,8 @@ public class Migrator {
                 new Function1<Connection, Set<String>>() {
                     public Set<String> apply(Connection connection) throws Throwable {
                         String schemaPattern = null;
-                        if (adapter.schemaNameOpt.isDefined()) {
-                            schemaPattern = adapter.unquotedNameConverter(adapter.schemaNameOpt.get());
+                        if (adapter.getSchemaNameOpt().isDefined()) {
+                            schemaPattern = adapter.unquotedNameConverter(adapter.getSchemaNameOpt().get());
                         }
                         DatabaseMetaData metadata = connection.getMetaData();
                         return ResourceUtils.autoClosingResultSet(metadata.getTables(null,

@@ -16,7 +16,10 @@ package lichen.migration.internal;
 import java.io.File;
 
 enum CommandOptionParser {
-     ;
+    /**
+     * 此处定义NULL不做任何使用.
+     */
+     NULL;
 
     public static SelectedOptions parse(String[] args) {
         final SelectedOptions selectedOptions = new SelectedOptions();

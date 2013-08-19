@@ -13,10 +13,14 @@
 // limitations under the License.
 package lichen.migration.internal;
 
-import lichen.migration.internal.util.StringUtils;
-import lichen.migration.model.*;
-
 import java.util.Arrays;
+
+import lichen.migration.internal.util.StringUtils;
+import lichen.migration.model.ColumnOption;
+import lichen.migration.model.IndexOption;
+import lichen.migration.model.Name;
+import lichen.migration.model.SqlType;
+import lichen.migration.model.Unique;
 
 /**
  * 数据库适配器.
@@ -46,23 +50,23 @@ abstract class DatabaseAdapter {
         }
     }
 
-    Option<String> schemaNameOpt;
+    private Option<String> _schemaNameOpt;
     /**
      * The vendor of the database.
      */
-    protected DatabaseVendor databaseVendor;
+    private DatabaseVendor _databaseVendor;
 
     /**
      * 默认一个空格字符，可以在未赋新值得情况下不影响其它的正常操作
      * The character that is used to quote identifiers.
      */
-    protected char quoteCharacter = ' ';
+    private char _quoteCharacter = ' ';
 
     /**
      * To properly quote table names the database adapter needs to know
      * how the database treats unquoted names.
      */
-    protected UnquotedNameConverter unquotedNameConverter;
+    private UnquotedNameConverter _unquotedNameConverter;
     /**
      * 如Derby, Oracle and PostgreSQL使用CONSTRAINT，而MySQL使用FOREIGN KEY.
      * The SQL keyword(s) or "phrase" used to drop a foreign key
@@ -76,7 +80,7 @@ abstract class DatabaseAdapter {
      * ALTER TABLE child DROP FOREIGN KEY idx_child_pk_parent;
      * ^^^^^^^^^^^
      */
-    protected String alterTableDropForeignKeyConstraintPhrase;
+    private String _alterTableDropForeignKeyConstraintPhrase;
     /**
      * This value is true if the database implicitly adds an index on
      * the column that has a foreign key constraint added to it.
@@ -92,10 +96,14 @@ abstract class DatabaseAdapter {
      * REFERENCES parent (pk);
      * CREATE INDEX idx_child_pk_parent ON child (pk_parent);
      */
-    protected boolean addingForeignKeyConstraintCreatesIndex;
+    private boolean _addingForeignKeyConstraintCreatesIndex;
 
+    /**
+     * 构造函数.
+     * @param newSchemaNameOpt
+     */
     public DatabaseAdapter(Option<String> newSchemaNameOpt) {
-        this.schemaNameOpt = newSchemaNameOpt;
+        this._schemaNameOpt = newSchemaNameOpt;
     }
 
     public ColumnDefinition newColumnDefinition(String tableName,
@@ -123,7 +131,7 @@ abstract class DatabaseAdapter {
      * @return a properly quoted schema name
      */
     public String quoteSchemaName(String schemaName) {
-        return quoteCharacter + unquotedNameConverter(schemaName) + quoteCharacter;
+        return _quoteCharacter + unquotedNameConverter(schemaName) + _quoteCharacter;
     }
 
     /**
@@ -145,9 +153,9 @@ abstract class DatabaseAdapter {
                     .append('.');
         }
 
-        return sb.append(quoteCharacter)
+        return sb.append(_quoteCharacter)
                 .append(unquotedNameConverter(tableName))
-                .append(quoteCharacter)
+                .append(_quoteCharacter)
                 .toString();
     }
 
@@ -163,7 +171,7 @@ abstract class DatabaseAdapter {
      */
     public String quoteTableName(String tableName) {
         // use the default schemaNameOpt defined in the adapter
-        return quoteTableName(schemaNameOpt, tableName);
+        return quoteTableName(_schemaNameOpt, tableName);
     }
 
     /**
@@ -181,9 +189,9 @@ abstract class DatabaseAdapter {
             sb.append(quoteSchemaName(newSchemaNameOpt.get()))
                     .append('.');
         }
-        return sb.append(quoteCharacter)
+        return sb.append(_quoteCharacter)
                 .append(unquotedNameConverter(indexName))
-                .append(quoteCharacter)
+                .append(_quoteCharacter)
                 .toString();
     }
 
@@ -194,11 +202,11 @@ abstract class DatabaseAdapter {
      * @return a properly quoted column name
      */
     public String quoteColumnName(String columnName) {
-        return quoteCharacter + unquotedNameConverter(columnName) + quoteCharacter;
+        return _quoteCharacter + unquotedNameConverter(columnName) + _quoteCharacter;
     }
 
     String unquotedNameConverter(String columnName) {
-        return unquotedNameConverter.apply(columnName);
+        return _unquotedNameConverter.apply(columnName);
     }
 
     protected abstract String alterColumnSql(Option<String> newSchemaNameOpt, ColumnDefinition newColumnDefinition);
@@ -240,7 +248,7 @@ abstract class DatabaseAdapter {
                                  String columnName,
                                  SqlType columnType,
                                  ColumnOption... options) {
-        return alterColumnSql(schemaNameOpt,
+        return alterColumnSql(_schemaNameOpt,
                 tableName,
                 columnName,
                 columnType,
@@ -278,7 +286,7 @@ abstract class DatabaseAdapter {
      */
     public String removeColumnSql(String tableName,
                                   String columnName) {
-        return removeColumnSql(schemaNameOpt, tableName, columnName);
+        return removeColumnSql(_schemaNameOpt, tableName, columnName);
     }
 
 
@@ -339,7 +347,7 @@ abstract class DatabaseAdapter {
      */
     public String addIndexSql(String tableName, String[] columnNames,
                               IndexOption... options) {
-        return addIndexSql(schemaNameOpt, tableName, columnNames, options);
+        return addIndexSql(_schemaNameOpt, tableName, columnNames, options);
     }
 
     /**
@@ -365,7 +373,7 @@ abstract class DatabaseAdapter {
      */
     public String removeIndexSql(String tableName,
                                  String indexName) {
-        return removeIndexSql(schemaNameOpt, tableName, indexName);
+        return removeIndexSql(_schemaNameOpt, tableName, indexName);
     }
 
     /**
@@ -395,7 +403,7 @@ abstract class DatabaseAdapter {
      * @return the SQL to lock the table
      */
     public String lockTableSql(String tableName) {
-        return lockTableSql(schemaNameOpt, tableName);
+        return lockTableSql(_schemaNameOpt, tableName);
     }
 
     /**
@@ -410,4 +418,61 @@ abstract class DatabaseAdapter {
         return "LOCK TABLE " + quoteTableName(newSchemaNameOpt, tableName)
                 + " IN EXCLUSIVE MODE";
     }
+
+    /**
+     * 以下是字段的setter和getter方法.
+     */
+
+    protected Option<String> getSchemaNameOpt() {
+        return _schemaNameOpt;
+    }
+
+    protected void setSchemaNameOpt(Option<String> schemaNameOpt) {
+        _schemaNameOpt = schemaNameOpt;
+    }
+
+    protected DatabaseVendor getDatabaseVendor() {
+        return _databaseVendor;
+    }
+
+    protected void setDatabaseVendor(DatabaseVendor databaseVendor) {
+        this._databaseVendor = databaseVendor;
+    }
+
+    protected char getQuoteCharacter() {
+        return _quoteCharacter;
+    }
+
+    protected void setQuoteCharacter(char quoteCharacter) {
+        this._quoteCharacter = quoteCharacter;
+    }
+
+    protected UnquotedNameConverter getUnquotedNameConverter() {
+        return _unquotedNameConverter;
+    }
+
+    protected void setUnquotedNameConverter(
+            UnquotedNameConverter unquotedNameConverter) {
+        this._unquotedNameConverter = unquotedNameConverter;
+    }
+
+    protected String getAlterTableDropForeignKeyConstraintPhrase() {
+        return _alterTableDropForeignKeyConstraintPhrase;
+    }
+
+    protected void setAlterTableDropForeignKeyConstraintPhrase(
+            String alterTableDropForeignKeyConstraintPhrase) {
+        this._alterTableDropForeignKeyConstraintPhrase = alterTableDropForeignKeyConstraintPhrase;
+    }
+
+    protected boolean isAddingForeignKeyConstraintCreatesIndex() {
+        return _addingForeignKeyConstraintCreatesIndex;
+    }
+
+    protected void setAddingForeignKeyConstraintCreatesIndex(
+            boolean addingForeignKeyConstraintCreatesIndex) {
+        this._addingForeignKeyConstraintCreatesIndex = addingForeignKeyConstraintCreatesIndex;
+    }
+
+
 }

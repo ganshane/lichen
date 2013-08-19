@@ -100,7 +100,7 @@ class MigrationHelperImpl implements MigrationHelper {
      * The vendor of the database the migration is being run on.
      */
     public DatabaseVendor databaseVendor() {
-        return adapter().databaseVendor;
+        return adapter().getDatabaseVendor();
     }
 
 
@@ -120,7 +120,7 @@ class MigrationHelperImpl implements MigrationHelper {
      * create index idx_child_pk_parent on child (pk_parent);
      */
     public boolean addingForeignKeyConstraintCreatesIndex() {
-        return adapter().addingForeignKeyConstraintCreatesIndex;
+        return adapter().isAddingForeignKeyConstraintCreatesIndex();
     }
 
     /**
