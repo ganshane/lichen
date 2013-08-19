@@ -13,7 +13,12 @@
 // limitations under the License.
 package lichen.migration.services;
 
-import lichen.migration.model.*;
+import lichen.migration.model.ColumnOption;
+import lichen.migration.model.IndexOption;
+import lichen.migration.model.Name;
+import lichen.migration.model.SqlType;
+import lichen.migration.model.TableOption;
+
 
 /**
  * 数据库升级脚本的帮助类.

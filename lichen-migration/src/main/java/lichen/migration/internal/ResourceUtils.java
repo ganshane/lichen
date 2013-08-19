@@ -35,7 +35,7 @@ final class ResourceUtils {
     private ResourceUtils() {
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(ResourceUtils.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResourceUtils.class);
 
     /**
      * Given a resource and two functions, the first, a closer function
@@ -68,13 +68,13 @@ final class ResourceUtils {
                 try {
                     closer.apply(resource);
                 } catch (Throwable throwable) {
-                    logger.warn("Fail to Close when " + closerDescription, throwable);
+                    LOGGER.warn("Fail to Close when " + closerDescription, throwable);
                 }
             } else {
                 try {
                     closer.apply(resource);
                 } catch (Throwable e) {
-                    logger.warn("Suppressing exception when " + closerDescription + ':', e);
+                    LOGGER.warn("Suppressing exception when " + closerDescription + ':', e);
                 }
             }
         }
@@ -166,7 +166,8 @@ final class ResourceUtils {
      * @return the result of f
      */
     static <C extends Connection, R> R autoCommittingConnection(C connection,
-                                                                final CommitBehavior commitBehavior, final Function1<C, R> f) {
+                                            final CommitBehavior commitBehavior,
+                                            final Function1<C, R> f) {
         boolean newCommitBehavior = false;
         switch (commitBehavior) {
             case AutoCommit:
@@ -203,7 +204,7 @@ final class ResourceUtils {
                             try {
                                 parameter.rollback();
                             } catch (Throwable e2) {
-                                logger.warn("Suppressing exception when rolling back" + "transaction:", e2);
+                                LOGGER.warn("Suppressing exception when rolling back" + "transaction:", e2);
                             }
                             throw e1;
                         }

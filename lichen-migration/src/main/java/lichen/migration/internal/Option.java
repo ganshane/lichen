@@ -19,7 +19,7 @@ package lichen.migration.internal;
  * @author jcai
  */
 public abstract class Option<T> {
-    private static final Option<Object> None = new Option<Object>() {
+    private static final Option<Object> NONE = new Option<Object>() {
         public boolean isDefined() {
             return false;
         }
@@ -29,11 +29,11 @@ public abstract class Option<T> {
         }
     };
 
-    public static <T extends Object> Option<T> None() {
-        return (Option<T>) None;
+    public static <T extends Object> Option<T> none() {
+        return (Option<T>) NONE;
     }
 
-    public static <T> Option<T> Some(T value) {
+    public static <T> Option<T> some(T value) {
         return new Some(value);
     }
 

@@ -100,12 +100,12 @@ final class UpCommand implements Command {
             InputStream configInputStream = new FileInputStream(_selectedOptions
                     .getPaths().getConfigPath());
             MigratorConfig config = XmlLoader.parseXML(MigratorConfig.class,
-                    configInputStream, Option.Some(getClass()
+                    configInputStream, Option.some(getClass()
                     .getResourceAsStream("/migrator-config.xsd")));
 
             DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(
                     DatabaseVendor.forDriver(config._driverClassName), Option
-                    .<String>None());
+                    .<String>none());
             Migrator migrator = new Migrator(config._url, config._username,
                     config._password, databaseAdapter);
             migrator.migrate(MigratorOperation.InstallAllMigrations,

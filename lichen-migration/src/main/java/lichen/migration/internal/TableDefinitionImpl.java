@@ -25,13 +25,13 @@ import java.util.List;
  * column to the table's definition.
  */
 class TableDefinitionImpl implements TableDefinition {
-    private List<ColumnDefinition> columnDefinitions = new ArrayList<ColumnDefinition>();
-    private DatabaseAdapter adapter;
-    private String tableName;
+    private List<ColumnDefinition> _columnDefinitions = new ArrayList<ColumnDefinition>();
+    private DatabaseAdapter _adapter;
+    private String _tableName;
 
     public TableDefinitionImpl(DatabaseAdapter newAdapter, String newTableName) {
-        this.adapter = newAdapter;
-        this.tableName = newTableName;
+        this._adapter = newAdapter;
+        this._tableName = newTableName;
     }
 
     /**
@@ -43,14 +43,14 @@ class TableDefinitionImpl implements TableDefinition {
         final int size = 512;
         StringBuilder sb = new StringBuilder(size);
         boolean firstColumn = true;
-        for (ColumnDefinition columnDefinition : columnDefinitions) {
+        for (ColumnDefinition columnDefinition : _columnDefinitions) {
 
             if (firstColumn) {
                 firstColumn = false;
             } else {
                 sb.append(", ");
             }
-            sb.append(adapter.quoteColumnName(columnDefinition.columnName()))
+            sb.append(_adapter.quoteColumnName(columnDefinition.columnName()))
                     .append(' ')
                     .append(columnDefinition.toSql());
         }
@@ -59,11 +59,11 @@ class TableDefinitionImpl implements TableDefinition {
 
     public final TableDefinition column(String name, SqlType columnType,
                                         ColumnOption... options) {
-        ColumnDefinition columnDefinition = adapter.newColumnDefinition(tableName,
+        ColumnDefinition columnDefinition = _adapter.newColumnDefinition(_tableName,
                 name,
                 columnType,
                 options);
-        columnDefinitions.add(columnDefinition);
+        _columnDefinitions.add(columnDefinition);
         return this;
     }
 

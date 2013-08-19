@@ -48,7 +48,7 @@ class MigrationHelperImpl implements MigrationHelper {
      * constructor style injection, which makes for cleaner code for the
      * users of this migration framework.
      */
-    private Option<Connection> _rawConnectionOpt = Option.None();
+    private Option<Connection> _rawConnectionOpt = Option.none();
 
     /**
      * Get the raw connection to the database the migration can use for
@@ -72,7 +72,7 @@ class MigrationHelperImpl implements MigrationHelper {
      * constructor style injection, which makes for cleaner code for the
      * users of this migration framework.
      */
-    private Option<Connection> _connectionOpt = Option.None();
+    private Option<Connection> _connectionOpt = Option.none();
 
     /**
      * Get the connection to the database the migration can use for any
@@ -92,7 +92,7 @@ class MigrationHelperImpl implements MigrationHelper {
      * constructor style injection, which makes for cleaner code for the
      * users of this migration framework.
      */
-    private Option<DatabaseAdapter> _adapterOpt = Option.None();
+    private Option<DatabaseAdapter> _adapterOpt = Option.none();
 
     /**
      * The database adapter that will be used for the migration.

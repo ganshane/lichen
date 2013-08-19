@@ -297,9 +297,9 @@ public class Migrator {
             Matcher matcher = re.matcher(baseName);
             if (matcher.matches()) {
                 String versionStr = matcher.group(1);
-                Option<Long> versionOpt = Option.None();
+                Option<Long> versionOpt = Option.none();
                 try {
-                    versionOpt = Option.Some(java.lang.Long.parseLong(versionStr));
+                    versionOpt = Option.some(java.lang.Long.parseLong(versionStr));
                 } catch (NumberFormatException e) {
                     skipNames.add(className);
                     LOGGER.debug("Skipping '{}' because the version string '{}' could not "
@@ -450,9 +450,9 @@ public class Migrator {
         ClassInstantiator<? extends Migration> classInstantiator
                 = PLASTIC_CLASS_POOL.getClassInstantiator(migrationClass.getName());
         final MigrationHelperImpl helper = new MigrationHelperImpl();
-        helper.setAdapterOpt(Option.Some(_adapter));
-        helper.setRawConnectionOpt(Option.Some(connection));
-        helper.setConnectionOpt(Option.Some(connection));
+        helper.setAdapterOpt(Option.some(_adapter));
+        helper.setRawConnectionOpt(Option.some(connection));
+        helper.setConnectionOpt(Option.some(connection));
 
         Migration migration = classInstantiator.with(Options.class,
                 OPTIONS).with(MigrationHelper.class, helper).newInstance();
@@ -515,7 +515,7 @@ public class Migrator {
      */
     private void initializeSchemaMigrationsTable() throws Throwable {
         if (!doesSchemaMigrationsTableExist()) {
-            final Option<Long> version = Option.None();
+            final Option<Long> version = Option.none();
             _connectionBuilder.withConnection(ResourceUtils.CommitBehavior.AutoCommit,
                     new Function1<Connection, Object>() {
                         public Object apply(Connection parameter) throws Throwable {
@@ -716,7 +716,7 @@ public class Migrator {
                             clazz = availableMigrations.get(removeVersion);
                             if (clazz != null) {
                                 runMigration(schemaConnection, clazz, MigrationDirection.Down,
-                                        Option.Some(removeVersion));
+                                        Option.some(removeVersion));
                             } else {
                                 String message = "The database has migration version '" + removeVersion
                                         + "' installed but there is no migration class "
@@ -731,7 +731,7 @@ public class Migrator {
                                 clazz = availableMigrations.get(installVersion);
                                 if (clazz != null) {
                                     runMigration(schemaConnection, clazz, MigrationDirection.Up,
-                                            Option.Some(installVersion));
+                                            Option.some(installVersion));
                                 } else {
                                     String message = "Illegal state: trying to install a migration "
                                             + "with version '" + installVersion + "' that should exist.";
@@ -829,7 +829,7 @@ public class Migrator {
                 = migrationStatuses.getInstalledWithoutAvailableImplementation();
 
         if (notInstalled.isEmpty() && installedWithoutAvailableImplementation.isEmpty()) {
-            return Option.None();
+            return Option.none();
         } else {
             final int size = 256;
             StringBuilder sb = new StringBuilder(size);
@@ -855,7 +855,7 @@ public class Migrator {
 
             sb.append('.');
 
-            return Option.Some(sb.toString());
+            return Option.some(sb.toString());
         }
     }
 

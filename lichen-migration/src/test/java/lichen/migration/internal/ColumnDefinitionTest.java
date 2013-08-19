@@ -25,7 +25,7 @@ public class ColumnDefinitionTest {
     @Test
     public void testAutotoIncrement() {
         A a = new A();
-        a.setColumnNameOpt(Option.Some("test_column"));
+        a.setColumnNameOpt(Option.some("test_column"));
         a.initialize();
         Assert.assertTrue(a.isAutoIncrement());
         Assert.assertEquals(a.getOptions().size(), 0);

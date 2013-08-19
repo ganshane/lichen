@@ -38,7 +38,7 @@ class H2VarbinaryColumnDefinition extends ColumnDefinition {
 class H2DatabaseAdapter extends DatabaseAdapter {
     public H2DatabaseAdapter(Option<String> schemaNameOpt) {
         super(schemaNameOpt);
-        setUnquotedNameConverter(UnquotedNameConverter.UppercaseUnquotedNameConverter);
+        setUnquotedNameConverter(UnquotedNameConverter.getUppercaseUnquotedNameConverter());
         setAddingForeignKeyConstraintCreatesIndex(true);
     }
 

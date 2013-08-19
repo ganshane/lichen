@@ -21,22 +21,49 @@ package lichen.migration.internal;
 abstract class UnquotedNameConverter {
     abstract String apply(String name);
 
-    static UnquotedNameConverter CasePreservingUnquotedNameConverter = new UnquotedNameConverter() {
+    private static UnquotedNameConverter casePreservingUnquotedNameConverter = new UnquotedNameConverter() {
         @Override
         String apply(String name) {
             return name;
         }
     };
-    static UnquotedNameConverter LowercaseUnquotedNameConverter = new UnquotedNameConverter() {
+    private static UnquotedNameConverter lowercaseUnquotedNameConverter = new UnquotedNameConverter() {
         @Override
         String apply(String name) {
             return name.toLowerCase();
         }
     };
-    static UnquotedNameConverter UppercaseUnquotedNameConverter = new UnquotedNameConverter() {
+    private static UnquotedNameConverter uppercaseUnquotedNameConverter = new UnquotedNameConverter() {
         @Override
         String apply(String name) {
             return name.toUpperCase();
         }
     };
+
+    /**
+     * setter和getter方法.
+     */
+
+    protected static UnquotedNameConverter getCasePreservingUnquotedNameConverter() {
+        return casePreservingUnquotedNameConverter;
+    }
+    protected static void setCasePreservingUnquotedNameConverter(
+            UnquotedNameConverter newCasePreservingUnquotedNameConverter) {
+        casePreservingUnquotedNameConverter = newCasePreservingUnquotedNameConverter;
+    }
+    protected static UnquotedNameConverter getLowercaseUnquotedNameConverter() {
+        return lowercaseUnquotedNameConverter;
+    }
+    protected static void setLowercaseUnquotedNameConverter(
+            UnquotedNameConverter newLowercaseUnquotedNameConverter) {
+        lowercaseUnquotedNameConverter = newLowercaseUnquotedNameConverter;
+    }
+    protected static UnquotedNameConverter getUppercaseUnquotedNameConverter() {
+        return uppercaseUnquotedNameConverter;
+    }
+    protected static void setUppercaseUnquotedNameConverter(
+            UnquotedNameConverter newUppercaseUnquotedNameConverter) {
+        uppercaseUnquotedNameConverter = newUppercaseUnquotedNameConverter;
+    }
+
 }

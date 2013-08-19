@@ -49,7 +49,7 @@ public class MigratorTest {
     public static void setup() throws ProxoolException {
         String driverClassName = "org.h2.Driver";
         DatabaseVendor vendor = DatabaseVendor.forDriver(driverClassName);
-        DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(vendor, Option.<String>None());
+        DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(vendor, Option.<String>none());
         Properties info = new Properties();
         info.setProperty("jdbc-x.proxool.alias", "test");
         info.setProperty("jdbc-x.proxool.maximum-connection-count", "50");

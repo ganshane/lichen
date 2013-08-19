@@ -121,7 +121,7 @@ public abstract class ColumnDefinition {
     /**
      * 列的刻度选项.
      */
-    private Option<Integer> _scale = Option.None();
+    private Option<Integer> _scale = Option.none();
 
     /**
      * 检查该列是否定义了刻度.
@@ -136,7 +136,7 @@ public abstract class ColumnDefinition {
                 if (_scale.isDefined()) {
                     _logger.warn("列{}重复定义了Scale", columnName());
                 }
-                _scale = Option.Some(((Scale) columnOption).getValue());
+                _scale = Option.some(((Scale) columnOption).getValue());
             }
         }
     }
@@ -144,7 +144,7 @@ public abstract class ColumnDefinition {
     /**
      * 定义列的精度选项，并默认空值.
      */
-    private Option<Integer> _precision = Option.None();
+    private Option<Integer> _precision = Option.none();
 
     /**
      * 检查该列是否定义了精度.
@@ -159,7 +159,7 @@ public abstract class ColumnDefinition {
                 if (_precision.isDefined()) {
                     _logger.warn("列{}重复定义了Precision", columnName());
                 }
-                _precision = Option.Some(((Precision) columnOption).getValue());
+                _precision = Option.some(((Precision) columnOption).getValue());
             }
         }
     }
@@ -226,7 +226,7 @@ public abstract class ColumnDefinition {
      * @return Option 如果定义了非空，则返回Option.Some(true)
      */
     private Option<Boolean> notNull() {
-        Option<Boolean> notNull = Option.None();
+        Option<Boolean> notNull = Option.none();
         Iterator<ColumnOption> it = _options.iterator();
         while (it.hasNext()) {
             ColumnOption columnOption = it.next();
@@ -235,13 +235,13 @@ public abstract class ColumnDefinition {
                 if (notNull.isDefined()) {
                     _logger.warn("列{}重复定义了NotNull Or Nullable", columnName());
                 }
-                notNull = Option.Some(true);
+                notNull = Option.some(true);
             } else if (columnOption instanceof Nullable) {
                 it.remove();
                 if (notNull.isDefined()) {
                     _logger.warn("列{}重复定义了NotNull Or Nullable", columnName());
                 }
-                notNull = Option.Some(false);
+                notNull = Option.some(false);
             }
         }
         return notNull;
