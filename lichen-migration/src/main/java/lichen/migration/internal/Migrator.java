@@ -646,17 +646,17 @@ public class Migrator {
                                 boolean versionFound = false;
                                 while (aIt.hasNext()) {
                                     Long version = aIt.next();
-                                    if (version <= operation.version) {
+                                    if (version <= operation.getVersion()) {
                                         prepareInstallVersions.add(version);
                                     } else {
                                         prepareRemoveVersions.add(0, version);
                                     }
-                                    if (version == operation.version) {
+                                    if (version == operation.getVersion()) {
                                         versionFound = true;
                                     }
                                 }
                                 if (!versionFound) {
-                                    String message = "The target version " + operation.version
+                                    String message = "The target version " + operation.getVersion()
                                             + " does not exist as a migration.";
                                     throw new RuntimeException(message);
                                 }
@@ -664,19 +664,19 @@ public class Migrator {
                                 removeVersions = prepareRemoveVersions.toArray(new Long[prepareRemoveVersions.size()]);
                                 break;
                             case RollbackMigration:
-                                if (operation.count > installedVersions.size()) {
-                                    String message = "Attempting to rollback " + operation.count
+                                if (operation.getCount() > installedVersions.size()) {
+                                    String message = "Attempting to rollback " + operation.getCount()
                                             + " migrations but the database only has " + installedVersions.size()
                                             + " installed in it.";
                                     throw new RuntimeException(message);
                                 }
                                 installVersions = new Long[]{};
-                                removeVersions = new Long[operation.count];
+                                removeVersions = new Long[operation.getCount()];
                                 it = installedVersions.iterator();
                                 i = 0;
                                 while (it.hasNext()) {
                                     i++;
-                                    removeVersions[operation.count - i] = it.next();
+                                    removeVersions[operation.getCount() - i] = it.next();
                                 }
                                 break;
                             default:
@@ -797,9 +797,9 @@ public class Migrator {
      */
     public Option<String> whyNotMigrated(String packageName, boolean searchSubPackages) throws Throwable {
         MigrationStatuses migrationStatuses = getMigrationStatuses(packageName, searchSubPackages);
-        SortedMap<Long, Class<? extends Migration>> notInstalled = migrationStatuses.notInstalled;
+        SortedMap<Long, Class<? extends Migration>> notInstalled = migrationStatuses.getNotInstalled();
         SortedSet<Long> installedWithoutAvailableImplementation
-                = migrationStatuses.installedWithoutAvailableImplementation;
+                = migrationStatuses.getInstalledWithoutAvailableImplementation();
 
         if (notInstalled.isEmpty() && installedWithoutAvailableImplementation.isEmpty()) {
             return Option.None();

@@ -31,14 +31,38 @@ enum MigratorOperation {
     RemoveAllMigrations,
     MigrateToVersion,
     RollbackMigration;
-    int version;
-    int count;
+    private int _version;
+    private int _count;
+
+    protected int getVersion() {
+        return _version;
+    }
+    protected void setVersion(int version) {
+        this._version = version;
+    }
+    protected int getCount() {
+        return _count;
+    }
+    protected void setCount(int count) {
+        this._count = count;
+    }
+
 }
 
 class MigrationStatuses {
-    final SortedMap<Long, Class<? extends Migration>> notInstalled;
-    final SortedMap<Long, Class<? extends Migration>> installedWithAvailableImplementation;
-    final SortedSet<Long> installedWithoutAvailableImplementation;
+    private final SortedMap<Long, Class<? extends Migration>> _notInstalled;
+    private final SortedMap<Long, Class<? extends Migration>> _installedWithAvailableImplementation;
+    private final SortedSet<Long> _installedWithoutAvailableImplementation;
+
+    protected SortedMap<Long, Class<? extends Migration>> getNotInstalled() {
+        return _notInstalled;
+    }
+    protected SortedMap<Long, Class<? extends Migration>> getInstalledWithAvailableImplementation() {
+        return _installedWithAvailableImplementation;
+    }
+    protected SortedSet<Long> getInstalledWithoutAvailableImplementation() {
+        return _installedWithoutAvailableImplementation;
+    }
 
     /**
      * Container for the state of all the available and installed
@@ -59,8 +83,8 @@ class MigrationStatuses {
     MigrationStatuses(SortedMap<Long, Class<? extends Migration>> newNotInstalled,
                       SortedMap<Long, Class<? extends Migration>> newInstalledWithAvailableImplementation,
                       SortedSet<Long> newInstalledWithoutAvailableImplementation) {
-        this.notInstalled = newNotInstalled;
-        this.installedWithAvailableImplementation = newInstalledWithAvailableImplementation;
-        this.installedWithoutAvailableImplementation = newInstalledWithoutAvailableImplementation;
+        this._notInstalled = newNotInstalled;
+        this._installedWithAvailableImplementation = newInstalledWithAvailableImplementation;
+        this._installedWithoutAvailableImplementation = newInstalledWithoutAvailableImplementation;
     }
 }
