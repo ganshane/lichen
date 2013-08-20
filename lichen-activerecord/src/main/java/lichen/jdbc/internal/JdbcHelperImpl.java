@@ -178,6 +178,33 @@ public class JdbcHelperImpl implements JdbcHelper {
             }
         }
     }
+    
+    
+    @Override
+    public int execute(String sql, PreparedStatementSetter... setters) {
+    	Connection conn = null;
+    	PreparedStatement ps = null;
+    	boolean rollBack = false;
+    	try {
+    		conn = getConnection();
+    		ps = conn.prepareStatement(sql);
+    		int index = 0;
+    		for (PreparedStatementSetter pss : setters) {
+    			pss.set(ps, ++index);
+    		}
+    		return ps.executeUpdate();
+    	} catch (SQLException e) {
+    		rollBack = isInTransaction();
+    		throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
+    	} finally {
+    		JdbcUtil.close(ps);
+    		if (rollBack) {
+    			rollbackTransaction();
+    		} else {
+    			freeConnection(conn);
+    		}
+    	}
+    }
 
     @Override
     public <T> List<T> queryForList(String sql, final RowMapper<T> mapper, PreparedStatementSetter... setters) {
