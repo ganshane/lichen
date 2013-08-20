@@ -13,9 +13,14 @@
 // limitations under the License.
 package lichen.jdbc.services;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.List;
 
 import lichen.core.services.Option;
+import lichen.core.services.func.Function1;
 
 /**
  * 针对数据库操作的帮助类.
@@ -96,7 +101,7 @@ public interface JdbcHelper {
      * @param setters  给占位符赋值的对象
      * @return 通过回调函数处理后结果
      */
-    <T> T withResultSet(String sql, ResultSetCallback<T> callback,
+    <T> T withResultSet(String sql, Function1<ResultSet, T> function,
                         PreparedStatementSetter... setters);
 
     /**
@@ -105,7 +110,7 @@ public interface JdbcHelper {
      * @param callback 回调函数
      * @return 查询结果
      */
-    <T> T withConnection(ConnectionCallback<T> callback);
+    <T> T withConnection(Function1<Connection, T> function);
 
     /**
      * 针对PreparedStatement的查询.
@@ -115,7 +120,7 @@ public interface JdbcHelper {
      * @param setters 给占位符赋值的对象
      * @return 查询结果
      */
-    <T> T withPreparedStatement(final String sql, final PreparedStatementCallback<T> callback,
+    <T> T withPreparedStatement(final String sql, final Function1<PreparedStatement, T> function,
              final PreparedStatementSetter... setters);
 
     /**
@@ -125,6 +130,6 @@ public interface JdbcHelper {
      * @param callback 回调函数
      * @return 查询结果
      */
-    <T> T withStatement(final String sql, final StatementCallback<T> callback);
+    <T> T withStatement(final String sql, final Function1<Statement, T> function);
 
 }

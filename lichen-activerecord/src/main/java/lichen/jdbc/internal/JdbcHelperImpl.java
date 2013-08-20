@@ -25,15 +25,12 @@ import javax.sql.DataSource;
 
 import lichen.core.services.LichenException;
 import lichen.core.services.Option;
-import lichen.jdbc.services.ConnectionCallback;
+import lichen.core.services.func.Function1;
 import lichen.jdbc.services.JdbcErrorCode;
 import lichen.jdbc.services.JdbcHelper;
-import lichen.jdbc.services.PreparedStatementCallback;
 import lichen.jdbc.services.PreparedStatementSetter;
-import lichen.jdbc.services.ResultSetCallback;
 import lichen.jdbc.services.ResultSetGetter;
 import lichen.jdbc.services.RowMapper;
-import lichen.jdbc.services.StatementCallback;
 
 /**
  * 实现JdbcHelper,此类非线程安全，只能在某一个线程中运行.
@@ -184,14 +181,18 @@ public class JdbcHelperImpl implements JdbcHelper {
 
     @Override
     public <T> List<T> queryForList(String sql, final RowMapper<T> mapper, PreparedStatementSetter... setters) {
-        return withResultSet(sql, new ResultSetCallback<List<T>>() {
+        return withResultSet(sql, new Function1<ResultSet, List<T>>() {
             @Override
-            public List<T> doInResultSet(ResultSet rs) throws SQLException {
+            public List<T> apply(ResultSet rs) {
                 int index = 0;
                 List<T> list = new ArrayList<T>();
-                while (rs.next()) {
-                    list.add(mapper.mapRow(rs, index));
-                    index++;
+                try {
+                    while (rs.next()) {
+                        list.add(mapper.mapRow(rs, index));
+                        index++;
+                    }
+                } catch (SQLException e) {
+                    throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
                 }
                 return list;
             }
@@ -199,12 +200,17 @@ public class JdbcHelperImpl implements JdbcHelper {
     }
 
     @Override
-    public <T> Option<T> queryForFirst(String sql, final ResultSetGetter<T> getter, PreparedStatementSetter... setters) {
-        return withResultSet(sql, new ResultSetCallback<Option<T>>() {
+    public <T> Option<T> queryForFirst(String sql,
+          final ResultSetGetter<T> getter, PreparedStatementSetter... setters) {
+        return withResultSet(sql, new Function1<ResultSet, Option<T>>() {
             @Override
-            public Option<T> doInResultSet(ResultSet rs) throws SQLException {
-                if (rs.next()) {
-                    return Option.some(getter.get(rs, 0));
+            public Option<T> apply(ResultSet rs) {
+                try {
+                    if (rs.next()) {
+                        return Option.some(getter.get(rs, 0));
+                    }
+                } catch (SQLException e) {
+                    throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
                 }
                 return Option.none();
             }
@@ -236,15 +242,15 @@ public class JdbcHelperImpl implements JdbcHelper {
     }
 
     @Override
-    public <T> T withResultSet(String sql, final ResultSetCallback<T> callback,
+    public <T> T withResultSet(String sql, final Function1<ResultSet, T> function,
                                PreparedStatementSetter... setters) {
-        return withPreparedStatement(sql, new PreparedStatementCallback<T>() {
+        return withPreparedStatement(sql, new Function1<PreparedStatement, T>() {
             @Override
-            public T doInPreparedStatement(PreparedStatement ps) throws SQLException {
+            public T apply(PreparedStatement ps) {
                 ResultSet rs = null;
                 try {
                     rs = ps.executeQuery();
-                    return callback.doInResultSet(rs);
+                    return function.apply(rs);
                 } catch (SQLException e) {
                     throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
                 } finally {
@@ -255,11 +261,11 @@ public class JdbcHelperImpl implements JdbcHelper {
     }
 
     @Override
-    public <T> T withConnection(ConnectionCallback<T> callback) {
+    public <T> T withConnection(Function1<Connection, T> function) {
         Connection conn = null;
         try {
             conn = getConnection();
-            return callback.doInConnection(conn);
+            return function.apply(conn);
         } catch (SQLException e) {
             throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
         } finally {
@@ -268,11 +274,11 @@ public class JdbcHelperImpl implements JdbcHelper {
     }
 
     @Override
-    public <T> T withPreparedStatement(final String sql, final PreparedStatementCallback<T> callback,
-           final PreparedStatementSetter... setters) {
-        return withConnection(new ConnectionCallback<T>() {
+    public <T> T withPreparedStatement(final String sql, final Function1<PreparedStatement, T> function,
+            final PreparedStatementSetter... setters) {
+         return withConnection(new Function1<Connection, T>() {
             @Override
-            public T doInConnection(Connection conn) throws SQLException {
+            public T apply(Connection conn) {
                 PreparedStatement ps = null;
                 try {
                     ps = conn.prepareStatement(sql);
@@ -281,25 +287,25 @@ public class JdbcHelperImpl implements JdbcHelper {
                         setter.set(ps, index);
                         index++;
                     }
-                    return callback.doInPreparedStatement(ps);
+                    return function.apply(ps);
                 } catch (SQLException e) {
                     throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
                 } finally {
                     JdbcUtil.close(ps);
                 }
             }
-        });
-    }
+         });
+     }
 
     @Override
-    public <T> T withStatement(final String sql, final StatementCallback<T> callback) {
-        return withConnection(new ConnectionCallback<T>() {
+    public <T> T withStatement(final String sql, final Function1<Statement, T> function) {
+        return withConnection(new Function1<Connection, T>() {
             @Override
-            public T doInConnection(Connection conn) throws SQLException {
+            public T apply(Connection conn) {
                 Statement stmt = null;
                 try {
                     stmt = conn.createStatement();
-                    return callback.doInStatement(stmt);
+                    return function.apply(stmt);
                 } catch (SQLException e) {
                     throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
                 } finally {

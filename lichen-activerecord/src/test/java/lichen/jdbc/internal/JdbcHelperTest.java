@@ -23,10 +23,12 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 
+import lichen.core.services.LichenException;
 import lichen.core.services.Option;
+import lichen.core.services.func.Function1;
+import lichen.jdbc.services.JdbcErrorCode;
 import lichen.jdbc.services.JdbcHelper;
 import lichen.jdbc.services.PreparedStatementSetter;
-import lichen.jdbc.services.ResultSetCallback;
 import lichen.jdbc.services.ResultSetGetter;
 import lichen.jdbc.services.RowMapper;
 
@@ -120,19 +122,22 @@ public class JdbcHelperTest {
    @Test
    public final void testWithResultSet() {
       Bean bean = jdbc.withResultSet("select * from jdbctest where id=? and jkey=? and name=?",
-             new ResultSetCallback<Bean>() {
-            @Override
-            public Bean doInResultSet(final ResultSet rs)
-                    throws SQLException {
-                if(rs.next()) {
-                	Bean bean = new Bean();
-                    bean._id = rs.getInt("id");
-                    bean._name = rs.getString("name");
-                    bean._creationDate = rs.getTimestamp("creation_date");
-                    return bean;
-                }
+             new Function1<ResultSet, Bean>() {
+			@Override
+			public Bean apply(ResultSet rs) {
+				try {
+					if(rs.next()) {
+						Bean bean = new Bean();
+					    bean._id = rs.getInt("id");
+					    bean._name = rs.getString("name");
+					    bean._creationDate = rs.getTimestamp("creation_date");
+					    return bean;
+					}
+				} catch (SQLException e) {
+					throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
+				}
                 return null;
-            }
+			}
           }, new PreparedStatementSetter() {
               @Override
               public void set(final PreparedStatement ps, final int index)
@@ -155,15 +160,18 @@ public class JdbcHelperTest {
 
           assertNotNull(bean);
 
-          Integer currentId = jdbc.withResultSet("select * from jdbctest", new ResultSetCallback<Integer>() {
-                @Override
-                public Integer doInResultSet(final ResultSet rs)
-                        throws SQLException {
-                	if(rs.next()) {
-                		return rs.getInt("id");
-                	}
+          Integer currentId = jdbc.withResultSet("select * from jdbctest", new Function1<ResultSet, Integer>() {
+				@Override
+				public Integer apply(ResultSet rs) {
+					try {
+						if(rs.next()) {
+							return rs.getInt("id");
+						}
+					} catch (SQLException e) {
+						throw LichenException.wrap(e, JdbcErrorCode.DATA_ACCESS_ERROR);
+					}
                 	return null;
-                }
+				}
               });
 
           assertEquals(1, currentId.intValue());
