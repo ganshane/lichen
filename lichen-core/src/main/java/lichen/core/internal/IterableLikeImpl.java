@@ -112,4 +112,42 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
         }
         return false;
     }
+
+    @Override
+    public final IterableLike<A> filter(final Function1<A, Boolean> function) {
+        final Iterator<A> old = iterator();
+        return new IterableLikeImpl<A>() {
+            @Override
+            public Iterator<A> iterator() {
+                return new Iterator<A>() {
+                    private A obj = null;
+
+                    @Override
+                    public boolean hasNext() {
+                        boolean isExecute = false;
+                        if (old.hasNext()) {
+                            obj = old.next();
+                            if (function.apply(obj)) {
+                                isExecute = true;
+                            } else {
+                                isExecute = hasNext();
+                            }
+                        }
+                        return isExecute;
+                    }
+
+                    @Override
+                    public A next() {
+                        return obj;
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new LichenException(
+                                LichenCoreErrorCode.UNSUPPORT_REMOVE_ITERATOR);
+                    }
+                };
+            }
+        };
+    }
 }
