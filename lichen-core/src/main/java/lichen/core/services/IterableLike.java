@@ -54,4 +54,12 @@ public interface IterableLike<A> extends Iterable<A> {
      * @return boolean
      */
     boolean exists(Function1<A, Boolean> function);
+    
+    /**
+     * 实现对集合元素的过滤操作，返回符合条件的集合元素
+     * @param <B> 
+     * @param function 待执行的函数
+     * @return 新的迭代器
+     */
+    IterableLike<A> filter(Function1<A,Boolean> function);
 }

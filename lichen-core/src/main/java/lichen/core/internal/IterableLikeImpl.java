@@ -21,6 +21,7 @@ import lichen.core.services.func.Function1;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * 针对{@link IterableLike}的实现.
@@ -111,5 +112,48 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
             }
         }
         return false;
+    }
+
+    @Override
+    public final IterableLike<A> filter(final Function1<A, Boolean> function) {
+        final Iterator<A> old = iterator();
+        return new IterableLikeImpl<A>() {
+            @Override
+            public Iterator<A> iterator() {
+                return new Iterator<A>() {
+                    private A _obj = null;
+                    private boolean _isNew = false;
+
+                    @Override
+                    public boolean hasNext() {
+                        if (old.hasNext()) {
+                            _obj = old.next();
+                            if (function.apply(_obj)) {
+                                _isNew = true;
+                                return true;
+                            } else {
+                                return hasNext();
+                            }
+                        }
+                        return false;
+                    }
+
+                    @Override
+                    public A next() {
+                        if(!_isNew){
+                            throw new NoSuchElementException();
+                        }
+                        _isNew = false;
+                        return _obj;
+                    }
+
+                    @Override
+                    public void remove() {
+                        throw new LichenException(
+                                LichenCoreErrorCode.UNSUPPORT_REMOVE_ITERATOR);
+                    }
+                };
+            }
+        };
     }
 }

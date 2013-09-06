@@ -88,7 +88,93 @@ public class JdbcHelperTest {
          true,
          new byte[]{1, 2, three});
    }
-
+   
+   @Test
+   public final void testExecute(){
+   	//insert
+   	jdbc.execute("INSERT INTO `jdbctest` (id, jkey, name, "
+               + "creation_date, big, money, sm, data) "
+               + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+           new PreparedStatementSetter() {
+               @Override
+               public void set(final PreparedStatement ps, final int index)
+               throws SQLException {
+                   ps.setObject(index, 6);
+               }
+           }, new PreparedStatementSetter() {
+               @Override
+               public void set(final PreparedStatement ps, final int index)
+               throws SQLException {
+                   ps.setObject(index, 8);
+               }
+           }, new PreparedStatementSetter() {
+               @Override
+               public void set(final PreparedStatement ps, final int index)
+               throws SQLException {
+                   ps.setObject(index, "啊啊");
+               }
+           }, new PreparedStatementSetter() {
+               @Override
+               public void set(final PreparedStatement ps, final int index)
+               throws SQLException {
+                   ps.setObject(index, new Timestamp(System.currentTimeMillis()));
+               }
+           }, new PreparedStatementSetter() {
+               @Override
+               public void set(final PreparedStatement ps, final int index)
+               throws SQLException {
+                   ps.setObject(index, 1111111111L);
+               }
+           }, new PreparedStatementSetter() {
+               @Override
+               public void set(final PreparedStatement ps, final int index)
+               throws SQLException {
+                   ps.setObject(index, new BigDecimal(11.1F));
+               }
+           }, new PreparedStatementSetter() {
+               @Override
+               public void set(final PreparedStatement ps, final int index)
+               throws SQLException {
+                   ps.setObject(index, false);
+               }
+           }, new PreparedStatementSetter() {
+               @Override
+               public void set(final PreparedStatement ps, final int index)
+               throws SQLException {
+                   ps.setObject(index, new byte[]{1, 2, 3});
+               }
+           }
+   	);
+   	//update
+   	jdbc.execute("update `jdbctest` set id=? where id=? ",
+           new PreparedStatementSetter() {
+               @Override
+               public void set(final PreparedStatement ps, final int index)
+               throws SQLException {
+                   ps.setObject(index, 9);
+               }
+           },	new PreparedStatementSetter() {
+               @Override
+               public void set(final PreparedStatement ps, final int index)
+               throws SQLException {
+                   ps.setObject(index, 8);
+               }
+           }
+   	);
+   	//detele
+   	jdbc.execute("delete from `jdbctest` where id=? ",
+           new PreparedStatementSetter() {
+               @Override
+               public void set(final PreparedStatement ps, final int index)
+               throws SQLException {
+                   ps.setObject(index, 6);
+               }
+           }
+   	);
+   }
+   
+   
+   
    @AfterClass
    public static void destroy() {
       jdbc.execute("DROP TABLE `jdbctest`");

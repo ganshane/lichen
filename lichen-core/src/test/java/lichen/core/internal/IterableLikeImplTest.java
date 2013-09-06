@@ -22,6 +22,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * 针对集合操作的测试
@@ -86,7 +87,7 @@ public class IterableLikeImplTest {
         Assert.assertEquals(32,first.get().age);
     }
     @Test
-	public void exists() {
+	public void test_exists() {
 		List<Bean> list = new ArrayList<Bean>();
 		list.add(new Bean("acai", 33));
 		list.add(new Bean("jcai", 32));
@@ -106,4 +107,44 @@ public class IterableLikeImplTest {
 		Assert.assertTrue(obj1);
 		Assert.assertFalse(obj2);
 	}
+    
+	@Test
+    public void test_filter() {
+        List<Bean> list = new ArrayList<Bean>();
+        list.add(new Bean("sc", 28));
+        list.add(new Bean("scl", 29));
+        list.add(new Bean("sucl", 30));
+        list.add(new Bean("suncl", 31));
+        list.add(new Bean("sunchl", 32));
+        IterableLikeImpl<Bean> iterableLike = new IterableLikeImpl<Bean>(list);
+        Iterator<Bean> newR = iterableLike.filter(
+                new Function1<Bean, Boolean>() {
+                    @Override
+                    public Boolean apply(Bean value) {
+                        return value.age >= 29;
+                    }
+                }).iterator();
+        int j=0;
+        while (newR.hasNext()) {
+            Bean obj = newR.next();
+            j++;
+            switch(j){
+                case 1:
+                    Assert.assertEquals("scl", obj.name);
+                    break;
+                 default:
+                        break;
+            }
+            System.out.println(obj.name);
+        }
+        Assert.assertEquals(4, j);
+        int i=10;
+        while((i-=1) >0)
+            try{
+                newR.next();
+                Assert.fail("fail to reach this");
+            }catch(NoSuchElementException e){
+                
+            }
+    }
 }

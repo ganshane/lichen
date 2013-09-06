@@ -67,6 +67,16 @@ public interface JdbcHelper {
      * @return 执行的结果
      */
     int execute(String sql, Object... params);
+    
+    
+    /**
+     * 执行sql对象.
+     * 
+     * @param sql
+     * @param setters
+     * @return
+     */
+    int execute(String sql, PreparedStatementSetter... setters);
 
     /**
      * 可以传递参数的查询，查询结果是一个list.
