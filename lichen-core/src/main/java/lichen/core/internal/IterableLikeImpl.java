@@ -18,7 +18,9 @@ import lichen.core.services.LichenCoreErrorCode;
 import lichen.core.services.LichenException;
 import lichen.core.services.Option;
 import lichen.core.services.func.Function1;
+import lichen.core.services.func.Function2;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -42,12 +44,15 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
     public IterableLikeImpl(final Collection<A> collection) {
         this._underlying = collection;
     }
+    public IterableLikeImpl(final A ... elements) {
+        this._underlying = Arrays.asList(elements);
+    }
 
     /**
      * 私有创建，仅仅供内部调用.
      */
     private IterableLikeImpl() {
-        this(null);
+        this((Collection<A>) null);
     }
 
     @Override
@@ -82,6 +87,14 @@ public class IterableLikeImpl<A> implements IterableLike<A> {
         Iterator<A> it = iterator();
         while (it.hasNext()) {
             function.apply(it.next());
+        }
+    }
+    @Override
+    public final void foreach(final Function2<A, Integer, Void> function) throws Throwable {
+        Iterator<A> it = iterator();
+        int i = 0;
+        while (it.hasNext()) {
+            function.apply(it.next(), i++);
         }
     }
 

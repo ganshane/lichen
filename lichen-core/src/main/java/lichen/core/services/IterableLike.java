@@ -15,6 +15,7 @@ package lichen.core.services;
 
 
 import lichen.core.services.func.Function1;
+import lichen.core.services.func.Function2;
 
 /**
  * 针对能够遍历操作的集合.
@@ -62,4 +63,6 @@ public interface IterableLike<A> extends Iterable<A> {
      * @return 新的迭代器
      */
     IterableLike<A> filter(Function1<A,Boolean> function);
+
+    void foreach(Function2<A, Integer, Void> function) throws Throwable;
 }

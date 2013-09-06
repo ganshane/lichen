@@ -26,5 +26,5 @@ public interface Function2<T1, T2, R> {
      * @param value2 值对象
      * @return 处理后的结果
      */
-    R apply(T1 value1, T2 value2);
+    R apply(T1 value1, T2 value2) throws Throwable;
 }
