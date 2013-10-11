@@ -44,6 +44,8 @@ public abstract class DatabaseAdapter {
         switch (vendor) {
             case H2:
                 return new H2DatabaseAdapter(schemaNameOpt);
+            case ORACLE:
+            	return new OracleDatabaseAdapter(schemaNameOpt);
             default:
                 throw new UnsupportedOperationException("not support adapter "
                         + vendor);
@@ -115,7 +117,7 @@ public abstract class DatabaseAdapter {
         d.setAdapterOpt(Option.some(this));
         d.setTableNameOpt(Option.some(tableName));
         d.setColumnNameOpt(Option.some(columnName));
-        d.setOptions(Arrays.asList(options));
+        d.getOptions().addAll(Arrays.asList(options));
 
         d.initialize();
 
