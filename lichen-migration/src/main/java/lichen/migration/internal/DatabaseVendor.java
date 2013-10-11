@@ -21,8 +21,10 @@ import java.sql.DriverManager;
  *
  * @author jcai
  */
-enum DatabaseVendor {
-    H2;
+public enum DatabaseVendor {
+    H2,
+    ORACLE
+    ;
 
     public static DatabaseVendor forDriver(String driverClassName) {
         if (driverClassName.equals("org.h2.Driver")) {
@@ -33,6 +35,14 @@ enum DatabaseVendor {
                 throw new MigrationException(e);
             }
             return H2;
+        } else if (driverClassName.equals("oracle.jdbc.driver.OracleDriver")) {
+        	try {
+                DriverManager.registerDriver((Driver) Class.forName(
+                        "oracle.jdbc.driver.OracleDriver").newInstance());
+            } catch (Throwable e) {
+                throw new MigrationException(e);
+            }
+            return ORACLE;
         }
         throw new IllegalArgumentException("Must pass a non-null JDBC "
                 + "driver class name to this " + "function.");
