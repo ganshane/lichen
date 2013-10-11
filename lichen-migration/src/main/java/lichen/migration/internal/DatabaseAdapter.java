@@ -27,7 +27,7 @@ import lichen.migration.model.Unique;
  *
  * @author jcai
  */
-abstract class DatabaseAdapter {
+public abstract class DatabaseAdapter {
     /**
      * Return the appropriate database adapter for the given database
      * vendor.
