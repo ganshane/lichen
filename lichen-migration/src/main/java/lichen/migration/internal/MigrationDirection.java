@@ -26,29 +26,6 @@ enum MigrationDirection {
     Up, Down
 }
 
-enum MigratorOperation {
-    InstallAllMigrations,
-    RemoveAllMigrations,
-    MigrateToVersion,
-    RollbackMigration;
-    private int _version;
-    private int _count;
-
-    protected int getVersion() {
-        return _version;
-    }
-    protected void setVersion(int version) {
-        this._version = version;
-    }
-    protected int getCount() {
-        return _count;
-    }
-    protected void setCount(int count) {
-        this._count = count;
-    }
-
-}
-
 class MigrationStatuses {
     private final SortedMap<Long, Class<? extends Migration>> _notInstalled;
     private final SortedMap<Long, Class<? extends Migration>> _installedWithAvailableImplementation;
