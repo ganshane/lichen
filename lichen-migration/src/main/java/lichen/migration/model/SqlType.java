@@ -20,6 +20,7 @@ package lichen.migration.model;
 public enum SqlType {
     BigintType,
     BlobType,
+    ClobType,
     BooleanType,
     CharType,
     DecimalType,
