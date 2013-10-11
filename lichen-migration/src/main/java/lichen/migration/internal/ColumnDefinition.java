@@ -374,25 +374,18 @@ public abstract class ColumnDefinition {
         return _options;
     }
 
-    protected void setOptions(List<ColumnOption> options) {
-        this._options = options;
-    }
-
+    
     protected boolean isAutoIncrement() {
         return _isAutoIncrement;
     }
 
-    protected void setAutoIncrement(boolean isAutoIncrement) {
-        this._isAutoIncrement = isAutoIncrement;
-    }
+    
 
     protected String getDefaultValue() {
         return _defaultValue;
     }
 
-    protected void setDefaultValue(String defaultValue) {
-        this._defaultValue = defaultValue;
-    }
+    
 
     protected Option<DatabaseAdapter> getAdapterOpt() {
         return _adapterOpt;
