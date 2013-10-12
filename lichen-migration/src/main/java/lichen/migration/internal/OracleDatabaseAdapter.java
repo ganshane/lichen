@@ -84,7 +84,7 @@ class OracleDatabaseAdapter extends DatabaseAdapter {
 class OracleVarcharColumnDefinition extends ColumnDefinition {
     @Override
     protected String sql() {
-    	return optionallyAddLimitToDataType("VARCHAR");
+    	return optionallyAddLimitToDataType("VARCHAR2");
     }
 }
 
