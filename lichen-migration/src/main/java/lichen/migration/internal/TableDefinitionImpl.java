@@ -74,7 +74,11 @@ class TableDefinitionImpl implements TableDefinition {
     public final TableDefinition blob(String name, ColumnOption... options) {
         return column(name, SqlType.BlobType, options);
     }
-
+    
+	public TableDefinition clob(String name, ColumnOption... options) {
+		return column(name, SqlType.ClobType, options);
+	}
+    
     public final TableDefinition bool(String name, ColumnOption... options) {
         return column(name, SqlType.BooleanType, options);
     }
