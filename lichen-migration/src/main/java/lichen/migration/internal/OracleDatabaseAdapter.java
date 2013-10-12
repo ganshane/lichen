@@ -103,6 +103,11 @@ class OracleClobColumnDefinition extends ColumnDefinition {
 class OracleIntegerColumnDefinition extends ColumnDefinition {
 	@Override
 	protected String sql() {
-		return optionallyAddLimitToDataType("NUMBER",getPrecision().get()+","+getScale().get());
+		if(getPrecision().isDefined() && getScale().isDefined()){
+			return optionallyAddLimitToDataType("NUMBER",getPrecision().get()+","+getScale().get());
+		}else{
+			return optionallyAddLimitToDataType("NUMBER");
+		}
+		
 	}
 }
