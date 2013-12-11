@@ -16,7 +16,7 @@ package lichen.migration.internal;
 import lichen.migration.model.SqlType;
 
 /**
- * 
+ *
  * @author shen
  *
  */
@@ -106,7 +106,7 @@ class OracleVarcharColumnDefinition extends ColumnDefinition {
         if (getLimitValue() == null) {
             setLimitValue("50");
         }
-    	return optionallyAddLimitToDataType("VARCHAR2");
+        return optionallyAddLimitToDataType("VARCHAR2");
     }
 }
 
@@ -115,7 +115,7 @@ class OracleVarcharColumnDefinition extends ColumnDefinition {
 class OracleClobColumnDefinition extends ColumnDefinition {
     @Override
     protected String sql() {
-    	return optionallyAddLimitToDataType("CLOB");
+        return optionallyAddLimitToDataType("CLOB");
     }
 }
 
@@ -123,13 +123,14 @@ class OracleClobColumnDefinition extends ColumnDefinition {
 @ColumnSupportsPrecision
 @ColumnSupportsDefault
 class OracleIntegerColumnDefinition extends ColumnDefinition {
-	@Override
-	protected String sql() {
-		if(getPrecision().isDefined() && getScale().isDefined()){
-			return optionallyAddLimitToDataType("NUMBER",getPrecision().get()+","+getScale().get());
-		}else{
-			return optionallyAddLimitToDataType("NUMBER");
-		}
-		
-	}
+    @Override
+    protected String sql() {
+        if (getPrecision().isDefined() && getScale().isDefined()) { //定义了数字类型的精度和刻度
+            return optionallyAddLimitToDataType("NUMBER", getPrecision().get() + "," + getScale().get());
+        } else if (getPrecision().isDefined()) { //只定义了数字类型的精度和刻度
+            return optionallyAddLimitToDataType("NUMBER", getPrecision().get() + "");
+        } else {
+            return optionallyAddLimitToDataType("NUMBER");
+        }
+    }
 }
