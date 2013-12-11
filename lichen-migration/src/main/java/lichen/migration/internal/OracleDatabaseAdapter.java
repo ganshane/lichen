@@ -42,7 +42,7 @@ class OracleDatabaseAdapter extends DatabaseAdapter {
             SqlType columnType) {
         switch (columnType) {
             case BigintType:
-                return new DefaultBigintColumnDefinition();
+                return new OracleLongColumnDefinition();
             case BlobType:
                 return new DefaultBlobColumnDefinition();
             case ClobType:
@@ -59,6 +59,8 @@ class OracleDatabaseAdapter extends DatabaseAdapter {
                 return new DefaultSmallintColumnDefinition();
             case VarcharType:
                 return new OracleVarcharColumnDefinition();
+            case TimestampType:
+                return new OracleDateColumnDefinition();
             default:
                 break;
         }
@@ -79,11 +81,31 @@ class OracleDatabaseAdapter extends DatabaseAdapter {
     }
 }
 
+@ColumnSupportsDefault
+class OracleDateColumnDefinition
+        extends ColumnDefinition {
+    protected String sql() {
+        return "DATE";
+    }
+}
+
+@ColumnSupportsDefault
+class OracleLongColumnDefinition
+        extends ColumnDefinition {
+    protected String sql() {
+        return "LONG";
+    }
+}
+
 @ColumnSupportsLimit
 @ColumnSupportsDefault
 class OracleVarcharColumnDefinition extends ColumnDefinition {
     @Override
     protected String sql() {
+        //由于oracle中varchar类型必须指定长度，因此在limit为空时默认指定长度50
+        if (getLimitValue() == null) {
+            setLimitValue("50");
+        }
     	return optionallyAddLimitToDataType("VARCHAR2");
     }
 }
