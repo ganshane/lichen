@@ -13,11 +13,7 @@
 // limitations under the License.
 package lichen.migration.services;
 
-import lichen.migration.model.ColumnOption;
-import lichen.migration.model.IndexOption;
-import lichen.migration.model.Name;
-import lichen.migration.model.SqlType;
-import lichen.migration.model.TableOption;
+import lichen.migration.model.*;
 
 
 /**
@@ -80,6 +76,16 @@ public interface MigrationHelper {
                      String columnName,
                      SqlType columnType,
                      ColumnOption... options) throws Throwable;
+
+    /**
+     * 增加列注释
+     * @param tableName 表名
+     * @param columnName 列名
+     * @param comment 注释名称
+     * @throws Throwable
+     */
+    void commentColumn(String tableName,String columnName,Comment comment) throws Throwable;
+    void commentTable(String tableName,Comment comment) throws Throwable;
 
     /**
      * 针对某一列，创建数据库索引.
