@@ -17,6 +17,7 @@ import java.util.Arrays;
 
 import lichen.migration.internal.util.StringUtils;
 import lichen.migration.model.ColumnOption;
+import lichen.migration.model.Comment;
 import lichen.migration.model.IndexOption;
 import lichen.migration.model.Name;
 import lichen.migration.model.SqlType;
@@ -212,6 +213,47 @@ public abstract class DatabaseAdapter {
     }
 
     protected abstract String alterColumnSql(Option<String> newSchemaNameOpt, ColumnDefinition newColumnDefinition);
+    
+    /**
+     * Different databases require different SQL to comment a table
+     * @param tableName
+     * @param comment
+     * @return
+     */
+    public String commentTableSql(String tableName, Comment comment) {
+		return commentTableSql(_schemaNameOpt,tableName, comment);
+	}
+    
+    /**
+     * for subclass implement 
+     * @param newSchemaNameOpt
+     * @param tableName 
+     * @param comment
+     * @return
+     */
+    public abstract String commentTableSql(Option<String> newSchemaNameOpt, String tableName, Comment comment);
+    
+    /**
+     * Different databases require different SQL to comment a column
+     * @param tableName
+     * @param columnName
+     * @param comment
+     * @return
+     */
+    public String commentColumnSql(String tableName, String columnName,Comment comment) {
+		return commentColumnSql(_schemaNameOpt,tableName, columnName, comment);
+	}
+    
+    /**
+     * for subclass implement 
+     * @param newSchemaNameOpt
+     * @param tableName
+     * @param columnName
+     * @param comment
+     * @return
+     */
+    public abstract String commentColumnSql(Option<String> newSchemaNameOpt, String tableName, String columnName,Comment comment);
+    
 
     /**
      * Different databases require different SQL to alter a column's

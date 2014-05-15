@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 import lichen.migration.model.ColumnOption;
+import lichen.migration.model.Comment;
 import lichen.migration.model.IndexOption;
 import lichen.migration.model.Name;
 import lichen.migration.model.SqlType;
@@ -136,6 +137,7 @@ class MigrationHelperImpl implements MigrationHelper {
     public final void execute(final String sql) throws Throwable {
         ResourceUtils.autoClosingStatement(connection().createStatement(), new Function1<Statement, Void>() {
             public Void apply(Statement parameter) throws Throwable {
+            	System.out.println("sql = "+sql);
                 LOGGER.debug("execute sql:{}", sql);
                 parameter.execute(sql);
                 return null;
@@ -203,6 +205,18 @@ class MigrationHelperImpl implements MigrationHelper {
         String sql = "ALTER TABLE " + adapter().quoteTableName(tableName) + " ADD " + tableDefinition.toSql();
         execute(sql);
     }
+    
+    @Override
+	public void commentTable(String tableName, Comment comment)
+			throws Throwable {
+    	execute(adapter().commentTableSql(tableName, comment));
+	}
+    
+	@Override
+	public void commentColumn(String tableName, String columnName,
+			Comment comment) throws Throwable {
+		execute(adapter().commentColumnSql(tableName, columnName, comment));
+	}
 
     public final void alterColumn(String tableName,
                                   String columnName,

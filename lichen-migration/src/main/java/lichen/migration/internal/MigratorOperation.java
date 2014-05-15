@@ -1,7 +1,7 @@
 package lichen.migration.internal;
 
 /**
- * 
+ * 数据库操作类型的枚举
  * @author shen
  *
  */

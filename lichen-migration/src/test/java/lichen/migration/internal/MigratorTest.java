@@ -48,6 +48,7 @@ public class MigratorTest {
     @BeforeClass
     public static void setup() throws ProxoolException {
         String driverClassName = "org.h2.Driver";
+//      String driverClassName = "oracle.jdbc.driver.OracleDriver";
         DatabaseVendor vendor = DatabaseVendor.forDriver(driverClassName);
         DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(vendor, Option.<String>none());
         Properties info = new Properties();
@@ -56,6 +57,11 @@ public class MigratorTest {
         info.setProperty("jdbc-x.user", "sa");
         info.setProperty("jdbc-x.proxool.driver-class", "org.h2.Driver");
         info.setProperty("jdbc-x.proxool.driver-url", "jdbc:h2:mem:testdb");
+        
+//      info.setProperty("jdbc-x.user", "monad");
+//      info.setProperty("jdbc-x.password", "monad");
+//      info.setProperty("jdbc-x.proxool.driver-class", "oracle.jdbc.driver.OracleDriver");
+//      info.setProperty("jdbc-x.proxool.driver-url", "jdbc:oracle:thin:@10.1.7.79:1521:tjkf");
 
         info.setProperty("jdbc-x.proxool.maximum-connection-lifetime", "18000000000");
         info.setProperty("jdbc-x.proxool.maximum-active-time", "60000000000");

@@ -14,6 +14,7 @@
 package lichen.migration.internal;
 
 import lichen.migration.model.AutoIncrement;
+import lichen.migration.model.Comment;
 import lichen.migration.model.Default;
 import lichen.migration.model.Limit;
 import lichen.migration.model.Name;
@@ -113,6 +114,16 @@ public class OptionsImpl implements Options {
             }
         };
     }
+    
+	@Override
+	public Comment Comment(final String comment) {
+		return new Comment(){
+			@Override
+            public String getValue() {
+                return comment;
+            }
+		};
+	}
 
     /**
      * 定义主键列.

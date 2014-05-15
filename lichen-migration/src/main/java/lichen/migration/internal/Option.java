@@ -29,12 +29,15 @@ public abstract class Option<T> {
         }
     };
 
-    public static <T extends Object> Option<T> none() {
-        return (Option<T>) NONE;
+    public static <E> Option<E> none(Class<E> clazz) {
+        return (Option<E>) NONE;
+    }
+    public static <F extends Object> Option<F> none() {
+        return (Option<F>) NONE;
     }
 
-    public static <T> Option<T> some(T value) {
-        return new Some(value);
+    public static <G> Option<G> some(G value) {
+        return new Some<G>(value);
     }
 
     public abstract boolean isDefined();

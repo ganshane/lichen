@@ -456,7 +456,7 @@ public class Migrator {
 
         Migration migration = classInstantiator.with(Options.class,
                 OPTIONS).with(MigrationHelper.class, helper).newInstance();
-
+        //根据操作类型，执行对应脚本类文件里的相应操作。
         switch (direction) {
             case Up:
                 migration.up();
@@ -467,7 +467,7 @@ public class Migrator {
             default:
                 break;
         }
-
+        //更新schema_migrations表里的脚本版本号
         if (versionUpdateOpt.isDefined()) {
             final Long version = versionUpdateOpt.get();
             String tableName = _adapter.quoteTableName(SCHEMA_MIGRATIONS_TABLENAME);

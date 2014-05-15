@@ -52,6 +52,10 @@ public class Migrate_20130722093444_CreateTable implements Migration {
         });
 
         _helper.addColumn("test_table", "test_col", SqlType.VarcharType, _options.NotNull());
+        
+        _helper.commentTable("test_table", _options.Comment("AAAa啊啊"));
+        _helper.commentColumn("test_table", "test_col", _options.Comment("列1"));
+        _helper.commentColumn("test_table", "blob", _options.Comment("照片"));
 
     }
 

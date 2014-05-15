@@ -85,6 +85,13 @@ public interface MigrationHelper {
      * @throws Throwable
      */
     void commentColumn(String tableName,String columnName,Comment comment) throws Throwable;
+    
+    /**
+     * 增加表注释
+     * @param tableName 表名
+     * @param comment 注释
+     * @throws Throwable
+     */
     void commentTable(String tableName,Comment comment) throws Throwable;
 
     /**

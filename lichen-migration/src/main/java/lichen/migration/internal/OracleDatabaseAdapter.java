@@ -13,6 +13,7 @@
 // limitations under the License.
 package lichen.migration.internal;
 
+import lichen.migration.model.Comment;
 import lichen.migration.model.SqlType;
 
 /**
@@ -79,6 +80,22 @@ class OracleDatabaseAdapter extends DatabaseAdapter {
         return "SELECT * FROM " + quoteTableName(schemaNameOpt, tableName)
                 + " FOR UPDATE";
     }
+
+	@Override
+	public String commentColumnSql(Option<String> schemaNameOpt,String tableName,
+			String columnName, Comment comment) {
+		return new java.lang.StringBuffer().append("COMMENT ON COLUMN ").append(
+				quoteTableName(schemaNameOpt, tableName)).append(".").append(columnName.toUpperCase())
+                .append(" IS '").append(comment.getValue()).append("'").toString();
+	}
+
+	@Override
+	public String commentTableSql(Option<String> schemaNameOpt,String tableName,
+			Comment comment) {
+		return new java.lang.StringBuffer().append("COMMENT ON TABLE ").append(
+                quoteTableName(schemaNameOpt, tableName))
+                .append(" IS '").append(comment.getValue()).append("'").toString();
+	}
 }
 
 @ColumnSupportsDefault
