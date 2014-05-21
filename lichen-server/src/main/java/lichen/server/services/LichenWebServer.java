@@ -1,7 +1,10 @@
 package lichen.server.services;
 
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.*;
 import org.eclipse.jetty.webapp.WebAppContext;
+
+import javax.servlet.Filter;
 
 /**
  * lichen web container server.
@@ -25,7 +28,7 @@ public class LichenWebServer {
      * @param contextPath 监听的servelt的context path
      * @return jetty服务器实例
      */
-    public Server createServer(String webappPath,
+    public static Server createServer(String webappPath,
                                int port,
                                String contextPath) {
         Server server = new Server(port);
@@ -34,6 +37,36 @@ public class LichenWebServer {
         context.setWar(webappPath);
         context.setContextPath(contextPath);
         context.setParentLoaderPriority(true);
+        server.setHandler(context);
+        return server;
+    }
+
+    /**
+     * 创建tapestry的webapp程序
+     * @param port 端口
+     * @param pkg tapestry package
+     * @return 服务器实例
+     */
+    public static Server createTapestryWebapp(int port,String pkg){
+        Server server = new Server(8080);
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
+        context.setDisplayName("tapestry");
+        context.setInitParameter("tapestry.app-package",pkg);
+        //default servlet holder
+        ServletHolder servletHolder = new ServletHolder(DefaultServlet.class);
+        servletHolder.setName("default");
+        context.addServlet(servletHolder, "/");
+
+        //tapestry filter
+        FilterHolder filterHolder = null;
+        try {
+            filterHolder = new FilterHolder((Class<? extends Filter>) Thread.currentThread().getContextClassLoader().loadClass("org.apache.tapestry5.TapestryFilter"));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        filterHolder.setName("tapestry");
+        context.addFilter(filterHolder, "/*", FilterMapping.ALL);
         server.setHandler(context);
         return server;
     }
@@ -55,7 +88,7 @@ public class LichenWebServer {
      * @param contextPath 监听的servelt的context path
      * @return jetty服务器实例
      */
-    public Server createServer(String webXmlPath,
+    public static Server createServer(String webXmlPath,
                                String webappPath,
                                int port,
                                String contextPath) {
