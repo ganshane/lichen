@@ -47,11 +47,11 @@ public class LichenWebServer {
      * @param pkg tapestry package
      * @return 服务器实例
      */
-    public static Server createTapestryWebapp(int port,String pkg){
+    public static Server createTapestryWebapp(int port,String pkg,String appName){
         Server server = new Server(8080);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
-        context.setDisplayName("tapestry");
+        context.setDisplayName(appName);
         context.setInitParameter("tapestry.app-package",pkg);
         //default servlet holder
         ServletHolder servletHolder = new ServletHolder(DefaultServlet.class);
@@ -65,7 +65,7 @@ public class LichenWebServer {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
-        filterHolder.setName("tapestry");
+        filterHolder.setName(appName);
         context.addFilter(filterHolder, "/*", FilterMapping.ALL);
         server.setHandler(context);
         return server;

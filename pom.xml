@@ -24,7 +24,7 @@
     <description>Lichen是一个基于Java技术的应用框架,非技术框架，提高生产力为第一目标.</description>
     <modules>
         <module>lichen-migration</module>
-        <module>lichen-activerecord</module>
+        <!-- <module>lichen-activerecord</module> -->
         <module>lichen-core</module>
         <module>lichen-server</module>
         <module>creeper</module>
