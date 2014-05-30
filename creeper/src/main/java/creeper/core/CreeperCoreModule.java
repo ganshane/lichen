@@ -2,6 +2,8 @@ package creeper.core;
 
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.MenuSourceImpl;
+import creeper.core.services.CreeperCoreExceptionCode;
+import creeper.core.services.CreeperException;
 import creeper.core.services.MenuSource;
 import creeper.core.services.XmlLoader;
 import lichen.migration.internal.Option;
@@ -36,7 +38,7 @@ public class CreeperCoreModule {
             FileInputStream content = FileUtils.openInputStream(new File(filePath));
             return XmlLoader.parseXML(CreeperCoreConfig.class,content, Option.some(CreeperCoreModule.class.getResourceAsStream("/creeper/core/config/CreeperCoreConfig.xsd")));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_READ_CONFIG_FILE);
         }
     }
 }
