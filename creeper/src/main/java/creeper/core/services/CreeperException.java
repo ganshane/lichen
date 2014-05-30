@@ -102,5 +102,20 @@ public class CreeperException extends RuntimeException {
         }
     }
 
+    @Override
+   public String toString(){
+        StringBuilder sb  = new StringBuilder();
+        if(exceptionCode != null){
+            sb.append("CREEPER-").append(exceptionCode.getNumber()).append(":");
+            sb.append(exceptionCode).append(" ");
+        }else{
+            sb.append("CREEPER-0000 UNKNOWN ");
+        }
+        if(super.getMessage() != null){sb.append(super.getMessage());}
+        if(super.getCause() !=null){sb.append(" -> ").append(super.getCause());}
+
+        return sb.toString();
+    }
+
 }
 
