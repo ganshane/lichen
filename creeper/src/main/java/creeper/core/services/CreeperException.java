@@ -84,7 +84,7 @@ public class CreeperException extends RuntimeException {
             s.println(this);
             s.println("\t-------------------------------");
             if (exceptionCode != null) {
-                s.println("\t" + exceptionCode + ":" + exceptionCode.getClass().getName());
+                s.println("\tCREEPER-"+exceptionCode.getNumber() +":"+ exceptionCode + "@" + exceptionCode.getClass().getName());
             }
             for (String key : properties.keySet()) {
                 s.println("\t" + key + "=[" + properties.get(key) + "]");
