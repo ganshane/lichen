@@ -38,7 +38,9 @@ public class CreeperCoreModule {
             FileInputStream content = FileUtils.openInputStream(new File(filePath));
             return XmlLoader.parseXML(CreeperCoreConfig.class,content, Option.some(CreeperCoreModule.class.getResourceAsStream("/creeper/core/config/CreeperCoreConfig.xsd")));
         } catch (IOException e) {
-            throw CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_READ_CONFIG_FILE);
+            CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_READ_CONFIG_FILE);
+            ce.set("file",filePath);
+            throw ce;
         }
     }
 }
