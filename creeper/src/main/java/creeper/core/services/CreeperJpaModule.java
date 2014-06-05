@@ -38,7 +38,6 @@ import java.util.Properties;
 public class CreeperJpaModule {
     public static void bind(ServiceBinder binder){
         binder.bind(JpaVendorAdapter.class, HibernateJpaVendorAdapter.class);
-        binder.bind(TransactionAdvice.class);
     }
     //创建基于Hibernate的JPA实现
     public static EntityManagerFactory buildEntityManagerFactory(CreeperCoreConfig config,
@@ -75,7 +74,7 @@ public class CreeperJpaModule {
         return new DaoPackageManager() {
             @Override
             public boolean contains(Class<?> daoType) {
-                return packages.contains(daoType.getPackage().getName());
+                return packages!= null && daoType.getPackage()!=null && packages.contains(daoType.getPackage().getName());
             }
         };
     }
@@ -127,13 +126,13 @@ public class CreeperJpaModule {
         return transactionInterceptor;
     }
     @Match("*")
-    public static void adviseTransactional(MethodAdviceReceiver receiver,@Local TransactionAdvice transactionAdvice)
+    public static void adviseTransactional(MethodAdviceReceiver receiver,@Local TransactionInterceptor transactionInterceptor)
     {
         for (Method m : receiver.getInterface().getMethods())
         {
             //仅仅对含有Transactional注解的方法进行AOP
             if (receiver.getMethodAnnotation(m, Transactional.class) != null)
-                receiver.adviseMethod(m, transactionAdvice);
+                receiver.adviseMethod(m, new TransactionAdvice(transactionInterceptor,m));
         }
     };
 }

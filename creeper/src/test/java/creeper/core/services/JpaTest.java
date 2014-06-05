@@ -6,6 +6,7 @@ import creeper.test.entities.EntityA;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.Registry;
 import org.apache.tapestry5.ioc.RegistryBuilder;
+import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.hibernate.cfg.Environment;
 import org.hibernate.dialect.H2Dialect;
@@ -24,6 +25,7 @@ import org.springframework.orm.jpa.SharedEntityManagerCreator;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
@@ -40,6 +42,7 @@ public class JpaTest {
     @Test
     public void test_jpa(){
 
+        /*
         EntityTestDao dao = registry.getObject(EntityTestDao.class, null);
         EntityA entityA = new EntityA();
         //entityA.setAccountId(123L);
@@ -48,6 +51,11 @@ public class JpaTest {
         Assert.assertNotNull(entityA);
         List<EntityA> list = dao.findByCustomQuery(entityA.getAccountId());
         Assert.assertEquals(list.size(),1);
+        */
+
+        TestService testService = registry.getObject(TestService.class,null);
+        testService.testNoTransaction();
+        testService.testNeedTransaction();
 
         /*
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
@@ -73,6 +81,9 @@ public class JpaTest {
         registry.shutdown();
     }
     public static class TestModule{
+        public static void bind(ServiceBinder binder){
+            binder.bind(TestService.class,TestServiceImpl.class);
+        }
         @Contribute(EntityManagerFactory.class)
         public static void provideEntityPackage(Configuration<String> entityPackages){
             entityPackages.add("creeper.test.entities");
@@ -97,6 +108,21 @@ public class JpaTest {
             config.jpaProperties.add(property);
 
             return config;
+        }
+    }
+    public static interface TestService{
+        @Transactional(propagation= Propagation.NEVER)
+        public void testNoTransaction();
+        @Transactional(propagation= Propagation.REQUIRED)
+        public void testNeedTransaction();
+    }
+    public static class TestServiceImpl implements TestService{
+        public void testNoTransaction(){
+            System.out.println("no transaction...");
+            testNeedTransaction();
+        }
+        public void testNeedTransaction(){
+            System.out.println("need transaction...");
         }
     }
 }
