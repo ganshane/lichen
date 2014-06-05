@@ -1,7 +1,7 @@
 package creeper.core;
 
 import creeper.core.config.CreeperCoreConfig;
-import creeper.core.internal.DataBaseMigrationImpl;
+import creeper.core.internal.DatabaseMigrationImpl;
 import creeper.core.internal.MenuSourceImpl;
 import creeper.core.services.*;
 import lichen.migration.internal.Option;
@@ -22,7 +22,7 @@ import java.io.IOException;
 public class CreeperCoreModule {
     public static void bind(ServiceBinder binder){
         binder.bind(MenuSource.class,MenuSourceImpl.class);
-        binder.bind(DataBaseMigrationService.class, DataBaseMigrationImpl.class);
+        binder.bind(DatabaseMigration.class,DatabaseMigrationImpl.class); 
     }
     /**
      * Contribution to the
@@ -44,8 +44,9 @@ public class CreeperCoreModule {
             throw ce;
         }
     }
+    
     @Startup
-    public static void initMyApplication(Logger logger, DataBaseMigrationService service){
+    public static void initCreeperDatabase(Logger logger, DatabaseMigration service){
         logger.info("Starting up...");
         service.dbSetup();
     }

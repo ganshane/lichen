@@ -18,21 +18,21 @@ import org.logicalcobwebs.proxool.ProxoolException;
 import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
 
 import creeper.core.config.CreeperCoreConfig;
-import creeper.core.models.CreeperDataBaseMigrationScript;
+import creeper.core.models.CreeperDatabaseMigrationScript;
 import creeper.core.services.CreeperCoreExceptionCode;
 import creeper.core.services.CreeperException;
-import creeper.core.services.DataBaseMigrationService;
+import creeper.core.services.DatabaseMigration;
 
-public class DataBaseMigrationImpl implements DataBaseMigrationService {
+public class DatabaseMigrationImpl implements DatabaseMigration {
 	
-	private Collection<CreeperDataBaseMigrationScript> _coll;
+	private Collection<CreeperDatabaseMigrationScript> _coll;
 	
 	private static Migrator migrator;
 	
 	@Inject
 	private CreeperCoreConfig creeperCoreConfig;
 	
-	public DataBaseMigrationImpl(Collection<CreeperDataBaseMigrationScript> coll,CreeperCoreConfig creeperCoreConfig){
+	public DatabaseMigrationImpl(Collection<CreeperDatabaseMigrationScript> coll,CreeperCoreConfig creeperCoreConfig){
 		_coll = coll;
 		this.creeperCoreConfig = creeperCoreConfig;
 		DatabaseVendor vendor = DatabaseVendor.forDriver(this.creeperCoreConfig.db._driverClassName);
@@ -63,9 +63,9 @@ public class DataBaseMigrationImpl implements DataBaseMigrationService {
 
 	@Override
 	public void dbSetup() {
-		Iterator<CreeperDataBaseMigrationScript> itor = _coll.iterator();
+		Iterator<CreeperDatabaseMigrationScript> itor = _coll.iterator();
 		while(itor.hasNext()){
-			CreeperDataBaseMigrationScript script = itor.next();
+			CreeperDatabaseMigrationScript script = itor.next();
 			try {
 				migrator.migrate(MigratorOperation.InstallAllMigrations, script.getPackageName(), script.isSearchSubPackages());
 			} catch (Throwable e) {
