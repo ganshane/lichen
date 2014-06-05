@@ -5,4 +5,8 @@
     <password>pass</password>
     <url>jdbc:h2:mem:testdb</url>
   </db>
+  <jpa>
+    <property name="hibernate.hbm2ddl.auto" value="create"/>
+    <property name="hibernate.show_sql" value="true"/>
+  </jpa>
 </creeper_core>

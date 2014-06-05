@@ -25,6 +25,15 @@ import org.junit.Test;
  */
 public class XmlLoaderTest {
     @Test
+    public void testOutput() throws Throwable {
+        CreeperCoreConfig config = new CreeperCoreConfig();
+        CreeperCoreConfig.JpaProperty property = new CreeperCoreConfig.JpaProperty();
+        property.name="haha";
+        property.value="haha";
+        config.jpaProperties.add(property);
+        System.out.println(XmlLoader.toXml(config));
+    }
+    @Test
     public void testXml() throws Throwable {
         CreeperCoreConfig config  = XmlLoader.parseXML(CreeperCoreConfig.class,
                 getClass().getResourceAsStream("/test_creeper_core_config.xml"),
