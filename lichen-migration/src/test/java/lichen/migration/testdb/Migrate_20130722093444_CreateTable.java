@@ -39,14 +39,14 @@ public class Migrate_20130722093444_CreateTable implements Migration {
             public void doInTable(TableDefinition t) throws Throwable {
                 t.bigint("bigint");
                 t.blob("blob");
-                t.bool("bool");
-                t.charColumn("charColumn");
-                t.column("column_", SqlType.BigintType);
+//                t.bool("bool");
+//                t.charColumn("charColumn");
+//                t.column("column_", SqlType.BigintType);
                 //t.decimal("decimal_",Op);
                 t.integer("int_", _options.Unique());
-                t.smallint("sint_");
-                t.timestamp("ts");
-                t.varbinary("vb");
+//                t.smallint("sint_");
+//                t.timestamp("ts");
+//                t.varbinary("vb");
                 t.varchar("vc", _options.Limit(size), _options.Default("'asdf'"));
             }
         });
@@ -54,14 +54,14 @@ public class Migrate_20130722093444_CreateTable implements Migration {
         _helper.addColumn("test_table", "test_col", SqlType.VarcharType, _options.NotNull());
         
         _helper.commentTable("test_table", _options.Comment("AAAa啊啊"));
-        _helper.commentColumn("test_table", "test_col", _options.Comment("列1"));
+        _helper.commentColumn("test_table", "vc", _options.Comment("列1"));
         _helper.commentColumn("test_table", "blob", _options.Comment("照片"));
 
     }
 
     @Override
     public void down() throws Throwable {
-        _helper.removeColumn("test_table", "test_col");
+        _helper.removeColumn("test_table", "vc");
         _helper.dropTable("test_table");
     }
 }
