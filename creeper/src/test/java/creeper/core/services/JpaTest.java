@@ -30,6 +30,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -39,12 +40,14 @@ public class JpaTest {
     @Test
     public void test_jpa(){
 
-        EntityTestDao dao = registry.getObject(EntityTestDao.class,null);
+        EntityTestDao dao = registry.getObject(EntityTestDao.class, null);
         EntityA entityA = new EntityA();
         //entityA.setAccountId(123L);
         entityA=dao.save(entityA);
         entityA = dao.findByAccountId(entityA.getAccountId());
         Assert.assertNotNull(entityA);
+        List<EntityA> list = dao.findByCustomQuery(entityA.getAccountId());
+        Assert.assertEquals(list.size(),1);
 
         /*
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
