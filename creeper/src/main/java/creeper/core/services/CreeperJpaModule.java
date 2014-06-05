@@ -1,8 +1,12 @@
 package creeper.core.services;
 
 import creeper.core.config.CreeperCoreConfig;
-import org.apache.tapestry5.ioc.Configuration;
-import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.*;
+import org.apache.tapestry5.ioc.annotations.Contribute;
+import org.apache.tapestry5.ioc.annotations.Local;
+import org.apache.tapestry5.ioc.services.MasterObjectProvider;
+import org.springframework.beans.factory.support.StaticListableBeanFactory;
+import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -47,13 +51,53 @@ public class CreeperJpaModule {
         entityManagerFactoryBean.afterPropertiesSet();
         return entityManagerFactoryBean.getObject();
     }
-    public static EntityManager buildEntityManager(EntityManagerFactory entityManagerFactory){
+    public static EntityManager buildEntityManager(@Local EntityManagerFactory entityManagerFactory){
         return SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
     }
-    public static JpaTransactionManager buildJpaTransactionManager(EntityManagerFactory entityManagerFactory){
+    public static JpaTransactionManager buildJpaTransactionManager(@Local EntityManagerFactory entityManagerFactory){
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         transactionManager.afterPropertiesSet();
         return transactionManager;
+    }
+    public static DaoPackageManager buildDaoPackageManager(final Collection<String> packages){
+        return new DaoPackageManager() {
+            @Override
+            public boolean contains(Class<?> daoType) {
+                return packages.contains(daoType.getPackage().getName());
+            }
+        };
+    }
+    @Contribute(MasterObjectProvider.class)
+    public static void provideEntityDaoObject(OrderedConfiguration<ObjectProvider> configuration,
+                                              @Local
+                                               final DaoPackageManager entityPackageManager,
+                                              @Local
+                                               final JpaTransactionManager transactionManager,
+                                              @Local
+                                               final EntityManagerFactory entityManagerFactory,
+                                              @Local
+                                               final JpaVendorAdapter jpaVendorAdapter)
+    {
+        final StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
+        beanFactory.addBean("transactionManager",transactionManager);
+        beanFactory.addBean("entityManagerFactory",entityManagerFactory);
+        beanFactory.addBean("jpaDialect", jpaVendorAdapter.getJpaDialect());
+        configuration.add("entityDaoProvider", new ObjectProvider() {
+            @Override
+            public <T> T provide(Class<T> objectType, AnnotationProvider annotationProvider, ObjectLocator locator) {
+                if (entityPackageManager.contains(objectType) && objectType.isInterface()) {
+                    JpaRepositoryFactoryBean jpaRepositoryFactoryBean = new JpaRepositoryFactoryBean();
+                    jpaRepositoryFactoryBean.setBeanFactory(beanFactory);
+                    jpaRepositoryFactoryBean.setTransactionManager("transactionManager");
+                    EntityManager entityManager = SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
+                    jpaRepositoryFactoryBean.setEntityManager(entityManager);
+                    jpaRepositoryFactoryBean.setRepositoryInterface(objectType);
+                    jpaRepositoryFactoryBean.afterPropertiesSet();
+                    return (T)jpaRepositoryFactoryBean.getObject();
+                }
+                return null;
+            }
+        });
     }
 }

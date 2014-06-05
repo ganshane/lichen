@@ -2,16 +2,14 @@ package creeper.core;
 
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.MenuSourceImpl;
-import creeper.core.services.CreeperCoreExceptionCode;
-import creeper.core.services.CreeperException;
-import creeper.core.services.MenuSource;
-import creeper.core.services.XmlLoader;
+import creeper.core.services.*;
 import lichen.migration.internal.Option;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.IOCUtilities;
 import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.annotations.SubModule;
 import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.apache.tapestry5.services.LibraryMapping;
 
@@ -19,6 +17,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+@SubModule({CreeperJpaModule.class})
 public class CreeperCoreModule {
     public static void bind(ServiceBinder binder){
         binder.bind(MenuSource.class,MenuSourceImpl.class);

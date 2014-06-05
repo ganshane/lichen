@@ -1,6 +1,7 @@
 package creeper.core.services;
 
 import creeper.core.config.CreeperCoreConfig;
+import creeper.test.dao.EntityTestDao;
 import creeper.test.entities.EntityA;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.Registry;
@@ -38,20 +39,7 @@ public class JpaTest {
     @Test
     public void test_jpa(){
 
-        StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
-        beanFactory.addBean("transactionManager",registry.getService(JpaTransactionManager.class));
-        beanFactory.addBean("entityManagerFactory",registry.getService(EntityManagerFactory.class));
-        beanFactory.addBean("hibernateJpaVendor", registry.getService(JpaVendorAdapter.class).getJpaDialect());
-
-        JpaRepositoryFactoryBean jpaRepositoryFactoryBean = new JpaRepositoryFactoryBean();
-        jpaRepositoryFactoryBean.setBeanFactory(beanFactory);
-        jpaRepositoryFactoryBean.setTransactionManager("transactionManager");
-        EntityManager entityManager = SharedEntityManagerCreator.createSharedEntityManager(registry.getService(EntityManagerFactory.class));
-        jpaRepositoryFactoryBean.setEntityManager(entityManager);
-        jpaRepositoryFactoryBean.setRepositoryInterface(EntityDao.class);
-
-        jpaRepositoryFactoryBean.afterPropertiesSet();
-        EntityDao dao = (EntityDao) jpaRepositoryFactoryBean.getObject();
+        EntityTestDao dao = registry.getObject(EntityTestDao.class,null);
         EntityA entityA = new EntityA();
         //entityA.setAccountId(123L);
         entityA=dao.save(entityA);
@@ -86,6 +74,10 @@ public class JpaTest {
         public static void provideEntityPackage(Configuration<String> entityPackages){
             entityPackages.add("creeper.test.entities");
         }
+        @Contribute(DaoPackageManager.class)
+        public static void provideDaoPackage(Configuration<String> daoPackage){
+            daoPackage.add("creeper.test.dao");
+        }
         public static CreeperCoreConfig buildConfig(){
             CreeperCoreConfig config = new CreeperCoreConfig();
             config.db._driverClassName="org.h2.Driver";
@@ -103,11 +95,5 @@ public class JpaTest {
 
             return config;
         }
-    }
-    @RepositoryDefinition(domainClass = EntityA.class,idClass = Long.class)
-    public static interface EntityDao{
-        public EntityA findByAccountId(Long id);
-        @Transactional
-        public EntityA save(EntityA accountInfo);
     }
 }
