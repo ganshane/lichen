@@ -18,19 +18,21 @@ import org.logicalcobwebs.proxool.ProxoolException;
 import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
 
 import creeper.core.config.CreeperCoreConfig;
-import creeper.core.models.CreeperDbScript;
+import creeper.core.models.CreeperDataBaseMigrationScript;
+import creeper.core.services.CreeperCoreExceptionCode;
+import creeper.core.services.CreeperException;
 import creeper.core.services.DataBaseMigrationService;
 
 public class DataBaseMigrationImpl implements DataBaseMigrationService {
 	
-	private Collection<CreeperDbScript> _coll;
+	private Collection<CreeperDataBaseMigrationScript> _coll;
 	
 	private static Migrator migrator;
 	
 	@Inject
 	private CreeperCoreConfig creeperCoreConfig;
 	
-	public DataBaseMigrationImpl(Collection<CreeperDbScript> coll,CreeperCoreConfig creeperCoreConfig){
+	public DataBaseMigrationImpl(Collection<CreeperDataBaseMigrationScript> coll,CreeperCoreConfig creeperCoreConfig){
 		_coll = coll;
 		this.creeperCoreConfig = creeperCoreConfig;
 		DatabaseVendor vendor = DatabaseVendor.forDriver(this.creeperCoreConfig.db._driverClassName);
@@ -51,7 +53,8 @@ public class DataBaseMigrationImpl implements DataBaseMigrationService {
         try {
 			PropertyConfigurator.configure(info);
 		} catch (ProxoolException e) {
-			e.printStackTrace();
+			CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_CONFIG_PROXOOL);
+            throw ce;
 		}
         //new datasource
         DataSource dataSource = new ProxoolDataSource("monad");
@@ -59,18 +62,18 @@ public class DataBaseMigrationImpl implements DataBaseMigrationService {
 	}
 
 	@Override
-	public boolean dbSetup() {
-		Iterator<CreeperDbScript> itor = _coll.iterator();
+	public void dbSetup() {
+		Iterator<CreeperDataBaseMigrationScript> itor = _coll.iterator();
 		while(itor.hasNext()){
-			CreeperDbScript script = itor.next();
+			CreeperDataBaseMigrationScript script = itor.next();
 			try {
 				migrator.migrate(MigratorOperation.InstallAllMigrations, script.getPackageName(), script.isSearchSubPackages());
 			} catch (Throwable e) {
-				e.printStackTrace();
-				//TODO 包装异常。
+				CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_MIGRAT_SCRIPT);
+	            ce.set("script_package",script.getPackageName());
+	            throw ce;
 			}
 		}
-		return false;
 	}
 
 }
