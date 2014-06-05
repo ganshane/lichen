@@ -7,7 +7,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import creeper.core.services.DataBaseMigrationService;
+import creeper.core.services.DataBaseMigration;
 
 /**
  * 数据库升级监听器
@@ -17,7 +17,7 @@ import creeper.core.services.DataBaseMigrationService;
 public class MigrationListener implements ServletContextListener {
 	
 	@Inject
-    private DataBaseMigrationService dbService;
+    private DataBaseMigration dbService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(MigrationListener.class);
 

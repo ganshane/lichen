@@ -4,7 +4,7 @@ import creeper.core.config.CreeperCoreConfig;
 import creeper.core.models.CreeperDataBaseMigrationScript;
 import creeper.core.models.CreeperMenu;
 import creeper.core.services.DaoPackageManager;
-import creeper.core.services.DataBaseMigrationService;
+import creeper.core.services.DataBaseMigration;
 import creeper.core.services.MenuSource;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.annotations.Contribute;
@@ -27,8 +27,8 @@ public class CreeperTestModule {
         coll.add(new CreeperMenu("test.b2","测试B2","/test2/b2",1));
     }
 
-    @Contribute(value = DataBaseMigrationService.class)
-    public static void provideDb(Configuration<CreeperDataBaseMigrationScript> configuration, final CreeperCoreConfig creeperCoreConfig){
+    @Contribute(value = DataBaseMigration.class)
+    public static void provideDataBase(Configuration<CreeperDataBaseMigrationScript> configuration, final CreeperCoreConfig creeperCoreConfig){
     	configuration.add(new CreeperDataBaseMigrationScript("creeper.test.db",false));
     	configuration.add(new CreeperDataBaseMigrationScript("creeper.test2.db",false));
     }

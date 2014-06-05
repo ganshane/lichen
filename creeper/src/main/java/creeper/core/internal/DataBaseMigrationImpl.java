@@ -21,9 +21,9 @@ import creeper.core.config.CreeperCoreConfig;
 import creeper.core.models.CreeperDataBaseMigrationScript;
 import creeper.core.services.CreeperCoreExceptionCode;
 import creeper.core.services.CreeperException;
-import creeper.core.services.DataBaseMigrationService;
+import creeper.core.services.DataBaseMigration;
 
-public class DataBaseMigrationImpl implements DataBaseMigrationService {
+public class DataBaseMigrationImpl implements DataBaseMigration {
 	
 	private Collection<CreeperDataBaseMigrationScript> _coll;
 	
