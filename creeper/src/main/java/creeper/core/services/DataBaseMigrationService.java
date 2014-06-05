@@ -11,6 +11,6 @@ public interface DataBaseMigrationService {
 	 * 执行安装脚本
 	 * @return
 	 */
-	public boolean dbSetup();
+	public void dbSetup();
 	
 }
