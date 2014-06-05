@@ -5,7 +5,7 @@ package creeper.core.services;
  * @author shen
  *
  */
-public interface DataBaseMigration {
+public interface DatabaseMigration {
 	
 	/**
 	 * 执行安装脚本

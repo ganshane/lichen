@@ -1,13 +1,13 @@
 package creeper.core.models;
 
-public class CreeperDataBaseMigrationScript {
+public class CreeperDatabaseMigrationScript {
 	
 	private String packageName;
 	
 	private boolean searchSubPackages;
 	
-	public CreeperDataBaseMigrationScript(){};
-	public CreeperDataBaseMigrationScript(String packageName,boolean searchSubPackages){
+	public CreeperDatabaseMigrationScript(){};
+	public CreeperDatabaseMigrationScript(String packageName,boolean searchSubPackages){
 		this.packageName = packageName;
 		this.searchSubPackages = searchSubPackages;
 	}

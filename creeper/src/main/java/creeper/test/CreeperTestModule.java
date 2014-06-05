@@ -1,10 +1,10 @@
 package creeper.test;
 
 import creeper.core.config.CreeperCoreConfig;
-import creeper.core.models.CreeperDataBaseMigrationScript;
+import creeper.core.models.CreeperDatabaseMigrationScript;
 import creeper.core.models.CreeperMenu;
 import creeper.core.services.DaoPackageManager;
-import creeper.core.services.DataBaseMigration;
+import creeper.core.services.DatabaseMigration;
 import creeper.core.services.MenuSource;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.annotations.Contribute;
@@ -27,10 +27,10 @@ public class CreeperTestModule {
         coll.add(new CreeperMenu("test.b2","测试B2","/test2/b2",1));
     }
 
-    @Contribute(value = DataBaseMigration.class)
-    public static void provideDataBase(Configuration<CreeperDataBaseMigrationScript> configuration, final CreeperCoreConfig creeperCoreConfig){
-    	configuration.add(new CreeperDataBaseMigrationScript("creeper.test.db",false));
-    	configuration.add(new CreeperDataBaseMigrationScript("creeper.test2.db",false));
+    @Contribute(value = DatabaseMigration.class)
+    public static void provideDataBase(Configuration<CreeperDatabaseMigrationScript> configuration, final CreeperCoreConfig creeperCoreConfig){
+    	configuration.add(new CreeperDatabaseMigrationScript("creeper.test.db",false));
+    	configuration.add(new CreeperDatabaseMigrationScript("creeper.test2.db",false));
     }
     @Contribute(EntityManagerFactory.class)
     public static void provideEntityPackage(Configuration<String> entityPackages){

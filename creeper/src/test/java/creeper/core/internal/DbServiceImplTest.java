@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import creeper.core.config.CreeperCoreConfig;
-import creeper.core.models.CreeperDataBaseMigrationScript;
+import creeper.core.models.CreeperDatabaseMigrationScript;
 
 /**
  * 
@@ -20,8 +20,8 @@ public class DbServiceImplTest {
     
     @Test
     public void testDbSetup(){
-        List<CreeperDataBaseMigrationScript> coll= new ArrayList<CreeperDataBaseMigrationScript>();
-        coll.add(new CreeperDataBaseMigrationScript("creeper.core.testdb",false));
+        List<CreeperDatabaseMigrationScript> coll= new ArrayList<CreeperDatabaseMigrationScript>();
+        coll.add(new CreeperDatabaseMigrationScript("creeper.core.testdb",false));
 
         CreeperCoreConfig conf = new CreeperCoreConfig();
         conf.db._driverClassName = "org.h2.Driver";
@@ -29,7 +29,7 @@ public class DbServiceImplTest {
         conf.db._username = "sa";
         conf.db._password = "";
         
-        DataBaseMigrationImpl dbservice = new DataBaseMigrationImpl(coll, conf);
+        DatabaseMigrationImpl dbservice = new DatabaseMigrationImpl(coll, conf);
         dbservice.dbSetup();
     }
 }
