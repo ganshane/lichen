@@ -135,5 +135,12 @@ public interface MigrationHelper {
     void removeIndex(String tableName,
                      String[] columnNames,
                      Name... name) throws Throwable;
+    
+    /**
+     * 执行sql语句
+     * @param sql
+     * @throws Throwable
+     */
+    void executeSQL(String ... sql) throws Throwable;
 
 }

@@ -35,22 +35,23 @@ public class MigratorTest {
     @Test
     public void testMigrate() throws Throwable {
         migrator.migrate(MigratorOperation.InstallAllMigrations, "lichen.migration.testdb", false);
-        migrator.migrate(MigratorOperation.RemoveAllMigrations, "lichen.migration.testdb", false);
+//        migrator.migrate(MigratorOperation.RemoveAllMigrations, "lichen.migration.testdb", false);
     }
 
     //创建视图测试用例
-    @Test
-    public void testMigrateIndex() throws Throwable {
-        migrator.migrate(MigratorOperation.InstallAllMigrations, "lichen.migration.testdb.index", false);
-        migrator.migrate(MigratorOperation.RemoveAllMigrations, "lichen.migration.testdb.index", false);
-    }
+//    @Test
+//    public void testMigrateIndex() throws Throwable {
+//        migrator.migrate(MigratorOperation.InstallAllMigrations, "lichen.migration.testdb.index", false);
+//        migrator.migrate(MigratorOperation.RemoveAllMigrations, "lichen.migration.testdb.index", false);
+//    }
 
     @BeforeClass
     public static void setup() throws ProxoolException {
         String driverClassName = "org.h2.Driver";
 //      String driverClassName = "oracle.jdbc.driver.OracleDriver";
         DatabaseVendor vendor = DatabaseVendor.forDriver(driverClassName);
-        DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(vendor, Option.<String>none());
+//        Option.some("monad");;Option.<String>none()
+        DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(vendor, Option.some("monad"));
         Properties info = new Properties();
         info.setProperty("jdbc-x.proxool.alias", "test");
         info.setProperty("jdbc-x.proxool.maximum-connection-count", "50");

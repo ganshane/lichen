@@ -11,45 +11,30 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package lichen.migration.internal;
+package creeper.test2.db;
 
-import lichen.migration.model.TableDefinition;
+import lichen.migration.model.SqlType;
 import lichen.migration.services.Migration;
 import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.Options;
-import lichen.migration.services.TableCallback;
 
 import javax.inject.Inject;
 
 /**
- * 创建数据库初始化脚本.
- *
  * @author jcai
  */
-public class CreateSchemaMigrationsTableMigration implements Migration {
+public class Migrate_201307241432128_ModifyColumn implements Migration {
     @Inject
     private MigrationHelper _helper;
     @Inject
     private Options _options;
 
+    @Override
     public void up() throws Throwable {
-        _helper.createTable(Migrator.SCHEMA_MIGRATIONS_TABLENAME, new TableCallback() {
-            public void doInTable(TableDefinition t) throws Throwable {
-                final int size = 32;
-                t.varchar("module_name", _options.Limit(100), _options.NotNull());
-                t.varchar("version", _options.Limit(size), _options.NotNull());
-            }
-        });
-
-        /*
-        addIndex(Migrator.schemaMigrationsTableName,
-                Array("version"),
-                Unique,
-                Name("unique_schema_migrations"))
-        */
     }
 
-    public void down() {
-        throw new IllegalStateException("Fail to down");
+    @Override
+    public void down() throws Throwable {
+        _helper.alterColumn("test_table", "test_col", SqlType.VarcharType, _options.NotNull());
     }
 }

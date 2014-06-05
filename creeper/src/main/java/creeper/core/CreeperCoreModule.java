@@ -5,13 +5,13 @@ import creeper.core.internal.MenuSourceImpl;
 import creeper.core.services.*;
 import lichen.migration.internal.Option;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.tapestry5.ioc.Configuration;
-import org.apache.tapestry5.ioc.IOCUtilities;
 import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.annotations.Startup;
 import org.apache.tapestry5.ioc.annotations.SubModule;
 import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.apache.tapestry5.services.LibraryMapping;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -29,7 +29,7 @@ public class CreeperCoreModule {
      */
     public static void contributeComponentClassResolver(
             Configuration<LibraryMapping> configuration) {
-        configuration.add(new LibraryMapping("creeper","creeper.core"));
+        configuration.add(new LibraryMapping("creeper", "creeper.core"));
     }
     public static CreeperCoreConfig buildCreeperCoreConfig(@Symbol(CreeperCoreSymbols.SERVER_HOME) String serverHome){
         String filePath = serverHome + "/config/creeper-core.xml";
@@ -41,5 +41,10 @@ public class CreeperCoreModule {
             ce.set("file",filePath);
             throw ce;
         }
+    }
+    @Startup
+    public static void initMyApplication(Logger logger, DataBaseMigrationService service){
+        logger.info("Starting up...");
+        service.dbSetup();
     }
 }

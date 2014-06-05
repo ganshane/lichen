@@ -8,7 +8,8 @@ import org.eclipse.jetty.server.Server;
  */
 public class CreeperApp {
     public static void main(String[] args) throws Exception {
-        Server server = LichenWebServer.createTapestryWebapp(8080,"creeper.core","creeper");
+//        Server server = LichenWebServer.createTapestryWebapp(8080,"creeper.core","creeper");
+        Server server = LichenWebServer.createTapestryWebapp(8080,"creeper.core","creeper","creeper.core.internal.CreeperFilter");
         server.start();
     }
 }

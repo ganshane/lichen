@@ -442,7 +442,7 @@ public class Migrator {
      */
     private void runMigration(Connection connection, Class<? extends Migration> migrationClass,
                               final MigrationDirection direction,
-                              Option<Long> versionUpdateOpt) throws Throwable {
+                              Option<Long> versionUpdateOpt,final String packageName) throws Throwable {
         //logger.info("Migrating {} with '{}'.",direction, migrationClass.getName());
         final int size = 80;
         System.out.println(horizontalLine("Applying: " + migrationClass.getSimpleName(), size));
@@ -468,25 +468,26 @@ public class Migrator {
                 break;
         }
         //更新schema_migrations表里的脚本版本号
-        if (versionUpdateOpt.isDefined()) {
+        if (versionUpdateOpt.isDefined() && null != packageName) {
             final Long version = versionUpdateOpt.get();
             String tableName = _adapter.quoteTableName(SCHEMA_MIGRATIONS_TABLENAME);
             String sql = "";
             switch (direction) {
                 case Up:
-                    sql = "INSERT INTO " + tableName + " (" + _adapter.quoteColumnName("version") + ") VALUES (?)";
+                    sql = "INSERT INTO " + tableName + " (" + _adapter.quoteColumnName("module_name") +","+ _adapter.quoteColumnName("version") + ") VALUES (?,?)";
                     break;
                 case Down:
-                    sql = "DELETE FROM " + tableName + " WHERE " + _adapter.quoteColumnName("version") + "= ?";
+                    sql = "DELETE FROM " + tableName + " WHERE " + _adapter.quoteColumnName("module_name") +"=? AND "+ _adapter.quoteColumnName("version") + "= ?";
                     break;
                 default:
                     break;
             }
-
+            System.out.println("更新版本"+version+"="+sql);
             ResourceUtils.autoClosingStatement(connection.prepareStatement(sql),
                     new Function1<PreparedStatement, Object>() {
                         public Object apply(PreparedStatement statement) throws Throwable {
-                            statement.setString(1, version.toString());
+                            statement.setString(1, packageName);
+                            statement.setString(2, version.toString());
                             statement.execute();
                             return null;
                         }
@@ -520,7 +521,7 @@ public class Migrator {
                     new Function1<Connection, Object>() {
                         public Object apply(Connection parameter) throws Throwable {
                             runMigration(parameter, CreateSchemaMigrationsTableMigration.class,
-                                    MigrationDirection.Up, version);
+                                    MigrationDirection.Up, version,null);
                             return null;
                         }
                     });
@@ -534,20 +535,21 @@ public class Migrator {
      * @return a sorted set of version numbers of the installed
      *         migrations
      */
-    private SortedSet<Long> getInstalledVersions() throws Throwable {
+    private SortedSet<Long> getInstalledVersions(final String packageName) throws Throwable {
         return _connectionBuilder.withConnection(
                 ResourceUtils.CommitBehavior.AutoCommit,
                 new Function1<Connection, SortedSet<Long>>() {
                     public SortedSet<Long> apply(Connection parameter)
                             throws Throwable {
-                        return getInstalledVersions(parameter);
+                        return getInstalledVersions(parameter,packageName);
                     }
                 });
     }
 
-    private SortedSet<Long> getInstalledVersions(Connection connection) throws Throwable {
+    private SortedSet<Long> getInstalledVersions(Connection connection,String packageName) throws Throwable {
         final String sql = "SELECT " + _adapter.quoteColumnName("version")
-                + " FROM " + _adapter.quoteTableName(SCHEMA_MIGRATIONS_TABLENAME);
+                + " FROM " + _adapter.quoteTableName(SCHEMA_MIGRATIONS_TABLENAME)+"WHERE MODULE_NAME = '"+packageName+"'";
+        System.out.println("查询已安装的版本="+sql);
         return ResourceUtils.autoClosingStatement(connection
                 .prepareStatement(sql),
                 new Function1<PreparedStatement, SortedSet<Long>>() {
@@ -625,7 +627,7 @@ public class Migrator {
                         // was not checked into a source control system.  Having a
                         // missing migration for an installed migration is not fatal
                         // unless the migration needs to be rolled back.
-                        SortedSet<Long> installedVersions = getInstalledVersions(schemaConnection);
+                        SortedSet<Long> installedVersions = getInstalledVersions(schemaConnection,packageName);
                         SortedMap<Long, Class<? extends Migration>> availableMigrations
                                 = findMigrations(packageName, searchSubPackages);
                         Set<Long> availableVersions = availableMigrations.keySet();
@@ -716,7 +718,7 @@ public class Migrator {
                             clazz = availableMigrations.get(removeVersion);
                             if (clazz != null) {
                                 runMigration(schemaConnection, clazz, MigrationDirection.Down,
-                                        Option.some(removeVersion));
+                                        Option.some(removeVersion),packageName);
                             } else {
                                 String message = "The database has migration version '" + removeVersion
                                         + "' installed but there is no migration class "
@@ -731,7 +733,7 @@ public class Migrator {
                                 clazz = availableMigrations.get(installVersion);
                                 if (clazz != null) {
                                     runMigration(schemaConnection, clazz, MigrationDirection.Up,
-                                            Option.some(installVersion));
+                                            Option.some(installVersion),packageName);
                                 } else {
                                     String message = "Illegal state: trying to install a migration "
                                             + "with version '" + installVersion + "' that should exist.";
@@ -776,7 +778,7 @@ public class Migrator {
                 = findMigrations(packageName, searchSubPackages);
         SortedSet<Long> installedVersions;
         if (doesSchemaMigrationsTableExist()) {
-            installedVersions = getInstalledVersions();
+            installedVersions = getInstalledVersions(packageName);
         } else {
             installedVersions = new TreeSet<Long>();
         }

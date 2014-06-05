@@ -11,16 +11,15 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-package lichen.migration.testdb;
+package creeper.test2.db;
 
-import lichen.migration.model.SqlType;
+import javax.inject.Inject;
+
 import lichen.migration.model.TableDefinition;
 import lichen.migration.services.Migration;
 import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.Options;
 import lichen.migration.services.TableCallback;
-
-import javax.inject.Inject;
 
 /**
  * @author jcai
@@ -34,34 +33,17 @@ public class Migrate_20130722093444_CreateTable implements Migration {
     @Override
     public void up() throws Throwable {
         final int size = 10;
-        _helper.createTable("test_table", new TableCallback() {
+        _helper.createTable("test_table2", new TableCallback() {
             @Override
             public void doInTable(TableDefinition t) throws Throwable {
-                t.bigint("bigint");
-                t.blob("blob");
-//                t.bool("bool");
-//                t.charColumn("charColumn");
-//                t.column("column_", SqlType.BigintType);
-                //t.decimal("decimal_",Op);
-                t.integer("int_", _options.Unique());
-//                t.smallint("sint_");
-//                t.timestamp("ts");
-//                t.varbinary("vb");
                 t.varchar("vc", _options.Limit(size), _options.Default("'asdf'"));
             }
         });
-
-        _helper.addColumn("test_table", "test_col", SqlType.VarcharType, _options.NotNull());
-        
-        _helper.commentTable("test_table", _options.Comment("AAAa啊啊"));
-        _helper.commentColumn("test_table", "vc", _options.Comment("列1"));
-        _helper.commentColumn("test_table", "blob", _options.Comment("照片"));
-
     }
 
     @Override
     public void down() throws Throwable {
-        _helper.removeColumn("test_table", "vc");
+        _helper.removeColumn("test_table", "test_col");
         _helper.dropTable("test_table");
     }
 }

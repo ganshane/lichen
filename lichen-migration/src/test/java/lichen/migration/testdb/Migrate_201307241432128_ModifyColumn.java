@@ -31,16 +31,16 @@ public class Migrate_201307241432128_ModifyColumn implements Migration {
 
     @Override
     public void up() throws Throwable {
-        final int size = 10;
-        _helper.alterColumn("test_table", "test_col",
-                SqlType.DecimalType,
-                _options.NotNull(),
-                _options.Precision(size),
-                _options.Scale(2));
+//        final int size = 10;
+//        _helper.alterColumn("test_table", "test_col",
+//                SqlType.DecimalType,
+//                _options.NotNull(),
+//                _options.Precision(size),
+//                _options.Scale(2));
     }
 
     @Override
     public void down() throws Throwable {
-        _helper.alterColumn("test_table", "test_col", SqlType.VarcharType, _options.NotNull());
+//        _helper.alterColumn("test_table", "test_col", SqlType.VarcharType, _options.NotNull());
     }
 }

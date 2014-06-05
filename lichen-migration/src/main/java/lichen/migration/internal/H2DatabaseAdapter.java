@@ -38,7 +38,8 @@ class H2VarbinaryColumnDefinition extends ColumnDefinition {
 
 class H2DatabaseAdapter extends DatabaseAdapter {
     public H2DatabaseAdapter(Option<String> schemaNameOpt) {
-        super(schemaNameOpt);
+    	//H2数据库schema应设置为空
+        super(Option.<String>none());
         setUnquotedNameConverter(UnquotedNameConverter.getUppercaseUnquotedNameConverter());
         setAddingForeignKeyConstraintCreatesIndex(true);
     }
