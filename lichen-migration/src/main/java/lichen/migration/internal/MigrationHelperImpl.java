@@ -296,4 +296,10 @@ class MigrationHelperImpl implements MigrationHelper {
         return LOGGER;
     }
 
+	@Override
+	public void executeSQL(String... sql) throws Throwable {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

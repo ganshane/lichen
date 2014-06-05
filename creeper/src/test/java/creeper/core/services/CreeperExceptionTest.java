@@ -13,6 +13,7 @@ public class CreeperExceptionTest {
         e.set("k1","v1");
         e.set("k2","v2");
         e.set("k3","v3");
-        e.printStackTrace();
+//        e.printStackTrace();
+        throw e;
     }
 }

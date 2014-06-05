@@ -48,7 +48,7 @@ public class LichenWebServer {
      * @return 服务器实例
      */
     public static Server createTapestryWebapp(int port,String pkg,String appName){
-        Server server = new Server(8080);
+        Server server = new Server(port);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
         context.setDisplayName(appName);
@@ -67,10 +67,44 @@ public class LichenWebServer {
         }
         filterHolder.setName(appName);
         context.addFilter(filterHolder, "/*", FilterMapping.ALL);
+        
+//        server.addLifeCycleListener(listener);
+        
         server.setHandler(context);
         return server;
     }
+    
+    /**
+     * 创建tapestry的webapp程序
+     * @param port 端口
+     * @param pkg tapestry package
+     * @param appName 服务器实例
+     * @param filter filter全路径
+     * @return
+     */
+    public static Server createTapestryWebapp(int port,String pkg,String appName,String filter){
+        Server server = new Server(port);
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
+        context.setDisplayName(appName);
+        context.setInitParameter("tapestry.app-package",pkg);
+        //default servlet holder
+        ServletHolder servletHolder = new ServletHolder(DefaultServlet.class);
+        servletHolder.setName("default");
+        context.addServlet(servletHolder, "/");
 
+        //tapestry filter
+        FilterHolder filterHolder = null;
+        try {
+            filterHolder = new FilterHolder((Class<? extends Filter>) Thread.currentThread().getContextClassLoader().loadClass(filter));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        filterHolder.setName(appName);
+        context.addFilter(filterHolder, "/*", FilterMapping.ALL);
+        server.setHandler(context);
+        return server;
+    }
     /**
      * 通过给定的web.xml以及webapp的路径创建web应用.
      * <p>

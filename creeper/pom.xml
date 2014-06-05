@@ -68,23 +68,17 @@
       <groupId>proxool</groupId>
       <artifactId>proxool</artifactId>
       <version>0.9.1</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>1.1.1</version>
-      <scope>test</scope>
+      <!--  <scope>test</scope>  -->
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
-      <!-- <scope>provided</scope> -->
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>

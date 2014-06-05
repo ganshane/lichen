@@ -36,6 +36,7 @@ public class CreateSchemaMigrationsTableMigration implements Migration {
         _helper.createTable(Migrator.SCHEMA_MIGRATIONS_TABLENAME, new TableCallback() {
             public void doInTable(TableDefinition t) throws Throwable {
                 final int size = 32;
+                t.varchar("module_name", _options.Limit(100), _options.NotNull());
                 t.varchar("version", _options.Limit(size), _options.NotNull());
             }
         });
