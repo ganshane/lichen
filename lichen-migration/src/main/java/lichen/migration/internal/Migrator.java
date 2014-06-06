@@ -450,6 +450,7 @@ public class Migrator {
         ClassInstantiator<? extends Migration> classInstantiator
                 = PLASTIC_CLASS_POOL.getClassInstantiator(migrationClass.getName());
         final MigrationHelperImpl helper = new MigrationHelperImpl();
+        //执行脚本的试试设置当前数据库厂商。
         helper.setAdapterOpt(Option.some(_adapter));
         helper.setRawConnectionOpt(Option.some(connection));
         helper.setConnectionOpt(Option.some(connection));

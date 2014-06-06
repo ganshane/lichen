@@ -13,11 +13,13 @@
 // limitations under the License.
 package lichen.migration.testdb;
 
+import lichen.migration.model.SequenceDefinition;
 import lichen.migration.model.SqlType;
 import lichen.migration.model.TableDefinition;
 import lichen.migration.services.Migration;
 import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.Options;
+import lichen.migration.services.SequenceCallback;
 import lichen.migration.services.TableCallback;
 
 import javax.inject.Inject;
@@ -56,7 +58,19 @@ public class Migrate_20130722093444_CreateTable implements Migration {
         _helper.commentTable("test_table", _options.Comment("AAAa啊啊"));
         _helper.commentColumn("test_table", "vc", _options.Comment("列1"));
         _helper.commentColumn("test_table", "blob", _options.Comment("照片"));
-
+        
+        
+        _helper.createSequence("seq_a", new SequenceCallback(){
+			@Override
+			public void doInSequence(SequenceDefinition seq)
+					throws Throwable {
+				seq.minValue(10);
+				seq.maxValue(2);
+				seq.start(5);
+				seq.increment(1);
+			}});
+        
+        _helper.dropSequence("seq_a");
     }
 
     @Override

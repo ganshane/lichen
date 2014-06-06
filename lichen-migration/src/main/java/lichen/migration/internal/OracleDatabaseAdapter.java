@@ -14,6 +14,7 @@
 package lichen.migration.internal;
 
 import lichen.migration.model.Comment;
+import lichen.migration.model.SequenceDefinition;
 import lichen.migration.model.SqlType;
 
 /**
@@ -95,6 +96,18 @@ class OracleDatabaseAdapter extends DatabaseAdapter {
 		return new java.lang.StringBuffer().append("COMMENT ON TABLE ").append(
                 quoteTableName(schemaNameOpt, tableName))
                 .append(" IS '").append(comment.getValue()).append("'").toString();
+	}
+
+	@Override
+	public String createSequenceSql(SequenceDefinition seqDefinition) {
+		final int size = 512;
+		StringBuilder sb = new StringBuilder(size);
+		sb
+		.append(" START WITH ").append(0 == seqDefinition.getStart() ? 1 : seqDefinition.getStart())
+		.append(" INCREMENT BY ").append(0 == seqDefinition.getIncrement()? 1 : seqDefinition.getIncrement())
+		.append(" MINVALUE ").append(0 == seqDefinition.getMinValue() ? 1 : seqDefinition.getMinValue())
+		.append(" MAXVALUE ").append(0 == seqDefinition.getMaxValue() ? "999999999999999999999999999" : seqDefinition.getMaxValue());
+		return sb.toString();
 	}
 }
 
