@@ -68,6 +68,9 @@ public abstract class Option<T> {
     public static <T> Option<T> none() {
         return (Option<T>) NONE;
     }
+    public static <T> Option<T> none(Class<T> clazz) {
+        return (Option<T>) NONE;
+    }
 
     /**
      * 含有的值对象.
@@ -89,6 +92,7 @@ public abstract class Option<T> {
             return new LichenException(LichenCoreErrorCode.OPTION_IS_NONE);
         }
     };
+
 
     private static class Some<T> extends Option<T> {
         private T _value;

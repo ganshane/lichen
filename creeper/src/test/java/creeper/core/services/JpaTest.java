@@ -1,11 +1,13 @@
 package creeper.core.services;
 
 import creeper.core.config.CreeperCoreConfig;
+import creeper.core.internal.CreeperModuleManagerImpl;
 import creeper.test.dao.EntityTestDao;
 import creeper.test.entities.EntityA;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.Registry;
 import org.apache.tapestry5.ioc.RegistryBuilder;
+import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.hibernate.cfg.Environment;
 import org.hibernate.dialect.H2Dialect;
@@ -24,6 +26,7 @@ import org.springframework.orm.jpa.SharedEntityManagerCreator;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
@@ -49,6 +52,10 @@ public class JpaTest {
         List<EntityA> list = dao.findByCustomQuery(entityA.getAccountId());
         Assert.assertEquals(list.size(),1);
 
+        TestService testService = registry.getObject(TestService.class,null);
+        testService.testNoTransaction();
+        testService.testNeedTransaction();
+
         /*
         TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
         TransactionStatus status = transactionManager.getTransaction(transactionDefinition);
@@ -73,13 +80,13 @@ public class JpaTest {
         registry.shutdown();
     }
     public static class TestModule{
-        @Contribute(EntityManagerFactory.class)
-        public static void provideEntityPackage(Configuration<String> entityPackages){
-            entityPackages.add("creeper.test.entities");
+        public static void bind(ServiceBinder binder){
+            binder.bind(TestService.class,TestServiceImpl.class);
+            binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class);
         }
-        @Contribute(DaoPackageManager.class)
-        public static void provideDaoPackage(Configuration<String> daoPackage){
-            daoPackage.add("creeper.test.dao");
+        @Contribute(CreeperModuleManager.class)
+        public static void provideTestModule(Configuration<String> modules){
+            modules.add("creeper.test");
         }
         public static CreeperCoreConfig buildConfig(){
             CreeperCoreConfig config = new CreeperCoreConfig();
@@ -97,6 +104,21 @@ public class JpaTest {
             config.jpaProperties.add(property);
 
             return config;
+        }
+    }
+    public static interface TestService{
+        @Transactional(propagation= Propagation.NEVER)
+        public void testNoTransaction();
+        @Transactional(propagation= Propagation.REQUIRED)
+        public void testNeedTransaction();
+    }
+    public static class TestServiceImpl implements TestService{
+        public void testNoTransaction(){
+            System.out.println("no transaction...");
+            testNeedTransaction();
+        }
+        public void testNeedTransaction(){
+            System.out.println("need transaction...");
         }
     }
 }

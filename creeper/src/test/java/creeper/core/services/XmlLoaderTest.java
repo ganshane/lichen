@@ -15,7 +15,7 @@ package creeper.core.services;
 
 import creeper.core.config.CreeperCoreConfig;
 import junit.framework.Assert;
-import lichen.migration.internal.Option;
+import lichen.core.services.Option;
 import org.junit.Test;
 
 

@@ -14,10 +14,12 @@ import java.lang.reflect.Method;
  * @author jcai
  */
 public class TransactionAdvice implements MethodAdvice{
+    private final Method trueMethod;
     private TransactionInterceptor interceptor;
 
-    public TransactionAdvice(@Local TransactionInterceptor interceptor) {
+    public TransactionAdvice(@Local TransactionInterceptor interceptor,Method method) {
         this.interceptor = interceptor;
+        this.trueMethod = method;
     }
 
     @Override
@@ -27,7 +29,8 @@ public class TransactionAdvice implements MethodAdvice{
 
                 @Override
                 public Method getMethod() {
-                    return methodInvocation.getMethod();
+                    return trueMethod;
+                    //return methodInvocation.getMethod();
                 }
 
                 @Override

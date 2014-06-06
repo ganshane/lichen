@@ -13,7 +13,8 @@
 // limitations under the License.
 package creeper.core.services;
 
-import lichen.migration.internal.Option;
+
+import lichen.core.services.Option;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.*;
