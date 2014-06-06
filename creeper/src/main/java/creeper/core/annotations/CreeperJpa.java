@@ -6,14 +6,11 @@ import java.lang.annotation.Target;
 
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-
 /**
  * @author jcai
  */
-@Target(
-        { PARAMETER, FIELD, CONSTRUCTOR ,TYPE})
+@Target( { PARAMETER, FIELD, CONSTRUCTOR ,TYPE})
 @Retention(RUNTIME)
 @Documented
-public @interface CreeperCore
-{
+public @interface CreeperJpa {
 }

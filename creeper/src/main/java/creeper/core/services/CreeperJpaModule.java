@@ -1,12 +1,14 @@
 package creeper.core.services;
 
 import creeper.core.annotations.CreeperCore;
+import creeper.core.annotations.CreeperJpa;
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.TransactionAdvice;
 import org.apache.tapestry5.ioc.*;
-import org.apache.tapestry5.ioc.annotations.*;
+import org.apache.tapestry5.ioc.annotations.Contribute;
+import org.apache.tapestry5.ioc.annotations.Marker;
+import org.apache.tapestry5.ioc.annotations.Match;
 import org.apache.tapestry5.ioc.services.MasterObjectProvider;
-import org.apache.tapestry5.plastic.*;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
@@ -27,18 +29,24 @@ import javax.persistence.EntityManagerFactory;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Properties;
 
 /**
  * creeper jpa module
+ *
+ * creeper JPA module 集成了:
+ * 1) Hibernate 2)Spring Transaction 3) Spring Data JPA
+ *
  * @author jcai
  */
 public class CreeperJpaModule {
     public static void bind(ServiceBinder binder){
-        binder.bind(JpaVendorAdapter.class, HibernateJpaVendorAdapter.class);
+        binder.bind(JpaVendorAdapter.class, HibernateJpaVendorAdapter.class).withMarker(CreeperJpa.class);
     }
-    //创建基于Hibernate的JPA实现
+    /**
+     * 创建基于Hibernate的JPA实现.
+     */
+    @Marker(CreeperJpa.class)
     public static EntityManagerFactory buildEntityManagerFactory(CreeperCoreConfig config,
                                                                  JpaVendorAdapter jpaVendorAdapter,
                                                                  CreeperModuleManager creeperModuleManager
@@ -60,15 +68,24 @@ public class CreeperJpaModule {
         entityManagerFactoryBean.afterPropertiesSet();
         return entityManagerFactoryBean.getObject();
     }
-    public static EntityManager buildEntityManager(@Local EntityManagerFactory entityManagerFactory){
+
+    /**
+     * 构建共享的EntityManager，在事务和操作的时候，都可以使用一个EntityManager
+     * @param entityManagerFactory
+     * @return
+     */
+    @Marker(CreeperJpa.class)
+    public static EntityManager buildEntityManager(@CreeperJpa EntityManagerFactory entityManagerFactory){
         return SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
     }
-    public static JpaTransactionManager buildJpaTransactionManager(@Local EntityManagerFactory entityManagerFactory){
+    @Marker(CreeperJpa.class)
+    public static JpaTransactionManager buildJpaTransactionManager(@CreeperJpa EntityManagerFactory entityManagerFactory){
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(entityManagerFactory);
         transactionManager.afterPropertiesSet();
         return transactionManager;
     }
+    @Marker(CreeperJpa.class)
     public static DaoPackageManager buildDaoPackageManager(final @CreeperCore CreeperModuleManager moduleManager){
         return new DaoPackageManager() {
             private Collection<String> _daoPackages = Arrays.asList(moduleManager.getModuleSubPackageWithSuffix("dao"));
@@ -79,11 +96,11 @@ public class CreeperJpaModule {
     }
     @Contribute(MasterObjectProvider.class)
     public static void provideEntityDaoObject(OrderedConfiguration<ObjectProvider> configuration,
-                                              @Local
+                                              @CreeperJpa
                                                final DaoPackageManager entityPackageManager,
-                                              @Local
+                                              @CreeperJpa
                                                final BeanFactory beanFactory,
-                                              @Local
+                                              @CreeperJpa
                                                final EntityManagerFactory entityManagerFactory)
     {
         configuration.add("entityDaoProvider", new ObjectProvider() {
@@ -103,11 +120,12 @@ public class CreeperJpaModule {
             }
         });
     }
-    public static ListableBeanFactory buildBeanFactory(@Local
+    @Marker(CreeperJpa.class)
+    public static ListableBeanFactory buildBeanFactory(@CreeperJpa
             final JpaTransactionManager transactionManager,
-            @Local
+            @CreeperJpa
             final EntityManagerFactory entityManagerFactory,
-            @Local
+            @CreeperJpa
             final JpaVendorAdapter jpaVendorAdapter){
         final StaticListableBeanFactory beanFactory = new StaticListableBeanFactory();
         beanFactory.addBean(TxUtils.DEFAULT_TRANSACTION_MANAGER,transactionManager);
@@ -115,7 +133,8 @@ public class CreeperJpaModule {
         beanFactory.addBean("jpaDialect", jpaVendorAdapter.getJpaDialect());
         return beanFactory;
     }
-    public static TransactionInterceptor buildTransactionInterceptor(@Local BeanFactory beanFactory){
+    @Marker(CreeperJpa.class)
+    public static TransactionInterceptor buildTransactionInterceptor(@CreeperJpa BeanFactory beanFactory){
         AnnotationTransactionAttributeSource transactionAttributeSource = new AnnotationTransactionAttributeSource();
 
         TransactionInterceptor transactionInterceptor = new TransactionInterceptor(null, transactionAttributeSource);
@@ -125,7 +144,7 @@ public class CreeperJpaModule {
         return transactionInterceptor;
     }
     @Match("*")
-    public static void adviseTransactional(MethodAdviceReceiver receiver,@Local TransactionInterceptor transactionInterceptor)
+    public static void adviseTransactional(MethodAdviceReceiver receiver,@CreeperJpa TransactionInterceptor transactionInterceptor)
     {
         for (Method m : receiver.getInterface().getMethods())
         {

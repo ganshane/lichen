@@ -36,6 +36,7 @@ public class CreeperCoreModule {
     public static void contributeComponentClassResolver(
             final Configuration<LibraryMapping> configuration,@CreeperCore CreeperModuleManager creeperModuleManager) {
         configuration.add(new LibraryMapping("creeper", "creeper.core"));
+        //自动加载各个模块的页面类
         creeperModuleManager.flowModuleSubPackageWithSuffix(null).each(new Worker<String>() {
             @Override
             public void work(String element) {
