@@ -1,5 +1,6 @@
 package creeper.core.services;
 
+import lichen.core.services.Option;
 import org.apache.tapestry5.func.Flow;
 
 /**
@@ -12,6 +13,6 @@ public interface CreeperModuleManager{
      * @param subPackage 子包的名称，譬如：db,entities 等
      * @return 包集合
      */
-    public String[] getModuleSubPackageWithSuffix(String subPackage);
-    public Flow<String> flowModuleSubPackageWithSuffix(String subPackage);
+    public String[] getModuleSubPackageWithSuffix(Option<String> subPackage);
+    public Flow<String> flowModuleSubPackageWithSuffix(Option<String> subPackage);
 }

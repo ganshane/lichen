@@ -6,7 +6,7 @@ import creeper.core.internal.CreeperModuleManagerImpl;
 import creeper.core.internal.DatabaseMigrationImpl;
 import creeper.core.internal.MenuSourceImpl;
 import creeper.core.services.*;
-import lichen.migration.internal.Option;
+import lichen.core.services.Option;
 import org.apache.commons.io.FileUtils;
 import org.apache.tapestry5.func.Worker;
 import org.apache.tapestry5.ioc.Configuration;
@@ -37,7 +37,7 @@ public class CreeperCoreModule {
             final Configuration<LibraryMapping> configuration,@CreeperCore CreeperModuleManager creeperModuleManager) {
         configuration.add(new LibraryMapping("creeper", "creeper.core"));
         //自动加载各个模块的页面类
-        creeperModuleManager.flowModuleSubPackageWithSuffix(null).each(new Worker<String>() {
+        creeperModuleManager.flowModuleSubPackageWithSuffix(Option.none(String.class)).each(new Worker<String>() {
             @Override
             public void work(String element) {
                 String moduleName = element.substring(element.lastIndexOf(".")+1);

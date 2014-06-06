@@ -68,7 +68,7 @@ public class DatabaseMigrationImpl implements DatabaseMigration {
 
 	@Override
 	public void dbSetup() {
-        Iterator<String> itor = _creeperModuleManager.flowModuleSubPackageWithSuffix("db").iterator();
+        Iterator<String> itor = _creeperModuleManager.flowModuleSubPackageWithSuffix(lichen.core.services.Option.some("db")).iterator();
         try{
             while(itor.hasNext()){
                 String packageName = itor.next();

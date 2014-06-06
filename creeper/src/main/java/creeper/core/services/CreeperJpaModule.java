@@ -4,9 +4,7 @@ import creeper.core.annotations.CreeperCore;
 import creeper.core.annotations.CreeperJpa;
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.TransactionAdvice;
-import lichen.migration.internal.DatabaseAdapter;
-import lichen.migration.internal.DatabaseVendor;
-import lichen.migration.internal.Option;
+import lichen.core.services.Option;
 import org.apache.tapestry5.ioc.*;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.Marker;
@@ -100,7 +98,7 @@ public class CreeperJpaModule {
             properties.setProperty(property.name,property.value);
         }
         entityManagerFactoryBean.setJpaProperties(properties);
-        entityManagerFactoryBean.setPackagesToScan(creeperModuleManager.getModuleSubPackageWithSuffix("entities"));
+        entityManagerFactoryBean.setPackagesToScan(creeperModuleManager.getModuleSubPackageWithSuffix(Option.some("entities")));
         entityManagerFactoryBean.afterPropertiesSet();
         return entityManagerFactoryBean.getObject();
     }
@@ -124,7 +122,7 @@ public class CreeperJpaModule {
     @Marker(CreeperJpa.class)
     public static DaoPackageManager buildDaoPackageManager(final @CreeperCore CreeperModuleManager moduleManager){
         return new DaoPackageManager() {
-            private Collection<String> _daoPackages = Arrays.asList(moduleManager.getModuleSubPackageWithSuffix("dao"));
+            private Collection<String> _daoPackages = Arrays.asList(moduleManager.getModuleSubPackageWithSuffix(Option.some("dao")));
             public boolean contains(Class<?> daoType) {
                 return _daoPackages != null && daoType.getPackage()!=null && _daoPackages.contains(daoType.getPackage().getName());
             }

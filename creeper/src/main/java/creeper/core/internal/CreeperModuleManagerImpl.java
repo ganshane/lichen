@@ -2,6 +2,7 @@ package creeper.core.internal;
 
 import creeper.core.annotations.CreeperCore;
 import creeper.core.services.CreeperModuleManager;
+import lichen.core.services.Option;
 import org.apache.tapestry5.func.F;
 import org.apache.tapestry5.func.Flow;
 import org.apache.tapestry5.func.Mapper;
@@ -22,19 +23,20 @@ public class CreeperModuleManagerImpl implements CreeperModuleManager{
         _modules = modules;
     }
     @Override
-    public String[] getModuleSubPackageWithSuffix(final String subPackage) {
+    public String[] getModuleSubPackageWithSuffix(final Option<String> subPackage) {
         return flowModuleSubPackageWithSuffix(subPackage).toArray(String.class);
     }
 
     @Override
-    public Flow<String> flowModuleSubPackageWithSuffix(final String subPackage) {
-        if(subPackage == null)
-            return F.flow(_modules);
-        return F.flow(_modules).map(new Mapper<String, String>() {
-            @Override
-            public String map(String element) {
-                return element + "." + subPackage;
-            }
-        });
+    public Flow<String> flowModuleSubPackageWithSuffix(final Option<String> subPackage) {
+        if(subPackage.isDefined()){
+            return F.flow(_modules).map(new Mapper<String, String>() {
+                @Override
+                public String map(String element) {
+                    return element + "." + subPackage.get();
+                }
+            });
+        }
+        return F.flow(_modules);
     }
 }
