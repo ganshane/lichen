@@ -4,11 +4,17 @@ import creeper.core.annotations.CreeperCore;
 import creeper.core.annotations.CreeperJpa;
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.TransactionAdvice;
+import lichen.migration.internal.DatabaseAdapter;
+import lichen.migration.internal.DatabaseVendor;
+import lichen.migration.internal.Option;
 import org.apache.tapestry5.ioc.*;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.Marker;
 import org.apache.tapestry5.ioc.annotations.Match;
 import org.apache.tapestry5.ioc.services.MasterObjectProvider;
+import org.logicalcobwebs.proxool.ProxoolDataSource;
+import org.logicalcobwebs.proxool.ProxoolException;
+import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
@@ -26,6 +32,7 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,23 +50,52 @@ public class CreeperJpaModule {
     public static void bind(ServiceBinder binder){
         binder.bind(JpaVendorAdapter.class, HibernateJpaVendorAdapter.class).withMarker(CreeperJpa.class);
     }
+    @Marker(CreeperJpa.class)
+    public static DataSource buildDataSource(CreeperCoreConfig config){
+        //Oracle的schema必须和数据库用户名一致。
+        Properties info = new Properties();
+        info.setProperty("jdbc-creeper.proxool.alias", "creeper");
+        info.setProperty("jdbc-creeper.proxool.maximum-connection-count", "50");
+        info.setProperty("jdbc-creeper.user", config.db._username);
+        if(StringUtils.hasText(config.db._password))
+            info.setProperty("jdbc-creeper.password", config.db._password);
+        info.setProperty("jdbc-creeper.proxool.driver-class", config.db._driverClassName);
+        info.setProperty("jdbc-creeper.proxool.driver-url", config.db._url);
+
+        info.setProperty("jdbc-creeper.proxool.maximum-connection-lifetime", "18000000");
+        info.setProperty("jdbc-creeper.proxool.maximum-active-time", "30000");
+
+        //configuration proxool database source
+        try {
+            PropertyConfigurator.configure(info);
+        } catch (ProxoolException e) {
+            CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_CONFIG_PROXOOL);
+            throw ce;
+        }
+        //new datasource
+        return new ProxoolDataSource("creeper");
+    }
     /**
      * 创建基于Hibernate的JPA实现.
      */
     @Marker(CreeperJpa.class)
     public static EntityManagerFactory buildEntityManagerFactory(CreeperCoreConfig config,
                                                                  JpaVendorAdapter jpaVendorAdapter,
+                                                                 @CreeperJpa DataSource dataSource,
                                                                  CreeperModuleManager creeperModuleManager
                                                                  ){
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
+        entityManagerFactoryBean.setDataSource(dataSource);
         Properties properties = new Properties();
+        /*
         properties.setProperty("hibernate.connection.driver_class",config.db._driverClassName);
         properties.setProperty("hibernate.connection.url",config.db._url);
         properties.setProperty("hibernate.connection.username",config.db._username);
         if(StringUtils.hasText(config.db._password)){
             properties.setProperty("hibernate.connection.password",config.db._password);
         }
+        */
         for(CreeperCoreConfig.JpaProperty property: config.jpaProperties){
             properties.setProperty(property.name,property.value);
         }

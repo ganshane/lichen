@@ -18,6 +18,7 @@ import org.apache.tapestry5.func.F;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
 import org.logicalcobwebs.proxool.ProxoolException;
+import org.logicalcobwebs.proxool.ProxoolFacade;
 import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
 
 import creeper.core.config.CreeperCoreConfig;
@@ -31,6 +32,7 @@ public class DatabaseMigrationImpl implements DatabaseMigration {
 
 	private static Migrator migrator;
     private final CreeperModuleManager _creeperModuleManager;
+    private final ProxoolDataSource _dataSource;
 
     @Inject
 	private CreeperCoreConfig creeperCoreConfig;
@@ -42,7 +44,7 @@ public class DatabaseMigrationImpl implements DatabaseMigration {
         //Oracle的schema必须和数据库用户名一致。
         DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(vendor, Option.some(this.creeperCoreConfig.db._username));
         Properties info = new Properties();
-        info.setProperty("jdbc-x.proxool.alias", "creeper");
+        info.setProperty("jdbc-x.proxool.alias", "creeper-migrator");
         info.setProperty("jdbc-x.proxool.maximum-connection-count", "50");
         info.setProperty("jdbc-x.user", this.creeperCoreConfig.db._username);
         info.setProperty("jdbc-x.password", this.creeperCoreConfig.db._password);
@@ -60,23 +62,31 @@ public class DatabaseMigrationImpl implements DatabaseMigration {
             throw ce;
 		}
         //new datasource
-        DataSource dataSource = new ProxoolDataSource("creeper");
-        migrator = new Migrator(dataSource, databaseAdapter);
+        _dataSource = new ProxoolDataSource("creeper-migrator");
+        migrator = new Migrator(_dataSource, databaseAdapter);
 	}
 
 	@Override
 	public void dbSetup() {
         Iterator<String> itor = _creeperModuleManager.flowModuleSubPackageWithSuffix("db").iterator();
-        while(itor.hasNext()){
-            String packageName = itor.next();
-			try {
-				migrator.migrate(MigratorOperation.InstallAllMigrations, packageName, false);
-			} catch (Throwable e) {
-				CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_MIGRAT_SCRIPT);
-	            ce.set("script_package",packageName);
-	            throw ce;
-			}
-		}
-	}
+        try{
+            while(itor.hasNext()){
+                String packageName = itor.next();
+                try {
+                    migrator.migrate(MigratorOperation.InstallAllMigrations, packageName, false);
+                } catch (Throwable e) {
+                    CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_MIGRAT_SCRIPT);
+                    ce.set("script_package",packageName);
+                    throw ce;
+                }
+            }
+        }finally {//关闭数据源
+            try {
+                ProxoolFacade.removeConnectionPool("creeper-migrator");
+            } catch (ProxoolException e) {
+                throw CreeperException.wrap(e);
+            }
+        }
+    }
 
 }
