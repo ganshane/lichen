@@ -1,10 +1,7 @@
 package creeper.core.internal;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
-
-import javax.sql.DataSource;
 
 import creeper.core.annotations.CreeperCore;
 import creeper.core.services.CreeperModuleManager;
@@ -14,7 +11,6 @@ import lichen.migration.internal.Migrator;
 import lichen.migration.internal.MigratorOperation;
 import lichen.migration.internal.Option;
 
-import org.apache.tapestry5.func.F;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
 import org.logicalcobwebs.proxool.ProxoolException;
@@ -22,7 +18,6 @@ import org.logicalcobwebs.proxool.ProxoolFacade;
 import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
 
 import creeper.core.config.CreeperCoreConfig;
-import creeper.core.models.CreeperDatabaseMigrationScript;
 import creeper.core.services.CreeperCoreExceptionCode;
 import creeper.core.services.CreeperException;
 import creeper.core.services.DatabaseMigration;

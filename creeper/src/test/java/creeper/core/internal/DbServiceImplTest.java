@@ -1,8 +1,6 @@
 package creeper.core.internal;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import creeper.core.services.CreeperModuleManager;
 import org.junit.Test;
@@ -10,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import creeper.core.config.CreeperCoreConfig;
-import creeper.core.models.CreeperDatabaseMigrationScript;
 
 /**
  * 

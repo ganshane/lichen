@@ -1,16 +1,10 @@
 package creeper.test;
 
-import creeper.core.config.CreeperCoreConfig;
-import creeper.core.models.CreeperDatabaseMigrationScript;
 import creeper.core.models.CreeperMenu;
 import creeper.core.services.CreeperModuleManager;
-import creeper.core.services.DaoPackageManager;
-import creeper.core.services.DatabaseMigration;
 import creeper.core.services.MenuSource;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.annotations.Contribute;
-
-import javax.persistence.EntityManagerFactory;
 
 /**
  * 测试使用的package
