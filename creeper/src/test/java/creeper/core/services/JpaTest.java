@@ -1,6 +1,7 @@
 package creeper.core.services;
 
 import creeper.core.config.CreeperCoreConfig;
+import creeper.core.internal.CreeperModuleManagerImpl;
 import creeper.test.dao.EntityTestDao;
 import creeper.test.entities.EntityA;
 import org.apache.tapestry5.ioc.Configuration;
@@ -42,7 +43,6 @@ public class JpaTest {
     @Test
     public void test_jpa(){
 
-        /*
         EntityTestDao dao = registry.getObject(EntityTestDao.class, null);
         EntityA entityA = new EntityA();
         //entityA.setAccountId(123L);
@@ -51,7 +51,6 @@ public class JpaTest {
         Assert.assertNotNull(entityA);
         List<EntityA> list = dao.findByCustomQuery(entityA.getAccountId());
         Assert.assertEquals(list.size(),1);
-        */
 
         TestService testService = registry.getObject(TestService.class,null);
         testService.testNoTransaction();
@@ -83,14 +82,11 @@ public class JpaTest {
     public static class TestModule{
         public static void bind(ServiceBinder binder){
             binder.bind(TestService.class,TestServiceImpl.class);
+            binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class);
         }
-        @Contribute(EntityManagerFactory.class)
-        public static void provideEntityPackage(Configuration<String> entityPackages){
-            entityPackages.add("creeper.test.entities");
-        }
-        @Contribute(DaoPackageManager.class)
-        public static void provideDaoPackage(Configuration<String> daoPackage){
-            daoPackage.add("creeper.test.dao");
+        @Contribute(CreeperModuleManager.class)
+        public static void provideTestModule(Configuration<String> modules){
+            modules.add("creeper.test");
         }
         public static CreeperCoreConfig buildConfig(){
             CreeperCoreConfig config = new CreeperCoreConfig();

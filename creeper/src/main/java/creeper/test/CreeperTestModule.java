@@ -3,6 +3,7 @@ package creeper.test;
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.models.CreeperDatabaseMigrationScript;
 import creeper.core.models.CreeperMenu;
+import creeper.core.services.CreeperModuleManager;
 import creeper.core.services.DaoPackageManager;
 import creeper.core.services.DatabaseMigration;
 import creeper.core.services.MenuSource;
@@ -27,17 +28,8 @@ public class CreeperTestModule {
         coll.add(new CreeperMenu("test.b2","测试B2","/test2/b2",1));
     }
 
-    @Contribute(value = DatabaseMigration.class)
-    public static void provideDataBase(Configuration<CreeperDatabaseMigrationScript> configuration, final CreeperCoreConfig creeperCoreConfig){
-    	configuration.add(new CreeperDatabaseMigrationScript("creeper.test.db",false));
-    	configuration.add(new CreeperDatabaseMigrationScript("creeper.test2.db",false));
-    }
-    @Contribute(EntityManagerFactory.class)
-    public static void provideEntityPackage(Configuration<String> entityPackages){
-        entityPackages.add("creeper.test.entities");
-    }
-    @Contribute(DaoPackageManager.class)
-    public static void provideDaoPackage(Configuration<String> daoPackage){
-        daoPackage.add("creeper.test.dao");
+    @Contribute(value = CreeperModuleManager.class)
+    public static void provideModule(Configuration<String> configuration){
+    	configuration.add("creeper.test");
     }
 }

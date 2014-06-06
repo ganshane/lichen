@@ -1,11 +1,14 @@
 package creeper.core;
 
+import creeper.core.annotations.CreeperCore;
 import creeper.core.config.CreeperCoreConfig;
+import creeper.core.internal.CreeperModuleManagerImpl;
 import creeper.core.internal.DatabaseMigrationImpl;
 import creeper.core.internal.MenuSourceImpl;
 import creeper.core.services.*;
 import lichen.migration.internal.Option;
 import org.apache.commons.io.FileUtils;
+import org.apache.tapestry5.func.Worker;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Startup;
@@ -22,7 +25,8 @@ import java.io.IOException;
 public class CreeperCoreModule {
     public static void bind(ServiceBinder binder){
         binder.bind(MenuSource.class,MenuSourceImpl.class);
-        binder.bind(DatabaseMigration.class,DatabaseMigrationImpl.class); 
+        binder.bind(DatabaseMigration.class,DatabaseMigrationImpl.class);
+        binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class);
     }
     /**
      * Contribution to the
@@ -30,8 +34,15 @@ public class CreeperCoreModule {
      * configuration.
      */
     public static void contributeComponentClassResolver(
-            Configuration<LibraryMapping> configuration) {
+            final Configuration<LibraryMapping> configuration,@CreeperCore CreeperModuleManager creeperModuleManager) {
         configuration.add(new LibraryMapping("creeper", "creeper.core"));
+        creeperModuleManager.flowModuleSubPackageWithSuffix(null).each(new Worker<String>() {
+            @Override
+            public void work(String element) {
+                String moduleName = element.substring(element.lastIndexOf(".")+1);
+                configuration.add(new LibraryMapping(moduleName, element));
+            }
+        });
     }
     public static CreeperCoreConfig buildCreeperCoreConfig(@Symbol(CreeperCoreSymbols.SERVER_HOME) String serverHome){
         String filePath = serverHome + "/config/creeper-core.xml";

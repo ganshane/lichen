@@ -1,8 +1,10 @@
 package creeper.core.internal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import creeper.core.services.CreeperModuleManager;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,8 +22,7 @@ public class DbServiceImplTest {
     
     @Test
     public void testDbSetup(){
-        List<CreeperDatabaseMigrationScript> coll= new ArrayList<CreeperDatabaseMigrationScript>();
-        coll.add(new CreeperDatabaseMigrationScript("creeper.core.testdb",false));
+        CreeperModuleManager manager = new CreeperModuleManagerImpl(Arrays.asList("creeper.test"));
 
         CreeperCoreConfig conf = new CreeperCoreConfig();
         conf.db._driverClassName = "org.h2.Driver";
@@ -29,7 +30,7 @@ public class DbServiceImplTest {
         conf.db._username = "sa";
         conf.db._password = "";
         
-        DatabaseMigrationImpl dbservice = new DatabaseMigrationImpl(coll, conf);
+        DatabaseMigrationImpl dbservice = new DatabaseMigrationImpl(manager, conf);
         dbservice.dbSetup();
     }
 }

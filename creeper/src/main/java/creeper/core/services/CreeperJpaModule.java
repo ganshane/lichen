@@ -1,11 +1,10 @@
 package creeper.core.services;
 
+import creeper.core.annotations.CreeperCore;
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.TransactionAdvice;
 import org.apache.tapestry5.ioc.*;
-import org.apache.tapestry5.ioc.annotations.Contribute;
-import org.apache.tapestry5.ioc.annotations.Local;
-import org.apache.tapestry5.ioc.annotations.Match;
+import org.apache.tapestry5.ioc.annotations.*;
 import org.apache.tapestry5.ioc.services.MasterObjectProvider;
 import org.apache.tapestry5.plastic.*;
 import org.springframework.beans.factory.BeanFactory;
@@ -42,7 +41,7 @@ public class CreeperJpaModule {
     //创建基于Hibernate的JPA实现
     public static EntityManagerFactory buildEntityManagerFactory(CreeperCoreConfig config,
                                                                  JpaVendorAdapter jpaVendorAdapter,
-                                                                 Collection<String> entityPackages
+                                                                 CreeperModuleManager creeperModuleManager
                                                                  ){
         LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
@@ -57,7 +56,7 @@ public class CreeperJpaModule {
             properties.setProperty(property.name,property.value);
         }
         entityManagerFactoryBean.setJpaProperties(properties);
-        entityManagerFactoryBean.setPackagesToScan(entityPackages.toArray(new String[entityPackages.size()]));
+        entityManagerFactoryBean.setPackagesToScan(creeperModuleManager.getModuleSubPackageWithSuffix("entities"));
         entityManagerFactoryBean.afterPropertiesSet();
         return entityManagerFactoryBean.getObject();
     }
@@ -70,11 +69,11 @@ public class CreeperJpaModule {
         transactionManager.afterPropertiesSet();
         return transactionManager;
     }
-    public static DaoPackageManager buildDaoPackageManager(final Collection<String> packages){
+    public static DaoPackageManager buildDaoPackageManager(final @CreeperCore CreeperModuleManager moduleManager){
         return new DaoPackageManager() {
-            @Override
+            private Collection<String> _daoPackages = Arrays.asList(moduleManager.getModuleSubPackageWithSuffix("dao"));
             public boolean contains(Class<?> daoType) {
-                return packages!= null && daoType.getPackage()!=null && packages.contains(daoType.getPackage().getName());
+                return _daoPackages != null && daoType.getPackage()!=null && _daoPackages.contains(daoType.getPackage().getName());
             }
         };
     }
