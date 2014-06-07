@@ -1,7 +1,8 @@
-package creeper.core.services;
+package creeper.core.services.jpa;
 
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.CreeperModuleManagerImpl;
+import creeper.core.services.CreeperModuleManager;
 import creeper.core.services.jpa.CreeperJpaModule;
 import creeper.test.dao.EntityTestDao;
 import creeper.test.entities.EntityA;

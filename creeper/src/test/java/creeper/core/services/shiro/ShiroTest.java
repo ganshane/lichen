@@ -1,4 +1,4 @@
-package creeper.core.services;
+package creeper.core.services.shiro;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
