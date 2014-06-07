@@ -1,4 +1,4 @@
-package creeper.core.services;
+package creeper.core.services.jpa;
 
 /**
  * entity package manager

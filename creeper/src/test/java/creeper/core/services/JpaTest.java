@@ -2,6 +2,7 @@ package creeper.core.services;
 
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.CreeperModuleManagerImpl;
+import creeper.core.services.jpa.CreeperJpaModule;
 import creeper.test.dao.EntityTestDao;
 import creeper.test.entities.EntityA;
 import org.apache.tapestry5.ioc.Configuration;
@@ -10,31 +11,14 @@ import org.apache.tapestry5.ioc.RegistryBuilder;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.hibernate.cfg.Environment;
-import org.hibernate.dialect.H2Dialect;
-import org.hibernate.dialect.MySQL5Dialect;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.beans.factory.support.StaticListableBeanFactory;
-import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
-import org.springframework.data.repository.RepositoryDefinition;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.JpaVendorAdapter;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.SharedEntityManagerCreator;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * @author jcai
