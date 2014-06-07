@@ -1,6 +1,8 @@
 package creeper.core.services.shiro;
 
+import creeper.core.services.CreeperCoreExceptionCode;
 import creeper.core.services.CreeperException;
+import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.aop.AuthorizingAnnotationMethodInterceptor;
 import org.apache.shiro.subject.Subject;
 import org.apache.tapestry5.model.MutableComponentModel;
@@ -50,6 +52,8 @@ abstract class AbstractShiroAnnotationWorker implements ComponentClassTransformW
                         return invocation.getInstance();
                     }
                 });
+            }catch(UnauthenticatedException ue){
+                throw new CreeperException(ue.getMessage(),CreeperCoreExceptionCode.ACCESS_DENIED);
             } catch (Throwable ex)
             {
                 throw CreeperException.wrap(ex);
