@@ -6,6 +6,7 @@ import creeper.core.internal.CreeperModuleManagerImpl;
 import creeper.core.internal.DatabaseMigrationImpl;
 import creeper.core.internal.MenuSourceImpl;
 import creeper.core.services.*;
+import creeper.core.services.shiro.CreeperShiroModule;
 import lichen.core.services.Option;
 import org.apache.commons.io.FileUtils;
 import org.apache.tapestry5.func.Worker;
@@ -21,7 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-@SubModule({CreeperJpaModule.class})
+@SubModule({CreeperJpaModule.class, CreeperShiroModule.class})
 public class CreeperCoreModule {
     public static void bind(ServiceBinder binder){
         binder.bind(MenuSource.class,MenuSourceImpl.class);

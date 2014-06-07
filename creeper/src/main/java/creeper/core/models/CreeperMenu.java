@@ -1,7 +1,5 @@
 package creeper.core.models;
 
-import com.google.common.collect.ImmutableSortedSet;
-
 import java.util.*;
 
 /**
