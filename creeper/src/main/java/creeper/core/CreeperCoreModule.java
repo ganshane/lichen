@@ -93,7 +93,8 @@ public class CreeperCoreModule {
 
     @Startup
     public static void initCreeperDatabase(Logger logger, DatabaseMigration service){
-        logger.info("Starting up...");
+        logger.info("upgrading database schema ...");
         service.dbSetup();
+        logger.info("database upgraded.");
     }
 }
