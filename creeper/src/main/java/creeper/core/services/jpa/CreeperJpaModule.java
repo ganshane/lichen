@@ -9,14 +9,12 @@ import creeper.core.services.CreeperException;
 import creeper.core.services.CreeperModuleManager;
 import lichen.core.services.Option;
 import org.apache.tapestry5.ioc.*;
-import org.apache.tapestry5.ioc.annotations.Contribute;
-import org.apache.tapestry5.ioc.annotations.EagerLoad;
-import org.apache.tapestry5.ioc.annotations.Marker;
-import org.apache.tapestry5.ioc.annotations.Match;
+import org.apache.tapestry5.ioc.annotations.*;
 import org.apache.tapestry5.ioc.services.MasterObjectProvider;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
 import org.logicalcobwebs.proxool.ProxoolException;
 import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
@@ -36,7 +34,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Properties;
 
@@ -114,8 +111,11 @@ public class CreeperJpaModule {
      * @return
      */
     @Marker(CreeperJpa.class)
-    public static EntityManager buildEntityManager(@CreeperJpa EntityManagerFactory entityManagerFactory){
-        return SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
+    @Scope(ScopeConstants.PERTHREAD)
+    public static EntityManager buildEntityManager(Logger logger,@CreeperJpa EntityManagerFactory entityManagerFactory){
+        logger.debug("Opening EntityManager....");
+        return entityManagerFactory.createEntityManager();
+        //return SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
     }
     @Marker(CreeperJpa.class)
     public static JpaTransactionManager buildJpaTransactionManager(@CreeperJpa EntityManagerFactory entityManagerFactory){

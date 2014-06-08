@@ -44,7 +44,7 @@ public abstract class BaseEntityTestCase {
         registry = RegistryBuilder.buildAndStartupRegistry(all.toArray(new Class<?>[all.size()]));
         //OpenSession In Thread
         EntityManagerFactory entityManagerFactory = registry.getService(EntityManagerFactory.class);
-        EntityManager em = entityManagerFactory.createEntityManager();
+        EntityManager em = registry.getService(EntityManager.class);
         EntityManagerHolder emHolder = new EntityManagerHolder(em);
         TransactionSynchronizationManager.bindResource(entityManagerFactory, emHolder);
     }

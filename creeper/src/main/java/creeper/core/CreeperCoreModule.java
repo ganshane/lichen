@@ -5,6 +5,7 @@ import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.CreeperModuleManagerImpl;
 import creeper.core.internal.DatabaseMigrationImpl;
 import creeper.core.internal.MenuSourceImpl;
+import creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
 import creeper.core.services.*;
 import creeper.core.services.db.DatabaseMigration;
 import creeper.core.services.db.DatabaseMigrationModule;
@@ -14,8 +15,11 @@ import lichen.core.services.Option;
 import org.apache.commons.io.FileUtils;
 import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.func.Worker;
+import org.apache.tapestry5.internal.test.EndOfRequestCleanupFilter;
 import org.apache.tapestry5.ioc.Configuration;
+import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.Startup;
 import org.apache.tapestry5.ioc.annotations.SubModule;
 import org.apache.tapestry5.ioc.annotations.Symbol;
@@ -90,6 +94,11 @@ public class CreeperCoreModule {
                 }
             }
         };
+    }
+    @Contribute(RequestHandler.class)
+    public static void provideOpenEntityManagerInView(OrderedConfiguration<RequestFilter> configuration)
+    {
+        configuration.addInstance("OpenEntityManagerInViewFilter", OpenEntityManagerInViewFilter.class, "after:StaticFiles");
     }
 
 }
