@@ -6,6 +6,8 @@ import creeper.core.internal.CreeperModuleManagerImpl;
 import creeper.core.internal.DatabaseMigrationImpl;
 import creeper.core.internal.MenuSourceImpl;
 import creeper.core.services.*;
+import creeper.core.services.db.DatabaseMigration;
+import creeper.core.services.db.DatabaseMigrationModule;
 import creeper.core.services.jpa.CreeperJpaModule;
 import creeper.core.services.shiro.CreeperShiroModule;
 import lichen.core.services.Option;
@@ -24,11 +26,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-@SubModule({CreeperJpaModule.class, CreeperShiroModule.class})
+@SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class, CreeperShiroModule.class})
 public class CreeperCoreModule {
     public static void bind(ServiceBinder binder){
         binder.bind(MenuSource.class, MenuSourceImpl.class);
-        binder.bind(DatabaseMigration.class,DatabaseMigrationImpl.class);
         binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class);
     }
     /**
@@ -91,10 +92,4 @@ public class CreeperCoreModule {
         };
     }
 
-    @Startup
-    public static void initCreeperDatabase(Logger logger, DatabaseMigration service){
-        logger.info("upgrading database schema ...");
-        service.dbSetup();
-        logger.info("database upgraded.");
-    }
 }

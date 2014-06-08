@@ -4,27 +4,28 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
+ * test entity A
  * @author jcai
  */
 @Entity
 @Table(name="entity_a")
 @javax.persistence.SequenceGenerator(
-        name="SEQ_STORE",
-        sequenceName="my_sequence"
+        name="entity_a_seq",
+        sequenceName="entity_a_seq"
 )
 public class EntityA implements Serializable {
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="SEQ_STORE")
-    @Column(name="account_id")
-    private Long accountId;
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="entity_a_seq")
+    @Column(name="entity_id")
+    private Long id;
     private Integer balance;
 
-    public Long getAccountId() {
-        return accountId;
+    public Long getId() {
+        return id;
     }
 
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Integer getBalance() {

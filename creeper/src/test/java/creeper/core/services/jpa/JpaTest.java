@@ -3,7 +3,7 @@ package creeper.core.services.jpa;
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.CreeperModuleManagerImpl;
 import creeper.core.services.CreeperModuleManager;
-import creeper.core.services.jpa.CreeperJpaModule;
+import creeper.core.services.db.DatabaseMigrationModule;
 import creeper.test.dao.EntityTestDao;
 import creeper.test.entities.EntityA;
 import org.apache.tapestry5.ioc.Configuration;
@@ -24,71 +24,40 @@ import java.util.List;
 /**
  * @author jcai
  */
-public class JpaTest {
+public class JpaTest extends BaseEntityTestCase{
+    protected static Class<?>[] iocModules=new Class<?>[]{TestServiceModule.class};
+    protected static String[] creeperModules = new String[]{"creeper.test"};
+
+    @Override
+    protected Class<?>[] getIocModules() {
+        return new Class<?>[]{TestServiceModule.class};
+    }
+    @Override
+    protected String[] getCreeperModules() {
+        return new String[]{"creeper.test"};
+    }
+
     @Test
-    public void test_jpa(){
+    public void test_EntityA(){
 
         EntityTestDao dao = registry.getObject(EntityTestDao.class, null);
         EntityA entityA = new EntityA();
-        //entityA.setAccountId(123L);
+        //entityA.setId(123L);
         entityA=dao.save(entityA);
-        entityA = dao.findByAccountId(entityA.getAccountId());
+        entityA = dao.findById(entityA.getId());
         Assert.assertNotNull(entityA);
-        List<EntityA> list = dao.findByCustomQuery(entityA.getAccountId());
+        List<EntityA> list = dao.findByCustomQuery(entityA.getId());
         Assert.assertEquals(list.size(),1);
 
         TestService testService = registry.getObject(TestService.class,null);
         testService.testNoTransaction();
         testService.testNeedTransaction();
 
-        /*
-        TransactionDefinition transactionDefinition = new DefaultTransactionDefinition();
-        TransactionStatus status = transactionManager.getTransaction(transactionDefinition);
-
-        EntityManager em = entityFactory.createEntityManager();
-        EntityA entityA = new EntityA();
-        entityA.setAccountId(123L);
-        em.persist(entityA);
-        transactionManager.commit(status);
-
-        em.close();
-        */
 
     }
-    private static Registry registry;
-    @BeforeClass
-    public static void setup(){
-        registry = RegistryBuilder.buildAndStartupRegistry(CreeperJpaModule.class,TestModule.class);
-    }
-    @AfterClass
-    public static void teardown(){
-        registry.shutdown();
-    }
-    public static class TestModule{
+    public static class TestServiceModule{
         public static void bind(ServiceBinder binder){
             binder.bind(TestService.class,TestServiceImpl.class);
-            binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class);
-        }
-        @Contribute(CreeperModuleManager.class)
-        public static void provideTestModule(Configuration<String> modules){
-            modules.add("creeper.test");
-        }
-        public static CreeperCoreConfig buildConfig(){
-            CreeperCoreConfig config = new CreeperCoreConfig();
-            config.db._driverClassName="org.h2.Driver";
-            config.db._url="jdbc:h2:mem:testdb";
-            config.db._username = "sa";
-            CreeperCoreConfig.JpaProperty property = new CreeperCoreConfig.JpaProperty();
-            property.name = Environment.HBM2DDL_AUTO;
-            property.value = "create";
-            config.jpaProperties.add(property);
-
-            property = new CreeperCoreConfig.JpaProperty();
-            property.name = Environment.SHOW_SQL;
-            property.value = "true";
-            config.jpaProperties.add(property);
-
-            return config;
         }
     }
     public static interface TestService{

@@ -13,8 +13,8 @@ import java.util.List;
  */
 @RepositoryDefinition(domainClass = EntityA.class,idClass = Long.class)
 public interface EntityTestDao extends CrudRepository<EntityA, Long> {
-    public EntityA findByAccountId(Long id);
-    @Query("select o from EntityA o where o.accountId=?1")
+    public EntityA findById(Long id);
+    @Query("select o from EntityA o where o.id=?1")
     public List<EntityA> findByCustomQuery(Long id);
     @Transactional
     public EntityA save(EntityA accountInfo);

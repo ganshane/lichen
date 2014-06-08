@@ -20,66 +20,40 @@ import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.services.CreeperCoreExceptionCode;
 import creeper.core.services.CreeperException;
-import creeper.core.services.DatabaseMigration;
+import creeper.core.services.db.DatabaseMigration;
+import org.springframework.util.StringUtils;
+
+import javax.sql.DataSource;
 
 public class DatabaseMigrationImpl implements DatabaseMigration {
 	
 
-	private static Migrator migrator;
     private final CreeperModuleManager _creeperModuleManager;
-    private final ProxoolDataSource _dataSource;
+    private final DataSource _dataSource;
+    private final Migrator migrator;
 
-    @Inject
-	private CreeperCoreConfig creeperCoreConfig;
-	
-	public DatabaseMigrationImpl(@CreeperCore CreeperModuleManager creeperModuleManager,CreeperCoreConfig creeperCoreConfig){
+    public DatabaseMigrationImpl(@CreeperCore CreeperModuleManager creeperModuleManager,
+                                 CreeperCoreConfig creeperCoreConfig,
+                                 DataSource dataSource){
         _creeperModuleManager = creeperModuleManager;
-		this.creeperCoreConfig = creeperCoreConfig;
-		DatabaseVendor vendor = DatabaseVendor.forDriver(this.creeperCoreConfig.db._driverClassName);
+        _dataSource = dataSource;
         //Oracle的schema必须和数据库用户名一致。
-        DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(vendor, Option.some(this.creeperCoreConfig.db._username));
-        Properties info = new Properties();
-        info.setProperty("jdbc-x.proxool.alias", "creeper-migrator");
-        info.setProperty("jdbc-x.proxool.maximum-connection-count", "50");
-        info.setProperty("jdbc-x.user", this.creeperCoreConfig.db._username);
-        info.setProperty("jdbc-x.password", this.creeperCoreConfig.db._password);
-        info.setProperty("jdbc-x.proxool.driver-class", this.creeperCoreConfig.db._driverClassName);
-        info.setProperty("jdbc-x.proxool.driver-url", this.creeperCoreConfig.db._url);
-
-        info.setProperty("jdbc-x.proxool.maximum-connection-lifetime", "18000000000");
-        info.setProperty("jdbc-x.proxool.maximum-active-time", "60000000000");
-
-        //configuration proxool database source
-        try {
-			PropertyConfigurator.configure(info);
-		} catch (ProxoolException e) {
-			CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_CONFIG_PROXOOL);
-            throw ce;
-		}
-        //new datasource
-        _dataSource = new ProxoolDataSource("creeper-migrator");
+        DatabaseVendor vendor = DatabaseVendor.forDriver(creeperCoreConfig.db._driverClassName);
+        DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(vendor, Option.some(creeperCoreConfig.db._username));
         migrator = new Migrator(_dataSource, databaseAdapter);
 	}
 
 	@Override
 	public void dbSetup() {
         Iterator<String> itor = _creeperModuleManager.flowModuleSubPackageWithSuffix(lichen.core.services.Option.some("db")).iterator();
-        try{
-            while(itor.hasNext()){
-                String packageName = itor.next();
-                try {
-                    migrator.migrate(MigratorOperation.InstallAllMigrations, packageName, false);
-                } catch (Throwable e) {
-                    CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_MIGRAT_SCRIPT);
-                    ce.set("script_package",packageName);
-                    throw ce;
-                }
-            }
-        }finally {//关闭数据源
+        while(itor.hasNext()){
+            String packageName = itor.next();
             try {
-                ProxoolFacade.removeConnectionPool("creeper-migrator");
-            } catch (ProxoolException e) {
-                throw CreeperException.wrap(e);
+                migrator.migrate(MigratorOperation.InstallAllMigrations, packageName, false);
+            } catch (Throwable e) {
+                CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_MIGRAT_SCRIPT);
+                ce.set("script_package",packageName);
+                throw ce;
             }
         }
     }
