@@ -1,5 +1,8 @@
 package creeper.core.internal;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -11,6 +14,7 @@ import lichen.migration.internal.Migrator;
 import lichen.migration.internal.MigratorOperation;
 import lichen.migration.internal.Option;
 
+import org.apache.tapestry5.func.Predicate;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
 import org.logicalcobwebs.proxool.ProxoolException;
@@ -45,17 +49,33 @@ public class DatabaseMigrationImpl implements DatabaseMigration {
 
 	@Override
 	public void dbSetup() {
-        Iterator<String> itor = _creeperModuleManager.flowModuleSubPackageWithSuffix(lichen.core.services.Option.some("db")).iterator();
-        while(itor.hasNext()){
-            String packageName = itor.next();
-            try {
-                migrator.migrate(MigratorOperation.InstallAllMigrations, packageName, false);
-            } catch (Throwable e) {
-                CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_MIGRAT_SCRIPT);
-                ce.set("script_package",packageName);
-                throw ce;
+        Iterator<String> itor = _creeperModuleManager.flowModuleSubPackageWithSuffix(lichen.core.services.Option.some("db")).
+                filter(new Predicate<String>() {
+                    @Override
+                    public boolean accept(String packageName) {
+                        String pn = packageName.replace('.', '/');
+
+                        try {
+                            Enumeration<URL> urls = DatabaseMigrationImpl.class.
+                                    getClassLoader().getResources(pn);
+                            return urls.hasMoreElements();
+                        } catch (IOException e) {
+                            throw CreeperException.wrap(e);
+                        }
+                    }
+                }).iterator();
+
+            while(itor.hasNext())
+            {
+                String packageName = itor.next();
+                try {
+                    migrator.migrate(MigratorOperation.InstallAllMigrations, packageName, false);
+                } catch (Throwable e) {
+                    CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_MIGRAT_SCRIPT);
+                    ce.set("script_package", packageName);
+                    throw ce;
+                }
             }
         }
-    }
 
-}
+    }
