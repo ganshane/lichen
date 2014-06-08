@@ -10,6 +10,7 @@ import creeper.core.services.CreeperModuleManager;
 import lichen.core.services.Option;
 import org.apache.tapestry5.ioc.*;
 import org.apache.tapestry5.ioc.annotations.Contribute;
+import org.apache.tapestry5.ioc.annotations.EagerLoad;
 import org.apache.tapestry5.ioc.annotations.Marker;
 import org.apache.tapestry5.ioc.annotations.Match;
 import org.apache.tapestry5.ioc.services.MasterObjectProvider;
@@ -80,6 +81,7 @@ public class CreeperJpaModule {
      * 创建基于Hibernate的JPA实现.
      */
     @Marker(CreeperJpa.class)
+    @EagerLoad
     public static EntityManagerFactory buildEntityManagerFactory(CreeperCoreConfig config,
                                                                  JpaVendorAdapter jpaVendorAdapter,
                                                                  @CreeperJpa DataSource dataSource,

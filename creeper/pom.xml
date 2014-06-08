@@ -52,6 +52,18 @@
       <version>5.3.7</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.tapestry</groupId>
+      <artifactId>tapestry-ioc</artifactId>
+      <version>5.3.7</version>
+      <exclusions>
+        <!-- 去掉和hibernate中的冲突，hibernate依赖的是 org.javassist -->
+        <exclusion>
+          <groupId>javassist</groupId>
+          <artifactId>javassist</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
       <groupId>javax.inject</groupId>
       <artifactId>javax.inject</artifactId>
       <version>1</version>

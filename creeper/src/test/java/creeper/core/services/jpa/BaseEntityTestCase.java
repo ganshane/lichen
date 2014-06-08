@@ -13,7 +13,12 @@ import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.hibernate.cfg.Environment;
 import org.junit.After;
 import org.junit.Before;
+import org.springframework.orm.jpa.EntityManagerFactoryUtils;
+import org.springframework.orm.jpa.EntityManagerHolder;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,9 +42,19 @@ public abstract class BaseEntityTestCase {
         all.add(CreeperJpaModule.class);
         all.add(TestDatabaseModule.class);
         registry = RegistryBuilder.buildAndStartupRegistry(all.toArray(new Class<?>[all.size()]));
+        //OpenSession In Thread
+        EntityManagerFactory entityManagerFactory = registry.getService(EntityManagerFactory.class);
+        EntityManager em = entityManagerFactory.createEntityManager();
+        EntityManagerHolder emHolder = new EntityManagerHolder(em);
+        TransactionSynchronizationManager.bindResource(entityManagerFactory, emHolder);
     }
     @After
     public void teardown(){
+        EntityManagerFactory emf = registry.getService(EntityManagerFactory.class);
+        EntityManagerHolder emHolder = (EntityManagerHolder)
+                TransactionSynchronizationManager.unbindResource(emf);
+        EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
+
         registry.shutdown();
         ThreadContext.remove("creeper.modules");
     }
@@ -61,11 +76,9 @@ public abstract class BaseEntityTestCase {
             config.db._url="jdbc:h2:mem:testdb";
             config.db._username = "sa";
             CreeperCoreConfig.JpaProperty property = new CreeperCoreConfig.JpaProperty();
-            /*
             property.name = Environment.HBM2DDL_AUTO;
             property.value = "create";
             config.jpaProperties.add(property);
-            */
 
             property = new CreeperCoreConfig.JpaProperty();
             property.name = Environment.SHOW_SQL;
