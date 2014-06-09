@@ -2,11 +2,13 @@ package creeper.core.internal.jpa;
 
 import creeper.core.annotations.CreeperJpa;
 import org.apache.tapestry5.ioc.ObjectCreator;
+import org.apache.tapestry5.ioc.services.Builtin;
 import org.apache.tapestry5.ioc.services.PlasticProxyFactory;
 import org.apache.tapestry5.plastic.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.lang.reflect.Method;
@@ -15,13 +17,18 @@ import java.lang.reflect.Method;
  * object creator
  * @author jcai
  */
-public class EntityManagerCreator{
+public class EntityManagerCreatorImpl implements creeper.core.services.jpa.EntityManagerCreator {
 
     private static final Method CREATE_OBJECT = PlasticUtils.getMethod(ObjectCreator.class, "createObject");
-    private static final Logger logger = LoggerFactory.getLogger(EntityManagerCreator.class);
-
-    public static EntityManager createObject(final EntityManagerFactory entityManagerFactory,PlasticProxyFactory proxyFactory) {
-        ClassInstantiator<EntityManager> instance = proxyFactory.createProxy(EntityManager.class, new PlasticClassTransformer() {
+    private static final Logger logger = LoggerFactory.getLogger(EntityManagerCreatorImpl.class);
+    private EntityManagerFactory entityManagerFactory;
+    private PlasticProxyFactory proxyFactory;
+    private final ClassInstantiator<EntityManager> instance;
+    public EntityManagerCreatorImpl(EntityManagerFactory entityManagerFactory,
+                                    @Builtin PlasticProxyFactory plasticProxyFactory){
+        this.entityManagerFactory = entityManagerFactory;
+        this.proxyFactory = plasticProxyFactory;
+        this.instance = proxyFactory.createProxy(EntityManager.class, new PlasticClassTransformer() {
             @Override
             public void transform(final PlasticClass plasticClass) {
                 final PlasticField objectCreatorField = plasticClass.introduceField(ObjectCreator.class, "creator")
@@ -69,7 +76,21 @@ public class EntityManagerCreator{
                         plasticMethod.changeImplementation(new InstructionBuilderCallback() {
                             @Override
                             public void doBuild(InstructionBuilder builder) {
-                                builder.loadThis().getField(isInit).returnResult();
+                                builder.loadThis().getField(isInit);
+                                builder.when(Condition.NON_ZERO, new InstructionBuilderCallback() {
+                                    @Override
+                                    public void doBuild(InstructionBuilder builder) {
+                                        builder.loadThis();
+                                        builder.invokeSpecial(plasticClass.getClassName(), delegateMethod.getDescription());
+                                        builder.loadArguments();
+                                        builder.invokeInterface(EntityManager.class.getName(), plasticMethod.getDescription().returnType, method.getName(),
+                                                plasticMethod.getDescription().argumentTypes);
+                                        builder.returnResult();
+                                    }
+                                });
+
+                                builder.loadConstant(Boolean.FALSE);//.unboxPrimitive(Boolean.TYPE.getName());
+                                builder.returnResult();
                             }
                         });
                     }
@@ -79,13 +100,22 @@ public class EntityManagerCreator{
                 }
             }
         });
-        //System.out.println(instance.toString());
-        return instance.with(ObjectCreator.class,new ObjectCreator<EntityManager>() {
-            @Override
-            public EntityManager createObject() {
+    }
+    class InternalEntityManagerCreator implements ObjectCreator<EntityManager>{
+        private EntityManager _entityManager;
+        @Override
+        public EntityManager createObject() {
+            if(_entityManager == null){
                 logger.debug("Opening EntityManager ....");
-                return entityManagerFactory.createEntityManager();
+                _entityManager = entityManagerFactory.createEntityManager();
             }
-        }).newInstance();
+            return _entityManager;
+        }
+    }
+
+    @Override
+    public EntityManager createEntityManager(){
+        return instance.with(ObjectCreator.class, new InternalEntityManagerCreator())
+                .newInstance();
     }
 }

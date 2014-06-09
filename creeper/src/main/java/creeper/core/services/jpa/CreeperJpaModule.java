@@ -4,7 +4,7 @@ import creeper.core.annotations.CreeperCore;
 import creeper.core.annotations.CreeperJpa;
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.TransactionAdvice;
-import creeper.core.internal.jpa.EntityManagerCreator;
+import creeper.core.internal.jpa.EntityManagerCreatorImpl;
 import creeper.core.services.CreeperCoreExceptionCode;
 import creeper.core.services.CreeperException;
 import creeper.core.services.CreeperModuleManager;
@@ -49,6 +49,7 @@ import java.util.Properties;
 public class CreeperJpaModule {
     public static void bind(ServiceBinder binder){
         binder.bind(JpaVendorAdapter.class, HibernateJpaVendorAdapter.class).withMarker(CreeperJpa.class);
+        binder.bind(EntityManagerCreator.class, EntityManagerCreatorImpl.class).withMarker(CreeperJpa.class);
     }
     @Marker(CreeperJpa.class)
     public static DataSource buildDataSource(CreeperCoreConfig config){
@@ -115,9 +116,8 @@ public class CreeperJpaModule {
      */
     @Marker(CreeperJpa.class)
     @Scope(ScopeConstants.PERTHREAD)
-    public static EntityManager buildEntityManager(Logger logger, @CreeperJpa EntityManagerFactory entityManagerFactory, @Builtin PlasticProxyFactory proxyFactory,PerthreadManager perthreadManager){
-        //return entityManagerFactory.createEntityManager();
-        final EntityManager manager  = entityManagerFactory.createEntityManager();//.createObject(entityManagerFactory,proxyFactory);
+    public static EntityManager buildEntityManager(Logger logger,PerthreadManager perthreadManager,EntityManagerCreator entityManagerCreator){
+        final EntityManager manager = entityManagerCreator.createEntityManager();
         //线程结束的时候，应该关闭此manager
         perthreadManager.addThreadCleanupListener(new ThreadCleanupListener() {
             @Override
