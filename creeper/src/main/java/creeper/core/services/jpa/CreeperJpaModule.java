@@ -117,7 +117,7 @@ public class CreeperJpaModule {
     @Scope(ScopeConstants.PERTHREAD)
     public static EntityManager buildEntityManager(Logger logger, @CreeperJpa EntityManagerFactory entityManagerFactory, @Builtin PlasticProxyFactory proxyFactory,PerthreadManager perthreadManager){
         //return entityManagerFactory.createEntityManager();
-        final EntityManager manager  = EntityManagerCreator.createObject(entityManagerFactory,proxyFactory);
+        final EntityManager manager  = entityManagerFactory.createEntityManager();//.createObject(entityManagerFactory,proxyFactory);
         //线程结束的时候，应该关闭此manager
         perthreadManager.addThreadCleanupListener(new ThreadCleanupListener() {
             @Override
