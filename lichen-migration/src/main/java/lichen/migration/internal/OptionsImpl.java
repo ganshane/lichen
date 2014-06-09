@@ -16,13 +16,17 @@ package lichen.migration.internal;
 import lichen.migration.model.AutoIncrement;
 import lichen.migration.model.Comment;
 import lichen.migration.model.Default;
+import lichen.migration.model.Increment;
 import lichen.migration.model.Limit;
+import lichen.migration.model.MaxValue;
+import lichen.migration.model.MinValue;
 import lichen.migration.model.Name;
 import lichen.migration.model.NotNull;
 import lichen.migration.model.Nullable;
 import lichen.migration.model.Precision;
 import lichen.migration.model.PrimaryKey;
 import lichen.migration.model.Scale;
+import lichen.migration.model.Start;
 import lichen.migration.model.Unique;
 import lichen.migration.services.Options;
 
@@ -140,4 +144,41 @@ public class OptionsImpl implements Options {
      */
     private static final AutoIncrement AUTO_INCREMENT = new AutoIncrement() {
     };
+
+	@Override
+	public Increment Increment(final int increment) {
+		return new Increment(){
+			@Override
+			public int getValue() {
+				return increment;
+			}};
+	}
+
+	@Override
+	public MaxValue MaxValue(final int maxvalue) {
+		return new MaxValue(){
+			@Override
+			public int getValue() {
+				return maxvalue;
+			}};
+	}
+
+	@Override
+	public MinValue MinValue(final int minvalue) {
+		return new MinValue(){
+			@Override
+			public int getValue() {
+				return minvalue;
+			}};
+	}
+
+	@Override
+	public Start Start(final int start) {
+		return new Start(){
+			@Override
+			public int getValue() {
+				return start;
+			}
+		};
+	}
 }

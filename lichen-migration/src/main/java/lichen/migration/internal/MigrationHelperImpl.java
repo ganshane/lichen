@@ -22,10 +22,10 @@ import lichen.migration.model.ColumnOption;
 import lichen.migration.model.Comment;
 import lichen.migration.model.IndexOption;
 import lichen.migration.model.Name;
+import lichen.migration.model.SequenceOption;
 import lichen.migration.model.SqlType;
 import lichen.migration.model.TableOption;
 import lichen.migration.services.MigrationHelper;
-import lichen.migration.services.SequenceCallback;
 import lichen.migration.services.TableCallback;
 
 import org.slf4j.Logger;
@@ -304,19 +304,16 @@ class MigrationHelperImpl implements MigrationHelper {
 	}
 
 	@Override
-	public void createSequence(String sequenceName, SequenceCallback body)
-			throws Throwable {
-		SequenceDefinitionImpl seqDefinition = new SequenceDefinitionImpl(adapter());
-        body.doInSequence(seqDefinition);
-        String sql = "CREATE SEQUENCE " + adapter().quoteTableName(sequenceName) +  adapter().createSequenceSql(seqDefinition);
-        execute(sql);
-	}
-
-	@Override
 	public void dropSequence(String sequenceName) throws Throwable {
 		String sql = "DROP SEQUENCE " + adapter().quoteTableName(sequenceName);
         execute(sql);
 		
+	}
+
+	@Override
+	public void createSequence(String seqName, SequenceOption... options) throws Throwable {
+		String createSequenceSql = adapter().createSequenceSql(seqName, options);
+        execute(createSequenceSql);
 	}
 
 }

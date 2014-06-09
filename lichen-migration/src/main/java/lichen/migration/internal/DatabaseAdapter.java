@@ -20,7 +20,7 @@ import lichen.migration.model.ColumnOption;
 import lichen.migration.model.Comment;
 import lichen.migration.model.IndexOption;
 import lichen.migration.model.Name;
-import lichen.migration.model.SequenceDefinition;
+import lichen.migration.model.SequenceOption;
 import lichen.migration.model.SqlType;
 import lichen.migration.model.Unique;
 
@@ -255,14 +255,6 @@ public abstract class DatabaseAdapter {
      */
     public abstract String commentColumnSql(Option<String> newSchemaNameOpt, String tableName, String columnName,Comment comment);
     
-    /**
-     * for subclass implement 
-     * @param seqDefinition 
-     * @return
-     */
-    public abstract String createSequenceSql(SequenceDefinition seqDefinition);
-    
-
     /**
      * Different databases require different SQL to alter a column's
      * definition.
@@ -525,6 +517,14 @@ public abstract class DatabaseAdapter {
             boolean addingForeignKeyConstraintCreatesIndex) {
         this._addingForeignKeyConstraintCreatesIndex = addingForeignKeyConstraintCreatesIndex;
     }
+    
+    /**
+     * for subclass implement
+     * @param seqName
+     * @param options
+     * @return
+     */
+	public abstract String createSequenceSql(String seqName, SequenceOption[] options);
 
 
 }

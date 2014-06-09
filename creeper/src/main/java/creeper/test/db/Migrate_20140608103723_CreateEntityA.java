@@ -13,12 +13,13 @@
 // limitations under the License.
 package creeper.test.db;
 
-import lichen.migration.model.SequenceDefinition;
-import lichen.migration.model.SqlType;
-import lichen.migration.model.TableDefinition;
-import lichen.migration.services.*;
-
 import javax.inject.Inject;
+
+import lichen.migration.model.TableDefinition;
+import lichen.migration.services.Migration;
+import lichen.migration.services.MigrationHelper;
+import lichen.migration.services.Options;
+import lichen.migration.services.TableCallback;
 
 /**
  * @author jcai
@@ -42,11 +43,7 @@ public class Migrate_20140608103723_CreateEntityA implements Migration {
         _helper.commentTable("entity_a", _options.Comment("用于测试的实体表"));
         _helper.commentColumn("entity_a", "entity_id", _options.Comment("主键字段"));
         _helper.commentColumn("entity_a", "balance", _options.Comment("测试的整数字段"));
-        _helper.createSequence("entity_a_seq",new SequenceCallback() {
-            @Override
-            public void doInSequence(SequenceDefinition seqDefinition) throws Throwable {
-            }
-        });
+        _helper.createSequence("entity_a_seq");
 
     }
 
