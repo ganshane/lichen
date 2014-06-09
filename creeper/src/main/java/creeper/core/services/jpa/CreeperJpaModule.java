@@ -4,13 +4,14 @@ import creeper.core.annotations.CreeperCore;
 import creeper.core.annotations.CreeperJpa;
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.TransactionAdvice;
+import creeper.core.internal.jpa.EntityManagerCreator;
 import creeper.core.services.CreeperCoreExceptionCode;
 import creeper.core.services.CreeperException;
 import creeper.core.services.CreeperModuleManager;
 import lichen.core.services.Option;
 import org.apache.tapestry5.ioc.*;
 import org.apache.tapestry5.ioc.annotations.*;
-import org.apache.tapestry5.ioc.services.MasterObjectProvider;
+import org.apache.tapestry5.ioc.services.*;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
 import org.logicalcobwebs.proxool.ProxoolException;
 import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
@@ -107,14 +108,25 @@ public class CreeperJpaModule {
 
     /**
      * 构建共享的EntityManager，在事务和操作的时候，都可以使用一个EntityManager
+     *
      * @param entityManagerFactory
+     * @param proxyFactory
      * @return
      */
     @Marker(CreeperJpa.class)
     @Scope(ScopeConstants.PERTHREAD)
-    public static EntityManager buildEntityManager(Logger logger,@CreeperJpa EntityManagerFactory entityManagerFactory){
-        logger.debug("Opening EntityManager....");
-        return entityManagerFactory.createEntityManager();
+    public static EntityManager buildEntityManager(Logger logger, @CreeperJpa EntityManagerFactory entityManagerFactory, @Builtin PlasticProxyFactory proxyFactory,PerthreadManager perthreadManager){
+        //return entityManagerFactory.createEntityManager();
+        final EntityManager manager  = EntityManagerCreator.createObject(entityManagerFactory,proxyFactory);
+        //线程结束的时候，应该关闭此manager
+        perthreadManager.addThreadCleanupListener(new ThreadCleanupListener() {
+            @Override
+            public void threadDidCleanup() {
+                if(manager.isOpen())
+                    manager.close();
+            }
+        });
+        return manager;
         //return SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
     }
     @Marker(CreeperJpa.class)

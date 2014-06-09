@@ -1,5 +1,7 @@
 package creeper.core.internal.jpa;
 
+import org.apache.tapestry5.ioc.services.Builtin;
+import org.apache.tapestry5.ioc.services.PlasticProxyFactory;
 import org.apache.tapestry5.plastic.PlasticUtils;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.RequestFilter;
@@ -24,14 +26,17 @@ public class OpenEntityManagerInViewFilter implements RequestFilter {
     private EntityManagerFactory entityManagerFactory;
     @Inject
     private EntityManager entityManager;
+    @Inject
+    @Builtin
+    private PlasticProxyFactory proxyFactory;
     @Override
     public boolean service(Request request, Response response, RequestHandler handler) throws IOException {
         try{
+            //EntityManager delegate = EntityManagerCreator.createObject(entityManager,proxyFactory);
             EntityManagerHolder emHolder = new EntityManagerHolder(entityManager);
             TransactionSynchronizationManager.bindResource(entityManagerFactory, emHolder);
             return handler.service(request,response);
         }finally{
-            //TODO 通过代理类来判断是否服务已经创建
             EntityManagerHolder emHolder = (EntityManagerHolder) TransactionSynchronizationManager.unbindResource(entityManagerFactory);
             EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
         }
