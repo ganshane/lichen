@@ -14,8 +14,12 @@
 package lichen.migration.internal;
 
 import lichen.migration.model.Comment;
-import lichen.migration.model.SequenceDefinition;
+import lichen.migration.model.Increment;
+import lichen.migration.model.MaxValue;
+import lichen.migration.model.MinValue;
+import lichen.migration.model.SequenceOption;
 import lichen.migration.model.SqlType;
+import lichen.migration.model.Start;
 
 /**
  *
@@ -99,15 +103,23 @@ class OracleDatabaseAdapter extends DatabaseAdapter {
 	}
 
 	@Override
-	public String createSequenceSql(SequenceDefinition seqDefinition) {
-		final int size = 512;
-		StringBuilder sb = new StringBuilder(size);
-		sb
-		.append(" START WITH ").append(0 == seqDefinition.getStart() ? 1 : seqDefinition.getStart())
-		.append(" INCREMENT BY ").append(0 == seqDefinition.getIncrement()? 1 : seqDefinition.getIncrement())
-		.append(" MINVALUE ").append(0 == seqDefinition.getMinValue() ? 1 : seqDefinition.getMinValue())
-		.append(" MAXVALUE ").append(0 == seqDefinition.getMaxValue() ? "999999999999999999999999999" : seqDefinition.getMaxValue());
-		return sb.toString();
+	public String createSequenceSql(String seqName, SequenceOption[] options) {
+		StringBuffer sql = new StringBuffer();
+        sql.append("CREATE SEQUENCE")
+                .append(quoteTableName(seqName));
+        for (int i = 0; i < options.length; i++) {
+            SequenceOption option = options[i];
+            if (option instanceof Start) {
+            	sql.append(" START WITH ").append(0 == option.getValue() ? 1 : option.getValue());
+            } else if (option instanceof Increment) {
+            	sql.append(" INCREMENT BY ").append(0 == option.getValue() ? 1 : option.getValue());
+            } else if (option instanceof MinValue){
+            	sql.append(" MINVALUE ").append(0 == option.getValue() ? 1 : option.getValue());
+            } else if (option instanceof MaxValue){
+            	sql.append(" MAXVALUE ").append(0 == option.getValue() ? "999999999999999999999999999" : option.getValue());
+            }
+        }
+        return sql.toString();
 	}
 }
 

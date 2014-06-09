@@ -101,4 +101,32 @@ public interface Options {
      * @return 列注释
      */
     Comment Comment(String comment);
+    
+    /**
+     * 序列最小值
+     * @param minvalue 
+     * @return 
+     */
+    MinValue MinValue(int minvalue);
+    
+    /**
+	 * 最大值
+	 * @param maxvalue
+	 * @return
+	 */
+    MaxValue MaxValue(int maxvalue);
+	
+	/**
+	 * 起始值
+	 * @param start
+	 * @return
+	 */
+    Start Start(int start);
+	
+	/**
+	 * 增量
+	 * @param increment
+	 * @return
+	 */
+    Increment Increment(int increment);
 }

@@ -144,18 +144,18 @@ public interface MigrationHelper {
     void executeSQL(String ... sql) throws Throwable;
     
     /**
-     * 创建序列
-     * @param sequenceName 序列名
-     * @param body         创建序列的回调函数
-     * @throws Throwable   任何错误，将抛出异常
-     */
-    void createSequence(String sequenceName, SequenceCallback body) throws Throwable;
-    
-    /**
      * 删除序列
      * @param sequenceName 待删除的序列名
      * @throws Throwable   任何错误，将抛出异常
      */
     void dropSequence(String sequenceName) throws Throwable;
+    
+    /**
+     * 创建序列
+     * @param seq_name 序列名
+     * @param options 序列属性
+     * @throws Throwable 任何错误，将抛出异常
+     */
+    void createSequence(String seq_name, SequenceOption... options) throws Throwable;
 
 }

@@ -14,7 +14,7 @@
 package lichen.migration.internal;
 
 import lichen.migration.model.Comment;
-import lichen.migration.model.SequenceDefinition;
+import lichen.migration.model.SequenceOption;
 import lichen.migration.model.SqlType;
 
 /**
@@ -115,7 +115,11 @@ class H2DatabaseAdapter extends DatabaseAdapter {
 	}
 
 	@Override
-	public String createSequenceSql(SequenceDefinition seqDefinition) {
-		return "";
+	public String createSequenceSql(String seqName, SequenceOption[] options) {
+		StringBuffer sql = new StringBuffer();
+        sql.append("CREATE SEQUENCE")
+                .append(quoteTableName(seqName)
+                		);
+        return sql.toString();
 	}
 }
