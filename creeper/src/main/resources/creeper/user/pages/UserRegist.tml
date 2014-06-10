@@ -1,0 +1,14 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">     
+<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"> 
+<body>
+<form t:type="form" t:id="registUserForm" >
+	<br/>
+ 	<t:errors/>
+ 	<p>用户名：<input t:type="textfield" t:value="user.username" label="用户名" t:validate="required" /></p>
+ 	<p>姓名：<input t:type="textfield"  t:value="user.name" label="姓名" t:validate="required" /></p>
+ 	<p>密码：<input t:type="textfield" t:value="user.password" label="密码" t:validate="required"/></p>
+ 	<p><input type="submit" value="注册"/></p>
+ 	<p><input type="reset" value="重置"/></p>
+</form>
+</body>   
+</html>

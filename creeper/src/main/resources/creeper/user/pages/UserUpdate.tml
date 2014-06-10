@@ -1,0 +1,16 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">     
+<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"> 
+<body>
+<form t:type="form" t:id="userUpdateForm" >
+	<br/>
+ 	<t:errors/>
+ 	<p>姓名：<t:textfield t:id="name" label="姓名" value="user.name" t:validate="required"/></p>
+ 	<p>用户名：<t:textfield t:id="username" label="用户名" value="user.username" t:validate="required"/></p>
+ 	<p>密码：<t:textfield t:id="password" label="密码" value="user.password" t:validate="required"/></p>
+ 	<p>
+ 		<input type="submit" value="保存"/>
+ 		<t:pagelink page="user/list">返回查看页面</t:pagelink>
+ 	</p>
+</form>
+</body>   
+</html>

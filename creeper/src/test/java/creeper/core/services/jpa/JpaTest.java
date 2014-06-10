@@ -1,25 +1,15 @@
 package creeper.core.services.jpa;
 
-import creeper.core.config.CreeperCoreConfig;
-import creeper.core.internal.CreeperModuleManagerImpl;
-import creeper.core.services.CreeperModuleManager;
-import creeper.core.services.db.DatabaseMigrationModule;
-import creeper.test.dao.EntityTestDao;
-import creeper.test.entities.EntityA;
-import org.apache.tapestry5.ioc.Configuration;
-import org.apache.tapestry5.ioc.Registry;
-import org.apache.tapestry5.ioc.RegistryBuilder;
+import java.util.List;
+
 import org.apache.tapestry5.ioc.ServiceBinder;
-import org.apache.tapestry5.ioc.annotations.Contribute;
-import org.hibernate.cfg.Environment;
-import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
+import creeper.test.dao.EntityTestDao;
+import creeper.test.entities.EntityA;
 
 /**
  * @author jcai
@@ -34,7 +24,7 @@ public class JpaTest extends BaseEntityTestCase{
     }
     @Override
     protected String[] getCreeperModules() {
-        return new String[]{"creeper.test"};
+        return new String[]{"creeper.test","creeper.user"};
     }
 
     @Test
