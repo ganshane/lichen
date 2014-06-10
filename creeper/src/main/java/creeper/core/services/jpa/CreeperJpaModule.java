@@ -110,8 +110,6 @@ public class CreeperJpaModule {
     /**
      * 构建共享的EntityManager，在事务和操作的时候，都可以使用一个EntityManager
      *
-     * @param entityManagerFactory
-     * @param proxyFactory
      * @return
      */
     @Marker(CreeperJpa.class)
@@ -152,7 +150,7 @@ public class CreeperJpaModule {
                                               @CreeperJpa
                                                final BeanFactory beanFactory,
                                               @CreeperJpa
-                                               final EntityManagerFactory entityManagerFactory)
+                                               final EntityManager entityManager)
     {
         configuration.add("entityDaoProvider", new ObjectProvider() {
             @Override
@@ -161,7 +159,7 @@ public class CreeperJpaModule {
                     JpaRepositoryFactoryBean jpaRepositoryFactoryBean = new JpaRepositoryFactoryBean();
                     jpaRepositoryFactoryBean.setBeanFactory(beanFactory);
                     jpaRepositoryFactoryBean.setTransactionManager(TxUtils.DEFAULT_TRANSACTION_MANAGER);
-                    EntityManager entityManager = SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
+                    //EntityManager entityManager = SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
                     jpaRepositoryFactoryBean.setEntityManager(entityManager);
                     jpaRepositoryFactoryBean.setRepositoryInterface(objectType);
                     jpaRepositoryFactoryBean.afterPropertiesSet();
