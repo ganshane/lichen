@@ -37,7 +37,7 @@ public class Migrate_20140606010101_CreateUsers implements Migration {
         _helper.commentColumn("users", "username", _options.Comment("用户名"));
         _helper.commentColumn("users", "password", _options.Comment("密码"));
         
-        _helper.createSequence("user_seq", _options.MinValue(5));
+        _helper.createSequence("user_seq", _options.Start(1), _options.MinValue(1),_options.Increment(1));
 
     }
 

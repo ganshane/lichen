@@ -1,14 +1,32 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">     
 <html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"> 
-<body>
+<t:layout>
 <form t:type="form" t:id="registUserForm" >
-	<br/>
- 	<t:errors/>
- 	<p>用户名：<input t:type="textfield" t:value="user.username" label="用户名" t:validate="required" /></p>
- 	<p>姓名：<input t:type="textfield"  t:value="user.name" label="姓名" t:validate="required" /></p>
- 	<p>密码：<input t:type="textfield" t:value="user.password" label="密码" t:validate="required"/></p>
- 	<p><input type="submit" value="注册"/></p>
- 	<p><input type="reset" value="重置"/></p>
+	<t:errors/>
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+	    <h3 class="panel-title">用户注册</h3>
+	  </div>
+	  <div class="panel-body">
+	    <div class="input-group">
+		  <div class="input-group-addon" style="width:100px;" >用户名：</div>
+		  <input class="form-control" t:type="textfield" t:value="user.username" label="用户名" t:validate="required" />
+		</div>
+		<div class="input-group">
+		  <div class="input-group-addon" style="width:100px;" >密码：</div>
+		  <input class="form-control" t:type="textfield"  t:value="user.password" label="密码" t:validate="required" />
+		</div>
+		<div class="input-group">
+		  <div class="input-group-addon" style="width:100px;" >姓名：</div>
+		  <input class="form-control" t:type="textfield" t:value="user.name" label="姓名" t:validate="required" />
+		</div>
+		<br/>
+		<div class="btn-group">
+		  <button type="submit" class="btn btn-default">注册</button>
+		  <button type="reset" class="btn btn-default">重置</button>
+		</div>
+	  </div>
+	</div>
 </form>
-</body>   
+</t:layout>
 </html>
