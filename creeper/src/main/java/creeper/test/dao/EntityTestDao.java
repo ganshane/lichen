@@ -1,6 +1,7 @@
 package creeper.test.dao;
 
 import creeper.test.entities.EntityA;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.RepositoryDefinition;
@@ -20,4 +21,6 @@ public interface EntityTestDao extends CrudRepository<EntityA, Long> {
     public List<EntityA> findByIds(Long id);
     @Transactional
     public EntityA save(EntityA accountInfo);
+    //动态组装条件
+    public List<EntityA> findAll(Specification<EntityA> spec);
 }
