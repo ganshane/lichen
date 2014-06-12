@@ -38,6 +38,7 @@ public class JpaTest extends BaseEntityTestCase{
         Assert.assertNotNull(entityA);
         List<EntityA> list = dao.findByCustomQuery(entityA.getId());
         Assert.assertEquals(list.size(),1);
+        list = dao.findByIds(entityA.getId());
 
         TestService testService = registry.getObject(TestService.class,null);
         testService.testNoTransaction();

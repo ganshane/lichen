@@ -16,6 +16,8 @@ public interface EntityTestDao extends CrudRepository<EntityA, Long> {
     public EntityA findById(Long id);
     @Query("select o from EntityA o where o.id=?1")
     public List<EntityA> findByCustomQuery(Long id);
+    @Query("select o.id from EntityA o where o.id=?1")
+    public List<EntityA> findByIds(Long id);
     @Transactional
     public EntityA save(EntityA accountInfo);
 }
