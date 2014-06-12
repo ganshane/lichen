@@ -1,36 +1,5 @@
 package creeper.core;
 
-import creeper.core.annotations.CreeperCore;
-import creeper.core.config.CreeperCoreConfig;
-import creeper.core.internal.CreeperModuleManagerImpl;
-import creeper.core.internal.DatabaseMigrationImpl;
-import creeper.core.internal.EntityValueEncoder;
-import creeper.core.internal.MenuSourceImpl;
-import creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
-import creeper.core.services.*;
-import creeper.core.services.db.DatabaseMigration;
-import creeper.core.services.db.DatabaseMigrationModule;
-import creeper.core.services.jpa.CreeperJpaModule;
-import creeper.core.services.shiro.CreeperShiroModule;
-import lichen.core.services.Option;
-import org.apache.commons.io.FileUtils;
-import org.apache.tapestry5.SymbolConstants;
-import org.apache.tapestry5.func.Worker;
-import org.apache.tapestry5.internal.test.EndOfRequestCleanupFilter;
-import org.apache.tapestry5.ioc.Configuration;
-import org.apache.tapestry5.ioc.MappedConfiguration;
-import org.apache.tapestry5.ioc.OrderedConfiguration;
-import org.apache.tapestry5.ioc.ServiceBinder;
-import org.apache.tapestry5.ioc.annotations.Contribute;
-import org.apache.tapestry5.ioc.annotations.Startup;
-import org.apache.tapestry5.ioc.annotations.SubModule;
-import org.apache.tapestry5.ioc.annotations.Symbol;
-import org.apache.tapestry5.ioc.services.ClassNameLocator;
-import org.apache.tapestry5.ioc.services.PropertyAccess;
-import org.apache.tapestry5.ioc.services.TypeCoercer;
-import org.apache.tapestry5.services.*;
-import org.slf4j.Logger;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -40,7 +9,48 @@ import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.Id;
 
-@SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class, CreeperShiroModule.class})
+import lichen.core.services.Option;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.tapestry5.SymbolConstants;
+import org.apache.tapestry5.func.Worker;
+import org.apache.tapestry5.ioc.Configuration;
+import org.apache.tapestry5.ioc.MappedConfiguration;
+import org.apache.tapestry5.ioc.OrderedConfiguration;
+import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.annotations.Contribute;
+import org.apache.tapestry5.ioc.annotations.SubModule;
+import org.apache.tapestry5.ioc.annotations.Symbol;
+import org.apache.tapestry5.ioc.services.ClassNameLocator;
+import org.apache.tapestry5.ioc.services.PropertyAccess;
+import org.apache.tapestry5.ioc.services.TypeCoercer;
+import org.apache.tapestry5.services.ComponentSource;
+import org.apache.tapestry5.services.ExceptionReporter;
+import org.apache.tapestry5.services.LibraryMapping;
+import org.apache.tapestry5.services.RequestExceptionHandler;
+import org.apache.tapestry5.services.RequestFilter;
+import org.apache.tapestry5.services.RequestHandler;
+import org.apache.tapestry5.services.ResponseRenderer;
+import org.apache.tapestry5.services.ValueEncoderSource;
+import org.slf4j.Logger;
+
+import creeper.core.annotations.CreeperCore;
+import creeper.core.config.CreeperCoreConfig;
+import creeper.core.internal.CreeperModuleManagerImpl;
+import creeper.core.internal.EntityValueEncoder;
+import creeper.core.internal.MenuSourceImpl;
+import creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
+import creeper.core.services.CreeperCoreExceptionCode;
+import creeper.core.services.CreeperException;
+import creeper.core.services.CreeperModuleManager;
+import creeper.core.services.MenuSource;
+import creeper.core.services.XmlLoader;
+import creeper.core.services.db.DatabaseMigrationModule;
+import creeper.core.services.jpa.CreeperJpaModule;
+import creeper.core.services.shiro.CreeperShiroModule;
+import creeper.user.UserModule;
+
+@SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class, CreeperShiroModule.class,UserModule.class})
 public class CreeperCoreModule {
     public static void bind(ServiceBinder binder){
         binder.bind(MenuSource.class, MenuSourceImpl.class);

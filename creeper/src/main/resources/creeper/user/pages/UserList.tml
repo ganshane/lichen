@@ -1,8 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">     
 <html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
-<head>
-</head>
-<body>
+<t:layout>
 <t:pagelink page="user/regist">注册</t:pagelink>&nbsp;
 <t:pagelink page="user/query">查询</t:pagelink>
 <table width="100%" border="1" cellspacing="0" cellpadding="0" class="table">
@@ -24,6 +22,5 @@
     </td>
   </tr>
 </table>
-
-</body>   
+</t:layout>   
 </html>

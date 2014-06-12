@@ -21,14 +21,10 @@ public class CreeperTestModule {
         coll.add(new CreeperMenu("test.a2","测试A2","/test2/a2",1));
         coll.add(new CreeperMenu("test.b2","测试B2","/test2/b2",1));
         
-        coll.add(new CreeperMenu("user","用户管理","/user",1));
-        coll.add(new CreeperMenu("user.regist","注册","/user/regist",1));
-        coll.add(new CreeperMenu("user.query","查询","/user/query",2));
     }
 
     @Contribute(value = CreeperModuleManager.class)
     public static void provideModule(Configuration<String> configuration){
     	configuration.add("creeper.test");
-    	configuration.add("creeper.user");
     }
 }
