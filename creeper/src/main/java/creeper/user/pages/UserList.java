@@ -1,12 +1,20 @@
 package creeper.user.pages;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.jpa.domain.Specification;
 
 import creeper.user.dao.UserDao;
 import creeper.user.entities.User;
@@ -26,8 +34,20 @@ public class UserList{
 	@Inject
 	private UserDao userDao;
 	
-	void onActivate(Long id,String name,String username,String password){
-		users = userDao.findByCustomQuery(id, name, username, password);
+	void onActivate(final Long id,final String name,final String username,final String password){
+		users = userDao.findAll(new Specification<User>() {
+			@Override
+			public Predicate toPredicate(Root<User> root,
+					CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> list = new ArrayList<Predicate>();
+				if(null != id){list.add(cb.equal(root.get("id"),id));}
+				if(null != name){list.add(cb.equal(root.get("name"),name));}
+				if(null != username){list.add(cb.equal(root.get("username"),username));}
+				if(null != password){list.add(cb.equal(root.get("password"),password));}
+				Predicate[] p = new Predicate[list.size()];   
+				return cb.and(list.toArray(p));
+			}
+        });
 	}
 	
 //	单击eventlink执行删除操作

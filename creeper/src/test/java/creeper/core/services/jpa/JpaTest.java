@@ -1,6 +1,13 @@
 package creeper.core.services.jpa;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.junit.Assert;
@@ -11,11 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import creeper.test.dao.EntityTestDao;
 import creeper.test.entities.EntityA;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import creeper.user.dao.UserDao;
+import creeper.user.entities.User;
 
 /**
  * @author jcai
@@ -56,9 +60,30 @@ public class JpaTest extends BaseEntityTestCase{
         TestService testService = registry.getObject(TestService.class,null);
         testService.testNoTransaction();
         testService.testNeedTransaction();
-
-
     }
+    
+    
+    @Test
+    public void test_User(){
+        UserDao dao = registry.getObject(UserDao.class, null);
+        dao.findAll(new Specification<User>() {
+			@Override
+			public Predicate toPredicate(Root<User> root,
+					CriteriaQuery<?> query, CriteriaBuilder cb) {
+				List<Predicate> list = new ArrayList<Predicate>();   
+				Predicate pid = cb.equal(root.get("id"),2);
+				Predicate pname = cb.equal(root.get("name"),"啊");
+				Predicate pusername = cb.equal(root.get("username"),"webmaster");
+				list.add(pid);
+				list.add(pname);
+				list.add(pusername);
+				Predicate[] p = new Predicate[list.size()];   
+				return cb.and(list.toArray(p));
+			}
+        });
+    }
+    
+    
     public static class TestServiceModule{
         public static void bind(ServiceBinder binder){
             binder.bind(TestService.class,TestServiceImpl.class);
