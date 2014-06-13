@@ -32,6 +32,7 @@ import org.apache.tapestry5.services.RequestFilter;
 import org.apache.tapestry5.services.RequestHandler;
 import org.apache.tapestry5.services.ResponseRenderer;
 import org.apache.tapestry5.services.ValueEncoderSource;
+import org.got5.tapestry5.jquery.JQuerySymbolConstants;
 import org.slf4j.Logger;
 
 import creeper.core.annotations.CreeperCore;
@@ -56,6 +57,11 @@ public class CreeperCoreModule {
         binder.bind(MenuSource.class, MenuSourceImpl.class);
         binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class);
     }
+    
+	public static void contributeApplicationDefaults(MappedConfiguration<String, String> configuration){
+		configuration.add(JQuerySymbolConstants.SUPPRESS_PROTOTYPE, "true");
+	}
+    
     /**
      * Contribution to the
      * {@link org.apache.tapestry5.services.ComponentClassResolver} service
