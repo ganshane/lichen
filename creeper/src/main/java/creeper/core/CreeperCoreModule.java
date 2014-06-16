@@ -7,6 +7,7 @@ import creeper.core.internal.EntityValueEncoder;
 import creeper.core.internal.H2ConsoleRunner;
 import creeper.core.internal.MenuSourceImpl;
 import creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
+import creeper.core.internal.override.CreeperOverrideModule;
 import creeper.core.services.*;
 import creeper.core.services.db.DatabaseMigrationModule;
 import creeper.core.services.jpa.CreeperJpaModule;
@@ -40,7 +41,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 
-@SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class, CreeperShiroModule.class,UserModule.class})
+@SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class, CreeperShiroModule.class,UserModule.class,CreeperOverrideModule.class})
 public class CreeperCoreModule {
     public static void bind(ServiceBinder binder){
         binder.bind(MenuSource.class, MenuSourceImpl.class);
