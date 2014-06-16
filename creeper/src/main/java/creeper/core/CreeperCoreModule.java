@@ -46,6 +46,10 @@ public class CreeperCoreModule {
         binder.bind(MenuSource.class, MenuSourceImpl.class);
         binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class);
     }
+
+    /**
+     * 在开发模式下，自动启动数据库管理工具
+     */
     @Startup
     public static void startupH2Console(@Symbol(SymbolConstants.PRODUCTION_MODE) boolean isProduction, final CreeperCoreConfig config,final DataSource dataSource){
         if(!isProduction){
