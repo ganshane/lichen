@@ -1,16 +1,18 @@
 package creeper.core;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.lang.reflect.Field;
-
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
-
+import creeper.core.annotations.CreeperCore;
+import creeper.core.config.CreeperCoreConfig;
+import creeper.core.internal.CreeperModuleManagerImpl;
+import creeper.core.internal.EntityValueEncoder;
+import creeper.core.internal.H2ConsoleRunner;
+import creeper.core.internal.MenuSourceImpl;
+import creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
+import creeper.core.services.*;
+import creeper.core.services.db.DatabaseMigrationModule;
+import creeper.core.services.jpa.CreeperJpaModule;
+import creeper.core.services.shiro.CreeperShiroModule;
+import creeper.user.UserModule;
 import lichen.core.services.Option;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.func.Worker;
@@ -19,37 +21,24 @@ import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
+import org.apache.tapestry5.ioc.annotations.Startup;
 import org.apache.tapestry5.ioc.annotations.SubModule;
 import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.apache.tapestry5.ioc.services.ClassNameLocator;
 import org.apache.tapestry5.ioc.services.PropertyAccess;
 import org.apache.tapestry5.ioc.services.TypeCoercer;
-import org.apache.tapestry5.services.ComponentSource;
-import org.apache.tapestry5.services.ExceptionReporter;
-import org.apache.tapestry5.services.LibraryMapping;
-import org.apache.tapestry5.services.RequestExceptionHandler;
-import org.apache.tapestry5.services.RequestFilter;
-import org.apache.tapestry5.services.RequestHandler;
-import org.apache.tapestry5.services.ResponseRenderer;
-import org.apache.tapestry5.services.ValueEncoderSource;
-import org.got5.tapestry5.jquery.JQuerySymbolConstants;
+import org.apache.tapestry5.services.*;
 import org.slf4j.Logger;
 
-import creeper.core.annotations.CreeperCore;
-import creeper.core.config.CreeperCoreConfig;
-import creeper.core.internal.CreeperModuleManagerImpl;
-import creeper.core.internal.EntityValueEncoder;
-import creeper.core.internal.MenuSourceImpl;
-import creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
-import creeper.core.services.CreeperCoreExceptionCode;
-import creeper.core.services.CreeperException;
-import creeper.core.services.CreeperModuleManager;
-import creeper.core.services.MenuSource;
-import creeper.core.services.XmlLoader;
-import creeper.core.services.db.DatabaseMigrationModule;
-import creeper.core.services.jpa.CreeperJpaModule;
-import creeper.core.services.shiro.CreeperShiroModule;
-import creeper.user.UserModule;
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.Id;
+import javax.sql.DataSource;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.sql.SQLException;
 
 @SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class, CreeperShiroModule.class,UserModule.class})
 public class CreeperCoreModule {
@@ -57,10 +46,27 @@ public class CreeperCoreModule {
         binder.bind(MenuSource.class, MenuSourceImpl.class);
         binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class);
     }
-    
+    @Startup
+    public static void startupH2Console(@Symbol(SymbolConstants.PRODUCTION_MODE) boolean isProduction, final CreeperCoreConfig config,final DataSource dataSource){
+        if(!isProduction){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        H2ConsoleRunner.run(dataSource.getConnection());
+                    } catch (SQLException e) {
+                        throw CreeperException.wrap(e);
+                    }
+                }
+            }).start();
+        }
+    }
+
+    /*
 	public static void contributeApplicationDefaults(MappedConfiguration<String, String> configuration){
 		configuration.add(JQuerySymbolConstants.SUPPRESS_PROTOTYPE, "true");
 	}
+	*/
     
     /**
      * Contribution to the
