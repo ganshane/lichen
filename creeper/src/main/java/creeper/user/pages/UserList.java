@@ -34,7 +34,7 @@ public class UserList{
 	@Inject
 	private UserDao userDao;
 	
-	void onActivate(final Long id,final String name,final String username,final String password){
+	void onActivate(final String id,final String name,final String password){
 		users = userDao.findAll(new Specification<User>() {
 			@Override
 			public Predicate toPredicate(Root<User> root,
@@ -42,8 +42,7 @@ public class UserList{
 				List<Predicate> list = new ArrayList<Predicate>();
 				if(null != id){list.add(cb.equal(root.get("id"),id));}
 				if(null != name){list.add(cb.equal(root.get("name"),name));}
-				if(null != username){list.add(cb.equal(root.get("username"),username));}
-				if(null != password){list.add(cb.equal(root.get("password"),password));}
+				if(null != password){list.add(cb.equal(root.get("pass"),password));}
 				Predicate[] p = new Predicate[list.size()];   
 				return cb.and(list.toArray(p));
 			}
