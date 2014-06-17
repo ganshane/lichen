@@ -1,0 +1,12 @@
+<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" >
+	<form t:type="form" >
+		<div class="panel panel-default" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_0_0.xsd" >
+		  <div class="panel-heading">
+		    <h3 class="panel-title">${title}</h3>
+		  </div>
+		  <div class="panel-body">
+		  <t:body/>
+		  </div>
+		</div>
+	</form>
+</html>
