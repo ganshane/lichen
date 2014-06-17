@@ -63,6 +63,8 @@ class H2DatabaseAdapter extends DatabaseAdapter {
                 return new DefaultBigintColumnDefinition();
             case BlobType:
                 return new DefaultBlobColumnDefinition();
+            case ClobType:
+            	return new DefaultClobColumnDefinition();
             case BooleanType:
                 return new DefaultBooleanColumnDefinition();
             case CharType:

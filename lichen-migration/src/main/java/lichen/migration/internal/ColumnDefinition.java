@@ -481,6 +481,14 @@ class DefaultBlobColumnDefinition
     }
 }
 
+
+class DefaultClobColumnDefinition 
+		extends ColumnDefinition{
+	protected String sql() {
+        return "CLOB";
+    }
+}
+
 @ColumnSupportsDefault
 class DefaultBooleanColumnDefinition
         extends ColumnDefinition {

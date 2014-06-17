@@ -39,6 +39,7 @@ public class Migrate_20130722093444_CreateTable implements Migration {
             public void doInTable(TableDefinition t) throws Throwable {
                 t.bigint("bigint");
                 t.blob("blob");
+                t.clob("xp");
 //                t.bool("bool");
 //                t.charColumn("charColumn");
 //                t.column("column_", SqlType.BigintType);
