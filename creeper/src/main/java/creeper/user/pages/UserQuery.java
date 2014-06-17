@@ -23,7 +23,7 @@ public class UserQuery {
 	@OnEvent(value=EventConstants.SUBMIT,component="queryUserForm")
 	Object onQueryUser(){
 		logger.debug(user.getName());
-		return pageRenderLinkSource.createPageRenderLinkWithContext(UserList.class, new Object[]{user.getId(),user.getName(),user.getUsername(),user.getPassword()});
+		return pageRenderLinkSource.createPageRenderLinkWithContext(UserList.class, new Object[]{user.getId(),user.getName(),user.getPass()});
 	}
 	
 }

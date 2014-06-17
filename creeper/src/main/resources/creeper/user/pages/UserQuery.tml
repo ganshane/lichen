@@ -14,15 +14,11 @@
 		</div>
 	    <div class="input-group">
 		  <span class="input-group-addon">用户名：</span>
-		  <input class="form-control" t:type="textfield" t:value="user.username" label="用户名" />
+		  <input class="form-control" t:type="textfield" t:value="user.name" label="用户名" />
 		</div>
 		<div class="input-group">
 		  <span class="input-group-addon">密码：</span>
-		  <input class="form-control" t:type="textfield"  t:value="user.name" label="姓名" />
-		</div>
-		<div class="input-group">
-		  <span class="input-group-addon">姓名：</span>
-		  <input class="form-control" t:type="textfield" t:value="user.password" label="密码" />
+		  <input class="form-control" t:type="textfield"  t:value="user.pass" label="密码" />
 		</div>
 		<br/>
 		<div class="btn-group">

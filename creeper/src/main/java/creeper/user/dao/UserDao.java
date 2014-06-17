@@ -11,7 +11,7 @@ import creeper.user.entities.User;
  * @author shen
  *
  */
-@RepositoryDefinition(domainClass = User.class,idClass = Long.class)
-public interface UserDao extends CrudRepository<User, Long> ,JpaSpecificationExecutor<User> {
+@RepositoryDefinition(domainClass = User.class,idClass = String.class)
+public interface UserDao extends CrudRepository<User, String> ,JpaSpecificationExecutor<User> {
 
 }

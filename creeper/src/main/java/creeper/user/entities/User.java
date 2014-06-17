@@ -1,5 +1,7 @@
 package creeper.user.entities;
 
+import creeper.core.CreeperCoreConstants;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -16,54 +18,83 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="users")
-@javax.persistence.SequenceGenerator(
-        name="user_seq",
-        sequenceName="user_seq"
-)
 public class User implements Serializable{
 	private static final long serialVersionUID = 9166431956890572840L;
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="user_seq")
+	@GeneratedValue(generator= CreeperCoreConstants.UUID_GENERATOR)
 	@Column
-	private Long id;
-	
+	private String id;
 	private String name;
-	
-	private String username;
-	
-	private String password;
+	private String pass;
+    private String mail;
+    private Integer created;
+    private Integer access;
+    private Integer login;
+    @Column(insertable = false)
+    private Integer status;
 
-	public Long getId() {
-		return id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getUsername() {
-		return username;
-	}
+    public String getPass() {
+        return pass;
+    }
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public String getMail() {
+        return mail;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	
+    public void setMail(String mail) {
+        this.mail = mail;
+    }
+
+    public Integer getCreated() {
+        return created;
+    }
+
+    public void setCreated(Integer created) {
+        this.created = created;
+    }
+
+    public Integer getAccess() {
+        return access;
+    }
+
+    public void setAccess(Integer access) {
+        this.access = access;
+    }
+
+    public Integer getLogin() {
+        return login;
+    }
+
+    public void setLogin(Integer login) {
+        this.login = login;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 }

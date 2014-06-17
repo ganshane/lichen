@@ -38,6 +38,6 @@ public class UserRegist {
 	Object onSaveUser(){
 		logger.debug("saveuser");
 		userDao.save(user);
-		return pageRenderLinkSource.createPageRenderLinkWithContext(UserList.class, new Object[]{user.getId(),user.getName(),user.getUsername(),user.getPassword()});
+		return pageRenderLinkSource.createPageRenderLinkWithContext(UserList.class, new Object[]{user.getId(),user.getName(),user.getPass()});
 	}
 }

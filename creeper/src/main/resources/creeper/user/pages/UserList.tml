@@ -6,7 +6,6 @@
 <table width="100%" border="1" cellspacing="0" cellpadding="0" class="table">
   <tr>
     <th>id</th>
-    <th>姓名</th>
     <th>用户名</th>
     <th>密码</th>
     <th>操作</th>
@@ -14,8 +13,7 @@
   <tr t:type="loop" t:source="users" t:value="user">
     <td>${user.id}</td>
     <td>${user.name}</td>
-    <td>${user.username}</td>
-    <td>${user.password}</td>
+    <td>${user.pass}</td>
     <td>
     	<a t:type="pagelink" t:id="xiugai" t:page="user/update" t:context="user" >修改</a>&nbsp;
     	<a t:type="eventlink" t:id="del" t:event="del" t:context="user">删除</a>

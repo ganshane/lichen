@@ -63,7 +63,7 @@ public class UserUpdate {
 		//只有真正进到这个@OnEvent方法里的时候，user才会变成页面上form里最后修改后的封装后的实体。
 		logger.debug("--"+user.getId());
 		userDao.save(user);
-		return pageRenderLinkSource.createPageRenderLinkWithContext(UserList.class, new Object[]{user.getId(),user.getName(),user.getUsername(),user.getPassword()});
+		return pageRenderLinkSource.createPageRenderLinkWithContext(UserList.class, new Object[]{user.getId(),user.getName(),user.getPass()});
 	}
 	
 }
