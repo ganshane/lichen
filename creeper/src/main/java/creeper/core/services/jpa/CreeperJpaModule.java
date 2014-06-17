@@ -5,13 +5,20 @@ import creeper.core.annotations.CreeperJpa;
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.TransactionAdvice;
 import creeper.core.internal.jpa.EntityManagerCreatorImpl;
+import creeper.core.internal.jpa.SmartHibernateJpaVendorAdapter;
 import creeper.core.services.CreeperCoreExceptionCode;
 import creeper.core.services.CreeperException;
 import creeper.core.services.CreeperModuleManager;
 import lichen.core.services.Option;
 import org.apache.tapestry5.ioc.*;
+import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.annotations.*;
 import org.apache.tapestry5.ioc.services.*;
+import org.hibernate.cfg.*;
+import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl;
+import org.hibernate.jpa.boot.internal.PersistenceUnitInfoDescriptor;
+import org.hibernate.service.ServiceRegistry;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
 import org.logicalcobwebs.proxool.ProxoolException;
 import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
@@ -33,9 +40,12 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.spi.PersistenceProvider;
+import javax.persistence.spi.PersistenceUnitInfo;
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -48,7 +58,7 @@ import java.util.Properties;
  */
 public class CreeperJpaModule {
     public static void bind(ServiceBinder binder){
-        binder.bind(JpaVendorAdapter.class, HibernateJpaVendorAdapter.class).withMarker(CreeperJpa.class);
+        binder.bind(SmartHibernateJpaVendorAdapter.class).withMarker(CreeperJpa.class);
         binder.bind(EntityManagerCreator.class, EntityManagerCreatorImpl.class).withMarker(CreeperJpa.class);
     }
     @Marker(CreeperJpa.class)
@@ -82,7 +92,7 @@ public class CreeperJpaModule {
     @Marker(CreeperJpa.class)
     @EagerLoad
     public static EntityManagerFactory buildEntityManagerFactory(CreeperCoreConfig config,
-                                                                 JpaVendorAdapter jpaVendorAdapter,
+                                                                 SmartHibernateJpaVendorAdapter jpaVendorAdapter,
                                                                  @CreeperJpa DataSource dataSource,
                                                                  CreeperModuleManager creeperModuleManager
                                                                  ){
@@ -102,7 +112,12 @@ public class CreeperJpaModule {
             properties.setProperty(property.name,property.value);
         }
         entityManagerFactoryBean.setJpaProperties(properties);
-        entityManagerFactoryBean.setPackagesToScan(creeperModuleManager.getModuleSubPackageWithSuffix(Option.some("entities")));
+        //增加核心模块的entities
+        String[] entities = creeperModuleManager.flowModuleSubPackageWithSuffix(Option.<String>some("entities")).
+                append("creeper.core.entities").toArray(String.class);
+
+        entityManagerFactoryBean.setPackagesToScan(entities);
+        jpaVendorAdapter.setAnnotatedPackages(entities);
         entityManagerFactoryBean.afterPropertiesSet();
         return entityManagerFactoryBean.getObject();
     }

@@ -9,6 +9,8 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import creeper.test.dao.EntityBDao;
+import creeper.test.entities.EntityB;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,6 +39,12 @@ public class JpaTest extends BaseEntityTestCase{
         return new String[]{"creeper.test","creeper.user"};
     }
 
+    @Test
+    public void test_EntityB(){
+        EntityBDao dao = registry.getObject(EntityBDao.class,null);
+        EntityB b = new EntityB();
+        dao.save(b);
+    }
     @Test
     public void test_EntityA(){
 
