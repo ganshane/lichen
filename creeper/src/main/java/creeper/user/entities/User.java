@@ -1,15 +1,12 @@
 package creeper.user.entities;
 
 import creeper.core.CreeperCoreConstants;
+import creeper.core.entities.UUIDPrimaryKeySupport;
 
 import java.io.Serializable;
+import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 
@@ -18,13 +15,9 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name="users")
-public class User implements Serializable{
+public class User extends UUIDPrimaryKeySupport {
 	private static final long serialVersionUID = 9166431956890572840L;
 	
-	@Id
-	@GeneratedValue(generator= CreeperCoreConstants.UUID_GENERATOR)
-	@Column
-	private String id;
 	private String name;
 	private String pass;
     private String mail;
@@ -33,14 +26,12 @@ public class User implements Serializable{
     private Integer login;
     @Column(insertable = false)
     private Integer status;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    @ManyToMany
+    @JoinTable(name="users_roles",
+            joinColumns = @JoinColumn(name="user_id",referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name="role_id",referencedColumnName = "id")
+    )
+    private Set<Role> roles;
 
     public String getName() {
         return name;
@@ -96,5 +87,13 @@ public class User implements Serializable{
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 }
