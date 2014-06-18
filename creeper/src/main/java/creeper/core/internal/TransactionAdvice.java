@@ -55,8 +55,10 @@ public class TransactionAdvice implements MethodAdvice{
                     throw new UnsupportedOperationException();
                 }
             });
-        } catch (Throwable throwable) {
-            throw CreeperException.wrap(throwable);
+        } catch (RuntimeException re) {
+            throw re;
+        }catch (Throwable e){
+            throw CreeperException.wrap(e);
         }
     }
 }
