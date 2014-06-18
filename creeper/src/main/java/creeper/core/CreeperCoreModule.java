@@ -3,7 +3,6 @@ package creeper.core;
 import creeper.core.annotations.CreeperCore;
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.CreeperModuleManagerImpl;
-import creeper.core.internal.EntityValueEncoder;
 import creeper.core.internal.H2ConsoleRunner;
 import creeper.core.internal.MenuSourceImpl;
 import creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
@@ -11,6 +10,7 @@ import creeper.core.internal.override.CreeperOverrideModule;
 import creeper.core.services.*;
 import creeper.core.services.db.DatabaseMigrationModule;
 import creeper.core.services.jpa.CreeperJpaModule;
+import creeper.core.services.jpa.CreeperJpaValueEncoderSourceModule;
 import creeper.core.services.shiro.CreeperShiroModule;
 import creeper.user.UserModule;
 import lichen.core.services.Option;
@@ -18,30 +18,24 @@ import org.apache.commons.io.FileUtils;
 import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.func.Worker;
 import org.apache.tapestry5.ioc.Configuration;
-import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.Startup;
 import org.apache.tapestry5.ioc.annotations.SubModule;
 import org.apache.tapestry5.ioc.annotations.Symbol;
-import org.apache.tapestry5.ioc.services.ClassNameLocator;
-import org.apache.tapestry5.ioc.services.PropertyAccess;
-import org.apache.tapestry5.ioc.services.TypeCoercer;
 import org.apache.tapestry5.services.*;
 import org.slf4j.Logger;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.Id;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.sql.SQLException;
 
-@SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class, CreeperShiroModule.class,UserModule.class,CreeperOverrideModule.class})
+@SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class,
+        CreeperShiroModule.class,UserModule.class,
+        CreeperOverrideModule.class, CreeperJpaValueEncoderSourceModule.class})
 public class CreeperCoreModule {
     public static void bind(ServiceBinder binder){
         binder.bind(MenuSource.class, MenuSourceImpl.class);
@@ -137,35 +131,4 @@ public class CreeperCoreModule {
     {
         configuration.addInstance("OpenEntityManagerInViewFilter", OpenEntityManagerInViewFilter.class, "after:StaticFiles");
     }
-    
-	@SuppressWarnings("unchecked")
-	@Contribute(ValueEncoderSource.class)
-	public static void contributeValueEncoderSource(Logger logger,
-			MappedConfiguration<Class<?>, Object> configuration,
-			final CreeperModuleManager creeperModuleManager,
-			final PropertyAccess propertyAccess, final TypeCoercer typeCoercer,final ClassNameLocator classNameLocator,EntityManager entityManager) {
-    	
-    	String[] entitiesPackageNames = creeperModuleManager.getModuleSubPackageWithSuffix(Option.some("entities"));
-    	for(String entitiesPackage : entitiesPackageNames){
-    		for(String className : classNameLocator.locateClassNames(entitiesPackage)){
-    			try {
-					Class<?> clazz = Class.forName(className);
-					if(null != clazz.getAnnotation(Entity.class)){
-						Field[] fields = clazz.getDeclaredFields();
-						for(Field field : fields){
-							if(null != field.getAnnotation(Id.class)){
-								configuration.add(clazz, new EntityValueEncoder(
-										clazz, field.getName() , propertyAccess,
-										typeCoercer, entityManager));
-								break;
-							}
-						}
-					}
-				} catch (ClassNotFoundException e) {
-					throw CreeperException.wrap(e);
-				}
-    		}
-    	}
-	}
-
 }
