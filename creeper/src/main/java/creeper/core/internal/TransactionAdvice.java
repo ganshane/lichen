@@ -56,7 +56,7 @@ public class TransactionAdvice implements MethodAdvice{
                 }
             });
         } catch (Throwable throwable) {
-            CreeperException.wrap(throwable);
+            throw CreeperException.wrap(throwable);
         }
     }
 }

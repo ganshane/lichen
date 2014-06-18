@@ -11,10 +11,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.mgt.WebSecurityManager;
 import org.apache.shiro.web.subject.WebSubject;
-import org.apache.tapestry5.ioc.Configuration;
-import org.apache.tapestry5.ioc.OrderedConfiguration;
-import org.apache.tapestry5.ioc.ScopeConstants;
-import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.*;
 import org.apache.tapestry5.ioc.annotations.*;
 import org.apache.tapestry5.services.RequestGlobals;
 import org.apache.tapestry5.services.transform.ComponentClassTransformWorker2;
@@ -33,14 +30,11 @@ public class CreeperShiroModule {
         binder.bind(PasswordService.class, DefaultPasswordService.class);
         binder.bind(CredentialsMatcher.class,PasswordMatcher.class);
     }
-    public static Realm buildJpaRealm(CredentialsMatcher passwordMatcher){
-        JpaRealm realm = new JpaRealm();
-        realm.setCredentialsMatcher(passwordMatcher);
-        return realm;
-    }
     @Contribute(WebSecurityManager.class)
-    public static void provideJpaRealm(Configuration<Realm> realms,CredentialsMatcher passwordMatcher){
-        JpaRealm realm = new JpaRealm();
+    public static void provideJpaRealm(Configuration<Realm> realms,
+                                       CredentialsMatcher passwordMatcher,
+                                       ObjectLocator locator){
+        JpaRealm realm = locator.autobuild(JpaRealm.class);
         realm.setCredentialsMatcher(passwordMatcher);
         realms.add(realm);
     }
