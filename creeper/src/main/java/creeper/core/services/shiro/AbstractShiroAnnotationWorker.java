@@ -20,9 +20,7 @@ import java.lang.reflect.Method;
  * @author jcai
  */
 abstract class AbstractShiroAnnotationWorker implements ComponentClassTransformWorker2 {
-    private Subject _subject;
-
-    private AuthorizingAnnotationMethodInterceptor interceptor = createInterceptor(_subject);
+    private AuthorizingAnnotationMethodInterceptor _interceptor;
 
     private final MethodAdvice advice = new MethodAdvice()
     {
@@ -30,7 +28,7 @@ abstract class AbstractShiroAnnotationWorker implements ComponentClassTransformW
         {
             try
             {
-                interceptor.invoke(new org.apache.shiro.aop.MethodInvocation() {
+                _interceptor.invoke(new org.apache.shiro.aop.MethodInvocation() {
                     @Override
                     public Object proceed() throws Throwable {
                         invocation.proceed();
@@ -62,7 +60,7 @@ abstract class AbstractShiroAnnotationWorker implements ComponentClassTransformW
     };
 
     protected AbstractShiroAnnotationWorker(Subject subject) {
-        _subject = subject;
+        _interceptor = createInterceptor(subject);
     }
 
     @Override

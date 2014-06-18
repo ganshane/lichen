@@ -33,5 +33,12 @@ public class UserServiceImpl implements UserService{
         UsernamePasswordToken token = new UsernamePasswordToken(name, password);
         token.setRememberMe(true);
         _subject.login(token);//TODO catch exception to show message
+        //TODO 保存用户相关信息
+    }
+
+    @Override
+    public void logout() {
+        //TODO 保存用户相关信息
+        _subject.logout();
     }
 }

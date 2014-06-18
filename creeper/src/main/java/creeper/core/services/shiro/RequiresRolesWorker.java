@@ -2,7 +2,9 @@ package creeper.core.services.shiro;
 
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.authz.aop.AuthorizingAnnotationMethodInterceptor;
+import org.apache.shiro.authz.aop.RoleAnnotationHandler;
 import org.apache.shiro.authz.aop.RoleAnnotationMethodInterceptor;
+import org.apache.shiro.authz.aop.UserAnnotationHandler;
 import org.apache.shiro.subject.Subject;
 
 import java.lang.annotation.Annotation;
@@ -18,7 +20,12 @@ public class RequiresRolesWorker extends AbstractShiroAnnotationWorker{
 
     @Override
     protected AuthorizingAnnotationMethodInterceptor createInterceptor(final Subject _subject) {
-        return new RoleAnnotationMethodInterceptor(){
+        return new AuthorizingAnnotationMethodInterceptor(new RoleAnnotationHandler(){
+            @Override
+            protected Subject getSubject() {
+                return _subject;
+            }
+        }){
             @Override
             protected Subject getSubject() {
                 return _subject;

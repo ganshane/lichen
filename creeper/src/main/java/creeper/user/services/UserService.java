@@ -22,4 +22,10 @@ public interface UserService {
      */
     @Transactional
     public void login(String name,String password);
+
+    /**
+     * 注销
+     */
+    @Transactional
+    public void logout();
 }

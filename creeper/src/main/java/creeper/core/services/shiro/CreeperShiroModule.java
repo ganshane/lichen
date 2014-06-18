@@ -8,6 +8,7 @@ import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.mgt.WebSecurityManager;
 import org.apache.shiro.web.subject.WebSubject;
@@ -46,9 +47,12 @@ public class CreeperShiroModule {
         return securityManager;
     }
     @Scope(ScopeConstants.PERTHREAD)
+    @EagerLoad
     public static Subject buildSubject(@Local WebSecurityManager securityManager,RequestGlobals requestGlobals){
-        SecurityUtils.setSecurityManager(securityManager);
-        return new WebSubject.Builder(securityManager,requestGlobals.getHTTPServletRequest(), requestGlobals.getHTTPServletResponse()).buildWebSubject();
+        //SecurityUtils.setSecurityManager(securityManager);
+        Subject subject = new WebSubject.Builder(securityManager,requestGlobals.getHTTPServletRequest(), requestGlobals.getHTTPServletResponse()).buildWebSubject();
+        ThreadContext.bind(subject);
+        return subject;
     }
     @Contribute(ComponentClassTransformWorker2.class)
     public static void provideShiroTransformWorkers(
