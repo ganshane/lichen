@@ -1,5 +1,6 @@
 package creeper.user;
 
+import creeper.core.models.CreeperModuleDef;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
@@ -30,7 +31,7 @@ public class UserModule {
     }
 
     @Contribute(value = CreeperModuleManager.class)
-    public static void provideModule(Configuration<String> configuration){
-    	configuration.add("creeper.user");
+    public static void provideModule(Configuration<CreeperModuleDef> configuration){
+    	configuration.add(CreeperModuleDef.create("用户","creeper.user"));
     }
 }

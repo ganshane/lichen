@@ -1,6 +1,7 @@
 package creeper.test;
 
 import creeper.core.models.CreeperMenu;
+import creeper.core.models.CreeperModuleDef;
 import creeper.core.services.CreeperModuleManager;
 import creeper.core.services.MenuSource;
 import org.apache.tapestry5.ioc.Configuration;
@@ -24,7 +25,7 @@ public class CreeperTestModule {
     }
 
     @Contribute(value = CreeperModuleManager.class)
-    public static void provideModule(Configuration<String> configuration){
-    	configuration.add("creeper.test");
+    public static void provideModule(Configuration<CreeperModuleDef> configuration){
+    	configuration.add(CreeperModuleDef.create("测试","creeper.test"));
     }
 }
