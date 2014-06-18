@@ -51,7 +51,7 @@ public class Migrate_20140606010101_CreateUsers implements Migration {
 
     @Override
     public void down() throws Throwable {
+        _helper.removeIndex("users","name");
         _helper.dropTable("users");
-        _helper.dropSequence("users_seq");
     }
 }
