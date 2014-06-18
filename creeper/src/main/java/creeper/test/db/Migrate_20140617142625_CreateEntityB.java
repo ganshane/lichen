@@ -24,6 +24,7 @@ public class Migrate_20140617142625_CreateEntityB implements Migration{
             public void doInTable(TableDefinition t) throws Throwable {
                 t.varchar("id", _options.PrimaryKey());
                 t.varchar("name");
+                t.integer("date");
             }
         });
     }
