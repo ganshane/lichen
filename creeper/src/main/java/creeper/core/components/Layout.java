@@ -2,6 +2,7 @@ package creeper.core.components;
 
 import creeper.core.models.CreeperMenu;
 import creeper.core.services.MenuSource;
+import org.apache.shiro.subject.Subject;
 import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.annotations.Cached;
 import org.apache.tapestry5.annotations.Import;
@@ -19,6 +20,9 @@ public class Layout {
     private String title;
     @Inject
     private MenuSource menuSource;
+    @Inject
+    @Property
+    private Subject subject;
     @Cached
     public String getMenu(){
         CreeperMenu menu = menuSource.buildCreeperMenu();
