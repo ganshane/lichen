@@ -44,6 +44,16 @@ public class Migrate_20140617163012_CreateRole implements Migration{
         _helper.commentColumn("permissions","perm",_options.Comment("许可"));
 
         _helper.addIndex("permissions","role_id");
+
+        _helper.createTable("users_roles",new TableCallback() {
+            @Override
+            public void doInTable(TableDefinition t) throws Throwable {
+                t.varchar("user_id",_options.NotNull(),_options.Limit(32));
+                t.varchar("role_id",_options.NotNull(),_options.Limit(32));
+            }
+        });
+        _helper.addIndex("users_roles","user_id");
+        _helper.addIndex("users_roles","role_id");
     }
 
     @Override

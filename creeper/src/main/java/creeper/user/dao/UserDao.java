@@ -13,5 +13,5 @@ import creeper.user.entities.User;
  */
 @RepositoryDefinition(domainClass = User.class,idClass = String.class)
 public interface UserDao extends CrudRepository<User, String> ,JpaSpecificationExecutor<User> {
-
+    public User findByName(String name);
 }
