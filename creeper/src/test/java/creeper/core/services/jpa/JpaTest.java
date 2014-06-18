@@ -9,6 +9,7 @@ import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import creeper.core.models.CreeperModuleDef;
 import creeper.test.dao.EntityBDao;
 import creeper.test.entities.EntityB;
 import org.apache.tapestry5.ioc.ServiceBinder;
@@ -35,8 +36,8 @@ public class JpaTest extends BaseEntityTestCase{
         return new Class<?>[]{TestServiceModule.class};
     }
     @Override
-    protected String[] getCreeperModules() {
-        return new String[]{"creeper.test","creeper.user"};
+    protected CreeperModuleDef[] getCreeperModules() {
+        return new CreeperModuleDef[]{CreeperModuleDef.create("测试","creeper.test")};
     }
 
     @Test

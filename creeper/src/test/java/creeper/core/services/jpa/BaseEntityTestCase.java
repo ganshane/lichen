@@ -2,6 +2,7 @@ package creeper.core.services.jpa;
 
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.CreeperModuleManagerImpl;
+import creeper.core.models.CreeperModuleDef;
 import creeper.core.services.CreeperModuleManager;
 import creeper.core.services.db.DatabaseMigrationModule;
 import org.apache.shiro.util.ThreadContext;
@@ -30,7 +31,7 @@ import java.util.List;
 public abstract class BaseEntityTestCase {
     protected Registry registry;
     protected Class<?>[] getIocModules(){ return null;}
-    protected String[] getCreeperModules(){return null;}
+    protected CreeperModuleDef[] getCreeperModules(){return null;}
     @Before
     public void setup(){
         ThreadContext.put("creeper.modules", getCreeperModules());
@@ -63,10 +64,10 @@ public abstract class BaseEntityTestCase {
             binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class);
         }
         @Contribute(CreeperModuleManager.class)
-        public static void provideTestModule(Configuration<String> modules){
-            String [] testModules = (String[]) ThreadContext.get("creeper.modules");
+        public static void provideTestModule(Configuration<CreeperModuleDef> modules){
+            CreeperModuleDef[] testModules = (CreeperModuleDef[]) ThreadContext.get("creeper.modules");
             if(testModules !=null)
-                for(String m:testModules){
+                for(CreeperModuleDef m:testModules){
                     modules.add(m);
                 }
         }

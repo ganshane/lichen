@@ -1,5 +1,6 @@
 package creeper.node.entities;
 
+import creeper.core.models.CreeperModuleDef;
 import creeper.core.services.jpa.BaseEntityTestCase;
 import creeper.node.dao.NodeDao;
 import creeper.node.dao.NodeRevisionDao;
@@ -20,8 +21,8 @@ public class NodeEntitiesTest extends BaseEntityTestCase{
     }
 
     @Override
-    protected String[] getCreeperModules() {
-        return new String[]{"creeper.node"};
+    protected CreeperModuleDef[] getCreeperModules() {
+        return new CreeperModuleDef[]{CreeperModuleDef.create("测试","creeper.node")};
     }
     @Test
     public void test_save(){

@@ -29,7 +29,13 @@ public class DateUserType implements UserType{
 
     @Override
     public boolean equals(Object x, Object y) throws HibernateException {
-        return x.equals(y);
+        if(x==y){
+            return true;
+        }else if(x==null||y==null){
+            return false;
+        }else {
+            return x.equals(y);
+        }
     }
 
     @Override

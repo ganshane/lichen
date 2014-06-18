@@ -3,6 +3,7 @@ package creeper.core.internal;
 import java.util.Arrays;
 import java.util.Properties;
 
+import creeper.core.models.CreeperModuleDef;
 import creeper.core.services.CreeperCoreExceptionCode;
 import creeper.core.services.CreeperException;
 import creeper.core.services.CreeperModuleManager;
@@ -27,7 +28,7 @@ public class DatabaseMigrationImplTest {
     
     @Test
     public void testDbSetup() throws ProxoolException {
-        CreeperModuleManager manager = new CreeperModuleManagerImpl(Arrays.asList("creeper.test"));
+        CreeperModuleManager manager = new CreeperModuleManagerImpl(Arrays.asList(CreeperModuleDef.create("测试","creeper.test")));
 
         CreeperCoreConfig creeperCoreConfig = new CreeperCoreConfig();
         creeperCoreConfig.db._driverClassName = "org.h2.Driver";
