@@ -13,13 +13,13 @@ import creeper.user.entities.User;
 import creeper.user.services.UserService;
 
 /**
- * 用户注册
+ * 用户登录
  * @author shen
  *
  */
-public class UserRegist {
+public class UserLogin {
 	
-	private static Logger logger = LoggerFactory.getLogger(UserRegist.class);
+	private static Logger logger = LoggerFactory.getLogger(UserLogin.class);
 	
 	@Inject
 	private UserService userService;
@@ -35,11 +35,10 @@ public class UserRegist {
 		user = new User();
 	}
 	
-	@OnEvent(value=EventConstants.SUBMIT,component="registUserForm")
-	@Transactional
-	Object onSaveUser(){
+	@OnEvent(value=EventConstants.SUBMIT,component="loginUserForm")
+	Object onLoginUser(){
 		logger.debug("saveuser");
-		userService.register(user);
+		userService.login(user.getName(), user.getPass());
 		return pageRenderLinkSource.createPageRenderLinkWithContext(UserList.class, new Object[]{user.getId(),user.getName(),user.getPass()});
 	}
 }
