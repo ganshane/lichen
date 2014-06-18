@@ -26,7 +26,7 @@ public class Migrate_20140606010101_CreateUsers implements Migration {
             public void doInTable(TableDefinition t) throws Throwable {
                 t.varchar("id", _options.PrimaryKey(),_options.Limit(32));
                 t.varchar("name", _options.NotNull(),_options.Limit(60));
-                t.varchar("pass", _options.NotNull(),_options.Limit(32));
+                t.varchar("pass", _options.NotNull(),_options.Limit(500));
                 t.varchar("mail", _options.Limit(64));
                 t.clob("data");
                 t.integer("created");
@@ -46,11 +46,12 @@ public class Migrate_20140606010101_CreateUsers implements Migration {
         _helper.commentColumn("users", "access", _options.Comment("最后一次访问时间，为秒数"));
         _helper.commentColumn("users", "login", _options.Comment("最后一次成功登录的时间，为秒数"));
         _helper.commentColumn("users", "status", _options.Comment("状态,1为正常，0为拒绝"));
+        _helper.addIndex("users","name");
     }
 
     @Override
     public void down() throws Throwable {
+        _helper.removeIndex("users","name");
         _helper.dropTable("users");
-        _helper.dropSequence("users_seq");
     }
 }
