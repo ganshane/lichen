@@ -133,7 +133,7 @@ public class CreeperMenu implements Comparable<CreeperMenu>{
 
     @Override
     public int compareTo(CreeperMenu o) {
-        return o.getOrder() - this.getOrder();
+        return this.getOrder() - o.getOrder();
     }
 
     public CreeperMenu copy() {
