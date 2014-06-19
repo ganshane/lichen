@@ -90,7 +90,6 @@ public class CreeperJpaModule {
      * 创建基于Hibernate的JPA实现.
      */
     @Marker(CreeperJpa.class)
-    @EagerLoad
     public static EntityManagerFactory buildEntityManagerFactory(CreeperCoreConfig config,
                                                                  SmartHibernateJpaVendorAdapter jpaVendorAdapter,
                                                                  @CreeperJpa DataSource dataSource,

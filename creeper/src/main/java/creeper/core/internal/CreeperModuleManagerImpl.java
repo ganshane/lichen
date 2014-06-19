@@ -7,9 +7,13 @@ import lichen.core.services.Option;
 import org.apache.tapestry5.func.F;
 import org.apache.tapestry5.func.Flow;
 import org.apache.tapestry5.func.Mapper;
+import org.apache.tapestry5.func.Predicate;
 import org.apache.tapestry5.ioc.annotations.Marker;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * 实现对creeper模块的管理
@@ -46,5 +50,20 @@ public class CreeperModuleManagerImpl implements CreeperModuleManager{
             });
         }
         return f;
+    }
+
+    @Override
+    public Iterator<String> getPermissionsByModulePackage(String pkg) {
+        List<String> permissions = F.flow(_modules).filter(new Predicate<CreeperModuleDef>() {
+            @Override
+            public boolean accept(CreeperModuleDef element) {
+                return element.getPkg().equals(element.getPkg());
+            }
+        }).first().getPermissions();
+
+        if(permissions != null){
+            return permissions.iterator();
+        }
+        return Collections.emptyIterator();
     }
 }

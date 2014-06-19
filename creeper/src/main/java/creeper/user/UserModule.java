@@ -32,6 +32,8 @@ public class UserModule {
 
     @Contribute(value = CreeperModuleManager.class)
     public static void provideModule(Configuration<CreeperModuleDef> configuration){
-    	configuration.add(CreeperModuleDef.create("用户","creeper.user"));
+        CreeperModuleDef def = CreeperModuleDef.create("用户","creeper.user");
+        def.addPermissions("删除用户","编辑用户");
+    	configuration.add(def);
     }
 }
