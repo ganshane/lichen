@@ -12,6 +12,7 @@ import creeper.core.services.db.DatabaseMigrationModule;
 import creeper.core.services.jpa.CreeperJpaModule;
 import creeper.core.services.jpa.CreeperJpaValueEncoderSourceModule;
 import creeper.core.services.shiro.CreeperShiroModule;
+import creeper.node.NodeModule;
 import creeper.user.UserModule;
 import lichen.core.services.Option;
 import org.apache.commons.io.FileUtils;
@@ -35,7 +36,9 @@ import java.sql.SQLException;
 
 @SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class,
         CreeperShiroModule.class,UserModule.class,
-        CreeperOverrideModule.class, CreeperJpaValueEncoderSourceModule.class})
+        CreeperOverrideModule.class, CreeperJpaValueEncoderSourceModule.class,
+        NodeModule.class
+})
 public class CreeperCoreModule {
     public static void bind(ServiceBinder binder){
         binder.bind(MenuSource.class, MenuSourceImpl.class);
