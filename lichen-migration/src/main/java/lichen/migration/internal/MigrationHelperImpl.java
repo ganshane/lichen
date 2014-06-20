@@ -26,6 +26,7 @@ import lichen.migration.model.SequenceOption;
 import lichen.migration.model.SqlType;
 import lichen.migration.model.TableOption;
 import lichen.migration.services.MigrationHelper;
+import lichen.migration.services.Options;
 import lichen.migration.services.TableCallback;
 
 import org.slf4j.Logger;
@@ -212,13 +213,33 @@ class MigrationHelperImpl implements MigrationHelper {
 			throws Throwable {
     	execute(adapter().commentTableSql(tableName, comment));
 	}
-    
+    @Override
+    public void commentTable(String tableName, final String comment)
+            throws Throwable {
+        execute(adapter().commentTableSql(tableName, new Comment() {
+            @Override
+            public String getValue() {
+                return comment;
+            }
+        }));
+    }
+
 	@Override
 	public void commentColumn(String tableName, String columnName,
 			Comment comment) throws Throwable {
 		execute(adapter().commentColumnSql(tableName, columnName, comment));
 	}
 
+    @Override
+    public void commentColumn(String tableName, String columnName,
+                              final String comment) throws Throwable {
+        execute(adapter().commentColumnSql(tableName, columnName, new Comment() {
+            @Override
+            public String getValue() {
+                return comment;
+            }
+        }));
+    }
     public final void alterColumn(String tableName,
                                   String columnName,
                                   SqlType columnType,

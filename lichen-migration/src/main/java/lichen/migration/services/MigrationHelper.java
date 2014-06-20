@@ -84,15 +84,19 @@ public interface MigrationHelper {
      * @param comment 注释名称
      * @throws Throwable
      */
+    @Deprecated
     void commentColumn(String tableName,String columnName,Comment comment) throws Throwable;
-    
+    void commentColumn(String tableName,String columnName,String comment) throws Throwable;
+
     /**
      * 增加表注释
      * @param tableName 表名
      * @param comment 注释
      * @throws Throwable
      */
+    @Deprecated
     void commentTable(String tableName,Comment comment) throws Throwable;
+    void commentTable(String tableName,String comment) throws Throwable;
 
     /**
      * 针对某一列，创建数据库索引.
