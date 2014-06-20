@@ -2,8 +2,10 @@ package creeper.user.entities;
 
 import creeper.core.CreeperCoreConstants;
 import creeper.core.entities.UUIDPrimaryKeySupport;
+import org.hibernate.annotations.Type;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.*;
@@ -17,15 +19,22 @@ import javax.persistence.*;
 @Table(name="users")
 public class User extends UUIDPrimaryKeySupport {
 	private static final long serialVersionUID = 9166431956890572840L;
+    public static enum UserStatus{
+       Activated,Locked
+    }
 	
 	private String name;
 	private String pass;
     private String mail;
-    private Integer created;
-    private Integer access;
-    private Integer login;
+    @Type(type=CreeperCoreConstants.TYPE_INT_DATE)
+    private Date created;
+    @Type(type=CreeperCoreConstants.TYPE_INT_DATE)
+    private Date access;
+    @Type(type=CreeperCoreConstants.TYPE_INT_DATE)
+    private Date login;
     @Column(insertable = false)
-    private Integer status;
+    @Enumerated
+    private UserStatus status;
     @ManyToMany
     @JoinTable(name="users_roles",
             joinColumns = @JoinColumn(name="user_id",referencedColumnName = "id"),
@@ -57,35 +66,35 @@ public class User extends UUIDPrimaryKeySupport {
         this.mail = mail;
     }
 
-    public Integer getCreated() {
+    public Date getCreated() {
         return created;
     }
 
-    public void setCreated(Integer created) {
+    public void setCreated(Date created) {
         this.created = created;
     }
 
-    public Integer getAccess() {
+    public Date getAccess() {
         return access;
     }
 
-    public void setAccess(Integer access) {
+    public void setAccess(Date access) {
         this.access = access;
     }
 
-    public Integer getLogin() {
+    public Date getLogin() {
         return login;
     }
 
-    public void setLogin(Integer login) {
+    public void setLogin(Date login) {
         this.login = login;
     }
 
-    public Integer getStatus() {
+    public UserStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Integer status) {
+    public void setStatus(UserStatus status) {
         this.status = status;
     }
 

@@ -32,7 +32,7 @@ public class Migrate_20140606010101_CreateUsers implements Migration {
                 t.integer("created");
                 t.integer("access");
                 t.integer("login");
-                t.smallint("status", _options.NotNull(), _options.Default("1"));
+                t.smallint("status", _options.NotNull(), _options.Default("0"));
             }
         });
 
@@ -45,7 +45,7 @@ public class Migrate_20140606010101_CreateUsers implements Migration {
         _helper.commentColumn("users", "created", _options.Comment("创建时间，为秒数"));
         _helper.commentColumn("users", "access", _options.Comment("最后一次访问时间，为秒数"));
         _helper.commentColumn("users", "login", _options.Comment("最后一次成功登录的时间，为秒数"));
-        _helper.commentColumn("users", "status", _options.Comment("状态,1为正常，0为拒绝"));
+        _helper.commentColumn("users", "status", _options.Comment("状态,0为正常，1为拒绝"));
         _helper.addIndex("users","name");
     }
 
