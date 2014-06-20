@@ -3,6 +3,7 @@ package creeper.core.services.jpa;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Path;
@@ -66,8 +67,11 @@ public class JpaTest extends BaseEntityTestCase{
             }
         });
 
+    }
+    @Test
+    public void test_service(){
         TestService testService = registry.getObject(TestService.class,null);
-        testService.testNoTransaction();
+        //testService.testNoTransaction();
         testService.testNeedTransaction();
     }
     
@@ -105,11 +109,16 @@ public class JpaTest extends BaseEntityTestCase{
         public void testNeedTransaction();
     }
     public static class TestServiceImpl implements TestService{
+        @Inject
+        private EntityBDao dao;
         public void testNoTransaction(){
             System.out.println("no transaction...");
             testNeedTransaction();
         }
         public void testNeedTransaction(){
+            dao.findByName("hello");
+            EntityB b = new EntityB();
+            dao.save(b);
             System.out.println("need transaction...");
         }
     }

@@ -15,4 +15,5 @@ import java.util.List;
  */
 @RepositoryDefinition(domainClass = EntityB.class,idClass = String.class)
 public interface EntityBDao extends CrudRepository<EntityB, String> {
+    public EntityB findByName(String name);
 }

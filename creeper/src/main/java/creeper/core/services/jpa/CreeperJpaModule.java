@@ -27,6 +27,7 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.support.StaticListableBeanFactory;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
+import org.springframework.data.repository.query.QueryLookupStrategy;
 import org.springframework.data.repository.util.TxUtils;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -176,6 +177,8 @@ public class CreeperJpaModule {
                     //EntityManager entityManager = SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
                     jpaRepositoryFactoryBean.setEntityManager(entityManager);
                     jpaRepositoryFactoryBean.setRepositoryInterface(objectType);
+                    //仅仅支持在Dao中发现Query
+                    jpaRepositoryFactoryBean.setQueryLookupStrategyKey(QueryLookupStrategy.Key.CREATE);
                     jpaRepositoryFactoryBean.afterPropertiesSet();
                     return (T)jpaRepositoryFactoryBean.getObject();
                 }
