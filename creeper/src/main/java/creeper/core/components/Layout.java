@@ -46,8 +46,12 @@ public class Layout {
     private void outputMenu(StringBuilder sb,List<CreeperMenu> menuColl){
         for(CreeperMenu menu:menuColl){
             sb.append("<li>");
-            sb.append("<a href=\""+menu.getUrl()+"\">").append(menu.getTitle());
-            sb.append("</a>");
+            if(menu.isType(CreeperMenu.MENU_IS_VIRTUAL_ACTION)){
+                sb.append(menu.getTitle());
+            }else{
+                sb.append("<a href=\""+menu.getUrl()+"\">").append(menu.getTitle());
+                sb.append("</a>");
+            }
             if(menu.getChildren().size()>0){
                 sb.append("<ul class=\"nav\">");
                 outputMenu(sb,menu.getChildren());
