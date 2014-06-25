@@ -6,6 +6,8 @@ import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.Local;
 import org.apache.tapestry5.ioc.services.ServiceOverride;
+import org.apache.tapestry5.services.ComponentEventLinkEncoder;
+import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.ValidationDecoratorFactory;
 
 /**
@@ -15,10 +17,15 @@ import org.apache.tapestry5.services.ValidationDecoratorFactory;
 public class CreeperOverrideModule {
     public static void bind(ServiceBinder binder){
         binder.bind(ValidationDecoratorFactory.class,CreeperValidationDecoratorFactory.class).withId("CreeperValidationDecoratorFactory").withMarker(CreeperCore.class);
+        binder.bind(ComponentEventLinkEncoder.class,CreeperLinkEncoder.class).withId("CreeperLinkEncoder").withMarker(CreeperCore.class);
     }
     @Contribute(ServiceOverride.class)
-    public static void overrideDecorator(MappedConfiguration<Class,Object> configuration,@Local ValidationDecoratorFactory factory){
+    public static void overrideDecorator(MappedConfiguration<Class,Object> configuration,
+                                         @Local ValidationDecoratorFactory factory,
+                                         @Local ComponentEventLinkEncoder encoder
+                                         ){
         configuration.add(ValidationDecoratorFactory.class, factory);
+        configuration.add(ComponentEventLinkEncoder.class, encoder);
     }
 }
 
