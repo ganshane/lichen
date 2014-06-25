@@ -5,16 +5,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>${title}</title>
-    <link href="${asset:classpath:creeper/core/assets/bootstrap/css/bootstrap3.1.1.min.css}" rel="stylesheet" />
-    <!-- 
-    <link href="${asset:classpath:creeper/core/components/Layout.css}" rel="stylesheet" />
-    <link href="http://libs.baidu.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet"/> 
-    -->
-    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
+    <t:ifiejavascript test="lt IE 9" js="prop:html5shiv"/>
+    <t:ifiejavascript test="lt IE 9" js="prop:respond"/>
 </head>
 <body>
 <div class="page-header">
