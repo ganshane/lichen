@@ -93,6 +93,7 @@ public class CreeperLinkEncoder implements ComponentEventLinkEncoder
         // Build up the absolute URI.
 
         String activePageName = parameters.getLogicalPageName();
+        activePageName = encodeAdminPageName(activePageName);
 
         builder.append(request.getContextPath());
 
@@ -156,7 +157,10 @@ public class CreeperLinkEncoder implements ComponentEventLinkEncoder
         // Build up the absolute URI.
 
         String activePageName = parameters.getActivePageName();
+        activePageName = encodeAdminPageName(activePageName);//调整URL
+
         String containingPageName = parameters.getContainingPageName();
+        containingPageName = encodeAdminPageName(containingPageName);//调整URL
         String eventType = parameters.getEventType();
 
         String nestedComponentId = parameters.getNestedComponentId();
@@ -266,7 +270,10 @@ public class CreeperLinkEncoder implements ComponentEventLinkEncoder
 
         // Split the path around slashes into a mutable list of terms, which will be consumed term by term.
 
-        List<String> path = splitPath(request.getPath());
+        //实现对管理界面的解码
+        String requestPath = request.getPath();
+        requestPath = decodeAdminPageName(requestPath);
+        List<String> path = splitPath(requestPath);
 
         if (this.applicationFolder.length() > 0)
         {
@@ -402,6 +409,7 @@ public class CreeperLinkEncoder implements ComponentEventLinkEncoder
         // to figure out where the logical page name stops and where the
         // activation context begins. Further, strip out the leading slash.
 
+        //实现对管理界面的解码
         String path = request.getPath();
         path = decodeAdminPageName(path);
 
@@ -536,6 +544,15 @@ public class CreeperLinkEncoder implements ComponentEventLinkEncoder
         Matcher matcher = pattern.matcher(originPath);
         if(matcher.matches()){
             return matcher.group(1)+"/"+matcher.group(2)+"/admin/"+matcher.group(3);
+        }
+        return originPath;
+    }
+    String encodeAdminPageName(String originPath){
+        String patternString = "(^[^/]+)/admin/(.*$)";
+        Pattern pattern = Pattern.compile(patternString,Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(originPath);
+        if(matcher.matches()){
+            return "admin/"+matcher.group(1)+"/"+matcher.group(2);
         }
         return originPath;
     }

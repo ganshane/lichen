@@ -7,6 +7,7 @@ import creeper.core.internal.H2ConsoleRunner;
 import creeper.core.internal.MenuSourceImpl;
 import creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
 import creeper.core.internal.override.CreeperOverrideModule;
+import creeper.core.models.CreeperMenu;
 import creeper.core.services.*;
 import creeper.core.services.db.DatabaseMigrationModule;
 import creeper.core.services.jpa.CreeperJpaModule;
@@ -133,5 +134,9 @@ public class CreeperCoreModule {
     public static void provideOpenEntityManagerInView(OrderedConfiguration<RequestFilter> configuration)
     {
         configuration.addInstance("OpenEntityManagerInViewFilter", OpenEntityManagerInViewFilter.class, "after:StaticFiles");
+    }
+    @Contribute(MenuSource.class)
+    public static void provideMenu(Configuration<CreeperMenu> configuration){
+        configuration.add(new CreeperMenu("admin","管理","/admin",1));
     }
 }

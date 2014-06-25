@@ -32,9 +32,9 @@ public class UserModule {
 		configuration.add(new CreeperMenu("user.login","登录","/user/login",2));
 		configuration.add(new CreeperMenu("user.query","查询","/user/query",3));
 		
-		configuration.add(new CreeperMenu("user.role","角色管理","/user/admin",4));
-		configuration.add(new CreeperMenu("user.role.form","添加角色","/user/admin/roleform",1)); //  /admin/user/roleform
-		configuration.add(new CreeperMenu("user.role.list","查询角色","/user/admin/rolelist",2));
+		configuration.add(new CreeperMenu("user.role","角色管理","/admin/user",4));
+		configuration.add(new CreeperMenu("user.role.form","添加角色","/admin/user/roleform",1)); //  /admin/user/roleform
+		configuration.add(new CreeperMenu("user.role.list","查询角色","/admin/user/rolelist",2));
     }
 
     @Contribute(value = CreeperModuleManager.class)

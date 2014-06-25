@@ -16,5 +16,9 @@ public class CreeperLinkEncoderTest {
 
         path = encoder.decodeAdminPageName("/admin/user/roleform");
         Assert.assertEquals("/user/admin/roleform",path);
+
+
+        path = encoder.encodeAdminPageName("user/admin/roleform");
+        Assert.assertEquals("admin/user/roleform",path);
     }
 }
