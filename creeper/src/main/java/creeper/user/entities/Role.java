@@ -14,7 +14,7 @@ import java.util.Set;
 public class Role extends UUIDPrimaryKeySupport {
     @Column(unique = true,nullable = false)
     private String name;
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "role")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "role",orphanRemoval=true)
     private Set<Permission> permissions;
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;

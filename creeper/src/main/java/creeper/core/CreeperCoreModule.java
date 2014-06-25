@@ -19,6 +19,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.func.Worker;
 import org.apache.tapestry5.ioc.Configuration;
+import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
@@ -64,11 +65,10 @@ public class CreeperCoreModule {
         }
     }
 
-    /*
 	public static void contributeApplicationDefaults(MappedConfiguration<String, String> configuration){
-		configuration.add(JQuerySymbolConstants.SUPPRESS_PROTOTYPE, "true");
+		configuration.add(SymbolConstants.SUPPRESS_REDIRECT_FROM_ACTION_REQUESTS, "true");
+//		configuration.add(JQuerySymbolConstants.SUPPRESS_PROTOTYPE, "true");
 	}
-	*/
     
     /**
      * Contribution to the

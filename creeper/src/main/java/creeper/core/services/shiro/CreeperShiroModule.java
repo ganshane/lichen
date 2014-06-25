@@ -34,8 +34,8 @@ public class CreeperShiroModule {
     @Contribute(WebSecurityManager.class)
     public static void provideJpaRealm(Configuration<Realm> realms,
                                        CredentialsMatcher passwordMatcher,
-                                       ObjectLocator locator){
-        JpaRealm realm = locator.autobuild(JpaRealm.class);
+                                       @Autobuild JpaRealm realm){
+        //JpaRealm realm = locator.autobuild(JpaRealm.class);
         realm.setCredentialsMatcher(passwordMatcher);
         realms.add(realm);
     }

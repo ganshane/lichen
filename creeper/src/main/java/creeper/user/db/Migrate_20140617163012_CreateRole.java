@@ -35,13 +35,13 @@ public class Migrate_20140617163012_CreateRole implements Migration{
             public void doInTable(TableDefinition t) throws Throwable {
                 t.varchar("id",_options.PrimaryKey(),_options.Limit(32));
                 t.varchar("role_id",_options.NotNull(),_options.Limit(32));
-                t.varchar("perm",_options.Limit(200));
+                t.varchar("permission",_options.Limit(200));
             }
         });
         _helper.commentTable("permissions", _options.Comment("许可"));
         _helper.commentColumn("permissions", "id", _options.Comment("主键"));
         _helper.commentColumn("permissions", "role_id", _options.Comment("关联角色"));
-        _helper.commentColumn("permissions","perm",_options.Comment("许可"));
+        _helper.commentColumn("permissions","permission",_options.Comment("许可"));
 
         _helper.addIndex("permissions","role_id");
 

@@ -3,6 +3,8 @@ package creeper.core.services;
 import lichen.core.services.Option;
 import org.apache.tapestry5.func.Flow;
 
+import creeper.core.models.CreeperModuleDef;
+
 import java.util.Iterator;
 
 /**
@@ -24,4 +26,10 @@ public interface CreeperModuleManager{
      * @return 权限列表
      */
     public Iterator<String> getPermissionsByModulePackage(String pkg);
+    
+    /**
+     * 获取所有模块
+     * @return
+     */
+    public Iterator<CreeperModuleDef> getAllModules();
 }

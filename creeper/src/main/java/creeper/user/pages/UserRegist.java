@@ -40,6 +40,6 @@ public class UserRegist {
 	Object onSaveUser(){
 		logger.debug("saveuser");
 		userService.register(user);
-		return pageRenderLinkSource.createPageRenderLinkWithContext(UserList.class, new Object[]{user.getId(),user.getName(),user.getPass()});
+		return pageRenderLinkSource.createPageRenderLinkWithContext(UserList.class, user);
 	}
 }

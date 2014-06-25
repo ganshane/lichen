@@ -25,7 +25,7 @@ public class CreeperModuleManagerImpl implements CreeperModuleManager{
     private Collection<CreeperModuleDef> _modules;
 
     public CreeperModuleManagerImpl(Collection<CreeperModuleDef> modules) {
-        _modules = modules;
+        _modules = Collections.unmodifiableCollection(modules);
     }
     @Override
     public String[] getModuleSubPackageWithSuffix(final Option<String> subPackage) {
@@ -52,7 +52,8 @@ public class CreeperModuleManagerImpl implements CreeperModuleManager{
         return f;
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public Iterator<String> getPermissionsByModulePackage(String pkg) {
         List<String> permissions = F.flow(_modules).filter(new Predicate<CreeperModuleDef>() {
             @Override
@@ -64,6 +65,10 @@ public class CreeperModuleManagerImpl implements CreeperModuleManager{
         if(permissions != null){
             return permissions.iterator();
         }
-        return Collections.emptyIterator();
+        return Collections.EMPTY_LIST.iterator();
     }
+	@Override
+	public Iterator<CreeperModuleDef> getAllModules() {
+		return _modules.iterator();
+	}
 }

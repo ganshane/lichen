@@ -1,14 +1,16 @@
 package creeper.user;
 
-import creeper.core.models.CreeperModuleDef;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 
 import creeper.core.models.CreeperMenu;
+import creeper.core.models.CreeperModuleDef;
 import creeper.core.services.CreeperModuleManager;
 import creeper.core.services.MenuSource;
+import creeper.user.internal.RoleServiceImpl;
 import creeper.user.internal.UserServiceImpl;
+import creeper.user.services.RoleService;
 import creeper.user.services.UserService;
 
 /**
@@ -20,6 +22,7 @@ public class UserModule {
 	
 	public static void bind(ServiceBinder binder){
         binder.bind(UserService.class, UserServiceImpl.class);
+        binder.bind(RoleService.class, RoleServiceImpl.class);
     }
 	
 	@Contribute(MenuSource.class)
@@ -28,6 +31,10 @@ public class UserModule {
 		configuration.add(new CreeperMenu("user.regist","注册","/user/regist",1));
 		configuration.add(new CreeperMenu("user.login","登录","/user/login",2));
 		configuration.add(new CreeperMenu("user.query","查询","/user/query",3));
+		
+		configuration.add(new CreeperMenu("user.role","角色管理","/user/admin",4));
+		configuration.add(new CreeperMenu("user.role.form","添加角色","/user/admin/roleform",1)); //  /admin/user/roleform
+		configuration.add(new CreeperMenu("user.role.list","查询角色","/user/admin/rolelist",2));
     }
 
     @Contribute(value = CreeperModuleManager.class)
