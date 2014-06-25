@@ -16,6 +16,7 @@ public class CreeperMenu implements Comparable<CreeperMenu>{
     public static final int MENU_CREATED_BY_ADMIN = 0x0040;
     public static final int MENU_IS_LOCAL_TASK = 0x0080;
     public static final int MENU_IS_LOCAL_ACTION = 0x0100;
+    public static final int MENU_IS_VIRTUAL_ACTION = 0x0200;
 
     /* 菜单类型 */
     //正常的菜单
@@ -28,6 +29,8 @@ public class CreeperMenu implements Comparable<CreeperMenu>{
     public static final int MENU_DEFAULT_LOCAL_TASK =  MENU_IS_LOCAL_TASK | MENU_LINKS_TO_PARENT | MENU_VISIBLE_IN_BREADCRUMB;
     //本地菜单
     public static final int MENU_LOCAL_ACTION =  MENU_IS_LOCAL_TASK | MENU_IS_LOCAL_ACTION | MENU_VISIBLE_IN_BREADCRUMB;
+    //虚拟的菜单，仅仅作为展示使用
+    public static final int MENU_VIRTUAL = MENU_IS_VIRTUAL_ACTION;
 
 
     //名称
@@ -56,6 +59,11 @@ public class CreeperMenu implements Comparable<CreeperMenu>{
     public CreeperMenu(String name,String title,String url,int order){
         this(name,url,order);
         this.title = title;
+    }
+    public CreeperMenu(String name,String title,String url,int order,int type){
+        this(name,url,order);
+        this.title = title;
+        this.type = type;
     }
     public String getName() {
         return name;
@@ -117,6 +125,9 @@ public class CreeperMenu implements Comparable<CreeperMenu>{
         return children;
     }
 
+    public boolean isType(int type){
+        return (this.type | type) == type;
+    }
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

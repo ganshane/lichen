@@ -47,6 +47,7 @@ public class MenuSourceImpl implements MenuSource {
             CreeperMenu childMenu;
             childMenu = new CreeperMenu();
             childMenu.setUrl(parents[seq]);
+            childMenu.setType(CreeperMenu.MENU_VIRTUAL);
 
             childMenuWrapper = new CreeperMenuWrapper(childMenu);
             menu.children.put(childMenu.getUrl(),childMenuWrapper);

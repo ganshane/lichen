@@ -137,6 +137,6 @@ public class CreeperCoreModule {
     }
     @Contribute(MenuSource.class)
     public static void provideMenu(Configuration<CreeperMenu> configuration){
-        configuration.add(new CreeperMenu("admin","管理","/admin",1));
+        configuration.add(new CreeperMenu("admin","管理","/admin",1,CreeperMenu.MENU_VIRTUAL));
     }
 }
