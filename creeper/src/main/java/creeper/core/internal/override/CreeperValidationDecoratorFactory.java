@@ -8,6 +8,7 @@ import org.apache.tapestry5.services.FormSupport;
 import org.apache.tapestry5.services.ValidationDecoratorFactory;
 
 /**
+ * 复写tapestry内置的错误修饰类，主要目的是去掉错误后面的红色标记
  * @author jcai
  */
 public class CreeperValidationDecoratorFactory implements ValidationDecoratorFactory{

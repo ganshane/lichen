@@ -30,6 +30,10 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 复写了tapestry内置的LinkEncoder,主要目的是提供admin模块URL的自动转换.
+ * 譬如：本来是 /user/admin/rolelist 变换为 /admin/user/rolelist
+ */
 public class CreeperLinkEncoder implements ComponentEventLinkEncoder
 {
     private final ComponentClassResolver componentClassResolver;
@@ -539,21 +543,32 @@ public class CreeperLinkEncoder implements ComponentEventLinkEncoder
         }
     }
     String decodeAdminPageName(String originPath){
-        String patternString = "(^.*)/admin/([^/]+)/(.*$)";
-        Pattern pattern = Pattern.compile(patternString,Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(originPath);
+        Matcher matcher = decodePathPattern.matcher(originPath);
         if(matcher.matches()){
-            return matcher.group(1)+"/"+matcher.group(2)+"/admin/"+matcher.group(3);
+            StringBuilder sb = new StringBuilder(20);
+            sb.append(matcher.group(1)).
+                    append("/").
+                    append(matcher.group(2)).
+                    append("/admin/").
+                    append(matcher.group(3));
+            return sb.toString();
         }
         return originPath;
     }
     String encodeAdminPageName(String originPath){
-        String patternString = "(^[^/]+)/admin/(.*$)";
-        Pattern pattern = Pattern.compile(patternString,Pattern.CASE_INSENSITIVE);
-        Matcher matcher = pattern.matcher(originPath);
+        Matcher matcher = encodePathPattern.matcher(originPath);
         if(matcher.matches()){
-            return "admin/"+matcher.group(1)+"/"+matcher.group(2);
+            StringBuilder sb = new StringBuilder(20);
+            sb.append("admin/").
+                    append(matcher.group(1)).
+                    append("/").
+                    append(matcher.group(2));
+            return sb.toString();
         }
         return originPath;
     }
+    private Pattern decodePathPattern =
+            Pattern.compile("(^.*)/admin/([^/]+)/(.*$)",Pattern.CASE_INSENSITIVE);
+    private Pattern encodePathPattern =
+            Pattern.compile("(^[^/]+)/admin/(.*$)",Pattern.CASE_INSENSITIVE);
 }
