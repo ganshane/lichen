@@ -1,6 +1,5 @@
 package creeper.core.internal.jpa;
 
-import creeper.core.annotations.CreeperJpa;
 import org.apache.tapestry5.ioc.ObjectCreator;
 import org.apache.tapestry5.ioc.services.Builtin;
 import org.apache.tapestry5.ioc.services.PlasticProxyFactory;
@@ -8,13 +7,15 @@ import org.apache.tapestry5.plastic.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.lang.reflect.Method;
 
 /**
  * object creator
+ * 此类的主要目的是创建 EntityManager的代理类，让EntityManager在未打开的时候，
+ * 不对其进行任何操作，代理实现了 isOpen 和 close 两个方法
+ *
  * @author jcai
  */
 public class EntityManagerCreatorImpl implements creeper.core.services.jpa.EntityManagerCreator {
