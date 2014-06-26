@@ -11,7 +11,7 @@
 		  <div class="panel-body">
 		  	<t:loop t:source="permissions" t:value="permisson">
 		  	<t:if test="${hasPermission}">
-	            <input name="perm" type="checkbox"  value="${permisson}" checked="true" />
+	            <input name="perm" type="checkbox"  value="${permisson}" checked="checked" />
 	            <p:else>
 	                <input name="perm" type="checkbox"  value="${permisson}" />
 	            </p:else>
