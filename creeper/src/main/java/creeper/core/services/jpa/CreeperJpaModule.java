@@ -11,14 +11,8 @@ import creeper.core.services.CreeperException;
 import creeper.core.services.CreeperModuleManager;
 import lichen.core.services.Option;
 import org.apache.tapestry5.ioc.*;
-import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.annotations.*;
 import org.apache.tapestry5.ioc.services.*;
-import org.hibernate.cfg.*;
-import org.hibernate.jpa.HibernatePersistenceProvider;
-import org.hibernate.jpa.boot.internal.EntityManagerFactoryBuilderImpl;
-import org.hibernate.jpa.boot.internal.PersistenceUnitInfoDescriptor;
-import org.hibernate.service.ServiceRegistry;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
 import org.logicalcobwebs.proxool.ProxoolException;
 import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
@@ -32,8 +26,6 @@ import org.springframework.data.repository.util.TxUtils;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.SharedEntityManagerCreator;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
@@ -41,12 +33,9 @@ import org.springframework.util.StringUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.spi.PersistenceProvider;
-import javax.persistence.spi.PersistenceUnitInfo;
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -68,11 +57,11 @@ public class CreeperJpaModule {
         Properties info = new Properties();
         info.setProperty("jdbc-creeper.proxool.alias", "creeper");
         info.setProperty("jdbc-creeper.proxool.maximum-connection-count", "50");
-        info.setProperty("jdbc-creeper.user", config.db._username);
-        if(StringUtils.hasText(config.db._password))
-            info.setProperty("jdbc-creeper.password", config.db._password);
-        info.setProperty("jdbc-creeper.proxool.driver-class", config.db._driverClassName);
-        info.setProperty("jdbc-creeper.proxool.driver-url", config.db._url);
+        info.setProperty("jdbc-creeper.user", config.db.username);
+        if(StringUtils.hasText(config.db.password))
+            info.setProperty("jdbc-creeper.password", config.db.password);
+        info.setProperty("jdbc-creeper.proxool.driver-class", config.db.driverClassName);
+        info.setProperty("jdbc-creeper.proxool.driver-url", config.db.url);
 
         info.setProperty("jdbc-creeper.proxool.maximum-connection-lifetime", "18000000");
         info.setProperty("jdbc-creeper.proxool.maximum-active-time", "30000");
@@ -101,11 +90,11 @@ public class CreeperJpaModule {
         entityManagerFactoryBean.setDataSource(dataSource);
         Properties properties = new Properties();
         /*
-        properties.setProperty("hibernate.connection.driver_class",config.db._driverClassName);
-        properties.setProperty("hibernate.connection.url",config.db._url);
-        properties.setProperty("hibernate.connection.username",config.db._username);
-        if(StringUtils.hasText(config.db._password)){
-            properties.setProperty("hibernate.connection.password",config.db._password);
+        properties.setProperty("hibernate.connection.driver_class",config.db.driverClassName);
+        properties.setProperty("hibernate.connection.url",config.db.url);
+        properties.setProperty("hibernate.connection.username",config.db.username);
+        if(StringUtils.hasText(config.db.password)){
+            properties.setProperty("hibernate.connection.password",config.db.password);
         }
         */
         for(CreeperCoreConfig.JpaProperty property: config.jpaProperties){

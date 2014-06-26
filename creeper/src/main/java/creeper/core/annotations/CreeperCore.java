@@ -8,6 +8,7 @@ import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
+ * 标记对象为Creeper核心类
  * @author jcai
  */
 @Target(

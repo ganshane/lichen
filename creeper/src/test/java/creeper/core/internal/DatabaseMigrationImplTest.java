@@ -31,19 +31,19 @@ public class DatabaseMigrationImplTest {
         CreeperModuleManager manager = new CreeperModuleManagerImpl(Arrays.asList(CreeperModuleDef.create("测试","creeper.test")));
 
         CreeperCoreConfig creeperCoreConfig = new CreeperCoreConfig();
-        creeperCoreConfig.db._driverClassName = "org.h2.Driver";
-        creeperCoreConfig.db._url = "jdbc:h2:mem:testdb";
-        creeperCoreConfig.db._username = "sa";
-        creeperCoreConfig.db._password = "";
+        creeperCoreConfig.db.driverClassName = "org.h2.Driver";
+        creeperCoreConfig.db.url = "jdbc:h2:mem:testdb";
+        creeperCoreConfig.db.username = "sa";
+        creeperCoreConfig.db.password = "";
 
         Properties info = new Properties();
         info.setProperty("jdbc-x.proxool.alias", "creeper-migrator");
         info.setProperty("jdbc-x.proxool.maximum-connection-count", "50");
-        info.setProperty("jdbc-x.user", creeperCoreConfig.db._username);
-        if(StringUtils.hasText(creeperCoreConfig.db._password))
-            info.setProperty("jdbc-x.password", creeperCoreConfig.db._password);
-        info.setProperty("jdbc-x.proxool.driver-class", creeperCoreConfig.db._driverClassName);
-        info.setProperty("jdbc-x.proxool.driver-url", creeperCoreConfig.db._url);
+        info.setProperty("jdbc-x.user", creeperCoreConfig.db.username);
+        if(StringUtils.hasText(creeperCoreConfig.db.password))
+            info.setProperty("jdbc-x.password", creeperCoreConfig.db.password);
+        info.setProperty("jdbc-x.proxool.driver-class", creeperCoreConfig.db.driverClassName);
+        info.setProperty("jdbc-x.proxool.driver-url", creeperCoreConfig.db.url);
 
         info.setProperty("jdbc-x.proxool.maximum-connection-lifetime", "18000000000");
         info.setProperty("jdbc-x.proxool.maximum-active-time", "60000000000");

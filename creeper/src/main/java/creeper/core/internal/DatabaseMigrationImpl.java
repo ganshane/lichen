@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Iterator;
-import java.util.Properties;
 
 import creeper.core.annotations.CreeperCore;
 import creeper.core.services.CreeperModuleManager;
@@ -15,17 +14,11 @@ import lichen.migration.internal.MigratorOperation;
 import lichen.migration.internal.Option;
 
 import org.apache.tapestry5.func.Predicate;
-import org.apache.tapestry5.ioc.annotations.Inject;
-import org.logicalcobwebs.proxool.ProxoolDataSource;
-import org.logicalcobwebs.proxool.ProxoolException;
-import org.logicalcobwebs.proxool.ProxoolFacade;
-import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
 
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.services.CreeperCoreExceptionCode;
 import creeper.core.services.CreeperException;
 import creeper.core.services.db.DatabaseMigration;
-import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
 
@@ -42,8 +35,8 @@ public class DatabaseMigrationImpl implements DatabaseMigration {
         _creeperModuleManager = creeperModuleManager;
         _dataSource = dataSource;
         //Oracle的schema必须和数据库用户名一致。
-        DatabaseVendor vendor = DatabaseVendor.forDriver(creeperCoreConfig.db._driverClassName);
-        DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(vendor, Option.some(creeperCoreConfig.db._username));
+        DatabaseVendor vendor = DatabaseVendor.forDriver(creeperCoreConfig.db.driverClassName);
+        DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(vendor, Option.some(creeperCoreConfig.db.username));
         migrator = new Migrator(_dataSource, databaseAdapter);
 	}
 

@@ -18,23 +18,27 @@ public class CreeperCoreConfig {
          * 数据库驱动类.
          */
         @XmlElement(name = "driver_class")
-        public String _driverClassName;
+        public String driverClassName;
         /**
          * 数据库用户名.
          */
         @XmlElement(name = "user_name")
-        public String _username;
+        public String username;
         /**
          * 数据库用户密码.
          */
         @XmlElement(name = "password")
-        public String _password;
+        public String password;
         /**
          * 数据库url地址.
          */
         @XmlElement(name = "url")
-        public String _url;
+        public String url;
     }
+
+    /**
+     * JPA属性配置
+     */
     @XmlRootElement(name="property")
     public static class JpaProperty{
         @XmlAttribute(name="name")
@@ -42,9 +46,10 @@ public class CreeperCoreConfig {
         @XmlAttribute(name="value")
         public String value;
     }
-    //数据库实例
+    /** 数据库相关配置 **/
     @XmlElement(name="db")
     public Database db = new Database();
+    /** JPA相关配置 **/
     @XmlElementWrapper(name="jpa")
     @XmlElement(name="property")
     public List<JpaProperty> jpaProperties = new ArrayList<JpaProperty>();

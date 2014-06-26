@@ -73,10 +73,10 @@ public abstract class BaseEntityTestCase {
         }
         public static CreeperCoreConfig buildConfig(){
             CreeperCoreConfig config = new CreeperCoreConfig();
-            config.db._driverClassName="org.h2.Driver";
-            config.db._url="jdbc:h2:mem:testdb";
-            //config.db._url="jdbc:h2:file:target/test";
-            config.db._username = "sa";
+            config.db.driverClassName ="org.h2.Driver";
+            config.db.url ="jdbc:h2:mem:testdb";
+            //config.db.url="jdbc:h2:file:target/test";
+            config.db.username = "sa";
            
             CreeperCoreConfig.JpaProperty property = new CreeperCoreConfig.JpaProperty();
             /*property.name = Environment.HBM2DDL_AUTO;

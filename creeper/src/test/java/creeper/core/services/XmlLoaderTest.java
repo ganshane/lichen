@@ -38,6 +38,6 @@ public class XmlLoaderTest {
         CreeperCoreConfig config  = XmlLoader.parseXML(CreeperCoreConfig.class,
                 getClass().getResourceAsStream("/test_creeper_core_config.xml"),
                 Option.some(getClass().getResourceAsStream("/creeper/core/config/CreeperCoreConfig.xsd")));
-        Assert.assertEquals("org.h2.Driver", config.db._driverClassName);
+        Assert.assertEquals("org.h2.Driver", config.db.driverClassName);
     }
 }
