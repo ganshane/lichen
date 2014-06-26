@@ -63,6 +63,15 @@ public class Authorize {
 	@Property
 	private String permisson;
 	
+	
+	public Boolean getHasPermission(){
+		for(Permission p : role.getPermissions()){
+			if(permisson.equals(p.getPermission()))
+				return true;
+		}
+		return false;
+	}
+	
 	@Cached
 	public Iterable<CreeperModuleDef> getModules(){
 		return new Iterable<CreeperModuleDef>(){

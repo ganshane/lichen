@@ -10,7 +10,13 @@
 		  </div>
 		  <div class="panel-body">
 		  	<t:loop t:source="permissions" t:value="permisson">
-			 	<input name="perm" type="checkbox" selected="false" value="${permisson}"/> ${permisson}&nbsp;
+		  	<t:if test="${hasPermission}">
+	            <input name="perm" type="checkbox"  value="${permisson}" checked="true" />
+	            <p:else>
+	                <input name="perm" type="checkbox"  value="${permisson}" />
+	            </p:else>
+	        </t:if>
+			  	${permisson}&nbsp;
 			</t:loop>
 		  </div>
 		</div>
