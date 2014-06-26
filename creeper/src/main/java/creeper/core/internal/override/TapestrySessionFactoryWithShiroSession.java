@@ -1,4 +1,4 @@
-package creeper.core.services.shiro;
+package creeper.core.internal.override;
 
 import org.apache.shiro.subject.Subject;
 import org.apache.tapestry5.func.F;

@@ -1,4 +1,4 @@
-package creeper.core.services.shiro;
+package creeper.core.internal.shiro;
 
 import creeper.core.services.CreeperCoreExceptionCode;
 import creeper.core.services.CreeperException;

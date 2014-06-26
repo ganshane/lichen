@@ -1,6 +1,11 @@
 package creeper.core.services.shiro;
 
 import creeper.core.annotations.CreeperJpa;
+import creeper.core.internal.override.TapestrySessionFactoryWithShiroSession;
+import creeper.core.internal.shiro.JpaRealm;
+import creeper.core.internal.shiro.RequiresPermissionsWorker;
+import creeper.core.internal.shiro.RequiresRolesWorker;
+import creeper.core.internal.shiro.RequiresUserWorker;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
@@ -12,11 +17,11 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.mgt.WebSecurityManager;
 import org.apache.shiro.web.subject.WebSubject;
+import org.apache.tapestry5.internal.services.TapestrySessionFactory;
 import org.apache.tapestry5.ioc.*;
 import org.apache.tapestry5.ioc.annotations.*;
 import org.apache.tapestry5.services.RequestGlobals;
 import org.apache.tapestry5.services.transform.ComponentClassTransformWorker2;
-import sun.security.util.Password;
 
 import javax.persistence.EntityManager;
 import java.util.Collection;

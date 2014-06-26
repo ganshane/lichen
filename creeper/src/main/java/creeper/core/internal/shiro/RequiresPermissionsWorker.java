@@ -1,10 +1,8 @@
-package creeper.core.services.shiro;
+package creeper.core.internal.shiro;
 
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.authz.aop.AuthorizingAnnotationMethodInterceptor;
 import org.apache.shiro.authz.aop.PermissionAnnotationHandler;
-import org.apache.shiro.authz.aop.PermissionAnnotationMethodInterceptor;
-import org.apache.shiro.authz.aop.UserAnnotationHandler;
 import org.apache.shiro.subject.Subject;
 
 import java.lang.annotation.Annotation;
