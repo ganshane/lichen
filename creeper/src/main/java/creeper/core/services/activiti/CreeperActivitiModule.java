@@ -5,10 +5,10 @@ import creeper.core.internal.activiti.CreeperWorkflowManagerImpl;
 import org.activiti.engine.*;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.activiti.spring.SpringProcessEngineConfiguration;
-import org.apache.tapestry5.annotations.HeartbeatDeferred;
 import org.apache.tapestry5.ioc.ServiceBinder;
-import org.apache.tapestry5.ioc.annotations.*;
-import org.apache.tapestry5.ioc.services.PropertyShadowBuilder;
+import org.apache.tapestry5.ioc.annotations.Local;
+import org.apache.tapestry5.ioc.annotations.Marker;
+import org.apache.tapestry5.ioc.annotations.Startup;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.persistence.EntityManagerFactory;
@@ -20,6 +20,7 @@ import javax.sql.DataSource;
  */
 public class CreeperActivitiModule {
 
+    //启动工作流,自动加载工作流
     @Startup
     public static void setupWorkflow(@Local CreeperWorkflowManager manager){
         manager.deploy();
