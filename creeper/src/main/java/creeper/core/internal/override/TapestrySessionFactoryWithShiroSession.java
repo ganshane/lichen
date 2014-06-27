@@ -38,7 +38,12 @@ public class TapestrySessionFactoryWithShiroSession implements TapestrySessionFa
         }
 
         public List<String> getAttributeNames() {
-            return F.flow(_shiroSession.getAttributeKeys()).map(new Mapper<Object, String>() {
+            if(_shiroSession == null)
+                return Collections.EMPTY_LIST;
+            Collection<Object> attributes = _shiroSession.getAttributeKeys();
+            if(attributes != null)
+                return Collections.EMPTY_LIST;
+            return F.flow(attributes).map(new Mapper<Object, String>() {
                 @Override
                 public String map(Object element) {
                     return String.valueOf(element);
