@@ -9,6 +9,7 @@ import creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
 import creeper.core.internal.override.CreeperOverrideModule;
 import creeper.core.models.CreeperMenu;
 import creeper.core.services.*;
+import creeper.core.services.activiti.CreeperActivitiModule;
 import creeper.core.services.db.DatabaseMigrationModule;
 import creeper.core.services.jpa.CreeperJpaModule;
 import creeper.core.services.jpa.CreeperJpaValueEncoderSourceModule;
@@ -39,7 +40,7 @@ import java.sql.SQLException;
 @SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class,
         CreeperShiroModule.class,UserModule.class,
         CreeperOverrideModule.class, CreeperJpaValueEncoderSourceModule.class,
-        NodeModule.class
+        NodeModule.class, CreeperActivitiModule.class
 })
 public class CreeperCoreModule {
     public static void bind(ServiceBinder binder){

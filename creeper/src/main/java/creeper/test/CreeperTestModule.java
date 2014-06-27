@@ -4,6 +4,7 @@ import creeper.core.models.CreeperMenu;
 import creeper.core.models.CreeperModuleDef;
 import creeper.core.services.CreeperModuleManager;
 import creeper.core.services.MenuSource;
+import creeper.core.services.activiti.CreeperWorkflowManager;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 
@@ -27,5 +28,10 @@ public class CreeperTestModule {
     @Contribute(value = CreeperModuleManager.class)
     public static void provideModule(Configuration<CreeperModuleDef> configuration){
     	configuration.add(CreeperModuleDef.create("测试","creeper.test"));
+    }
+    @Contribute(CreeperWorkflowManager.class)
+    public static void provideHelloWorkflow(
+            Configuration<String> configuration){
+        configuration.add("classpath:hello.bpmn20.xml");
     }
 }

@@ -2,6 +2,7 @@ package creeper.core.services.activiti;
 
 import creeper.core.annotations.CreeperActiviti;
 import creeper.core.internal.activiti.CreeperWorkflowManagerImpl;
+import creeper.core.internal.activiti.WorkflowServiceImpl;
 import org.activiti.engine.*;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.activiti.spring.SpringProcessEngineConfiguration;
@@ -26,7 +27,8 @@ public class CreeperActivitiModule {
         manager.deploy();
     }
     public static void bind(ServiceBinder binder){
-        binder.bind(CreeperWorkflowManager.class, CreeperWorkflowManagerImpl.class).withMarker(CreeperActiviti.class).eagerLoad();
+        binder.bind(CreeperWorkflowManager.class, CreeperWorkflowManagerImpl.class).withMarker(CreeperActiviti.class);
+        binder.bind(WorkflowService.class, WorkflowServiceImpl.class).withMarker(CreeperActiviti.class);
     }
     @Marker(CreeperActiviti.class)
     public static ProcessEngine buildProcessEngine(EntityManagerFactory entityManagerFactory,

@@ -1,7 +1,5 @@
 package creeper.core.internal.activiti;
 
-import creeper.core.annotations.CreeperActiviti;
-import creeper.core.models.CreeperModuleDef;
 import creeper.core.services.activiti.CreeperActivitiModule;
 import creeper.core.services.activiti.CreeperWorkflowManager;
 import creeper.core.services.jpa.BaseEntityTestCase;
@@ -9,21 +7,12 @@ import org.activiti.engine.*;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.activiti.spring.ProcessEngineFactoryBean;
-import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.apache.tapestry5.Asset;
-import org.apache.tapestry5.annotations.Path;
-import org.apache.tapestry5.internal.AssetConstants;
 import org.apache.tapestry5.internal.services.AbstractAsset;
-import org.apache.tapestry5.internal.services.AssetSourceImpl;
-import org.apache.tapestry5.internal.services.ClasspathAssetFactory;
 import org.apache.tapestry5.ioc.Configuration;
-import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.Resource;
-import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.EagerLoad;
-import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.ioc.internal.util.ClasspathResource;
 import org.apache.tapestry5.services.*;
 import org.junit.Assert;
@@ -31,12 +20,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 import java.util.List;
 
 /**
