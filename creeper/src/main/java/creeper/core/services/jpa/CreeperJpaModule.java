@@ -16,6 +16,7 @@ import org.apache.tapestry5.ioc.annotations.*;
 import org.apache.tapestry5.ioc.internal.services.RegistryStartup;
 import org.apache.tapestry5.ioc.services.*;
 import org.apache.tapestry5.services.Core;
+import org.hibernate.jpa.HibernateEntityManager;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
 import org.logicalcobwebs.proxool.ProxoolException;
 import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
@@ -131,7 +132,7 @@ public class CreeperJpaModule {
      */
     @Marker(CreeperJpa.class)
     @Scope(ScopeConstants.PERTHREAD)
-    public static EntityManager buildEntityManager(Logger logger,@InjectService("PerthreadManager") PerthreadManager perthreadManager,@Local EntityManagerCreator entityManagerCreator){
+    public static HibernateEntityManager buildEntityManager(Logger logger,@InjectService("PerthreadManager") PerthreadManager perthreadManager,@Local EntityManagerCreator entityManagerCreator){
         final EntityManager manager = entityManagerCreator.createEntityManager();
         //线程结束的时候，应该关闭此manager
         perthreadManager.addThreadCleanupListener(new ThreadCleanupListener() {
@@ -141,7 +142,7 @@ public class CreeperJpaModule {
                     manager.close();
             }
         });
-        return manager;
+        return (HibernateEntityManager) manager;
         //return SharedEntityManagerCreator.createSharedEntityManager(entityManagerFactory);
     }
     @Marker(CreeperJpa.class)

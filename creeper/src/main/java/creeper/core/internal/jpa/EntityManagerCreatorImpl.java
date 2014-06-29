@@ -5,6 +5,7 @@ import org.apache.tapestry5.ioc.ObjectCreator;
 import org.apache.tapestry5.ioc.services.Builtin;
 import org.apache.tapestry5.ioc.services.PlasticProxyFactory;
 import org.apache.tapestry5.plastic.*;
+import org.hibernate.jpa.HibernateEntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,12 +26,12 @@ public class EntityManagerCreatorImpl implements creeper.core.services.jpa.Entit
     private static final Logger logger = LoggerFactory.getLogger(EntityManagerCreatorImpl.class);
     private EntityManagerFactory entityManagerFactory;
     private PlasticProxyFactory proxyFactory;
-    private final ClassInstantiator<EntityManager> instance;
+    private final ClassInstantiator<HibernateEntityManager> instance;
     public EntityManagerCreatorImpl(@CreeperJpa EntityManagerFactory entityManagerFactory,
                                     @Builtin PlasticProxyFactory plasticProxyFactory){
         this.entityManagerFactory = entityManagerFactory;
         this.proxyFactory = plasticProxyFactory;
-        this.instance = proxyFactory.createProxy(EntityManager.class, new PlasticClassTransformer() {
+        this.instance = proxyFactory.createProxy(HibernateEntityManager.class, new PlasticClassTransformer() {
             @Override
             public void transform(final PlasticClass plasticClass) {
                 final PlasticField objectCreatorField = plasticClass.introduceField(ObjectCreator.class, "creator")
