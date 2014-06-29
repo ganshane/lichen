@@ -25,9 +25,9 @@ public class RoleForm {
 	@Property
 	private Role role;
 	
-	//初始化user实体
-	void onPrepare(){
-		role = new Role();
+	void onActivate(){
+		if(null == role)
+			role = new Role();
 	}
 	
 	@OnEvent(value=EventConstants.SUBMIT,component="roleForm")

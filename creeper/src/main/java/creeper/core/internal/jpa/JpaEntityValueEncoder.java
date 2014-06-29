@@ -1,5 +1,17 @@
 package creeper.core.internal.jpa;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+import javax.persistence.EntityManager;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.SingularAttribute;
+
+import org.apache.commons.codec.binary.Base64;
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.ioc.services.PropertyAccess;
 import org.apache.tapestry5.ioc.services.PropertyAdapter;
@@ -7,10 +19,7 @@ import org.apache.tapestry5.ioc.services.TypeCoercer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.persistence.EntityManager;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.SingularAttribute;
-import java.io.Serializable;
+import creeper.core.services.CreeperException;
 
 /**
  * hibernate映射实体ValueEncoder
@@ -69,7 +78,28 @@ public class JpaEntityValueEncoder<T> implements ValueEncoder<T> {
         Object id = propertyAdapter.get(value);
 
         if (null == id){
-            return null;
+        	StringBuffer serStr = new StringBuffer();
+        	serStr.append("_ser_obj");
+        	ByteArrayOutputStream byteArrayOutputStream = null;
+        	ObjectOutputStream objectOutputStream = null;
+        	try {
+				byteArrayOutputStream = new ByteArrayOutputStream();  
+	        	objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+				objectOutputStream.writeObject(value);
+	        	serStr.append(Base64.encodeBase64URLSafeString(byteArrayOutputStream.toByteArray()));
+			} catch (IOException e) {
+				throw CreeperException.wrap(e);
+			} finally {
+				try {
+					if(null != objectOutputStream)
+						objectOutputStream.close();
+					if(null != byteArrayOutputStream)
+						byteArrayOutputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+            return serStr.toString();
         }
         
         return typeCoercer.coerce(id, String.class);
@@ -83,10 +113,33 @@ public class JpaEntityValueEncoder<T> implements ValueEncoder<T> {
 	public T toValue(String clientValue) {
 		if(null == clientValue)
 			return null;
-		//根据propertyAdapter.getType()获得的原始字段类型，调用typeCoercer服务将id转换，id可为string，int等类型，所以要转换。
-		Object id = typeCoercer.coerce(clientValue, propertyAdapter.getType());
-		Serializable ser_id = (Serializable) id;
-		return entityManager.find(entityClass, ser_id);
+		if(!clientValue.startsWith("_ser_obj")){
+			//根据propertyAdapter.getType()获得的原始字段类型，调用typeCoercer服务将id转换，id可为string，int等类型，所以要转换。
+			Object id = typeCoercer.coerce(clientValue, propertyAdapter.getType());
+			Serializable ser_id = (Serializable) id;
+			return entityManager.find(entityClass, ser_id);
+		}else{
+			String _ser_obj = clientValue.replaceFirst("_ser_obj", "");
+			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64.decodeBase64(_ser_obj));;
+			ObjectInputStream objectInputStream = null;
+			try {
+				objectInputStream = new ObjectInputStream(byteArrayInputStream);
+				return (T) objectInputStream.readObject(); 
+			} catch (IOException e) {
+				throw CreeperException.wrap(e);
+			} catch (ClassNotFoundException e) {
+				throw CreeperException.wrap(e);
+			} finally {
+				try {
+					if(null != objectInputStream)
+						objectInputStream.close();
+					if(null != byteArrayInputStream)
+						byteArrayInputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 }

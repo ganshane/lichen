@@ -6,6 +6,8 @@ import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import creeper.user.dao.RoleDao;
 import creeper.user.entities.Role;
@@ -18,11 +20,13 @@ import creeper.user.services.RoleService;
  */
 public class RoleList {
 	
-	@Property
-	private Role role = new Role();
+	private static Logger logger = LoggerFactory.getLogger(RoleList.class);
 	
 	@Property
-	private List<Role> roles;
+	private Role role;
+	
+	@Property
+	private Role roleParams;
 	
 	@Inject
 	private RoleService _roleService;
@@ -30,20 +34,29 @@ public class RoleList {
 	@Inject
 	private RoleDao _roleDao;
 	
+	public List<Role> getRoles(){
+		return _roleService.findAll(roleParams);
+	}
+	
+	void onActivate(){
+		if(roleParams == null)
+			roleParams = new Role(); 
+	}
+	
 	void onActivate(Role role){
-		roles = _roleService.findAll(role);
+
 	}
 	
 //	单击eventlink执行删除操作
 	@OnEvent(value="del")
-	Object doDeleteRole(Role role){
+	void doDeleteRole(Role role,Role param){
+		this.roleParams = param;
 		_roleDao.delete(role);
-		return this;
 	}
 	
 	@OnEvent(value=EventConstants.SUBMIT,component="roleQueryForm")
 	void doQueryRole(){
-		roles = _roleService.findAll(role);
+
 	}
 		
 }
