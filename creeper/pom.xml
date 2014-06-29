@@ -134,9 +134,21 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>proxool</groupId>
+      <groupId>com.cloudhopper.proxool</groupId>
       <artifactId>proxool</artifactId>
       <version>0.9.1</version>
+      <exclusions>
+        <!--
+        <exclusion>
+          <groupId>com.cloudhopper.proxool</groupId>
+          <artifactId>proxool-cglib</artifactId>
+        </exclusion>
+        -->
+        <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
@@ -154,11 +166,13 @@
       <artifactId>mockito-all</artifactId>
       <scope>test</scope>
     </dependency>
+    <!--
     <dependency>
     	<groupId>org.got5</groupId> 
   		<artifactId>tapestry5-jquery</artifactId> 
   		<version>3.4.0</version> 
     </dependency>
+    -->
   </dependencies>
   <build>
     <plugins>
