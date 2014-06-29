@@ -12,7 +12,9 @@ import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.SingularAttribute;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.tapestry5.ValueEncoder;
+import org.apache.tapestry5.ioc.IOCUtilities;
 import org.apache.tapestry5.ioc.services.PropertyAccess;
 import org.apache.tapestry5.ioc.services.PropertyAdapter;
 import org.apache.tapestry5.ioc.services.TypeCoercer;
@@ -90,14 +92,8 @@ public class JpaEntityValueEncoder<T> implements ValueEncoder<T> {
 			} catch (IOException e) {
 				throw CreeperException.wrap(e);
 			} finally {
-				try {
-					if(null != objectOutputStream)
-						objectOutputStream.close();
-					if(null != byteArrayOutputStream)
-						byteArrayOutputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+                IOUtils.closeQuietly(objectOutputStream);
+                IOUtils.closeQuietly(byteArrayOutputStream);
 			}
             return serStr.toString();
         }
@@ -130,14 +126,8 @@ public class JpaEntityValueEncoder<T> implements ValueEncoder<T> {
 			} catch (ClassNotFoundException e) {
 				throw CreeperException.wrap(e);
 			} finally {
-				try {
-					if(null != objectInputStream)
-						objectInputStream.close();
-					if(null != byteArrayInputStream)
-						byteArrayInputStream.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+                IOUtils.closeQuietly(objectInputStream);
+                IOUtils.closeQuietly(byteArrayInputStream);
 			}
 		}
 	}
