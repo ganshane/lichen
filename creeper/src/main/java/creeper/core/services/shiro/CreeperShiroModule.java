@@ -44,7 +44,7 @@ public class CreeperShiroModule {
         realm.setCredentialsMatcher(passwordMatcher);
         realms.add(realm);
     }
-    @EagerLoad
+    //@EagerLoad
     public static WebSecurityManager buildWebSecurityManager(@CreeperJpa EntityManager entityManager,Collection<Realm> realms){
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealms(realms);
@@ -52,7 +52,7 @@ public class CreeperShiroModule {
         return securityManager;
     }
     @Scope(ScopeConstants.PERTHREAD)
-    @EagerLoad
+    //@EagerLoad
     public static Subject buildSubject(@Local WebSecurityManager securityManager,RequestGlobals requestGlobals){
         //SecurityUtils.setSecurityManager(securityManager);
         Subject subject = new WebSubject.Builder(securityManager,requestGlobals.getHTTPServletRequest(), requestGlobals.getHTTPServletResponse()).buildWebSubject();

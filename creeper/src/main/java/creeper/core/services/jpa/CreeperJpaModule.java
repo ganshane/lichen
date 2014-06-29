@@ -6,6 +6,7 @@ import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.TransactionAdvice;
 import creeper.core.internal.jpa.EntityManagerCreatorImpl;
 import creeper.core.internal.jpa.SmartHibernateJpaVendorAdapter;
+import creeper.core.internal.jpa.SpringDataDaoProviderImpl;
 import creeper.core.services.CreeperCoreExceptionCode;
 import creeper.core.services.CreeperException;
 import creeper.core.services.CreeperModuleManager;
@@ -13,6 +14,7 @@ import lichen.core.services.Option;
 import org.apache.tapestry5.ioc.*;
 import org.apache.tapestry5.ioc.annotations.*;
 import org.apache.tapestry5.ioc.services.*;
+import org.apache.tapestry5.services.Core;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
 import org.logicalcobwebs.proxool.ProxoolException;
 import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
@@ -50,6 +52,7 @@ public class CreeperJpaModule {
     public static void bind(ServiceBinder binder){
         binder.bind(SmartHibernateJpaVendorAdapter.class).withMarker(CreeperJpa.class);
         binder.bind(EntityManagerCreator.class, EntityManagerCreatorImpl.class).withMarker(CreeperJpa.class);
+        binder.bind(SpringDataDaoProvider.class, SpringDataDaoProviderImpl.class).withSimpleId().withMarker(CreeperJpa.class);
     }
     @Marker(CreeperJpa.class)
     public static DataSource buildDataSource(CreeperCoreConfig config){
@@ -80,8 +83,8 @@ public class CreeperJpaModule {
      * 创建基于Hibernate的JPA实现.
      */
     @Marker(CreeperJpa.class)
-    public static EntityManagerFactory buildEntityManagerFactory(CreeperCoreConfig config,
-                                                                 SmartHibernateJpaVendorAdapter jpaVendorAdapter,
+    public static EntityManagerFactory buildEntityManagerFactory(@CreeperCore CreeperCoreConfig config,
+                                                                 @Local SmartHibernateJpaVendorAdapter jpaVendorAdapter,
                                                                  @CreeperJpa DataSource dataSource,
                                                                  CreeperModuleManager creeperModuleManager
                                                                  ){
@@ -118,7 +121,7 @@ public class CreeperJpaModule {
      */
     @Marker(CreeperJpa.class)
     @Scope(ScopeConstants.PERTHREAD)
-    public static EntityManager buildEntityManager(Logger logger,PerthreadManager perthreadManager,EntityManagerCreator entityManagerCreator){
+    public static EntityManager buildEntityManager(Logger logger,@InjectService("PerthreadManager") PerthreadManager perthreadManager,@Local EntityManagerCreator entityManagerCreator){
         final EntityManager manager = entityManagerCreator.createEntityManager();
         //线程结束的时候，应该关闭此manager
         perthreadManager.addThreadCleanupListener(new ThreadCleanupListener() {
@@ -145,17 +148,20 @@ public class CreeperJpaModule {
             public boolean contains(Class<?> daoType) {
                 return _daoPackages != null && daoType.getPackage()!=null && _daoPackages.contains(daoType.getPackage().getName());
             }
+
+            @Override
+            public String[] getPackages() {
+                return _daoPackages.toArray(new String[_daoPackages.size()]);
+            }
         };
     }
     @Contribute(MasterObjectProvider.class)
     public static void provideEntityDaoObject(OrderedConfiguration<ObjectProvider> configuration,
-                                              @CreeperJpa
-                                               final DaoPackageManager entityPackageManager,
-                                              @CreeperJpa
-                                               final BeanFactory beanFactory,
-                                              @CreeperJpa
-                                               final EntityManager entityManager)
+                                               @Local
+                                               final ObjectProvider objectProvider)
     {
+        configuration.add("SpringDaoProvider",objectProvider,"after:AnnotationBasedContributions", "after:ServiceOverride");
+    /*
         configuration.add("entityDaoProvider", new ObjectProvider() {
             @Override
             public <T> T provide(Class<T> objectType, AnnotationProvider annotationProvider, ObjectLocator locator) {
@@ -167,13 +173,14 @@ public class CreeperJpaModule {
                     jpaRepositoryFactoryBean.setEntityManager(entityManager);
                     jpaRepositoryFactoryBean.setRepositoryInterface(objectType);
                     //仅仅支持在Dao中发现Query
-                    jpaRepositoryFactoryBean.setQueryLookupStrategyKey(QueryLookupStrategy.Key.CREATE);
+                    jpaRepositoryFactoryBean.setQueryLookupStrategyKey(QueryLookupStrategy.Key.USE_DECLARED_QUERY);
                     jpaRepositoryFactoryBean.afterPropertiesSet();
                     return (T)jpaRepositoryFactoryBean.getObject();
                 }
                 return null;
             }
         });
+    */
     }
     @Marker(CreeperJpa.class)
     public static ListableBeanFactory buildBeanFactory(@CreeperJpa

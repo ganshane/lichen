@@ -11,4 +11,5 @@ public interface DaoPackageManager{
      * @return
      */
     public boolean contains(Class<?> daoType);
+    public String[] getPackages();
 }

@@ -13,21 +13,21 @@ import creeper.core.services.activiti.CreeperActivitiModule;
 import creeper.core.services.db.DatabaseMigrationModule;
 import creeper.core.services.jpa.CreeperJpaModule;
 import creeper.core.services.jpa.CreeperJpaValueEncoderSourceModule;
+import creeper.core.services.jpa.SpringDataDaoProvider;
 import creeper.core.services.shiro.CreeperShiroModule;
 import creeper.node.NodeModule;
 import creeper.user.UserModule;
 import lichen.core.services.Option;
 import org.apache.commons.io.FileUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.web.mgt.WebSecurityManager;
 import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.func.Worker;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
-import org.apache.tapestry5.ioc.annotations.Contribute;
-import org.apache.tapestry5.ioc.annotations.Startup;
-import org.apache.tapestry5.ioc.annotations.SubModule;
-import org.apache.tapestry5.ioc.annotations.Symbol;
+import org.apache.tapestry5.ioc.annotations.*;
 import org.apache.tapestry5.services.*;
 import org.slf4j.Logger;
 
@@ -44,15 +44,20 @@ import java.sql.SQLException;
 })
 public class CreeperCoreModule {
     public static void bind(ServiceBinder binder){
-        binder.bind(MenuSource.class, MenuSourceImpl.class);
-        binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class);
+        binder.bind(MenuSource.class, MenuSourceImpl.class).withMarker(CreeperCore.class);
+        binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class).withMarker(CreeperCore.class);
     }
 
     /**
      * 在开发模式下，自动启动数据库管理工具
      */
     @Startup
-    public static void startupH2Console(@Symbol(SymbolConstants.PRODUCTION_MODE) boolean isProduction, final CreeperCoreConfig config,final DataSource dataSource){
+    public static void startupH2Console(
+            @Symbol(SymbolConstants.PRODUCTION_MODE) boolean isProduction, final CreeperCoreConfig config,
+            final DataSource dataSource,
+            SpringDataDaoProvider objectProvider,
+            WebSecurityManager securityManager
+            ){
         if(!isProduction){
             new Thread(new Runnable() {
                 @Override
@@ -65,6 +70,11 @@ public class CreeperCoreModule {
                 }
             }).start();
         }
+
+        //启动spring dao object
+        objectProvider.setupDaoObject();
+        //启动安全配置参数
+        SecurityUtils.setSecurityManager(securityManager);
     }
 
 	public static void contributeApplicationDefaults(MappedConfiguration<String, String> configuration){
@@ -89,6 +99,7 @@ public class CreeperCoreModule {
             }
         });
     }
+    @Marker(CreeperCore.class)
     public static CreeperCoreConfig buildCreeperCoreConfig(@Symbol(CreeperCoreSymbols.SERVER_HOME) String serverHome){
         String filePath = serverHome + "/config/creeper-core.xml";
         try {

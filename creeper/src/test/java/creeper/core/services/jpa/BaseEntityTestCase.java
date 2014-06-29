@@ -1,5 +1,6 @@
 package creeper.core.services.jpa;
 
+import creeper.core.annotations.CreeperCore;
 import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.CreeperModuleManagerImpl;
 import creeper.core.models.CreeperModuleDef;
@@ -11,6 +12,9 @@ import org.apache.tapestry5.ioc.Registry;
 import org.apache.tapestry5.ioc.RegistryBuilder;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
+import org.apache.tapestry5.ioc.annotations.Marker;
+import org.apache.tapestry5.ioc.annotations.Startup;
+import org.apache.tapestry5.ioc.services.ClassNameLocator;
 import org.hibernate.cfg.Environment;
 import org.junit.After;
 import org.junit.Before;
@@ -60,6 +64,11 @@ public abstract class BaseEntityTestCase {
         ThreadContext.remove("creeper.modules");
     }
     public static class TestDatabaseModule{
+        @Startup
+        public static void setup(SpringDataDaoProvider daoProvider){
+            daoProvider.setupDaoObject();
+        }
+
         public static void bind(ServiceBinder binder){
             binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class);
         }
@@ -71,6 +80,7 @@ public abstract class BaseEntityTestCase {
                     modules.add(m);
                 }
         }
+        @Marker(CreeperCore.class)
         public static CreeperCoreConfig buildConfig(){
             CreeperCoreConfig config = new CreeperCoreConfig();
             config.db.driverClassName ="org.h2.Driver";

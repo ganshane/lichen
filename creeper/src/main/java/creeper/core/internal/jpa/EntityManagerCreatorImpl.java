@@ -1,5 +1,6 @@
 package creeper.core.internal.jpa;
 
+import creeper.core.annotations.CreeperJpa;
 import org.apache.tapestry5.ioc.ObjectCreator;
 import org.apache.tapestry5.ioc.services.Builtin;
 import org.apache.tapestry5.ioc.services.PlasticProxyFactory;
@@ -25,7 +26,7 @@ public class EntityManagerCreatorImpl implements creeper.core.services.jpa.Entit
     private EntityManagerFactory entityManagerFactory;
     private PlasticProxyFactory proxyFactory;
     private final ClassInstantiator<EntityManager> instance;
-    public EntityManagerCreatorImpl(EntityManagerFactory entityManagerFactory,
+    public EntityManagerCreatorImpl(@CreeperJpa EntityManagerFactory entityManagerFactory,
                                     @Builtin PlasticProxyFactory plasticProxyFactory){
         this.entityManagerFactory = entityManagerFactory;
         this.proxyFactory = plasticProxyFactory;
