@@ -64,11 +64,6 @@ public abstract class BaseEntityTestCase {
         ThreadContext.remove("creeper.modules");
     }
     public static class TestDatabaseModule{
-        @Startup
-        public static void setup(SpringDataDaoProvider daoProvider){
-            daoProvider.setupDaoObject();
-        }
-
         public static void bind(ServiceBinder binder){
             binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class);
         }

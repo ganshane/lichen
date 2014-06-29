@@ -13,6 +13,7 @@ import creeper.core.services.CreeperModuleManager;
 import lichen.core.services.Option;
 import org.apache.tapestry5.ioc.*;
 import org.apache.tapestry5.ioc.annotations.*;
+import org.apache.tapestry5.ioc.internal.services.RegistryStartup;
 import org.apache.tapestry5.ioc.services.*;
 import org.apache.tapestry5.services.Core;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
@@ -53,6 +54,15 @@ public class CreeperJpaModule {
         binder.bind(SmartHibernateJpaVendorAdapter.class).withMarker(CreeperJpa.class);
         binder.bind(EntityManagerCreator.class, EntityManagerCreatorImpl.class).withMarker(CreeperJpa.class);
         binder.bind(SpringDataDaoProvider.class, SpringDataDaoProviderImpl.class).withSimpleId().withMarker(CreeperJpa.class);
+    }
+    @Contribute(Runnable.class)
+    public static void initJpaDaoObject(OrderedConfiguration<Runnable> configuration, final SpringDataDaoProvider provider){
+        configuration.add("jpa",new Runnable() {
+            @Override
+            public void run() {
+                provider.setupDaoObject();
+            }
+        },"after:database-migration");
     }
     @Marker(CreeperJpa.class)
     public static DataSource buildDataSource(CreeperCoreConfig config){

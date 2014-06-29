@@ -54,9 +54,7 @@ public class CreeperCoreModule {
     @Startup
     public static void startupH2Console(
             @Symbol(SymbolConstants.PRODUCTION_MODE) boolean isProduction, final CreeperCoreConfig config,
-            final DataSource dataSource,
-            SpringDataDaoProvider objectProvider,
-            WebSecurityManager securityManager
+            final DataSource dataSource
             ){
         if(!isProduction){
             new Thread(new Runnable() {
@@ -70,11 +68,6 @@ public class CreeperCoreModule {
                 }
             }).start();
         }
-
-        //启动spring dao object
-        objectProvider.setupDaoObject();
-        //启动安全配置参数
-        SecurityUtils.setSecurityManager(securityManager);
     }
 
 	public static void contributeApplicationDefaults(MappedConfiguration<String, String> configuration){

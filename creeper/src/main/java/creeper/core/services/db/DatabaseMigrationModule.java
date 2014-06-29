@@ -1,8 +1,11 @@
 package creeper.core.services.db;
 
 import creeper.core.internal.DatabaseMigrationImpl;
+import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.Startup;
+import org.apache.tapestry5.ioc.internal.services.RegistryStartup;
 import org.slf4j.Logger;
 
 /**
@@ -13,10 +16,16 @@ public class DatabaseMigrationModule {
     public static void bind(ServiceBinder binder){
         binder.bind(DatabaseMigration.class,DatabaseMigrationImpl.class);
     }
-    @Startup
-    public static void initCreeperDatabase(Logger logger, DatabaseMigration service){
-        logger.info("upgrading database schema ...");
-        service.dbSetup();
-        logger.info("database upgraded.");
+
+    @Contribute(Runnable.class)
+    public static void initCreeperDatabase(final Logger logger, final DatabaseMigration service,OrderedConfiguration<Runnable> configuration){
+        configuration.add("database-migration", new Runnable() {
+            @Override
+            public void run() {
+                logger.info("upgrading database schema ...");
+                service.dbSetup();
+                logger.info("database upgraded.");
+            }
+        });
     }
 }

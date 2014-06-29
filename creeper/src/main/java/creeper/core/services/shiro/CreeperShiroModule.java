@@ -6,6 +6,7 @@ import creeper.core.internal.shiro.JpaRealm;
 import creeper.core.internal.shiro.RequiresPermissionsWorker;
 import creeper.core.internal.shiro.RequiresRolesWorker;
 import creeper.core.internal.shiro.RequiresUserWorker;
+import creeper.core.services.jpa.SpringDataDaoProvider;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
@@ -20,6 +21,7 @@ import org.apache.shiro.web.subject.WebSubject;
 import org.apache.tapestry5.internal.services.TapestrySessionFactory;
 import org.apache.tapestry5.ioc.*;
 import org.apache.tapestry5.ioc.annotations.*;
+import org.apache.tapestry5.ioc.internal.services.RegistryStartup;
 import org.apache.tapestry5.services.RequestGlobals;
 import org.apache.tapestry5.services.transform.ComponentClassTransformWorker2;
 
@@ -48,8 +50,16 @@ public class CreeperShiroModule {
     public static WebSecurityManager buildWebSecurityManager(@CreeperJpa EntityManager entityManager,Collection<Realm> realms){
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
         securityManager.setRealms(realms);
-        SecurityUtils.setSecurityManager(securityManager);
         return securityManager;
+    }
+    @Contribute(Runnable.class)
+    public static void initSecurity(OrderedConfiguration<Runnable> configuration, final WebSecurityManager securityManager){
+        configuration.add("jpa",new Runnable() {
+            @Override
+            public void run() {
+                SecurityUtils.setSecurityManager(securityManager);
+            }
+        },"after:jpa");
     }
     @Scope(ScopeConstants.PERTHREAD)
     //@EagerLoad
