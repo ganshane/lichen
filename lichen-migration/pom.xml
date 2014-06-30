@@ -44,12 +44,23 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 		</dependency>
-        <dependency>
-            <groupId>proxool</groupId>
-            <artifactId>proxool</artifactId>
-            <version>0.9.1</version>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>com.cloudhopper.proxool</groupId>
+      <artifactId>proxool</artifactId>
+      <version>0.9.1</version>
+      <exclusions>
+        <!--
+        <exclusion>
+          <groupId>com.cloudhopper.proxool</groupId>
+          <artifactId>proxool-cglib</artifactId>
+        </exclusion>
+        -->
+        <exclusion>
+          <groupId>avalon-framework</groupId>
+          <artifactId>avalon-framework-api</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
