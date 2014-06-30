@@ -1,23 +1,23 @@
 package creeper.core.internal.activiti;
 
-import creeper.core.services.CreeperException;
-import creeper.core.services.activiti.CreeperWorkflowManager;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.repository.DeploymentBuilder;
-import org.apache.tapestry5.Asset;
-import org.apache.tapestry5.func.F;
-import org.apache.tapestry5.func.Worker;
-import org.apache.tapestry5.ioc.ObjectLocator;
-import org.apache.tapestry5.ioc.annotations.InjectService;
-import org.apache.tapestry5.ioc.services.SymbolSource;
-import org.apache.tapestry5.services.AssetSource;
-import org.apache.tapestry5.services.Core;
-
-import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
+
+import javax.inject.Inject;
+
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.repository.DeploymentBuilder;
+import org.apache.commons.io.IOUtils;
+import org.apache.tapestry5.Asset;
+import org.apache.tapestry5.func.F;
+import org.apache.tapestry5.func.Worker;
+import org.apache.tapestry5.ioc.services.SymbolSource;
+import org.apache.tapestry5.services.AssetSource;
+
+import creeper.core.services.CreeperException;
+import creeper.core.services.activiti.CreeperWorkflowManager;
 
 /**
  * 针对工作流的管理实现类
@@ -53,6 +53,8 @@ public class CreeperWorkflowManagerImpl implements CreeperWorkflowManager{
                     deployment.addInputStream(element.toString(),inputStream);
                 } catch (IOException e) {
                     throw CreeperException.wrap(e);
+                }finally{
+                	IOUtils.closeQuietly(inputStream);
                 }
             }
         });
