@@ -1,5 +1,6 @@
 package creeper.user;
 
+import creeper.user.services.UserSavedListener;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
@@ -12,6 +13,9 @@ import creeper.user.internal.RoleServiceImpl;
 import creeper.user.internal.UserServiceImpl;
 import creeper.user.services.RoleService;
 import creeper.user.services.UserService;
+import org.apache.tapestry5.ioc.services.ChainBuilder;
+
+import java.util.List;
 
 /**
  * 用户模块
@@ -42,5 +46,8 @@ public class UserModule {
         CreeperModuleDef def = CreeperModuleDef.create("用户","creeper.user");
         def.addPermissions("删除用户","编辑用户");
     	configuration.add(def);
+    }
+    public static UserSavedListener buildUserSavedListener(List<UserSavedListener> configuration,ChainBuilder chainBuilder){
+        return chainBuilder.build(UserSavedListener.class,configuration);
     }
 }

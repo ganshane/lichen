@@ -2,6 +2,7 @@ package creeper.user.internal;
 
 import javax.inject.Inject;
 
+import creeper.user.services.UserSavedListener;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -30,12 +31,15 @@ public class UserServiceImpl implements UserService{
     private PasswordService _passwordService;
     @Inject
     private Subject _subject;
+    @Inject
+    private UserSavedListener userSavedListener;
     @Override
     public void register(User user) {
         //加密密码
         String passwordEncrypted = _passwordService.encryptPassword(user.getPass());
         user.setPass(passwordEncrypted);
         _userDao.save(user);
+        userSavedListener.afterSaved(user);
     }
 
     @Override
