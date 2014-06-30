@@ -44,7 +44,7 @@ public interface UserService {
      * @param role
      * @return
      */
-    public List<Role> findAll(Role role);
+    public List<Role> findAllRole(Role role);
     
     /**
      * 根据user里封装的参数，参数符合条件的所有记录。

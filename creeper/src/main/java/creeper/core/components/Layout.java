@@ -7,6 +7,7 @@ import org.apache.tapestry5.Asset;
 import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
+import org.springframework.util.StringUtils;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -44,20 +45,27 @@ public class Layout {
         return sb.toString();
     }
     private void outputMenu(StringBuilder sb,List<CreeperMenu> menuColl){
+    	boolean hasTitle = false;
         for(CreeperMenu menu:menuColl){
-            sb.append("<li>");
-            if(menu.isType(CreeperMenu.MENU_IS_VIRTUAL_ACTION)){
-                sb.append(menu.getTitle());
-            }else{
-                sb.append("<a href=\""+menu.getUrl()+"\">").append(menu.getTitle());
-                sb.append("</a>");
-            }
+        	hasTitle = StringUtils.hasText(menu.getTitle());
+        	if(hasTitle){//当菜单没有title，认为是临时节点，把此节点提升一级
+	            sb.append("<li>");
+	            if(menu.isType(CreeperMenu.MENU_IS_VIRTUAL_ACTION)){
+	                sb.append(menu.getTitle());
+	            }else{
+	                sb.append("<a href=\""+menu.getUrl()+"\">").append(menu.getTitle());
+	                sb.append("</a>");
+	            }
+        	}
             if(menu.getChildren().size()>0){
-                sb.append("<ul class=\"nav\">");
+            	if(hasTitle)
+            		sb.append("<ul class=\"nav\">");
                 outputMenu(sb,menu.getChildren());
-                sb.append("</ul>");
+                if(hasTitle)
+                	sb.append("</ul>");
             }
-            sb.append("</li>");
+            if(hasTitle)
+            	sb.append("</li>");
         }
     }
 }

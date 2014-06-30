@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
-	public List<Role> findAll(final Role role) {
+	public List<Role> findAllRole(final Role role) {
 		if(null != role){
 			return _roleDao.findAll(new Specification<Role>() {
 				@Override

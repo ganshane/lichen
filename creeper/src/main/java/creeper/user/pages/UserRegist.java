@@ -54,7 +54,7 @@ public class UserRegist {
 	Object doSaveUser(){
 		user.setCreated(new Date());
 		userService.register(user);
-		return pageRenderLinkSource.createPageRenderLinkWithContext(UserList.class, user);
+		return pageRenderLinkSource.createPageRenderLinkWithContext(UserLogin.class);
 	}
 	
 }

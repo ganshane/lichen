@@ -1,4 +1,4 @@
-package creeper.user.pages;
+package creeper.user.pages.admin;
 
 import java.util.List;
 
@@ -29,7 +29,12 @@ public class UserList{
 		return _userService.findAll(userParams);
 	}
 	
-	void onActivate(final User user){
+	void onActivate(){
+		if(userParams == null)
+			userParams = new User(); 
+	}
+	
+	void onActivate(User user){
 		if(userParams == null)
 			userParams = new User(); 
 	}
