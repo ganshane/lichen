@@ -14,7 +14,8 @@ import java.io.Serializable;
  */
 @MappedSuperclass
 public class UUIDPrimaryKeySupport implements Serializable{
-    @Id
+	private static final long serialVersionUID = -2686414518400291686L;
+	@Id
     @GeneratedValue(generator= CreeperCoreConstants.UUID_GENERATOR)
     @Column
     private String id;

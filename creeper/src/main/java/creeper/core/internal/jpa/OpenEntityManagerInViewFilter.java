@@ -1,8 +1,13 @@
 package creeper.core.internal.jpa;
 
+import java.io.IOException;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
 import org.apache.tapestry5.ioc.services.Builtin;
 import org.apache.tapestry5.ioc.services.PlasticProxyFactory;
-import org.apache.tapestry5.plastic.PlasticUtils;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.RequestFilter;
 import org.apache.tapestry5.services.RequestHandler;
@@ -10,11 +15,6 @@ import org.apache.tapestry5.services.Response;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import java.io.IOException;
 
 /**
  * open entity manager in view

@@ -23,7 +23,7 @@ public class DateUserType implements UserType{
     }
 
     @Override
-    public Class returnedClass() {
+    public Class<?> returnedClass() {
         return Date.class;
     }
 

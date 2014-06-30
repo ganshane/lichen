@@ -1,14 +1,13 @@
 package creeper.core.internal.jpa;
 
-import creeper.core.annotations.CreeperJpa;
-import creeper.core.services.CreeperException;
-import creeper.core.services.jpa.DaoPackageManager;
-import creeper.core.services.jpa.SpringDataDaoProvider;
-import javassist.bytecode.stackmap.TypeData;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.persistence.EntityManager;
+
 import org.apache.tapestry5.ioc.AnnotationProvider;
 import org.apache.tapestry5.ioc.ObjectLocator;
-import org.apache.tapestry5.ioc.ObjectProvider;
-import org.apache.tapestry5.ioc.annotations.InjectService;
 import org.apache.tapestry5.ioc.internal.services.ClassNameLocatorImpl;
 import org.apache.tapestry5.ioc.internal.services.ClasspathURLConverterImpl;
 import org.apache.tapestry5.ioc.services.ClassNameLocator;
@@ -18,10 +17,10 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.data.repository.util.TxUtils;
 
-import javax.persistence.EntityManager;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import creeper.core.annotations.CreeperJpa;
+import creeper.core.services.CreeperException;
+import creeper.core.services.jpa.DaoPackageManager;
+import creeper.core.services.jpa.SpringDataDaoProvider;
 
 /**
  * spring data dao provider
@@ -31,7 +30,7 @@ public class SpringDataDaoProviderImpl implements SpringDataDaoProvider {
     private final DaoPackageManager _daoPackageManager;
     private BeanFactory _beanFactory;
     private EntityManager _entityManager;
-    private Map<Class,Object> objects = new HashMap();
+    private Map<Class<?>,Object> objects = new HashMap<Class<?>,Object>();
     private static final Logger logger = LoggerFactory.getLogger(SpringDataDaoProviderImpl.class);
 
     public SpringDataDaoProviderImpl(@CreeperJpa BeanFactory beanFactory,
@@ -62,7 +61,8 @@ public class SpringDataDaoProviderImpl implements SpringDataDaoProvider {
             }
         }
     }
-    private Object createDaoObject(Class objectType){
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+	private <T> T createDaoObject(Class<T> objectType){
         JpaRepositoryFactoryBean jpaRepositoryFactoryBean = new JpaRepositoryFactoryBean();
         jpaRepositoryFactoryBean.setBeanFactory(_beanFactory);
         jpaRepositoryFactoryBean.setTransactionManager(TxUtils.DEFAULT_TRANSACTION_MANAGER);
@@ -72,10 +72,11 @@ public class SpringDataDaoProviderImpl implements SpringDataDaoProvider {
         //仅仅支持在Dao中发现Query
         //jpaRepositoryFactoryBean.setQueryLookupStrategyKey(QueryLookupStrategy.Key.USE_DECLARED_QUERY);
         jpaRepositoryFactoryBean.afterPropertiesSet();
-        return jpaRepositoryFactoryBean.getObject();
+        return (T) jpaRepositoryFactoryBean.getObject();
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     public <T> T provide(Class<T> objectType, AnnotationProvider annotationProvider, ObjectLocator locator) {
         return (T) objects.get(objectType);
     }

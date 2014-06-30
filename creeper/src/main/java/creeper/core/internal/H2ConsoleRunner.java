@@ -10,7 +10,8 @@ import java.sql.Connection;
  * @author jcai
  */
 public class H2ConsoleRunner {
-    public static void run(Connection conn){
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public static void run(Connection conn){
         /*
         */
         try {

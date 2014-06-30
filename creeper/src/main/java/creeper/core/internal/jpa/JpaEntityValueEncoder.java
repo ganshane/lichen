@@ -14,7 +14,6 @@ import javax.persistence.metamodel.SingularAttribute;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.ioc.IOCUtilities;
 import org.apache.tapestry5.ioc.services.PropertyAccess;
 import org.apache.tapestry5.ioc.services.PropertyAdapter;
 import org.apache.tapestry5.ioc.services.TypeCoercer;
@@ -40,8 +39,8 @@ public class JpaEntityValueEncoder<T> implements ValueEncoder<T> {
 	//实体类
 	private final Class<T> entityClass;
 
-	//tapestry ioc 服务：存放所有对于类的封装的ClassPropertyAdapter的服务，提供从Map<Class, ClassPropertyAdapter>,中获取ClassPropertyAdapter等
-	//方法,如 ClassPropertyAdapter getAdapter(Class forClass);如果map中没有这个class的话，就调用ClassPropertyAdapter buildAdapter(Class forClass)
+	//tapestry ioc 服务：存放所有对于类的封装的ClassPropertyAdapter的服，提供从Map<Class, ClassPropertyAdapter>,中获取ClassPropertyAdapter等
+	//方法,如 ClassPropertyAdapter getAdapter(Class forClass);如果map中没有这个class的话，就调用ClassPClass forClass)
 	//创建并加入到map，供以后使用。
 	//BeanInfo info = Introspector.getBeanInfo(forClass);通过jdk对bean的封装！！！
 	private final PropertyAccess propertyAccess;
@@ -60,10 +59,10 @@ public class JpaEntityValueEncoder<T> implements ValueEncoder<T> {
 	/**
 	 * 构造方法注入
 	 */
-	public JpaEntityValueEncoder(EntityType<?> entityType,PropertyAccess propertyAccess,
+	public JpaEntityValueEncoder(EntityType<T> entityType,PropertyAccess propertyAccess,
                                  TypeCoercer typeCoercer, EntityManager entityManager) {
 
-		this.entityClass = (Class<T>) entityType.getJavaType();
+		this.entityClass = entityType.getJavaType();
         SingularAttribute<?, ?> attribute = entityType.getId(entityType.getIdType().getJavaType());
 		this.primaryKey = attribute.getName();
 		this.propertyAccess = propertyAccess;
