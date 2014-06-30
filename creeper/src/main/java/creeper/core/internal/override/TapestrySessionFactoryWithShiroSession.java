@@ -1,13 +1,16 @@
 package creeper.core.internal.override;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.shiro.subject.Subject;
 import org.apache.tapestry5.func.F;
 import org.apache.tapestry5.func.Mapper;
 import org.apache.tapestry5.internal.services.TapestrySessionFactory;
 import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
 import org.apache.tapestry5.services.Session;
-
-import java.util.*;
 
 /**
  * 复写tapestry的内部组件，使得和shiro共用session基础组件.
@@ -39,10 +42,10 @@ public class TapestrySessionFactoryWithShiroSession implements TapestrySessionFa
 
         public List<String> getAttributeNames() {
             if(_shiroSession == null)
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             Collection<Object> attributes = _shiroSession.getAttributeKeys();
             if(attributes != null)
-                return Collections.EMPTY_LIST;
+                return Collections.emptyList();
             return F.flow(attributes).map(new Mapper<Object, String>() {
                 @Override
                 public String map(Object element) {

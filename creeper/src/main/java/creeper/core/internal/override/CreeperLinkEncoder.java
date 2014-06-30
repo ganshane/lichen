@@ -14,7 +14,17 @@
 
 package creeper.core.internal.override;
 
-import org.apache.tapestry5.*;
+import java.util.List;
+import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.tapestry5.EventConstants;
+import org.apache.tapestry5.EventContext;
+import org.apache.tapestry5.Link;
+import org.apache.tapestry5.MetaDataConstants;
+import org.apache.tapestry5.SymbolConstants;
+import org.apache.tapestry5.TapestryConstants;
 import org.apache.tapestry5.internal.InternalConstants;
 import org.apache.tapestry5.internal.TapestryInternalUtils;
 import org.apache.tapestry5.internal.services.LinkImpl;
@@ -22,13 +32,18 @@ import org.apache.tapestry5.internal.services.RequestSecurityManager;
 import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.apache.tapestry5.ioc.internal.util.CollectionFactory;
 import org.apache.tapestry5.ioc.internal.util.InternalUtils;
-import org.apache.tapestry5.services.*;
+import org.apache.tapestry5.services.BaseURLSource;
+import org.apache.tapestry5.services.ComponentClassResolver;
+import org.apache.tapestry5.services.ComponentEventLinkEncoder;
+import org.apache.tapestry5.services.ComponentEventRequestParameters;
+import org.apache.tapestry5.services.ContextPathEncoder;
+import org.apache.tapestry5.services.LocalizationSetter;
+import org.apache.tapestry5.services.MetaDataLocator;
+import org.apache.tapestry5.services.PageRenderRequestParameters;
+import org.apache.tapestry5.services.PersistentLocale;
+import org.apache.tapestry5.services.Request;
+import org.apache.tapestry5.services.Response;
 import org.apache.tapestry5.services.security.ClientWhitelist;
-
-import java.util.List;
-import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * 复写了tapestry内置的LinkEncoder,主要目的是提供admin模块URL的自动转换.
@@ -256,16 +271,6 @@ public class CreeperLinkEncoder implements ComponentEventLinkEncoder
         }
 
         return builder.toString();
-    }
-
-    private String peekFirst(List<String> path)
-    {
-        if (path.size() == 0)
-        {
-            return null;
-        }
-
-        return path.get(0);
     }
 
     public ComponentEventRequestParameters decodeComponentEventRequest(Request request)

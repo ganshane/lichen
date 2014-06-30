@@ -1,10 +1,13 @@
 package creeper.core.internal.override;
 
-import org.apache.tapestry5.*;
-import org.apache.tapestry5.annotations.Path;
+import org.apache.tapestry5.BaseValidationDecorator;
+import org.apache.tapestry5.CSSClassConstants;
+import org.apache.tapestry5.Field;
+import org.apache.tapestry5.MarkupWriter;
+import org.apache.tapestry5.ValidationDecorator;
+import org.apache.tapestry5.ValidationTracker;
 import org.apache.tapestry5.dom.Element;
 import org.apache.tapestry5.services.Environment;
-import org.apache.tapestry5.services.FormSupport;
 import org.apache.tapestry5.services.ValidationDecoratorFactory;
 
 /**
@@ -14,13 +17,9 @@ import org.apache.tapestry5.services.ValidationDecoratorFactory;
 public class CreeperValidationDecoratorFactory implements ValidationDecoratorFactory{
     private final Environment environment;
 
-    private final Asset spacerImage;
-
-    public CreeperValidationDecoratorFactory(Environment environment, @Path("${tapestry.spacer-image}")
-    Asset spacerImage)
+    public CreeperValidationDecoratorFactory(Environment environment)
     {
         this.environment = environment;
-        this.spacerImage = spacerImage;
     }
     @Override
     public ValidationDecorator newInstance(MarkupWriter writer) {
@@ -67,11 +66,6 @@ public class CreeperValidationDecoratorFactory implements ValidationDecoratorFac
         @Override
         public void afterField(Field field)
         {
-        }
-
-        private FormSupport getFormSupport()
-        {
-            return environment.peekRequired(FormSupport.class);
         }
 
         private boolean inError(Field field)
