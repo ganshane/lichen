@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import creeper.user.dao.RoleDao;
 import creeper.user.entities.Role;
-import creeper.user.services.RoleService;
+import creeper.user.services.UserService;
 
 /**
  * 
@@ -29,13 +29,13 @@ public class RoleList {
 	private Role roleParams;
 	
 	@Inject
-	private RoleService _roleService;
+	private UserService _userService;
 	
 	@Inject
 	private RoleDao _roleDao;
 	
 	public List<Role> getRoles(){
-		return _roleService.findAll(roleParams);
+		return _userService.findAll(roleParams);
 	}
 	
 	void onActivate(){

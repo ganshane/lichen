@@ -10,9 +10,7 @@ import creeper.core.models.CreeperMenu;
 import creeper.core.models.CreeperModuleDef;
 import creeper.core.services.CreeperModuleManager;
 import creeper.core.services.MenuSource;
-import creeper.user.internal.RoleServiceImpl;
 import creeper.user.internal.UserServiceImpl;
-import creeper.user.services.RoleService;
 import creeper.user.services.UserService;
 import org.apache.tapestry5.ioc.services.ChainBuilder;
 import org.apache.tapestry5.services.PageRenderLinkSource;
@@ -28,7 +26,6 @@ public class UserModule {
 	
 	public static void bind(ServiceBinder binder){
         binder.bind(UserService.class, UserServiceImpl.class);
-        binder.bind(RoleService.class, RoleServiceImpl.class);
     }
 	
 	@Contribute(MenuSource.class)

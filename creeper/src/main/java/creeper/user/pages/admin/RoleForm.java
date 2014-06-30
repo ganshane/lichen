@@ -7,7 +7,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.PageRenderLinkSource;
 
 import creeper.user.entities.Role;
-import creeper.user.services.RoleService;
+import creeper.user.services.UserService;
 
 /**
  * 
@@ -17,7 +17,7 @@ import creeper.user.services.RoleService;
 public class RoleForm {
 	
 	@Inject
-	private RoleService _roleService;
+	private UserService _userService;
 	
 	@Inject
 	private PageRenderLinkSource pageRenderLinkSource;
@@ -32,7 +32,7 @@ public class RoleForm {
 	
 	@OnEvent(value=EventConstants.SUBMIT,component="roleForm")
 	Object doSaveRole(){
-		_roleService.saveOrUpdateRole(role);
+		_userService.saveOrUpdate(role);
 		return pageRenderLinkSource.createPageRenderLinkWithContext(RoleList.class, role);
 	}
 }

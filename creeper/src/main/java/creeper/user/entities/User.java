@@ -1,14 +1,20 @@
 package creeper.user.entities;
 
-import creeper.core.CreeperCoreConstants;
-import creeper.core.entities.UUIDPrimaryKeySupport;
-import org.hibernate.annotations.Type;
-
-import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
+
+import creeper.core.CreeperCoreConstants;
+import creeper.core.entities.UUIDPrimaryKeySupport;
 
 /**
  * 

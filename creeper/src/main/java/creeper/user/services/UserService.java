@@ -1,5 +1,8 @@
 package creeper.user.services;
 
+import java.util.List;
+
+import creeper.user.entities.Role;
 import creeper.user.entities.User;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,4 +31,25 @@ public interface UserService {
      */
     @Transactional
     public void logout();
+    
+    /**
+	 * 添加新角色
+	 * @param role
+	 */
+    @Transactional
+    public void saveOrUpdate(Role role);
+    
+    /**
+     * 根据role里封装的参数，参数符合条件的所有记录。
+     * @param role
+     * @return
+     */
+    public List<Role> findAll(Role role);
+    
+    /**
+     * 根据user里封装的参数，参数符合条件的所有记录。
+     * @param user
+     * @return
+     */
+	public List<User> findAll(User user);
 }
