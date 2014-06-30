@@ -1,5 +1,6 @@
 package creeper.user;
 
+import creeper.user.pages.UserRegist;
 import creeper.user.services.UserSavedListener;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.ServiceBinder;
@@ -14,6 +15,7 @@ import creeper.user.internal.UserServiceImpl;
 import creeper.user.services.RoleService;
 import creeper.user.services.UserService;
 import org.apache.tapestry5.ioc.services.ChainBuilder;
+import org.apache.tapestry5.services.PageRenderLinkSource;
 
 import java.util.List;
 
@@ -30,9 +32,9 @@ public class UserModule {
     }
 	
 	@Contribute(MenuSource.class)
-    public static void provideMenu(Configuration<CreeperMenu> configuration){
+    public static void provideMenu(Configuration<CreeperMenu> configuration,PageRenderLinkSource pageRenderLinkSource){
 		configuration.add(new CreeperMenu("user","用户","/user",1, CreeperMenu.MENU_VIRTUAL));
-		configuration.add(new CreeperMenu("user.regist","注册","/user/regist",1));
+		configuration.add(new CreeperMenu("user.regist","注册",UserRegist.class,1));
 		configuration.add(new CreeperMenu("user.login","登录","/user/login",2));
 		configuration.add(new CreeperMenu("user.query","查询","/user/query",3));
 		
