@@ -29,8 +29,7 @@
     <dependency>
       <groupId>com.ganshane.lichen</groupId>
       <artifactId>lichen-core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+      </dependency>
     <dependency>
   <groupId>org.apache.tapestry</groupId> 
   <artifactId>tapestry-upload</artifactId> 
@@ -39,7 +38,6 @@
     <dependency>
       <groupId>com.ganshane.lichen</groupId>
       <artifactId>lichen-migration</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.ganshane.lichen</groupId>
