@@ -41,6 +41,8 @@ public class CreeperMenu implements Comparable<CreeperMenu>{
     private String desc;
     //URL
     private String url;
+    //page对应的class
+    private Class<?> pageClass;
     //菜单类型
     private int type=MENU_NORMAL_ITEM;
     //菜单排序
@@ -58,6 +60,12 @@ public class CreeperMenu implements Comparable<CreeperMenu>{
     }
     public CreeperMenu(String name,String title,String url,int order){
         this(name,url,order);
+        this.title = title;
+    }
+    public CreeperMenu(String name,String title,Class<?> pageClass,int order){
+        this.name = name;
+        this.pageClass = pageClass;
+        this.order = order;
         this.title = title;
     }
     public CreeperMenu(String name,String title,String url,int order,int type){
@@ -156,6 +164,15 @@ public class CreeperMenu implements Comparable<CreeperMenu>{
         menuCopied.type = type;
         menuCopied.order = order;
         menuCopied.parent = parent;
+        menuCopied.pageClass = pageClass;
         return menuCopied;
+    }
+
+    public Class<?> getPageClass() {
+        return pageClass;
+    }
+
+    public void setPageClass(Class<?> pageClass) {
+        this.pageClass = pageClass;
     }
 }

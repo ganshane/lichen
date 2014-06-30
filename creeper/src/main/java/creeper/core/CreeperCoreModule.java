@@ -5,6 +5,7 @@ import creeper.core.config.CreeperCoreConfig;
 import creeper.core.internal.CreeperModuleManagerImpl;
 import creeper.core.internal.H2ConsoleRunner;
 import creeper.core.internal.MenuSourceImpl;
+import creeper.core.internal.activiti.SyncUserToActivitiListener;
 import creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
 import creeper.core.internal.override.CreeperOverrideModule;
 import creeper.core.models.CreeperMenu;
@@ -17,6 +18,7 @@ import creeper.core.services.jpa.SpringDataDaoProvider;
 import creeper.core.services.shiro.CreeperShiroModule;
 import creeper.node.NodeModule;
 import creeper.user.UserModule;
+import creeper.user.services.UserSavedListener;
 import lichen.core.services.Option;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.SecurityUtils;
@@ -30,6 +32,7 @@ import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.*;
 import org.apache.tapestry5.services.*;
 import org.slf4j.Logger;
+import org.springframework.stereotype.Controller;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -143,5 +146,9 @@ public class CreeperCoreModule {
     @Contribute(MenuSource.class)
     public static void provideMenu(Configuration<CreeperMenu> configuration){
         configuration.add(new CreeperMenu("admin","管理","/admin",1,CreeperMenu.MENU_VIRTUAL));
+    }
+    @Contribute(UserSavedListener.class)
+    public static void provideSyncToActiviti(OrderedConfiguration<UserSavedListener> configuration){
+        configuration.addInstance("activiti", SyncUserToActivitiListener.class);
     }
 }

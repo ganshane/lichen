@@ -7,8 +7,8 @@
 	  <input class="form-control" t:type="textfield" t:value="user.name" label="用户名" t:validate="required" />
 	</div>
 	<div class="input-group">
-	  <div class="input-group-addon" style="width:100px;">密码：</div>
-	  <input class="form-control" t:type="textfield"  t:value="user.pass" label="密码" t:validate="required" />
+	  <div class="input-group-addon" style="width:100px;">电子邮件：</div>
+	  <input class="form-control" t:type="textfield"  t:value="user.mail" label="电子邮件" t:validate="email" />
 	</div>
 	<br/>
 	<div class="btn-group">

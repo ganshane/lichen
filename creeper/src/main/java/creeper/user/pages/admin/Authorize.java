@@ -24,7 +24,7 @@ import creeper.core.models.CreeperModuleDef;
 import creeper.core.services.CreeperModuleManager;
 import creeper.user.entities.Permission;
 import creeper.user.entities.Role;
-import creeper.user.services.RoleService;
+import creeper.user.services.UserService;
 
 /**
  * 授权页
@@ -46,7 +46,7 @@ public class Authorize {
 	private String permission;
 	
 	@Inject
-	private RoleService roleService;
+	private UserService _userService;
 	
 	@Inject
 	private CreeperModuleManager creeperModuleManager;
@@ -124,7 +124,7 @@ public class Authorize {
 			p.setPermission(per);
 			permissions.add(p);
 		}
-		roleService.saveOrUpdateRole(role);
+		_userService.saveOrUpdate(role);
 	}
 	
 }

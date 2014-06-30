@@ -23,7 +23,7 @@ public class MenuSourceImplTest {
         coll.add(new CreeperMenu("d.b.c","/d/b/c",1));
 
 
-        MenuSourceImpl menuSource = new MenuSourceImpl(coll);
+        MenuSourceImpl menuSource = new MenuSourceImpl(coll,null);
         CreeperMenu root = menuSource.buildCreeperMenu();
         logger.debug("menu:{}",root);
     }

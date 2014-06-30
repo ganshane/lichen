@@ -54,7 +54,7 @@ public class CreeperShiroModule {
     }
     @Contribute(Runnable.class)
     public static void initSecurity(OrderedConfiguration<Runnable> configuration, final WebSecurityManager securityManager){
-        configuration.add("jpa",new Runnable() {
+        configuration.add("shiro",new Runnable() {
             @Override
             public void run() {
                 SecurityUtils.setSecurityManager(securityManager);

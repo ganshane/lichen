@@ -63,4 +63,8 @@ public class CreeperActivitiModule {
     public static HistoryService buildHistoryService(ProcessEngine engine){
         return engine.getHistoryService();
     }
+    @Marker(CreeperActiviti.class)
+    public static IdentityService buildIdentityService(ProcessEngine engine){
+        return engine.getIdentityService();
+    }
 }

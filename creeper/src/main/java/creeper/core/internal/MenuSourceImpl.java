@@ -1,7 +1,10 @@
 package creeper.core.internal;
 
 import creeper.core.models.CreeperMenu;
+import creeper.core.services.CreeperCoreExceptionCode;
+import creeper.core.services.CreeperException;
 import creeper.core.services.MenuSource;
+import org.apache.tapestry5.services.PageRenderLinkSource;
 
 import java.util.*;
 
@@ -10,10 +13,13 @@ import java.util.*;
  * @author jcai
  */
 public class MenuSourceImpl implements MenuSource {
+    private final PageRenderLinkSource _pageRenderLinkSource;
     private Collection<CreeperMenu> _coll;
-    public MenuSourceImpl(Collection<CreeperMenu> coll){
+    public MenuSourceImpl(Collection<CreeperMenu> coll,PageRenderLinkSource pageRenderLinkSource){
         _coll = Collections.unmodifiableCollection(coll);
+        _pageRenderLinkSource = pageRenderLinkSource;
     }
+
     @Override
     public CreeperMenu buildCreeperMenu() {
         //进行排序
@@ -26,10 +32,17 @@ public class MenuSourceImpl implements MenuSource {
         CreeperMenuWrapper root = new CreeperMenuWrapper(rootMenu);
 
         Iterator<CreeperMenu> it = _coll.iterator();
-        while(it.hasNext()){
+        while (it.hasNext()) {
             CreeperMenuWrapper menu = new CreeperMenuWrapper(it.next().copy());
             String url = menu.getUrl();
-            String [] parents = findParents(url);
+            if (url == null && menu.getPageClass() == null) {
+                throw new CreeperException("url和pageClass不能都为空,"+menu, CreeperCoreExceptionCode.URL_AND_PAGE_CLASS_IS_NULL);
+            }
+            if (url == null && menu.getPageClass() != null) {
+                url = _pageRenderLinkSource.createPageRenderLink(menu.getPageClass()).toRedirectURI();
+                menu.setUrl(url);
+            }
+            String[] parents = findParents(url);
             //构建父类菜单
             CreeperMenuWrapper parentMenu = getOrFillParentMenu(root, parents, 0);
             parentMenu.children.put(url, menu);
@@ -80,6 +93,7 @@ public class MenuSourceImpl implements MenuSource {
         Map<String,CreeperMenuWrapper> children = new HashMap<String, CreeperMenuWrapper>() ;
         private CreeperMenu _menu;
         HashMap<String, Integer> map = new HashMap<String, Integer>();
+
         public CreeperMenuWrapper(CreeperMenu menu){
             _menu = menu;
         }
@@ -97,6 +111,18 @@ public class MenuSourceImpl implements MenuSource {
 
         public String getUrl() {
             return _menu.getUrl();
+        }
+        public Class<?> getPageClass(){
+            return _menu.getPageClass();
+        }
+
+        public void setUrl(String url) {
+            _menu.setUrl(url);
+        }
+
+        @Override
+        public String toString() {
+            return _menu.toString();
         }
     }
 }
