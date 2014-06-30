@@ -35,7 +35,7 @@ public class RoleList {
 	private RoleDao _roleDao;
 	
 	public List<Role> getRoles(){
-		return _userService.findAll(roleParams);
+		return _userService.findAllRole(roleParams);
 	}
 	
 	void onActivate(){
