@@ -45,6 +45,12 @@ public class MenuSourceImpl implements MenuSource {
             String[] parents = findParents(url);
             //构建父类菜单
             CreeperMenuWrapper parentMenu = getOrFillParentMenu(root, parents, 0);
+            
+            //如果已经存在临时的节点菜单，则需要拷贝子节点信息，避免子节点信息丢失
+            CreeperMenuWrapper tmpWrapper = parentMenu.children.get(url);
+            if(tmpWrapper != null)
+            	menu.children = tmpWrapper.children;
+            
             parentMenu.children.put(url, menu);
         }
 

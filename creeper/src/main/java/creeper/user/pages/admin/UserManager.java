@@ -1,4 +1,4 @@
-package creeper.user.pages;
+package creeper.user.pages.admin;
 
 import java.util.ArrayList;
 import java.util.Arrays;

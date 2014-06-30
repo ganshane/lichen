@@ -32,7 +32,7 @@
     <td>${user.name}</td>
     <td>${user.mail}</td>
     <td>
-    	<a t:type="pagelink" t:id="manager" t:page="user/manager" t:context="user" >管理</a>&nbsp;
+    	<a t:type="pagelink" t:id="manager" t:page="user/admin/usermanager" t:context="user" >管理</a>&nbsp;
     	<a t:type="eventlink" t:id="del" t:event="del" t:context="user">删除</a>
     </td>
   </tr>
