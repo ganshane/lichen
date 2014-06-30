@@ -37,7 +37,6 @@ public class SyncUserToActivitiListener implements UserSavedListener{
         } else {
             activitiUser = identityService.newUser(user.getId());
         }
-        activitiUser = activitiUsers.get(0);
         activitiUser.setFirstName(user.getName());
         activitiUser.setLastName("");
         activitiUser.setPassword(user.getPass());
