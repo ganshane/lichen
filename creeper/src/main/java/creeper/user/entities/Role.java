@@ -1,9 +1,15 @@
 package creeper.user.entities;
 
-import creeper.core.entities.UUIDPrimaryKeySupport;
-
-import javax.persistence.*;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import creeper.core.entities.UUIDPrimaryKeySupport;
 
 /**
  * 角色
@@ -12,7 +18,8 @@ import java.util.Set;
 @Entity
 @Table(name="roles")
 public class Role extends UUIDPrimaryKeySupport {
-    @Column(unique = true,nullable = false)
+	private static final long serialVersionUID = -2752858772727853061L;
+	@Column(unique = true,nullable = false)
     private String name;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "role",orphanRemoval=true)
     private Set<Permission> permissions;

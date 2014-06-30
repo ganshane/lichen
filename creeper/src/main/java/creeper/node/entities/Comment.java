@@ -1,12 +1,17 @@
 package creeper.node.entities;
 
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
+
 import creeper.core.CreeperCoreConstants;
 import creeper.core.entities.UUIDPrimaryKeySupport;
 import creeper.user.entities.User;
-import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
-import java.util.Date;
 
 /**
  * comment
@@ -15,7 +20,8 @@ import java.util.Date;
 @Entity
 @Table(name="comments")
 public class Comment extends UUIDPrimaryKeySupport{
-    private String title;
+	private static final long serialVersionUID = 1630283388784385476L;
+	private String title;
     private String body;
     private String thread;//用来展示树形结构
     @ManyToOne

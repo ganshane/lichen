@@ -1,11 +1,11 @@
 package creeper.user.entities;
 
-import creeper.core.entities.UUIDPrimaryKeySupport;
-
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import creeper.core.entities.UUIDPrimaryKeySupport;
 
 /**
  * 角色对应的许可
@@ -14,7 +14,8 @@ import javax.persistence.Table;
 @Entity
 @Table(name="permissions")
 public class Permission extends UUIDPrimaryKeySupport{
-    @ManyToOne
+	private static final long serialVersionUID = -2707205891341041043L;
+	@ManyToOne
     @JoinColumn(name="role_id",nullable = false,updatable = false)
     private Role role;
     private String permission;

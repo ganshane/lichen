@@ -1,12 +1,11 @@
 package creeper.core.services.db;
 
-import creeper.core.internal.DatabaseMigrationImpl;
 import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
-import org.apache.tapestry5.ioc.annotations.Startup;
-import org.apache.tapestry5.ioc.internal.services.RegistryStartup;
 import org.slf4j.Logger;
+
+import creeper.core.internal.DatabaseMigrationImpl;
 
 /**
  * 数据库升级的模块

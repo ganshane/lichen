@@ -1,12 +1,17 @@
 package creeper.node.entities;
 
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
+
 import creeper.core.CreeperCoreConstants;
 import creeper.core.entities.UUIDPrimaryKeySupport;
 import creeper.user.entities.User;
-import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
-import java.util.Date;
 
 /**
  * node revision
@@ -15,7 +20,8 @@ import java.util.Date;
 @Entity
 @Table(name="node_revisions")
 public class NodeRevision extends UUIDPrimaryKeySupport{
-    @ManyToOne
+	private static final long serialVersionUID = 3450278342553679681L;
+	@ManyToOne
     @JoinColumn(name="node_id")
     private Node node;
     @ManyToOne

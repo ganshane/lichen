@@ -1,7 +1,11 @@
 package creeper.core.services.jpa;
 
-import creeper.core.annotations.CreeperJpa;
-import creeper.core.internal.jpa.JpaEntityValueEncoder;
+import java.util.Set;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.metamodel.EntityType;
+
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.annotations.Contribute;
@@ -11,18 +15,17 @@ import org.apache.tapestry5.services.ValueEncoderFactory;
 import org.apache.tapestry5.services.ValueEncoderSource;
 import org.slf4j.Logger;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.metamodel.EntityType;
-import java.util.Set;
+import creeper.core.annotations.CreeperJpa;
+import creeper.core.internal.jpa.JpaEntityValueEncoder;
 
 /**
  * 提供jpa中的实体对象和string的转换
  * @author jcai
  */
 public class CreeperJpaValueEncoderSourceModule {
-    @Contribute(ValueEncoderSource.class)
-    public static void provideValueEncoder(MappedConfiguration<Class, ValueEncoderFactory> configuration,
+    @SuppressWarnings("rawtypes")
+	@Contribute(ValueEncoderSource.class)
+    public static void provideValueEncoder(MappedConfiguration<Class<?>, ValueEncoderFactory<?>> configuration,
                                            Logger logger,
                                            final PropertyAccess propertyAccess,
                                            final TypeCoercer typeCoercer,
@@ -38,7 +41,8 @@ public class CreeperJpaValueEncoderSourceModule {
 
             ValueEncoderFactory factory = new ValueEncoderFactory()
             {
-                public ValueEncoder create(Class type)
+                @SuppressWarnings("unchecked")
+				public ValueEncoder create(Class type)
                 {
                     return new JpaEntityValueEncoder(entityType,propertyAccess,typeCoercer,entityManager);
                 }

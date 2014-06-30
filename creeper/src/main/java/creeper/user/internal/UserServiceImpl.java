@@ -9,11 +9,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-
-import creeper.user.services.UserSavedListener;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.IncorrectCredentialsException;
-import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.subject.Subject;
@@ -25,6 +20,7 @@ import creeper.user.dao.RoleDao;
 import creeper.user.dao.UserDao;
 import creeper.user.entities.Role;
 import creeper.user.entities.User;
+import creeper.user.services.UserSavedListener;
 import creeper.user.services.UserService;
 
 /**
@@ -33,7 +29,6 @@ import creeper.user.services.UserService;
  */
 public class UserServiceImpl implements UserService{
 	
-	private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 	
     @Inject
     private UserDao _userDao;

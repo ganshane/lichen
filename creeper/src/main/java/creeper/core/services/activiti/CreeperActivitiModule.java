@@ -1,9 +1,15 @@
 package creeper.core.services.activiti;
 
-import creeper.core.annotations.CreeperActiviti;
-import creeper.core.internal.activiti.CreeperWorkflowManagerImpl;
-import creeper.core.internal.activiti.WorkflowServiceImpl;
-import org.activiti.engine.*;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.IdentityService;
+import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.ProcessEngineConfiguration;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
@@ -12,8 +18,9 @@ import org.apache.tapestry5.ioc.annotations.Marker;
 import org.apache.tapestry5.ioc.annotations.Startup;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
+import creeper.core.annotations.CreeperActiviti;
+import creeper.core.internal.activiti.CreeperWorkflowManagerImpl;
+import creeper.core.internal.activiti.WorkflowServiceImpl;
 
 /**
  * 集成工作流引擎 activiti.
@@ -26,7 +33,8 @@ public class CreeperActivitiModule {
     public static void setupWorkflow(@Local CreeperWorkflowManager manager){
         manager.deploy();
     }
-    public static void bind(ServiceBinder binder){
+    @SuppressWarnings("unchecked")
+	public static void bind(ServiceBinder binder){
         binder.bind(CreeperWorkflowManager.class, CreeperWorkflowManagerImpl.class).withMarker(CreeperActiviti.class);
         binder.bind(WorkflowService.class, WorkflowServiceImpl.class).withMarker(CreeperActiviti.class);
     }

@@ -1,11 +1,12 @@
 package creeper.core.pages;
 
-import creeper.core.services.CreeperException;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.services.ExceptionReporter;
-import org.apache.tapestry5.util.TextStreamResponse;
+
+import creeper.core.services.CreeperException;
 
 /**
+ * 错误异常页面类
  * @author jcai
  */
 public class ExceptionPage implements ExceptionReporter {

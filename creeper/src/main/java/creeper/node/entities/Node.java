@@ -1,13 +1,18 @@
 package creeper.node.entities;
 
+import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Type;
+
 import creeper.core.CreeperCoreConstants;
 import creeper.core.entities.UUIDPrimaryKeySupport;
 import creeper.user.entities.User;
-import org.hibernate.annotations.Type;
-
-import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
 
 /**
  * 记录每个内容实体
@@ -16,7 +21,8 @@ import java.util.List;
 @Entity
 @Table(name="nodes")
 public class Node extends UUIDPrimaryKeySupport{
-    private String type;
+	private static final long serialVersionUID = -2597107566097963409L;
+	private String type;
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)

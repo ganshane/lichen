@@ -1,18 +1,26 @@
 package creeper.core.services.jpa;
 
-import creeper.core.annotations.CreeperCore;
-import creeper.core.annotations.CreeperJpa;
-import creeper.core.config.CreeperCoreConfig;
-import creeper.core.internal.TransactionAdvice;
-import creeper.core.internal.jpa.EntityManagerCreatorImpl;
-import creeper.core.internal.jpa.SmartHibernateJpaVendorAdapter;
-import creeper.core.internal.jpa.SpringDataDaoProviderImpl;
-import creeper.core.services.CreeperCoreExceptionCode;
-import creeper.core.services.CreeperException;
-import creeper.core.services.CreeperModuleManager;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Properties;
+
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+
 import lichen.core.services.Option;
-import org.apache.tapestry5.ioc.*;
-import org.apache.tapestry5.ioc.annotations.*;
+
+import org.apache.tapestry5.ioc.MethodAdviceReceiver;
+import org.apache.tapestry5.ioc.ObjectProvider;
+import org.apache.tapestry5.ioc.OrderedConfiguration;
+import org.apache.tapestry5.ioc.ScopeConstants;
+import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.annotations.Contribute;
+import org.apache.tapestry5.ioc.annotations.InjectService;
+import org.apache.tapestry5.ioc.annotations.Local;
+import org.apache.tapestry5.ioc.annotations.Marker;
+import org.apache.tapestry5.ioc.annotations.Match;
+import org.apache.tapestry5.ioc.annotations.Scope;
 import org.apache.tapestry5.ioc.services.MasterObjectProvider;
 import org.apache.tapestry5.ioc.services.PerthreadManager;
 import org.apache.tapestry5.ioc.services.ThreadCleanupListener;
@@ -33,12 +41,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Properties;
+import creeper.core.annotations.CreeperCore;
+import creeper.core.annotations.CreeperJpa;
+import creeper.core.config.CreeperCoreConfig;
+import creeper.core.internal.TransactionAdvice;
+import creeper.core.internal.jpa.EntityManagerCreatorImpl;
+import creeper.core.internal.jpa.SmartHibernateJpaVendorAdapter;
+import creeper.core.internal.jpa.SpringDataDaoProviderImpl;
+import creeper.core.services.CreeperCoreExceptionCode;
+import creeper.core.services.CreeperException;
+import creeper.core.services.CreeperModuleManager;
 
 /**
  * creeper jpa module
@@ -49,7 +61,8 @@ import java.util.Properties;
  * @author jcai
  */
 public class CreeperJpaModule {
-    public static void bind(ServiceBinder binder){
+    @SuppressWarnings("unchecked")
+	public static void bind(ServiceBinder binder){
         binder.bind(SmartHibernateJpaVendorAdapter.class).withMarker(CreeperJpa.class);
         binder.bind(EntityManagerCreator.class, EntityManagerCreatorImpl.class).withMarker(CreeperJpa.class);
         binder.bind(SpringDataDaoProvider.class, SpringDataDaoProviderImpl.class).withSimpleId().withMarker(CreeperJpa.class);

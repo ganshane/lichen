@@ -1,12 +1,9 @@
 package creeper.core.services.shiro;
 
-import creeper.core.annotations.CreeperJpa;
-import creeper.core.internal.override.TapestrySessionFactoryWithShiroSession;
-import creeper.core.internal.shiro.JpaRealm;
-import creeper.core.internal.shiro.RequiresPermissionsWorker;
-import creeper.core.internal.shiro.RequiresRolesWorker;
-import creeper.core.internal.shiro.RequiresUserWorker;
-import creeper.core.services.jpa.SpringDataDaoProvider;
+import java.util.Collection;
+
+import javax.persistence.EntityManager;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
@@ -18,15 +15,22 @@ import org.apache.shiro.util.ThreadContext;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.mgt.WebSecurityManager;
 import org.apache.shiro.web.subject.WebSubject;
-import org.apache.tapestry5.internal.services.TapestrySessionFactory;
-import org.apache.tapestry5.ioc.*;
-import org.apache.tapestry5.ioc.annotations.*;
-import org.apache.tapestry5.ioc.internal.services.RegistryStartup;
+import org.apache.tapestry5.ioc.Configuration;
+import org.apache.tapestry5.ioc.OrderedConfiguration;
+import org.apache.tapestry5.ioc.ScopeConstants;
+import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.annotations.Autobuild;
+import org.apache.tapestry5.ioc.annotations.Contribute;
+import org.apache.tapestry5.ioc.annotations.Local;
+import org.apache.tapestry5.ioc.annotations.Scope;
 import org.apache.tapestry5.services.RequestGlobals;
 import org.apache.tapestry5.services.transform.ComponentClassTransformWorker2;
 
-import javax.persistence.EntityManager;
-import java.util.Collection;
+import creeper.core.annotations.CreeperJpa;
+import creeper.core.internal.shiro.JpaRealm;
+import creeper.core.internal.shiro.RequiresPermissionsWorker;
+import creeper.core.internal.shiro.RequiresRolesWorker;
+import creeper.core.internal.shiro.RequiresUserWorker;
 
 /**
  * 集成shiro的模块
