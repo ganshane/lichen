@@ -12,8 +12,6 @@ import javax.persistence.criteria.Root;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 
 import creeper.user.dao.RoleDao;
@@ -29,7 +27,7 @@ import creeper.user.services.UserService;
  */
 public class UserServiceImpl implements UserService{
 	
-	
+    
     @Inject
     private UserDao _userDao;
     
@@ -114,5 +112,11 @@ public class UserServiceImpl implements UserService{
 	        });
 		}
 		return null;
+	}
+
+	@Override
+	public void saveOrUpdate(User user) {
+		_userDao.save(user);
+        userSavedListener.afterSaved(user);
 	}
 }
