@@ -9,7 +9,8 @@ public enum CreeperCoreExceptionCode implements ExceptionCode {
     FAIL_CONFIG_PROXOOL(1002),
     FAIL_MIGRAT_SCRIPT(1003),
     ACCESS_DENIED(1004),
-    URL_AND_PAGE_CLASS_IS_NULL(1005);
+    URL_AND_PAGE_CLASS_IS_NULL(1005),
+    FAIL_PARSE_XML(1006);
 
     private final int _num;
     private CreeperCoreExceptionCode(int num){

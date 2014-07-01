@@ -14,7 +14,9 @@
 package creeper.core.services;
 
 
+import creeper.core.CreeperCoreConstants;
 import lichen.core.services.Option;
+import org.apache.commons.io.IOUtils;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.*;
@@ -38,21 +40,21 @@ public final class XmlLoader {
         ValidationEventCollector vec = new ValidationEventCollector();
         try {
             //create io reader
-            InputStreamReader reader = new InputStreamReader(is, "UTF-8");
+            InputStreamReader reader = new InputStreamReader(is, CreeperCoreConstants.UTF8_ENCODING);
             JAXBContext context = JAXBContext.newInstance(clazz);
             //unmarshal xml
             Unmarshaller unmarshaller = context.createUnmarshaller();
             //.unmarshal(reader).asInstanceOf[T]
             if (xsd.isDefined()) {
                 SchemaFactory sf = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-                StreamSource schemaSource = new StreamSource(xsd.get(), "UTF-8");
+                StreamSource schemaSource = new StreamSource(xsd.get(), CreeperCoreConstants.UTF8_ENCODING);
                 Schema schema = sf.newSchema(schemaSource);
                 unmarshaller.setSchema(schema);
                 unmarshaller.setEventHandler(vec);
             }
             return clazz.cast(unmarshaller.unmarshal(reader));
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            throw CreeperException.wrap(e);
         } finally {
             close(is);
             if (xsd.isDefined()) {
@@ -63,19 +65,17 @@ public final class XmlLoader {
                 if (ves.length > 0) {
                     ValidationEvent ve = ves[0];
                     ValidationEventLocator vel = ve.getLocator();
-                    throw new RuntimeException(String.format("line %s column %s :%s",
-                            vel.getLineNumber(), vel.getColumnNumber(), ve.getMessage()));
+
+                    throw new CreeperException(
+                            String.format("line %s column %s :%s",
+                            vel.getLineNumber(), vel.getColumnNumber(), ve.getMessage()),CreeperCoreExceptionCode.FAIL_PARSE_XML);
                 }
             }
         }
     }
 
     private static void close(Closeable io) {
-        try {
-            io.close();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
+        IOUtils.closeQuietly(io);
     }
 
     /**
@@ -87,6 +87,6 @@ public final class XmlLoader {
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         marshaller.marshal(obj, out);
-        return new String(out.toByteArray(), "UTF-8");
+        return new String(out.toByteArray(), CreeperCoreConstants.UTF8_ENCODING);
     }
 }
