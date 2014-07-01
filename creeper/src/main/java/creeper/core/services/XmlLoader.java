@@ -33,7 +33,6 @@ import java.io.InputStreamReader;
  */
 public final class XmlLoader {
     private XmlLoader() {
-
     }
     public static <T> T parseXML(Class<T> clazz, InputStream is, Option<InputStream> xsd) {
         ValidationEventCollector vec = new ValidationEventCollector();
