@@ -1,5 +1,7 @@
 
-@TypeDefs({@TypeDef(typeClass = DateUserType.class,name= CreeperCoreConstants.TYPE_INT_DATE)})
+@TypeDefs({@TypeDef(typeClass = DateUserType.class,
+				    name= CreeperCoreConstants.TYPE_INT_DATE)
+	     })
 @GenericGenerator(name="uuid",strategy = "uuid")
 package creeper.core.entities;
 import creeper.core.CreeperCoreConstants;

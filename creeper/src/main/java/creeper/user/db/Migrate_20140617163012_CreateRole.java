@@ -1,12 +1,12 @@
 package creeper.user.db;
 
+import javax.inject.Inject;
+
 import lichen.migration.model.TableDefinition;
 import lichen.migration.services.Migration;
 import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.Options;
 import lichen.migration.services.TableCallback;
-
-import javax.inject.Inject;
 
 /**
  * @author jcai
@@ -26,9 +26,9 @@ public class Migrate_20140617163012_CreateRole implements Migration{
                 t.varchar("name",_options.NotNull(),_options.Limit(64));
             }
         });
-        _helper.commentTable("roles", _options.Comment("角色"));
-        _helper.commentColumn("roles", "id", _options.Comment("主键"));
-        _helper.commentColumn("roles","name",_options.Comment("角色名称"));
+        _helper.commentTable("roles", "角色");
+        _helper.commentColumn("roles", "id", "主键");
+        _helper.commentColumn("roles","name","角色名称");
 
         _helper.createTable("permissions",new TableCallback() {
             @Override
@@ -38,10 +38,10 @@ public class Migrate_20140617163012_CreateRole implements Migration{
                 t.varchar("permission",_options.Limit(200));
             }
         });
-        _helper.commentTable("permissions", _options.Comment("许可"));
-        _helper.commentColumn("permissions", "id", _options.Comment("主键"));
-        _helper.commentColumn("permissions", "role_id", _options.Comment("关联角色"));
-        _helper.commentColumn("permissions","permission",_options.Comment("许可"));
+        _helper.commentTable("permissions", "许可");
+        _helper.commentColumn("permissions", "id", "主键");
+        _helper.commentColumn("permissions", "role_id", "关联角色");
+        _helper.commentColumn("permissions","permission","许可");
 
         _helper.addIndex("permissions","role_id");
 

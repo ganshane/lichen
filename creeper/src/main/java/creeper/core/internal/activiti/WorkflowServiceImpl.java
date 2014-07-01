@@ -1,8 +1,9 @@
 package creeper.core.internal.activiti;
 
 import creeper.core.entities.WorkflowAdapter;
-import creeper.core.models.WorkflowTaskStat;
+import creeper.core.models.WorkflowStat;
 import creeper.core.services.activiti.WorkflowService;
+
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+
 import java.util.Map;
 
 /**
@@ -47,8 +49,8 @@ public class WorkflowServiceImpl implements WorkflowService{
     }
 
     @Override
-    public WorkflowTaskStat statByUserId(String userId) {
-        WorkflowTaskStat stat = new WorkflowTaskStat();
+    public WorkflowStat statByUserId(String userId) {
+        WorkflowStatImpl stat = new WorkflowStatImpl();
         // 根据角色查询任务--未签收的
         TaskQuery taskCandidateUserQuery = createUnsignedTaskQuery(userId);
         long taskForGroupCounter = taskCandidateUserQuery.count();

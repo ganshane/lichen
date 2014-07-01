@@ -1,7 +1,8 @@
 package creeper.core.services.activiti;
 
 import creeper.core.entities.WorkflowAdapter;
-import creeper.core.models.WorkflowTaskStat;
+import creeper.core.models.WorkflowStat;
+
 import org.activiti.engine.task.Task;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +41,7 @@ public interface WorkflowService {
      * @param userId 用户的ID
      * @return 工作流的状态
      */
-    WorkflowTaskStat statByUserId(String userId);
+    WorkflowStat statByUserId(String userId);
 
     /**
      * 签收某一任务

@@ -22,6 +22,7 @@ import creeper.user.services.UserService;
  */
 public class UserRegist {
 	
+	@SuppressWarnings("unused")
 	private static Logger logger = LoggerFactory.getLogger(UserRegist.class);
 	
 	@Inject

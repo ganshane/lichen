@@ -33,6 +33,13 @@ public interface UserService {
     public void logout();
     
     /**
+	 * 添加新用户
+	 * @param role
+	 */
+    @Transactional
+    public void saveOrUpdate(User user);
+    
+    /**
 	 * 添加新角色
 	 * @param role
 	 */
