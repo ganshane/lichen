@@ -6,7 +6,15 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * creeper exception
+ * creeper exception.
+ * <p>
+ *     整个系统的异常处理框架.
+ *     <ul>
+ *         <li>每种可知异常按照对应的代码进行标注</li>
+ *         <li>可以封装异常变为RuntimeException</li>
+ *     </ul>
+ * </p>
+ * @author jcai
  */
 public class CreeperException extends RuntimeException {
 
