@@ -27,7 +27,7 @@ import creeper.user.services.UserService;
  */
 public class UserServiceImpl implements UserService{
 	
-	
+    
     @Inject
     private UserDao _userDao;
     
@@ -112,5 +112,11 @@ public class UserServiceImpl implements UserService{
 	        });
 		}
 		return null;
+	}
+
+	@Override
+	public void saveOrUpdate(User user) {
+		_userDao.save(user);
+        userSavedListener.afterSaved(user);
 	}
 }
