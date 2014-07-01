@@ -41,8 +41,10 @@ public class CreeperCoreConfig {
      */
     @XmlRootElement(name="property")
     public static class JpaProperty{
+    		//属性名称
         @XmlAttribute(name="name")
         public String name;
+        //属性的值
         @XmlAttribute(name="value")
         public String value;
     }
