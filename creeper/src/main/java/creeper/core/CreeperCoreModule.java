@@ -53,6 +53,9 @@ import creeper.node.NodeModule;
 import creeper.user.UserModule;
 import creeper.user.services.UserSavedListener;
 
+/**
+ * Creeper的核心入口类
+ */
 @SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class,
         CreeperShiroModule.class,UserModule.class,
         CreeperOverrideModule.class, CreeperJpaValueEncoderSourceModule.class,
