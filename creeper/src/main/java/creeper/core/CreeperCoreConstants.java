@@ -11,4 +11,6 @@ public class CreeperCoreConstants {
     public static final String UUID_GENERATOR="uuid";
     /** 自定义整形日期类型 **/
     public static final String TYPE_INT_DATE = "IntDate";
+    /** service interface parameter for axis service **/
+    public static final String SERVICE_INTERFACE = "service-interface";
 }
