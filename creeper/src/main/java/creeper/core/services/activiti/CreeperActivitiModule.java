@@ -43,7 +43,7 @@ public class CreeperActivitiModule {
                                                    PlatformTransactionManager transactionManager,
                                                    DataSource dataSource) throws Exception {
         SpringProcessEngineConfiguration configuration = new SpringProcessEngineConfiguration();
-        configuration.setJpaEntityManagerFactory(entityManagerFactory);
+        //configuration.setJpaEntityManagerFactory(entityManagerFactory);
         configuration.setJpaHandleTransaction(false);
         configuration.setJobExecutorActivate(false);
         configuration.setJpaCloseEntityManager(false);
