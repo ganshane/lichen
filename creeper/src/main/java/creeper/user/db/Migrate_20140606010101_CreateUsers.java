@@ -36,16 +36,16 @@ public class Migrate_20140606010101_CreateUsers implements Migration {
             }
         });
 
-        _helper.commentTable("users", _options.Comment("用户信息"));
-        _helper.commentColumn("users", "id", _options.Comment("主键"));
-        _helper.commentColumn("users", "name", _options.Comment("姓名"));
-        _helper.commentColumn("users", "pass", _options.Comment("密码"));
-        _helper.commentColumn("users", "mail", _options.Comment("电子邮件"));
-        _helper.commentColumn("users", "data", _options.Comment("存放人员数据"));
-        _helper.commentColumn("users", "created", _options.Comment("创建时间，为秒数"));
-        _helper.commentColumn("users", "access", _options.Comment("最后一次访问时间，为秒数"));
-        _helper.commentColumn("users", "login", _options.Comment("最后一次成功登录的时间，为秒数"));
-        _helper.commentColumn("users", "status", _options.Comment("状态,0为正常，1为拒绝"));
+        _helper.commentTable("users", "用户信息");
+        _helper.commentColumn("users", "id", "主键");
+        _helper.commentColumn("users", "name", "姓名");
+        _helper.commentColumn("users", "pass", "密码");
+        _helper.commentColumn("users", "mail", "电子邮件");
+        _helper.commentColumn("users", "data", "存放人员数据");
+        _helper.commentColumn("users", "created", "创建时间，为秒数");
+        _helper.commentColumn("users", "access", "最后一次访问时间，为秒数");
+        _helper.commentColumn("users", "login", "最后一次成功登录的时间，为秒数");
+        _helper.commentColumn("users", "status", "状态,0为正常，1为拒绝");
         _helper.addIndex("users","name");
     }
 
