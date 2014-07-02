@@ -3,6 +3,7 @@ package creeper.core.internal.axis2;
 import creeper.core.services.CreeperException;
 import creeper.core.services.axis2.WebServicePublisher;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.Constants;
 import org.apache.axis2.transport.http.AxisServlet;
 import org.apache.tapestry5.TapestryFilter;
 import org.apache.tapestry5.ioc.Registry;
@@ -31,7 +32,7 @@ public class WebserviceRequestFilter implements HttpServletRequestFilter{
                 super.init(config);
                 try {
                     //add tapestry ioc object supplier
-                    axisConfiguration.addParameter("ServiceObjectSupplier", TapestryIOCObjectSupplier.class.getName());
+                    axisConfiguration.addParameter(Constants.SERVICE_OBJECT_SUPPLIER,TapestryIOCObjectSupplier.class.getName());
                     //axisConfiguration.addParameter("EnableChildFirstClassLoading",true);
                     //get ioc registry object
                     Registry registry = (Registry) config.getServletContext().getAttribute(TapestryFilter.REGISTRY_CONTEXT_NAME);
