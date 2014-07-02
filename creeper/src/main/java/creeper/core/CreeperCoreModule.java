@@ -7,6 +7,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import creeper.core.services.axis2.Axis2Module;
 import lichen.core.services.Option;
 
 import org.apache.commons.io.FileUtils;
@@ -53,10 +54,13 @@ import creeper.node.NodeModule;
 import creeper.user.UserModule;
 import creeper.user.services.UserSavedListener;
 
+/**
+ * Creeper的核心入口类
+ */
 @SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class,
         CreeperShiroModule.class,UserModule.class,
         CreeperOverrideModule.class, CreeperJpaValueEncoderSourceModule.class,
-        NodeModule.class, CreeperActivitiModule.class
+        NodeModule.class, CreeperActivitiModule.class,Axis2Module.class
 })
 public class CreeperCoreModule {
     @SuppressWarnings("unchecked")

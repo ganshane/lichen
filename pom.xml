@@ -386,5 +386,6 @@
         <update-release-info>false</update-release-info>
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
         <tapestry-release-version>5.3.7</tapestry-release-version>
+        <axis-release-version>1.6.2</axis-release-version>
     </properties>
 </project>

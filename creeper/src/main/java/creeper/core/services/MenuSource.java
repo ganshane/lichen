@@ -7,5 +7,9 @@ import creeper.core.models.CreeperMenu;
  * @author jcai
  */
 public interface MenuSource {
+    /**
+     * 创建基于根目录的菜单
+     * @return 根节点菜单
+     */
     public CreeperMenu buildCreeperMenu();
 }
