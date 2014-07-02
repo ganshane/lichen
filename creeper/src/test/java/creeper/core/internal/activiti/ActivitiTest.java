@@ -11,6 +11,7 @@ import org.apache.tapestry5.Asset;
 import org.apache.tapestry5.internal.services.AbstractAsset;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.Resource;
+import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.EagerLoad;
 import org.apache.tapestry5.ioc.internal.util.ClasspathResource;
@@ -35,7 +36,15 @@ public class ActivitiTest extends BaseEntityTestCase{
         return new Class<?>[]{CreeperActivitiModule.class,WorkFlowTestModule.class};
     }
 
+    public static class TestService {
+        public String findUserName(){
+            return "james";
+        };
+    }
     public static class WorkFlowTestModule{
+        public static void bind(ServiceBinder binder){
+            binder.bind(TestService.class);
+        }
         @EagerLoad
         public static AssetSource buildAssetSource(){
             AssetSource mock = Mockito.mock(AssetSource.class);

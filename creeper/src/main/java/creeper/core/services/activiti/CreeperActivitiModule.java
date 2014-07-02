@@ -3,6 +3,7 @@ package creeper.core.services.activiti;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import creeper.core.internal.activiti.ActivitiServiceExporterImpl;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.IdentityService;
 import org.activiti.engine.ProcessEngine;
@@ -12,10 +13,12 @@ import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.activiti.spring.SpringProcessEngineConfiguration;
+import org.apache.tapestry5.ioc.ObjectLocator;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Local;
 import org.apache.tapestry5.ioc.annotations.Marker;
 import org.apache.tapestry5.ioc.annotations.Startup;
+import org.apache.tapestry5.ioc.services.ServiceActivityScoreboard;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import creeper.core.annotations.CreeperActiviti;
@@ -38,11 +41,17 @@ public class CreeperActivitiModule {
         binder.bind(CreeperWorkflowManager.class, CreeperWorkflowManagerImpl.class).withMarker(CreeperActiviti.class);
         binder.bind(WorkflowService.class, WorkflowServiceImpl.class).withMarker(CreeperActiviti.class);
     }
+    public static ActivitiServiceExporter buildActivitiServiceExporter(ObjectLocator objectLocator,ServiceActivityScoreboard scoreboard){
+        return new ActivitiServiceExporterImpl(scoreboard,objectLocator);
+    }
     @Marker(CreeperActiviti.class)
     public static ProcessEngine buildProcessEngine(EntityManagerFactory entityManagerFactory,
                                                    PlatformTransactionManager transactionManager,
-                                                   DataSource dataSource) throws Exception {
+                                                   DataSource dataSource,
+                                                   ActivitiServiceExporter activitiServiceExporter) throws Exception {
         SpringProcessEngineConfiguration configuration = new SpringProcessEngineConfiguration();
+        configuration.setBeans(activitiServiceExporter);
+
         //configuration.setJpaEntityManagerFactory(entityManagerFactory);
         configuration.setJpaHandleTransaction(false);
         configuration.setJobExecutorActivate(false);

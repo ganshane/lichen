@@ -8,7 +8,7 @@
 
     <startEvent id="startevent1" name="Start"></startEvent>
 
-    <userTask id="usertask1" name="User Task" activiti:assignee="kermit"></userTask>
+    <userTask id="usertask1" name="User Task" activiti:assignee="${TestService.findUserName()}"></userTask>
 
     <endEvent id="endevent1" name="End"></endEvent>
 
