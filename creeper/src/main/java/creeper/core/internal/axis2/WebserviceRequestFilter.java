@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 实现针对axis2的集成，便于使用tapestry能够自动导出一些webservice的服务类
@@ -29,10 +31,11 @@ public class WebserviceRequestFilter implements HttpServletRequestFilter{
         _axisServlet = new AxisServlet(){
             @Override
             public void init(ServletConfig config) throws ServletException {
+                //add tapestry ioc object supplier
                 super.init(config);
                 try {
-                    //add tapestry ioc object supplier
                     axisConfiguration.addParameter(Constants.SERVICE_OBJECT_SUPPLIER,TapestryIOCObjectSupplier.class.getName());
+                    configContext.setServicePath("ws");
                     //axisConfiguration.addParameter("EnableChildFirstClassLoading",true);
                     //get ioc registry object
                     Registry registry = (Registry) config.getServletContext().getAttribute(TapestryFilter.REGISTRY_CONTEXT_NAME);
