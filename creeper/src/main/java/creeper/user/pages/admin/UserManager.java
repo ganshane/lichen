@@ -52,7 +52,7 @@ public class UserManager {
 		return false;
 	}
 	
-	public List<Role> getRoles(){
+	public Iterable<Role> getRoles(){
 		return _userService.findAllRole(new Role());
 	}
 	

@@ -34,7 +34,7 @@ public class RoleList {
 	@Inject
 	private RoleDao _roleDao;
 	
-	public List<Role> getRoles(){
+	public Iterable<Role> getRoles(){
 		return _userService.findAllRole(roleParams);
 	}
 	
