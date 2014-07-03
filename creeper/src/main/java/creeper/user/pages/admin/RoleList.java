@@ -1,13 +1,9 @@
 package creeper.user.pages.admin;
 
-import java.util.List;
-
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import creeper.user.dao.RoleDao;
 import creeper.user.entities.Role;
@@ -20,8 +16,7 @@ import creeper.user.services.UserService;
  */
 public class RoleList {
 	
-	private static Logger logger = LoggerFactory.getLogger(RoleList.class);
-	
+	@SuppressWarnings("unused")
 	@Property
 	private Role role;
 	

@@ -9,6 +9,7 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public class TimstampSupport {
-    @Column(name="timestamp")
+    @SuppressWarnings("unused")
+	@Column(name="timestamp")
     private Integer timestamp;
 }

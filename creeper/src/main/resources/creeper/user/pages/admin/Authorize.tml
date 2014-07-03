@@ -23,7 +23,5 @@
 	</t:loop>
 	<button type="submit" class="btn btn-default">保存</button>
 </creeperform>
-${checklistSelectedValues}
-
 </t:layout>   
 </html>

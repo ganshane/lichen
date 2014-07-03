@@ -16,7 +16,6 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.mysema.query.types.ExpressionUtils;
-import com.mysema.query.types.expr.BooleanExpression;
 
 import creeper.user.dao.RoleDao;
 import creeper.user.dao.UserDao;
@@ -90,19 +89,6 @@ public class UserServiceImpl implements UserService{
 			if(null != role.getId()){list.add(r.id.eq(role.getId()));}
 			if(null != role.getName()){list.add(r.name.eq(role.getName()));}
 			return _roleDao.findAll(ExpressionUtils.allOf(list));
-//			return _roleDao.findAll(new Specification<Role>() {
-//				@Override
-//				public Predicate toPredicate(Root<Role> root,
-//						CriteriaQuery<?> query, CriteriaBuilder cb) {
-//					List<Predicate> list = new ArrayList<Predicate>();
-//					QRole r = QRole.role;
-////					if(null != role.getId()){list.add(cb.equal(root.get("id"),role.getId()));}
-////					if(null != role.getId()){list.add(cb.equal(root.get(Role_.id),role.getId()));}
-////					if(null != role.getName()){list.add(cb.equal(root.get(Role_.name),role.getName()));}
-//					Predicate[] p = new Predicate[list.size()];   
-//					return cb.and(list.toArray(p));
-//				}
-//	        });
 		}
 		return null;
 	}

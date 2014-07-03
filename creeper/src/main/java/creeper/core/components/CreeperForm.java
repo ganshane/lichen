@@ -13,6 +13,7 @@ import org.apache.tapestry5.corelib.components.Form;
  */
 public class CreeperForm {
 	
+	@SuppressWarnings("unused")
 	@Property
 	@Parameter(required=true, defaultPrefix = BindingConstants.LITERAL)
 	private String title;

@@ -23,7 +23,7 @@ import creeper.core.internal.jpa.JpaEntityValueEncoder;
  * @author jcai
  */
 public class CreeperJpaValueEncoderSourceModule {
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
 	@Contribute(ValueEncoderSource.class)
     public static void provideValueEncoder(MappedConfiguration<Class<?>, ValueEncoderFactory<?>> configuration,
                                            Logger logger,
@@ -41,7 +41,6 @@ public class CreeperJpaValueEncoderSourceModule {
 
             ValueEncoderFactory factory = new ValueEncoderFactory()
             {
-                @SuppressWarnings("unchecked")
 				public ValueEncoder create(Class type)
                 {
                     return new JpaEntityValueEncoder(entityType,propertyAccess,typeCoercer,entityManager);
