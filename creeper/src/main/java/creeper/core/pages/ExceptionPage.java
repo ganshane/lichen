@@ -10,7 +10,8 @@ import creeper.core.services.CreeperException;
  * @author jcai
  */
 public class ExceptionPage implements ExceptionReporter {
-    @Property
+    @SuppressWarnings("unused")
+	@Property
     private CreeperException exception;
 
     @Override

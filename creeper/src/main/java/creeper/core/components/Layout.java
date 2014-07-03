@@ -17,21 +17,26 @@ import java.util.List;
         "classpath:creeper/core/components/Layout.css"})
 public class Layout {
     /** The page title, for the <title> element and the <h1> element. */
-    @Property
+    @SuppressWarnings("unused")
+	@Property
     @Parameter(defaultPrefix = BindingConstants.LITERAL)
     private String title;
     @Inject
     private MenuSource menuSource;
-    @Inject
+    @SuppressWarnings("unused")
+	@Inject
     @Property
     private Subject subject;
-    @Environmental
+    @SuppressWarnings("unused")
+	@Environmental
     private JavaScriptSupport javaScriptSupport;
 
-    @Property
+    @SuppressWarnings("unused")
+	@Property
     @Inject @Path("classpath:creeper/core/assets/html5shiv.js")
     private Asset html5shiv;
-    @Property
+    @SuppressWarnings("unused")
+	@Property
     @Inject @Path("classpath:creeper/core/assets/respond.min.js")
     private Asset respond;
 

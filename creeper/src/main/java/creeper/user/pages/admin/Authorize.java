@@ -8,17 +8,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.tapestry5.EventConstants;
-import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.annotations.Cached;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.PageActivationContext;
-import org.apache.tapestry5.annotations.Persist;
 import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.internal.services.StringValueEncoder;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import creeper.core.models.CreeperModuleDef;
 import creeper.core.services.CreeperModuleManager;
@@ -33,8 +28,6 @@ import creeper.user.services.UserService;
  */
 public class Authorize {
 	
-	private static Logger logger = LoggerFactory.getLogger(Authorize.class);
-	
 	@Property
 	@PageActivationContext
 	private Role role;
@@ -42,6 +35,7 @@ public class Authorize {
 	@Property
 	private CreeperModuleDef module;
 	
+	@SuppressWarnings("unused")
 	@Property
 	private String permission;
 	
@@ -51,12 +45,6 @@ public class Authorize {
 	@Inject
 	private CreeperModuleManager creeperModuleManager;
 	
-	@Property
-	@Persist(PersistenceConstants.FLASH)
-    private List<String> checklistSelectedValues;
-
-	@Property
-    private final StringValueEncoder stringValueEncoder = new StringValueEncoder();
 	@Inject
 	private Request request;
 
@@ -89,14 +77,6 @@ public class Authorize {
 			return new ArrayList<String>();
 		}
 	}
-	/*void onActivate(Role role){
-		logger.debug(""+role);
-		if(null != role){
-			this.role = role;
-		}
-		
-		
-	}*/
 	
 	@OnEvent(value=EventConstants.SUCCESS,component="authorizeForm")
 	void doAuthorizeRole(){
