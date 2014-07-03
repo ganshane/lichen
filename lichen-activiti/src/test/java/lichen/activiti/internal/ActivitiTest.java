@@ -9,11 +9,14 @@ import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
+import org.apache.commons.dbcp.BasicDataSource;
+import org.apache.commons.dbcp.managed.BasicManagedDataSource;
 import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.Registry;
 import org.apache.tapestry5.ioc.RegistryBuilder;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
+import org.h2.jdbcx.JdbcConnectionPool;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,7 +24,12 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.SingleConnectionDataSource;
+import org.springframework.transaction.PlatformTransactionManager;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 /**
@@ -45,6 +53,17 @@ public class ActivitiTest {
         public static void provideHelloWorkflow(
                 Configuration<org.springframework.core.io.Resource> configuration){
             configuration.add(new ClassPathResource(workflow));
+        }
+        public static DataSource buildDataSource(){
+            //JdbcConnectionPool cp = JdbcConnectionPool.create("jdbc:h2:mem:test", "sa", "sa");
+            BasicDataSource dataSource = new BasicDataSource();
+            dataSource.setUrl("jdbc:h2:mem:testdb");
+            dataSource.setDriverClassName("org.h2.Driver");
+            dataSource.setUsername("sa");
+            return dataSource;
+        }
+        public static PlatformTransactionManager buildTransactionManager(DataSource dataSource){
+            return new DataSourceTransactionManager(dataSource);
         }
     }
     @Before

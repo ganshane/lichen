@@ -7,6 +7,8 @@ import org.activiti.engine.repository.DeploymentBuilder;
 import org.apache.commons.io.IOUtils;
 import org.apache.tapestry5.func.F;
 import org.apache.tapestry5.func.Worker;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
@@ -21,6 +23,8 @@ import java.util.Collections;
 public class LichenWorkflowManagerImpl implements LichenWorkflowManager {
     private RepositoryService _repositoryService;
     private Collection<Resource> workflows;
+    private static final Logger logger =
+            LoggerFactory.getLogger(LichenWorkflowManagerImpl.class);
 
     public LichenWorkflowManagerImpl(Collection<Resource> workflows,
                                      RepositoryService repositoryService) {
@@ -36,8 +40,9 @@ public class LichenWorkflowManagerImpl implements LichenWorkflowManager {
             public void work(Resource element) {
                 InputStream inputStream = null;
                 try {
+                    logger.info("deploy workflow using resource [{}]", element);
                     inputStream = element.getInputStream();
-                    deployment.addInputStream(element.toString(),inputStream);
+                    deployment.addInputStream(element.getFilename(),inputStream);
                 } catch (IOException e) {
                     throw LichenException.wrap(e);
                 }finally{
