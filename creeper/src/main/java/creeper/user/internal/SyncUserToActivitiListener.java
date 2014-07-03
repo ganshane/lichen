@@ -1,16 +1,14 @@
-package creeper.core.internal.activiti;
-
-import java.util.List;
-import java.util.Set;
-
-import javax.inject.Inject;
-
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.identity.Group;
+package creeper.user.internal;
 
 import creeper.user.entities.Role;
 import creeper.user.entities.User;
 import creeper.user.services.UserSavedListener;
+import org.activiti.engine.IdentityService;
+import org.activiti.engine.identity.Group;
+
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 当保存用户的时候，同步用户到activiti中，便于工作流的运行

@@ -1,4 +1,4 @@
-package creeper.core.annotations;
+package lichen.activiti.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -17,5 +17,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target( { PARAMETER, FIELD, CONSTRUCTOR ,TYPE})
 @Retention(RUNTIME)
 @Documented
-public @interface CreeperActiviti{
+public @interface LichenActiviti {
 }

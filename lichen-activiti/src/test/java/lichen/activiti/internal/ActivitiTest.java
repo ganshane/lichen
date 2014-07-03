@@ -1,40 +1,36 @@
-package creeper.core.internal.activiti;
+package lichen.activiti.internal;
 
-import creeper.core.services.activiti.CreeperActivitiModule;
-import creeper.core.services.activiti.CreeperWorkflowManager;
-import creeper.core.services.jpa.BaseEntityTestCase;
-import org.activiti.engine.*;
+import lichen.activiti.LichenActivitiModule;
+import lichen.activiti.services.LichenWorkflowManager;
+import org.activiti.engine.HistoryService;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
+import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.apache.tapestry5.Asset;
-import org.apache.tapestry5.internal.services.AbstractAsset;
 import org.apache.tapestry5.ioc.Configuration;
-import org.apache.tapestry5.ioc.Resource;
+import org.apache.tapestry5.ioc.Registry;
+import org.apache.tapestry5.ioc.RegistryBuilder;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
-import org.apache.tapestry5.ioc.annotations.EagerLoad;
-import org.apache.tapestry5.ioc.internal.util.ClasspathResource;
-import org.apache.tapestry5.services.*;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 
 import java.util.List;
 
 /**
  * @author jcai
  */
-public class ActivitiTest extends BaseEntityTestCase{
+public class ActivitiTest {
     private Logger logger = LoggerFactory.getLogger(getClass());
     private static String workflow = "hello.bpmn20.xml";
-
-    @Override
-    protected Class<?>[] getIocModules() {
-        return new Class<?>[]{CreeperActivitiModule.class,WorkFlowTestModule.class};
-    }
+    private Registry registry;
 
     public static class TestService {
         public String findUserName(){
@@ -45,32 +41,19 @@ public class ActivitiTest extends BaseEntityTestCase{
         public static void bind(ServiceBinder binder){
             binder.bind(TestService.class);
         }
-        @EagerLoad
-        public static AssetSource buildAssetSource(){
-            AssetSource mock = Mockito.mock(AssetSource.class);
-
-            final Resource classpathResource = new ClasspathResource(workflow);
-            Asset classpathAsset = new AbstractAsset(false)
-            {
-                public Resource getResource()
-                {
-                    return classpathResource;
-                }
-
-                public String toClientURL()
-                {
-                    //return clientURL(resource);
-                    return null;
-                }
-            };
-            Mockito.when(mock.getAsset(null, "classpath:"+workflow, null)).thenReturn(classpathAsset);
-            return mock;
-        }
-        @Contribute(CreeperWorkflowManager.class)
+        @Contribute(LichenWorkflowManager.class)
         public static void provideHelloWorkflow(
-                Configuration<String> configuration){
-            configuration.add("classpath:"+workflow);
+                Configuration<org.springframework.core.io.Resource> configuration){
+            configuration.add(new ClassPathResource(workflow));
         }
+    }
+    @Before
+    public void setup(){
+        registry = RegistryBuilder.buildAndStartupRegistry(LichenActivitiModule.class,WorkFlowTestModule.class);
+    }
+    @After
+    public void teardown(){
+        registry.shutdown();
     }
     @Test
     public void test_instance(){

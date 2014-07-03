@@ -1,4 +1,4 @@
-package creeper.core.entities;
+package lichen.activiti.entities;
 
 /**
  * 适应workflow的实体类.

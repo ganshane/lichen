@@ -1,13 +1,11 @@
-package creeper.core.internal.activiti;
+package lichen.activiti.internal;
 
-import creeper.core.services.CreeperException;
-import creeper.core.services.activiti.ActivitiServiceExporter;
+import lichen.activiti.services.ActivitiServiceExporter;
 import org.activiti.engine.ActivitiException;
 import org.apache.tapestry5.ioc.ObjectLocator;
 import org.apache.tapestry5.ioc.services.ServiceActivity;
 import org.apache.tapestry5.ioc.services.ServiceActivityScoreboard;
 
-import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * 导出带有 @CreeperActiviti的服务到activiti中
  * @author jcai
  */
-public class ActivitiServiceExporterImpl implements ActivitiServiceExporter{
+public class ActivitiServiceExporterImpl implements ActivitiServiceExporter {
     private final ObjectLocator _locator;
     private final ConcurrentHashMap<Object, Object> beans;
     private ServiceActivityScoreboard scoreboard;

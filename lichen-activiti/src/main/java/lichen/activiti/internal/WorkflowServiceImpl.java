@@ -1,9 +1,9 @@
-package creeper.core.internal.activiti;
+package lichen.activiti.internal;
 
-import creeper.core.entities.WorkflowAdapter;
-import creeper.core.models.WorkflowStat;
-import creeper.core.services.activiti.WorkflowService;
 
+import lichen.activiti.entities.WorkflowAdapter;
+import lichen.activiti.models.WorkflowStat;
+import lichen.activiti.services.WorkflowService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
@@ -26,7 +26,7 @@ import java.util.Map;
  * 工作流服务的实现类
  * @author jcai
  */
-public class WorkflowServiceImpl implements WorkflowService{
+public class WorkflowServiceImpl implements WorkflowService {
     @Inject
     private RuntimeService _runtimeService;
     @Inject

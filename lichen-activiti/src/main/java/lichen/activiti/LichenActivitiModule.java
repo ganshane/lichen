@@ -1,16 +1,13 @@
-package creeper.core.services.activiti;
+package lichen.activiti;
 
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
-import creeper.core.internal.activiti.ActivitiServiceExporterImpl;
-import org.activiti.engine.HistoryService;
-import org.activiti.engine.IdentityService;
-import org.activiti.engine.ProcessEngine;
-import org.activiti.engine.ProcessEngineConfiguration;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import lichen.activiti.annotations.LichenActiviti;
+import lichen.activiti.internal.ActivitiServiceExporterImpl;
+import lichen.activiti.internal.LichenWorkflowManagerImpl;
+import lichen.activiti.internal.WorkflowServiceImpl;
+import lichen.activiti.services.ActivitiServiceExporter;
+import lichen.activiti.services.LichenWorkflowManager;
+import lichen.activiti.services.WorkflowService;
+import org.activiti.engine.*;
 import org.activiti.spring.ProcessEngineFactoryBean;
 import org.activiti.spring.SpringProcessEngineConfiguration;
 import org.apache.tapestry5.ioc.ObjectLocator;
@@ -21,32 +18,30 @@ import org.apache.tapestry5.ioc.annotations.Startup;
 import org.apache.tapestry5.ioc.services.ServiceActivityScoreboard;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import creeper.core.annotations.CreeperActiviti;
-import creeper.core.internal.activiti.CreeperWorkflowManagerImpl;
-import creeper.core.internal.activiti.WorkflowServiceImpl;
+import javax.sql.DataSource;
+
 
 /**
  * 集成工作流引擎 activiti.
  * @author jcai
  */
-public class CreeperActivitiModule {
+public class LichenActivitiModule {
 
     //启动工作流,自动加载工作流
     @Startup
-    public static void setupWorkflow(@Local CreeperWorkflowManager manager){
+    public static void setupWorkflow(@Local LichenWorkflowManager manager){
         manager.deploy();
     }
     @SuppressWarnings("unchecked")
 	public static void bind(ServiceBinder binder){
-        binder.bind(CreeperWorkflowManager.class, CreeperWorkflowManagerImpl.class).withMarker(CreeperActiviti.class);
-        binder.bind(WorkflowService.class, WorkflowServiceImpl.class).withMarker(CreeperActiviti.class);
+        binder.bind(LichenWorkflowManager.class, LichenWorkflowManagerImpl.class).withMarker(LichenActiviti.class);
+        binder.bind(WorkflowService.class, WorkflowServiceImpl.class).withMarker(LichenActiviti.class);
     }
     public static ActivitiServiceExporter buildActivitiServiceExporter(ObjectLocator objectLocator,ServiceActivityScoreboard scoreboard){
         return new ActivitiServiceExporterImpl(scoreboard,objectLocator);
     }
-    @Marker(CreeperActiviti.class)
-    public static ProcessEngine buildProcessEngine(EntityManagerFactory entityManagerFactory,
-                                                   PlatformTransactionManager transactionManager,
+    @Marker(LichenActiviti.class)
+    public static ProcessEngine buildProcessEngine(PlatformTransactionManager transactionManager,
                                                    DataSource dataSource,
                                                    ActivitiServiceExporter activitiServiceExporter) throws Exception {
         SpringProcessEngineConfiguration configuration = new SpringProcessEngineConfiguration();
@@ -64,23 +59,23 @@ public class CreeperActivitiModule {
         processEngineFactoryBean.setProcessEngineConfiguration(configuration);
         return processEngineFactoryBean.getObject();
     }
-    @Marker(CreeperActiviti.class)
+    @Marker(LichenActiviti.class)
     public static RepositoryService buildRepositoryService(ProcessEngine engine){
         return engine.getRepositoryService();
     }
-    @Marker(CreeperActiviti.class)
+    @Marker(LichenActiviti.class)
     public static RuntimeService buildRuntimeService(ProcessEngine engine){
         return engine.getRuntimeService();
     }
-    @Marker(CreeperActiviti.class)
+    @Marker(LichenActiviti.class)
     public static TaskService buildTaskService(ProcessEngine engine){
         return engine.getTaskService();
     }
-    @Marker(CreeperActiviti.class)
+    @Marker(LichenActiviti.class)
     public static HistoryService buildHistoryService(ProcessEngine engine){
         return engine.getHistoryService();
     }
-    @Marker(CreeperActiviti.class)
+    @Marker(LichenActiviti.class)
     public static IdentityService buildIdentityService(ProcessEngine engine){
         return engine.getIdentityService();
     }

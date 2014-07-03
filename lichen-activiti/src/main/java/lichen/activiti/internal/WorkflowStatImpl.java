@@ -1,6 +1,7 @@
-package creeper.core.internal.activiti;
+package lichen.activiti.internal;
 
-import creeper.core.models.WorkflowStat;
+
+import lichen.activiti.models.WorkflowStat;
 
 /**
  * 工作流任务的状态
