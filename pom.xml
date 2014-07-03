@@ -22,13 +22,15 @@
     <version>0.1.1-SNAPSHOT</version>
     <name>Lichen Framework</name>
     <description>Lichen是一个基于Java技术的应用框架,非技术框架，提高生产力为第一目标.</description>
-    <modules>
-        <module>lichen-migration</module>
-        <!-- <module>lichen-activerecord</module> -->
-        <module>lichen-core</module>
-        <module>lichen-server</module>
-        <module>creeper</module>
-    </modules>
+  <modules>
+    <module>lichen-core</module>
+    <module>lichen-ws</module>
+    <module>lichen-activiti</module>
+    <module>lichen-migration</module>
+    <!-- <module>lichen-activerecord</module> -->
+    <module>lichen-server</module>
+    <module>creeper</module>
+  </modules>
     <scm>
 	    <connection>scm:git:https://dev.egfit.com/git/lichen.git</connection>
 	    <developerConnection>scm:git:https://dev.egfit.com/git/lichen.git</developerConnection>
@@ -37,14 +39,14 @@
         <dependencies>
             <dependency>
                 <groupId>com.ganshane.lichen</groupId>
-                <artifactId>lichen-activerecord</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ganshane.lichen</groupId>
                 <artifactId>lichen-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+          <dependency>
+            <groupId>com.ganshane.lichen</groupId>
+            <artifactId>lichen-server</artifactId>
+            <version>${project.version}</version>
+          </dependency>
             <dependency>
                 <groupId>com.ganshane.lichen</groupId>
                 <artifactId>lichen-migration</artifactId>
@@ -60,6 +62,11 @@
                 <artifactId>servlet-api</artifactId>
                 <version>2.5</version>
             </dependency>
+          <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>tapestry-core</artifactId>
+            <version>${tapestry-release-version}</version>
+          </dependency>
             <dependency>
                 <groupId>org.apache.tapestry</groupId>
                 <artifactId>tapestry-ioc</artifactId>
@@ -77,6 +84,45 @@
                 <artifactId>proxool</artifactId>
                 <version>0.9.1</version>
             </dependency>
+          <!-- spring -->
+          <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>1.6.0.RELEASE</version>
+          </dependency>
+          <!-- commons -->
+          <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
+          </dependency>
+          <!-- jpa -->
+          <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0.2</version>
+            <optional>true</optional>
+          </dependency>
+
+          <!-- activiti workflow -->
+          <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-engine</artifactId>
+            <version>${activiti-release-version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-spring</artifactId>
+            <version>${activiti-release-version}</version>
+            <exclusions>
+              <exclusion>
+                <groupId>commons-dbcp</groupId>
+                <artifactId>commons-dbcp</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+
+          <!-- jetty webserver -->
             <dependency>
                 <groupId>org.mortbay.jetty</groupId>
                 <artifactId>jetty</artifactId>
@@ -387,5 +433,6 @@
         <project.build.sourceEncoding>UTF8</project.build.sourceEncoding>
         <tapestry-release-version>5.3.7</tapestry-release-version>
         <axis-release-version>1.6.2</axis-release-version>
+        <activiti-release-version>5.15.1</activiti-release-version>
     </properties>
 </project>

@@ -1,15 +1,21 @@
 package creeper.core;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
-import creeper.core.services.axis2.Axis2Module;
+import creeper.core.annotations.CreeperCore;
+import creeper.core.config.CreeperCoreConfig;
+import creeper.core.internal.CreeperModuleManagerImpl;
+import creeper.core.internal.H2ConsoleRunner;
+import creeper.core.internal.MenuSourceImpl;
+import creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
+import creeper.core.internal.override.CreeperOverrideModule;
+import creeper.core.models.CreeperMenu;
+import creeper.core.services.*;
+import creeper.core.services.db.DatabaseMigrationModule;
+import creeper.core.services.jpa.CreeperJpaModule;
+import creeper.core.services.jpa.CreeperJpaValueEncoderSourceModule;
+import creeper.core.services.shiro.CreeperShiroModule;
+import creeper.node.NodeModule;
+import creeper.user.UserModule;
 import lichen.core.services.Option;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.func.Worker;
@@ -17,42 +23,15 @@ import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
-import org.apache.tapestry5.ioc.annotations.Contribute;
-import org.apache.tapestry5.ioc.annotations.Marker;
-import org.apache.tapestry5.ioc.annotations.Startup;
-import org.apache.tapestry5.ioc.annotations.SubModule;
-import org.apache.tapestry5.ioc.annotations.Symbol;
-import org.apache.tapestry5.services.ComponentSource;
-import org.apache.tapestry5.services.ExceptionReporter;
-import org.apache.tapestry5.services.LibraryMapping;
-import org.apache.tapestry5.services.RequestExceptionHandler;
-import org.apache.tapestry5.services.RequestFilter;
-import org.apache.tapestry5.services.RequestHandler;
-import org.apache.tapestry5.services.ResponseRenderer;
+import org.apache.tapestry5.ioc.annotations.*;
+import org.apache.tapestry5.services.*;
 import org.slf4j.Logger;
 
-import creeper.core.annotations.CreeperCore;
-import creeper.core.config.CreeperCoreConfig;
-import creeper.core.internal.CreeperModuleManagerImpl;
-import creeper.core.internal.H2ConsoleRunner;
-import creeper.core.internal.MenuSourceImpl;
-import creeper.core.internal.activiti.SyncUserToActivitiListener;
-import creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
-import creeper.core.internal.override.CreeperOverrideModule;
-import creeper.core.models.CreeperMenu;
-import creeper.core.services.CreeperCoreExceptionCode;
-import creeper.core.services.CreeperException;
-import creeper.core.services.CreeperModuleManager;
-import creeper.core.services.MenuSource;
-import creeper.core.services.XmlLoader;
-import creeper.core.services.activiti.CreeperActivitiModule;
-import creeper.core.services.db.DatabaseMigrationModule;
-import creeper.core.services.jpa.CreeperJpaModule;
-import creeper.core.services.jpa.CreeperJpaValueEncoderSourceModule;
-import creeper.core.services.shiro.CreeperShiroModule;
-import creeper.node.NodeModule;
-import creeper.user.UserModule;
-import creeper.user.services.UserSavedListener;
+import javax.sql.DataSource;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * Creeper的核心入口类
@@ -60,7 +39,7 @@ import creeper.user.services.UserSavedListener;
 @SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class,
         CreeperShiroModule.class,UserModule.class,
         CreeperOverrideModule.class, CreeperJpaValueEncoderSourceModule.class,
-        NodeModule.class, CreeperActivitiModule.class,Axis2Module.class
+        NodeModule.class
 })
 public class CreeperCoreModule {
     @SuppressWarnings("unchecked")
@@ -163,10 +142,6 @@ public class CreeperCoreModule {
     }
     @Contribute(MenuSource.class)
     public static void provideMenu(Configuration<CreeperMenu> configuration){
-        configuration.add(new CreeperMenu("admin","管理","/admin",1,CreeperMenu.MENU_VIRTUAL));
-    }
-    @Contribute(UserSavedListener.class)
-    public static void provideSyncToActiviti(OrderedConfiguration<UserSavedListener> configuration){
-        configuration.addInstance("activiti", SyncUserToActivitiListener.class);
+        configuration.add(new CreeperMenu("admin", "管理", "/admin", 1, CreeperMenu.MENU_VIRTUAL));
     }
 }
