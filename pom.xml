@@ -22,13 +22,14 @@
     <version>0.1.1-SNAPSHOT</version>
     <name>Lichen Framework</name>
     <description>Lichen是一个基于Java技术的应用框架,非技术框架，提高生产力为第一目标.</description>
-    <modules>
-        <module>lichen-migration</module>
-        <!-- <module>lichen-activerecord</module> -->
-        <module>lichen-core</module>
-        <module>lichen-server</module>
-        <module>creeper</module>
-    </modules>
+  <modules>
+    <module>lichen-core</module>
+    <module>lichen-ws</module>
+    <module>lichen-migration</module>
+    <!-- <module>lichen-activerecord</module> -->
+    <module>lichen-server</module>
+    <module>creeper</module>
+  </modules>
     <scm>
 	    <connection>scm:git:https://dev.egfit.com/git/lichen.git</connection>
 	    <developerConnection>scm:git:https://dev.egfit.com/git/lichen.git</developerConnection>
@@ -37,14 +38,14 @@
         <dependencies>
             <dependency>
                 <groupId>com.ganshane.lichen</groupId>
-                <artifactId>lichen-activerecord</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ganshane.lichen</groupId>
                 <artifactId>lichen-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
+          <dependency>
+            <groupId>com.ganshane.lichen</groupId>
+            <artifactId>lichen-server</artifactId>
+            <version>${project.version}</version>
+          </dependency>
             <dependency>
                 <groupId>com.ganshane.lichen</groupId>
                 <artifactId>lichen-migration</artifactId>
@@ -60,6 +61,11 @@
                 <artifactId>servlet-api</artifactId>
                 <version>2.5</version>
             </dependency>
+          <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>tapestry-core</artifactId>
+            <version>${tapestry-release-version}</version>
+          </dependency>
             <dependency>
                 <groupId>org.apache.tapestry</groupId>
                 <artifactId>tapestry-ioc</artifactId>

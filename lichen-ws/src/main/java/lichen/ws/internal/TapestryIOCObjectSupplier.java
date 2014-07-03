@@ -4,9 +4,9 @@
  * file: $Id: TapestryIOCObjectSupplier.java 685 2010-03-17 08:04:57Z jcai $
  * created at:2010-3-5
  */
-package creeper.core.internal.axis2;
+package lichen.ws.internal;
 
-import creeper.core.CreeperCoreConstants;
+import lichen.ws.LichenWsConstants;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.ServiceObjectSupplier;
 import org.apache.axis2.description.AxisService;
@@ -49,7 +49,7 @@ public class TapestryIOCObjectSupplier implements ServiceObjectSupplier {
             //get gobal registry object
             Registry registry = (Registry) servletContext.getAttribute(TapestryFilter.REGISTRY_CONTEXT_NAME);
             //get service interface
-            Class serviceInterface = (Class) axisService.getParameterValue(CreeperCoreConstants.SERVICE_INTERFACE);
+            Class serviceInterface = (Class) axisService.getParameterValue(LichenWsConstants.SERVICE_INTERFACE);
             return registry.getService(serviceInterface);
         } catch (Exception e) {
             throw AxisFault.makeFault(e);

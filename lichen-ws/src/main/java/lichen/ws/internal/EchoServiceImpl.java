@@ -4,10 +4,10 @@
  * file: $Id: EchoServiceImpl.java 685 2010-03-17 08:04:57Z jcai $
  * created at:2010-3-4
  */
-package creeper.core.internal.axis2;
+package lichen.ws.internal;
 
 
-import creeper.core.services.axis2.EchoService;
+import lichen.ws.services.EchoService;
 
 /**
  * only for test

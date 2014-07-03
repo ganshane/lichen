@@ -1,6 +1,7 @@
-package creeper.core.services.axis2;
+package lichen.ws.services;
 
-import creeper.core.services.CreeperException;
+
+import lichen.core.services.LichenException;
 
 import javax.xml.namespace.QName;
 import java.net.MalformedURLException;
@@ -31,7 +32,7 @@ public class WebserviceClient {
         try {
             url = new URL(wsdlURL);
         } catch (MalformedURLException e) {
-            throw CreeperException.wrap(e);
+            throw LichenException.wrap(e);
         }
         //服务描述中服务端点的限定名称  两个参数分别为 命名空间 服务名
         QName qName = new QName(namespace, serviceName);

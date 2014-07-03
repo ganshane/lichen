@@ -1,12 +1,14 @@
-package creeper.core.internal.axis2;
+package lichen.ws.internal;
 
-import creeper.core.services.CreeperException;
-import creeper.core.services.axis2.WebServicePublisher;
+import lichen.core.services.LichenException;
+import lichen.ws.LichenWsSymbols;
+import lichen.ws.services.WebServicePublisher;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.transport.http.AxisServlet;
 import org.apache.tapestry5.TapestryFilter;
 import org.apache.tapestry5.ioc.Registry;
+import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.apache.tapestry5.services.ApplicationGlobals;
 import org.apache.tapestry5.services.HttpServletRequestFilter;
 import org.apache.tapestry5.services.HttpServletRequestHandler;
@@ -18,8 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 实现针对axis2的集成，便于使用tapestry能够自动导出一些webservice的服务类
@@ -27,7 +27,11 @@ import java.util.Map;
  */
 public class WebserviceRequestFilter implements HttpServletRequestFilter{
     private final AxisServlet _axisServlet;
-    public WebserviceRequestFilter(final ApplicationGlobals applicationGlobals) throws ServletException {
+    private final String _webservicePath;
+
+    public WebserviceRequestFilter(final ApplicationGlobals applicationGlobals,
+                                   final @Symbol(LichenWsSymbols.WEB_SERVICE_PATH) String webservicePath) throws ServletException {
+        this._webservicePath = webservicePath;
         _axisServlet = new AxisServlet(){
             @Override
             public void init(ServletConfig config) throws ServletException {
@@ -35,7 +39,7 @@ public class WebserviceRequestFilter implements HttpServletRequestFilter{
                 super.init(config);
                 try {
                     axisConfiguration.addParameter(Constants.SERVICE_OBJECT_SUPPLIER,TapestryIOCObjectSupplier.class.getName());
-                    configContext.setServicePath("ws");
+                    configContext.setServicePath(webservicePath);
                     //axisConfiguration.addParameter("EnableChildFirstClassLoading",true);
                     //get ioc registry object
                     Registry registry = (Registry) config.getServletContext().getAttribute(TapestryFilter.REGISTRY_CONTEXT_NAME);
@@ -75,11 +79,11 @@ public class WebserviceRequestFilter implements HttpServletRequestFilter{
     }
     @Override
     public boolean service(HttpServletRequest request, HttpServletResponse response, HttpServletRequestHandler handler) throws IOException {
-        if(request.getServletPath().startsWith("/ws")){
+        if(request.getServletPath().startsWith("/"+_webservicePath)){
             try {
                 _axisServlet.service(request,response);
             } catch (ServletException e) {
-                throw CreeperException.wrap(e);
+                throw LichenException.wrap(e);
             }
             return true;
         }

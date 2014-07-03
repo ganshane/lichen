@@ -4,10 +4,10 @@
  * file: $Id: WebServicePublisherImpl.java 283 2010-03-11 07:41:26Z jcai $
  * created at:2010-3-2
  */
-package creeper.core.internal.axis2;
+package lichen.ws.internal;
 
-import creeper.core.CreeperCoreConstants;
-import creeper.core.services.axis2.WebServicePublisher;
+import lichen.ws.LichenWsConstants;
+import lichen.ws.services.WebServicePublisher;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
@@ -38,7 +38,7 @@ public class WebServicePublisherImpl implements WebServicePublisher {
             if (annotation != null) {
                 AxisService service;
                 service = AxisService.createService(serviceInterface.getName(),axisConfiguration);
-                service.addParameter(CreeperCoreConstants.SERVICE_INTERFACE, serviceInterface);
+                service.addParameter(LichenWsConstants.SERVICE_INTERFACE, serviceInterface);
                 axisConfiguration.addService(service);
                 axisConfiguration.startService(service.getName());
             }
