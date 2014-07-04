@@ -1,0 +1,6 @@
+.nav .nav>li>a {
+padding-left: 30px;
+}
+
+/* override tapestry internal css */
+.t-error-popup {z-index:3;}

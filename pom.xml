@@ -27,9 +27,8 @@
     <module>lichen-ws</module>
     <module>lichen-activiti</module>
     <module>lichen-migration</module>
-    <!-- <module>lichen-activerecord</module> -->
     <module>lichen-server</module>
-    <module>creeper</module>
+    <module>lichen-creeper</module>
   </modules>
     <scm>
 	    <connection>scm:git:https://dev.egfit.com/git/lichen.git</connection>
