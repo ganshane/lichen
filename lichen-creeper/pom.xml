@@ -16,7 +16,7 @@
   -->
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.ganshane.creeper</groupId>
+  <groupId>com.ganshane.lichen</groupId>
   <artifactId>lichen-creeper</artifactId>
   <name>creeper core</name>
   <description>creeper core</description>
