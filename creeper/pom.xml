@@ -17,13 +17,13 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ganshane.creeper</groupId>
-  <artifactId>creeper-core</artifactId>
+  <artifactId>lichen-creeper</artifactId>
   <name>creeper core</name>
   <description>creeper core</description>
   <parent>
     <groupId>com.ganshane.lichen</groupId>
     <artifactId>lichen</artifactId>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>dev-SNAPSHOT</version>
   </parent>
   <dependencies>
     <dependency>
