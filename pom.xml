@@ -19,7 +19,7 @@
     <groupId>com.ganshane.lichen</groupId>
     <artifactId>lichen</artifactId>
     <packaging>pom</packaging>
-    <version>0.5.2.2</version>
+    <version>0.5.2.3-SNAPSHOT</version>
     <name>Lichen Framework</name>
     <description>Lichen是一个基于Java技术的应用框架,非技术框架，提高生产力为第一目标.</description>
   <modules>
@@ -34,7 +34,7 @@
     <scm>
 	    <connection>scm:git:https://dev.egfit.com/git/lichen.git</connection>
 	    <developerConnection>scm:git:https://dev.egfit.com/git/lichen.git</developerConnection>
-      <tag>lichen-0.5.2.2</tag>
+      <tag>HEAD</tag>
   </scm>
     <dependencyManagement>
         <dependencies>
