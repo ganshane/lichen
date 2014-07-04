@@ -18,6 +18,7 @@ import org.apache.tapestry5.ioc.services.ClassNameLocator;
 import org.hibernate.cfg.Environment;
 import org.junit.After;
 import org.junit.Before;
+import org.logicalcobwebs.proxool.ProxoolFacade;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.orm.jpa.EntityManagerHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -61,6 +62,7 @@ public abstract class BaseEntityTestCase {
         EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
 
         registry.shutdown();
+        ProxoolFacade.shutdown();
         ThreadContext.remove("creeper.modules");
     }
     public static class TestDatabaseModule{

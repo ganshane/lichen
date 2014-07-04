@@ -23,6 +23,7 @@ public class Migrate_20140620133624_CreateComment implements Migration{
         _helper.createTable("comments",new TableCallback() {
             @Override
             public void doInTable(TableDefinition t) throws Throwable {
+                t.varchar("id",_options.PrimaryKey(),_options.Limit(32));
                 t.varchar("title",_options.NotNull(),_options.Limit(128));
                 t.clob("body",_options.NotNull());
                 t.varchar("thread",_options.NotNull(),_options.Limit(128));

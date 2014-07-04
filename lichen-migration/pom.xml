@@ -24,17 +24,21 @@
         <artifactId>lichen</artifactId>
         <version>0.1.1-SNAPSHOT</version>
     </parent>
-	<dependencies>
-        <dependency>
-            <groupId>org.apache.tapestry</groupId>
-            <artifactId>plastic</artifactId>
-            <version>5.3.7</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-        </dependency>
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.tapestry</groupId>
+      <artifactId>plastic</artifactId>
+      <version>${tapestry-release-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
+    </dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -46,26 +50,13 @@
     <dependency>
       <groupId>com.cloudhopper.proxool</groupId>
       <artifactId>proxool</artifactId>
-      <version>0.9.1</version>
-      <exclusions>
-        <!--
-        <exclusion>
-          <groupId>com.cloudhopper.proxool</groupId>
-          <artifactId>proxool-cglib</artifactId>
-        </exclusion>
-        -->
-        <exclusion>
-          <groupId>avalon-framework</groupId>
-          <artifactId>avalon-framework-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
-            <scope>test</scope>
-        </dependency>
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.1.1</version>
+      <scope>test</scope>
+    </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -76,11 +67,11 @@
 			<artifactId>ojdbc14</artifactId>
 			<version>10.2.0.3</version>
 		</dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <!-- <scope>provided</scope> -->
-        </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <!-- <scope>provided</scope> -->
+    </dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-all</artifactId>

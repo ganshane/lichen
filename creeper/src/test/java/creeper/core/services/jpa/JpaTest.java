@@ -75,27 +75,7 @@ public class JpaTest extends BaseEntityTestCase{
         testService.testNeedTransaction();
     }
     
-    
-    @Test
-    public void test_User(){
-        UserDao dao = registry.getObject(UserDao.class, null);
-        dao.findAll(new Specification<User>() {
-			@Override
-			public Predicate toPredicate(Root<User> root,
-					CriteriaQuery<?> query, CriteriaBuilder cb) {
-				List<Predicate> list = new ArrayList<Predicate>();   
-				Predicate pid = cb.equal(root.get("id"),2);
-				Predicate pname = cb.equal(root.get("name"),"啊");
-				Predicate pusername = cb.equal(root.get("username"),"webmaster");
-				list.add(pid);
-				list.add(pname);
-				list.add(pusername);
-				Predicate[] p = new Predicate[list.size()];   
-				return cb.and(list.toArray(p));
-			}
-        });
-    }
-    
+
     
     public static class TestServiceModule{
         public static void bind(ServiceBinder binder){

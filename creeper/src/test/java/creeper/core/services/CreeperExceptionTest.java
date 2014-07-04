@@ -14,6 +14,6 @@ public class CreeperExceptionTest {
         e.set("k2","v2");
         e.set("k3","v3");
 //        e.printStackTrace();
-        throw e;
+        //throw e;
     }
 }

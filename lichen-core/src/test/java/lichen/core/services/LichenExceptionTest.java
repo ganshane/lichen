@@ -11,6 +11,6 @@ public class LichenExceptionTest {
     public void test_exception(){
         LichenException exception = new LichenException(LichenCoreErrorCode.UNSUPPORT_REMOVE_ITERATOR).
                 set("test", 1).set("test2", 213).set("key3","test msg");
-        exception.printStackTrace();
+        //exception.printStackTrace();
     }
 }

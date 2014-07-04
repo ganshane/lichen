@@ -67,41 +67,73 @@
             <artifactId>tapestry-core</artifactId>
             <version>${tapestry-release-version}</version>
           </dependency>
-            <dependency>
-                <groupId>org.apache.tapestry</groupId>
-                <artifactId>tapestry-ioc</artifactId>
-                <version>${tapestry-release-version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.testng</groupId>
-                        <artifactId>testng</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
+          <dependency>
+            <groupId>org.apache.tapestry</groupId>
+            <artifactId>tapestry-ioc</artifactId>
+            <version>${tapestry-release-version}</version>
+            <exclusions>
+              <exclusion>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+              </exclusion>
+              <!-- 去掉和hibernate中的冲突，hibernate依赖的是 org.javassist -->
+              <exclusion>
+                <groupId>javassist</groupId>
+                <artifactId>javassist</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
+          <!-- javassist -->
+          <dependency>
+            <groupId>org.javassist</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.18.1-GA</version>
+          </dependency>
             <!-- database connection pool -->
-            <dependency>
-                <groupId>proxool</groupId>
-                <artifactId>proxool</artifactId>
-                <version>0.9.1</version>
-            </dependency>
+          <dependency>
+            <groupId>com.cloudhopper.proxool</groupId>
+            <artifactId>proxool</artifactId>
+            <version>0.9.1</version>
+            <exclusions>
+              <!--
+              <exclusion>
+                <groupId>com.cloudhopper.proxool</groupId>
+                <artifactId>proxool-cglib</artifactId>
+              </exclusion>
+              -->
+              <exclusion>
+                <groupId>avalon-framework</groupId>
+                <artifactId>avalon-framework-api</artifactId>
+              </exclusion>
+            </exclusions>
+          </dependency>
           <!-- spring -->
           <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
-            <version>1.6.0.RELEASE</version>
+            <version>${spring-data-jpa-version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring-release-version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring-release-version}</version>
+          </dependency>
+          <!-- jpa -->
+          <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.1-api</artifactId>
+            <version>1.0.0.Final</version>
           </dependency>
           <!-- commons -->
           <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
-          </dependency>
-          <!-- jpa -->
-          <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>persistence-api</artifactId>
-            <version>1.0.2</version>
-            <optional>true</optional>
           </dependency>
 
           <!-- activiti workflow -->
@@ -122,12 +154,22 @@
             </exclusions>
           </dependency>
 
-          <!-- jetty webserver -->
-            <dependency>
-                <groupId>org.mortbay.jetty</groupId>
-                <artifactId>jetty</artifactId>
-                <version>6.1.24</version>
-            </dependency>
+          <!-- jetty@eclipse -->
+          <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty-release-version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>${jetty-release-version}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jsp</artifactId>
+            <version>${jetty-release-version}</version>
+          </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>
                 <artifactId>h2</artifactId>
@@ -434,5 +476,8 @@
         <tapestry-release-version>5.3.7</tapestry-release-version>
         <axis-release-version>1.6.2</axis-release-version>
         <activiti-release-version>5.15.1</activiti-release-version>
+        <spring-release-version>3.2.9.RELEASE</spring-release-version>
+        <spring-data-jpa-version>1.6.0.RELEASE</spring-data-jpa-version>
+        <jetty-release-version>7.6.9.v20130131</jetty-release-version>
     </properties>
 </project>

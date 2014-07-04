@@ -4,12 +4,14 @@ import creeper.core.models.CreeperModuleDef;
 import creeper.core.services.jpa.BaseEntityTestCase;
 import creeper.node.dao.NodeDao;
 import creeper.node.dao.NodeRevisionDao;
+import creeper.user.entities.User;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
+import java.util.Date;
 
 /**
  * @author jcai
@@ -22,15 +24,27 @@ public class NodeEntitiesTest extends BaseEntityTestCase{
 
     @Override
     protected CreeperModuleDef[] getCreeperModules() {
-        return new CreeperModuleDef[]{CreeperModuleDef.create("测试","creeper.node")};
+        return new CreeperModuleDef[]{CreeperModuleDef.create("测试","creeper.node"),CreeperModuleDef.create("user","creeper.user")};
     }
     @Test
     public void test_save(){
 
+        User user = new User();
+        user.setId("12345");
         Node node = new Node();
+        node.setTitle("title");
+        node.setType("type");
+        node.setUser(user);
+        node.setComment(0);
+        node.setChanged(new Date());
+        node.setCreated(new Date());
 
         NodeRevision revision = new NodeRevision();
+        revision.setTitle("title");
+        revision.setBody("body");
         revision.setNode(node);
+        revision.setUser(user);
+        revision.setCreated(new Date());
 
         node.setLastNodeRevision(revision);
 

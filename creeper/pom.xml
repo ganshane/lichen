@@ -31,24 +31,19 @@
       <artifactId>lichen-core</artifactId>
       </dependency>
     <dependency>
-  <groupId>org.apache.tapestry</groupId> 
-  <artifactId>tapestry-upload</artifactId> 
-  <version>${tapestry-release-version}</version> 
-  </dependency>
-    <dependency>
       <groupId>com.ganshane.lichen</groupId>
       <artifactId>lichen-migration</artifactId>
     </dependency>
     <dependency>
       <groupId>com.ganshane.lichen</groupId>
       <artifactId>lichen-server</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>2.4</version>
     </dependency>
+    <!-- tapestry -->
     <dependency>
       <groupId>org.apache.tapestry</groupId>
       <artifactId>tapestry-core</artifactId>
@@ -57,13 +52,11 @@
     <dependency>
       <groupId>org.apache.tapestry</groupId>
       <artifactId>tapestry-ioc</artifactId>
-      <exclusions>
-        <!-- 去掉和hibernate中的冲突，hibernate依赖的是 org.javassist -->
-        <exclusion>
-          <groupId>javassist</groupId>
-          <artifactId>javassist</artifactId>
-        </exclusion>
-      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.tapestry</groupId>
+      <artifactId>tapestry-upload</artifactId>
+      <version>${tapestry-release-version}</version>
     </dependency>
     <dependency>
       <groupId>javax.inject</groupId>
@@ -88,17 +81,14 @@
     <dependency>
       <groupId>org.springframework.data</groupId>
       <artifactId>spring-data-jpa</artifactId>
-      <version>1.6.0.RELEASE</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-orm</artifactId>
-      <version>3.2.9.RELEASE</version>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-context</artifactId>
-      <version>3.2.9.RELEASE</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
@@ -127,19 +117,6 @@
     <dependency>
       <groupId>com.cloudhopper.proxool</groupId>
       <artifactId>proxool</artifactId>
-      <version>0.9.1</version>
-      <exclusions>
-        <!--
-        <exclusion>
-          <groupId>com.cloudhopper.proxool</groupId>
-          <artifactId>proxool-cglib</artifactId>
-        </exclusion>
-        -->
-        <exclusion>
-          <groupId>avalon-framework</groupId>
-          <artifactId>avalon-framework-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
