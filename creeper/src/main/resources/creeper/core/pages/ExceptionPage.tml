@@ -1,8 +1,0 @@
-<html t:type="layout"
-      t:title="hello"
-      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
-      xmlns:p="tapestry:parameter">
-<div class="alert alert-danger" >
-  ${exception}
-</div>
-</html>
