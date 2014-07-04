@@ -1,0 +1,12 @@
+<creeper_core>
+  <db>
+    <driver_class>org.h2.Driver</driver_class>
+    <user_name>sa</user_name>
+    <password>pass</password>
+    <url>jdbc:h2:mem:testdb</url>
+  </db>
+  <jpa>
+    <property name="hibernate.hbm2ddl.auto" value="create"/>
+    <property name="hibernate.show_sql" value="true"/>
+  </jpa>
+</creeper_core>

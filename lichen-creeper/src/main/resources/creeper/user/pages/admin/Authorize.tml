@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">     
+<html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd" xmlns:p="tapestry:parameter">
+<t:layout>
+
+<creeperform t:type="creeperform" t:id="authorizeForm" title="角色 ${role.name} 授权" >
+	<t:loop t:source="modules" t:value="module" t:formState="none">
+		<div class="panel panel-default">
+		  <div class="panel-heading">
+		    <h3 class="panel-title">${module.name}</h3>
+		  </div>
+		  <div class="panel-body">
+		  	<t:loop t:source="permissions" t:value="permisson">
+		  	<t:if test="${hasPermission}">
+	            <input name="perm" type="checkbox"  value="${permisson}" checked="checked" />
+	            <p:else>
+	                <input name="perm" type="checkbox"  value="${permisson}" />
+	            </p:else>
+	        </t:if>
+			  	${permisson}&nbsp;
+			</t:loop>
+		  </div>
+		</div>
+	</t:loop>
+	<button type="submit" class="btn btn-default">保存</button>
+</creeperform>
+</t:layout>   
+</html>
