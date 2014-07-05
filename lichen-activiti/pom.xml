@@ -81,16 +81,15 @@
   <build>
     <plugins>
       <plugin>
-        <!-- Entry needed to create, install and deploy sources jars -->
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-        </executions>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestEntries>
+              <Tapestry-Module-Classes>lichen.activiti.LichenActivitiModule</Tapestry-Module-Classes>
+            </manifestEntries>
+          </archive>
+        </configuration>
       </plugin>
     </plugins>
   </build>
