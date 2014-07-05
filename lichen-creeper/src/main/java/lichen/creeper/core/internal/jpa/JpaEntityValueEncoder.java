@@ -54,6 +54,7 @@ public class JpaEntityValueEncoder<T> implements ValueEncoder<T> {
 
 	//tapestry ioc 服务：对于一个类中某个属性的封装。
 	private final PropertyAdapter propertyAdapter;
+    private static final String SERIALIZABLE_PREFIX="S_";
 
 
 	/**
@@ -80,7 +81,7 @@ public class JpaEntityValueEncoder<T> implements ValueEncoder<T> {
 
         if (null == id){
         	StringBuffer serStr = new StringBuffer();
-        	serStr.append("_ser_obj");
+        	serStr.append(SERIALIZABLE_PREFIX);
         	ByteArrayOutputStream byteArrayOutputStream = null;
         	ObjectOutputStream objectOutputStream = null;
         	try {
@@ -108,13 +109,13 @@ public class JpaEntityValueEncoder<T> implements ValueEncoder<T> {
 	public T toValue(String clientValue) {
 		if(null == clientValue)
 			return null;
-		if(!clientValue.startsWith("_ser_obj")){
+		if(!clientValue.startsWith(SERIALIZABLE_PREFIX)){
 			//根据propertyAdapter.getType()获得的原始字段类型，调用typeCoercer服务将id转换，id可为string，int等类型，所以要转换。
 			Object id = typeCoercer.coerce(clientValue, propertyAdapter.getType());
 			Serializable ser_id = (Serializable) id;
 			return entityManager.find(entityClass, ser_id);
 		}else{
-			String _ser_obj = clientValue.replaceFirst("_ser_obj", "");
+			String _ser_obj = clientValue.substring(SERIALIZABLE_PREFIX.length());
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(Base64.decodeBase64(_ser_obj));;
 			ObjectInputStream objectInputStream = null;
 			try {
