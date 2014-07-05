@@ -13,8 +13,8 @@ import javax.inject.Inject;
 import java.util.List;
 
 @Import(stylesheet = {
-        "classpath:lichen.creeper/core/assets/bootstrap/css/bootstrap3.1.1.min.css",
-        "classpath:lichen.creeper/core/components/Layout.css"})
+        "classpath:lichen/creeper/core/assets/bootstrap/css/bootstrap3.1.1.min.css",
+        "classpath:lichen/creeper/core/components/Layout.css"})
 public class Layout {
     /** The page title, for the <title> element and the <h1> element. */
     @SuppressWarnings("unused")
@@ -33,11 +33,11 @@ public class Layout {
 
     @SuppressWarnings("unused")
 	@Property
-    @Inject @Path("classpath:lichen.creeper/core/assets/html5shiv.js")
+    @Inject @Path("classpath:lichen/creeper/core/assets/html5shiv.js")
     private Asset html5shiv;
     @SuppressWarnings("unused")
 	@Property
-    @Inject @Path("classpath:lichen.creeper/core/assets/respond.min.js")
+    @Inject @Path("classpath:lichen/creeper/core/assets/respond.min.js")
     private Asset respond;
 
     @Cached
