@@ -21,7 +21,7 @@
     <description>数据库升级工具类，不依赖SQL</description>
     <parent>
         <groupId>com.ganshane.lichen</groupId>
-        <artifactId>lichen</artifactId>
+        <artifactId>lichen-project</artifactId>
         <version>dev-SNAPSHOT</version>
     </parent>
   <dependencies>

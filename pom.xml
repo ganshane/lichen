@@ -17,7 +17,7 @@
 
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ganshane.lichen</groupId>
-  <artifactId>lichen</artifactId>
+  <artifactId>lichen-project</artifactId>
   <packaging>pom</packaging>
   <version>dev-SNAPSHOT</version>
   <name>Lichen Framework</name>
@@ -29,6 +29,7 @@
     <module>lichen-migration</module>
     <module>lichen-server</module>
     <module>lichen-creeper</module>
+    <module>lichen-node</module>
   </modules>
   <scm>
     <url>https://dev.egfit.com/projects/lichen/repository</url>
@@ -40,6 +41,11 @@
       <dependency>
         <groupId>com.ganshane.lichen</groupId>
         <artifactId>lichen-core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.ganshane.lichen</groupId>
+        <artifactId>lichen-creeper</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

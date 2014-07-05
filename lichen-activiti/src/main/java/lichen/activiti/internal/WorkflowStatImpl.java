@@ -9,7 +9,7 @@ import lichen.activiti.models.WorkflowStat;
  */
 class WorkflowStatImpl implements WorkflowStat {
 	/* (non-Javadoc)
-	 * @see creeper.core.models.WorkflowStat#getUnsigned()
+	 * @see lichen.creeper.core.models.WorkflowStat#getUnsigned()
 	 */
     @Override
 	public long getUnsigned() {
@@ -21,7 +21,7 @@ class WorkflowStatImpl implements WorkflowStat {
     }
 
     /* (non-Javadoc)
-	 * @see creeper.core.models.WorkflowStat#getTodo()
+	 * @see lichen.creeper.core.models.WorkflowStat#getTodo()
 	 */
     @Override
 	public long getTodo() {
@@ -33,7 +33,7 @@ class WorkflowStatImpl implements WorkflowStat {
     }
 
     /* (non-Javadoc)
-	 * @see creeper.core.models.WorkflowStat#getUnfinished()
+	 * @see lichen.creeper.core.models.WorkflowStat#getUnfinished()
 	 */
     @Override
 	public long getUnfinished() {
@@ -45,7 +45,7 @@ class WorkflowStatImpl implements WorkflowStat {
     }
 
     /* (non-Javadoc)
-	 * @see creeper.core.models.WorkflowStat#getFinished()
+	 * @see lichen.creeper.core.models.WorkflowStat#getFinished()
 	 */
     @Override
 	public long getFinished() {

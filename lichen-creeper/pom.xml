@@ -18,11 +18,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.ganshane.lichen</groupId>
   <artifactId>lichen-creeper</artifactId>
-  <name>creeper core</name>
-  <description>creeper core</description>
+  <name>lichen.creeper core</name>
+  <description>Lichen Creepr</description>
   <parent>
     <groupId>com.ganshane.lichen</groupId>
-    <artifactId>lichen</artifactId>
+    <artifactId>lichen-project</artifactId>
     <version>dev-SNAPSHOT</version>
   </parent>
   <dependencies>
@@ -128,7 +128,8 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
+      <scope>provided</scope>
+      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
