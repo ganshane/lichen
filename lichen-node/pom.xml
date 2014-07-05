@@ -84,7 +84,7 @@
         <configuration>
           <archive>
             <manifestEntries>
-              <Tapestry-Module-Classes>lichen.ws.LichenWsModule</Tapestry-Module-Classes>
+              <Tapestry-Module-Classes>lichen.node.NodeModule</Tapestry-Module-Classes>
             </manifestEntries>
           </archive>
         </configuration>
