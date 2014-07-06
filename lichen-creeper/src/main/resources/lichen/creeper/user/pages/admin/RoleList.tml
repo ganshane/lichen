@@ -3,10 +3,6 @@
 <t:layout>
 <creeperform t:type="creeperform" t:id="roleQueryForm" title="查询角色" >
 	<div class="input-group">
-	  <div class="input-group-addon" style="width:100px;" >ID：</div>
-	  <input class="form-control" t:type="textfield" t:value="roleParams.id" label="ID" />
-	</div>
-	<div class="input-group">
 	  <div class="input-group-addon" style="width:100px;" >名称：</div>
 	  <input class="form-control" t:type="textfield" t:value="roleParams.name" label="名称"/>
 	</div>

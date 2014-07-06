@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * @author jcai
@@ -30,7 +31,7 @@ public class NodeEntitiesTest extends BaseEntityTestCase{
     public void test_save(){
 
         User user = new User();
-        user.setId("12345");
+        user.setId(UUID.randomUUID());
         Node node = new Node();
         node.setTitle("title");
         node.setType("type");

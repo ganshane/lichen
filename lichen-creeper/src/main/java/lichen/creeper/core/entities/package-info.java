@@ -2,7 +2,7 @@
 @TypeDefs({@TypeDef(typeClass = DateUserType.class,
 				    name= CreeperCoreConstants.TYPE_INT_DATE)
 	     })
-@GenericGenerator(name="uuid",strategy = "uuid")
+@GenericGenerator(name="uuid",strategy = "uuid2")
 package lichen.creeper.core.entities;
 import lichen.creeper.core.CreeperCoreConstants;
 import lichen.creeper.core.internal.hibernate.DateUserType;

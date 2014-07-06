@@ -7,13 +7,15 @@ import org.springframework.data.repository.RepositoryDefinition;
 
 import lichen.creeper.user.entities.Role;
 
+import java.util.UUID;
+
 /**
  * 
  * @author shen
  *
  */
-@RepositoryDefinition(domainClass = Role.class, idClass = String.class)
-public interface RoleDao extends CrudRepository<Role, String>,
+@RepositoryDefinition(domainClass = Role.class, idClass = UUID.class)
+public interface RoleDao extends CrudRepository<Role, UUID>,
 		JpaSpecificationExecutor<Role>,QueryDslPredicateExecutor<Role>  {
 
 }

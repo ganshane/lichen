@@ -24,7 +24,7 @@ public class Migrate_20140606010101_CreateUsers implements Migration {
         _helper.createTable("users",new TableCallback() {
             @Override
             public void doInTable(TableDefinition t) throws Throwable {
-                t.varchar("id", _options.PrimaryKey(),_options.Limit(32));
+                t.varbinary("id", _options.PrimaryKey(),_options.Limit(16));
                 t.varchar("name", _options.NotNull(),_options.Limit(60));
                 t.varchar("pass", _options.NotNull(),_options.Limit(500));
                 t.varchar("mail", _options.Limit(64));

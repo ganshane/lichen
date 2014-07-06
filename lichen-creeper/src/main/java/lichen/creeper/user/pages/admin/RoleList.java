@@ -39,7 +39,9 @@ public class RoleList {
 	}
 	
 	void onActivate(Role role){
-
+        if(roleParams == null)
+            roleParams = new Role();
+        this.role = role;
 	}
 	
 //	单击eventlink执行删除操作

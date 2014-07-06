@@ -22,7 +22,7 @@ public class Migrate_20140617163012_CreateRole implements Migration{
         _helper.createTable("roles",new TableCallback() {
             @Override
             public void doInTable(TableDefinition t) throws Throwable {
-                t.varchar("id",_options.PrimaryKey(),_options.Limit(32));
+                t.varbinary("id",_options.PrimaryKey(),_options.Limit(16));
                 t.varchar("name",_options.NotNull(),_options.Limit(64));
             }
         });
@@ -33,8 +33,8 @@ public class Migrate_20140617163012_CreateRole implements Migration{
         _helper.createTable("permissions",new TableCallback() {
             @Override
             public void doInTable(TableDefinition t) throws Throwable {
-                t.varchar("id",_options.PrimaryKey(),_options.Limit(32));
-                t.varchar("role_id",_options.NotNull(),_options.Limit(32));
+                t.varbinary("id",_options.PrimaryKey(),_options.Limit(16));
+                t.varbinary("role_id",_options.NotNull(),_options.Limit(16));
                 t.varchar("permission",_options.Limit(200));
             }
         });
@@ -48,8 +48,8 @@ public class Migrate_20140617163012_CreateRole implements Migration{
         _helper.createTable("users_roles",new TableCallback() {
             @Override
             public void doInTable(TableDefinition t) throws Throwable {
-                t.varchar("user_id",_options.NotNull(),_options.Limit(32));
-                t.varchar("role_id",_options.NotNull(),_options.Limit(32));
+                t.varbinary("user_id",_options.NotNull(),_options.Limit(16));
+                t.varbinary("role_id",_options.NotNull(),_options.Limit(16));
             }
         });
         _helper.addIndex("users_roles","user_id");

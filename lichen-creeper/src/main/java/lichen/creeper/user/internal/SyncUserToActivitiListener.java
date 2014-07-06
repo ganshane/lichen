@@ -20,7 +20,7 @@ public class SyncUserToActivitiListener implements UserSavedListener{
 
     @Override
     public void afterSaved(User user) {
-        String userId = user.getId();
+        String userId = user.getId().toString();
         org.activiti.engine.identity.User activitiUser;
 
         List<org.activiti.engine.identity.User> activitiUsers = identityService.createUserQuery().userId(userId).list();
@@ -31,10 +31,10 @@ public class SyncUserToActivitiListener implements UserSavedListener{
             // 删除用户的membership
             List<Group> activitiGroups = identityService.createGroupQuery().groupMember(userId).list();
             for (Group group : activitiGroups) {
-                identityService.deleteMembership(user.getId(), group.getId());
+                identityService.deleteMembership(user.getId().toString(), group.getId().toString());
             }
         } else {
-            activitiUser = identityService.newUser(user.getId());
+            activitiUser = identityService.newUser(user.getId().toString());
         }
         activitiUser.setFirstName(user.getName());
         activitiUser.setLastName("");
@@ -45,7 +45,7 @@ public class SyncUserToActivitiListener implements UserSavedListener{
         Set<Role> roles = user.getRoles();
         if(roles != null)
             for (Role role : roles) {
-                identityService.createMembership(user.getId(), role.getName());
+                identityService.createMembership(user.getId().toString(), role.getName());
             }
     }
 }

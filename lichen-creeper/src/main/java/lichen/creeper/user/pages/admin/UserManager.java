@@ -1,10 +1,6 @@
 package lichen.creeper.user.pages.admin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.inject.Inject;
 
@@ -78,7 +74,7 @@ public class UserManager {
 		Set<Role> depRoles = new HashSet<Role>();
 		for(Role r : userroles){
 			if(rolelist.contains(r.getId())){
-				existRoles.add(r.getId());
+				existRoles.add(r.getId().toString());
 			}else{
 				depRoles.add(r);
 			}
@@ -87,7 +83,7 @@ public class UserManager {
 		rolelist.removeAll(existRoles);
 		//新加的权限
 		for(String nr : rolelist){
-			Role newRole = _roleDao.findOne(nr);
+			Role newRole = _roleDao.findOne(UUID.fromString(nr));
 			userroles.add(newRole);
 		}
 		_userDao.save(user);

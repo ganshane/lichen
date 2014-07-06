@@ -68,6 +68,7 @@ public class RoleEntitiesTest extends BaseEntityTestCase{
 		System.out.println("=======================");
 		
 		RoleDao dao = registry.getObject(RoleDao.class,null);
+        System.out.println("uuid:"+role.getId());
 		role = dao.findOne(role.getId());
 		Permission delPerm = null;
 		Set<Permission> perms = role.getPermissions();

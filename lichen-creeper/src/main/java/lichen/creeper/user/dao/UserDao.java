@@ -7,12 +7,14 @@ import org.springframework.data.repository.RepositoryDefinition;
 
 import lichen.creeper.user.entities.User;
 
+import java.util.UUID;
+
 /**
  * 
  * @author shen
  *
  */
-@RepositoryDefinition(domainClass = User.class,idClass = String.class)
-public interface UserDao extends CrudRepository<User, String> ,JpaSpecificationExecutor<User> , QueryDslPredicateExecutor<User> {
+@RepositoryDefinition(domainClass = User.class,idClass = UUID.class)
+public interface UserDao extends CrudRepository<User, UUID> ,JpaSpecificationExecutor<User> , QueryDslPredicateExecutor<User> {
     public User findByName(String name);
 }

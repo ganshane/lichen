@@ -23,6 +23,9 @@ import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.*;
+import org.apache.tapestry5.ioc.services.Coercion;
+import org.apache.tapestry5.ioc.services.CoercionTuple;
+import org.apache.tapestry5.ioc.services.TypeCoercer;
 import org.apache.tapestry5.services.*;
 import org.slf4j.Logger;
 
@@ -31,6 +34,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.UUID;
 
 /**
  * Creeper的核心入口类
@@ -141,5 +145,20 @@ public class CreeperCoreModule {
     @Contribute(MenuSource.class)
     public static void provideMenu(Configuration<CreeperMenu> configuration){
         configuration.add(new CreeperMenu("admin", "管理", "/admin", 1, CreeperMenu.MENU_VIRTUAL));
+    }
+    @Contribute(TypeCoercer.class)
+    public static void provideTypeCoercer(Configuration<CoercionTuple> configuration){
+        configuration.add(CoercionTuple.create(UUID.class,String.class,new Coercion<UUID, String>() {
+            @Override
+            public String coerce(UUID input) {
+                return input.toString();
+            }
+        }));
+        configuration.add(CoercionTuple.create(String.class, UUID.class,new Coercion<String, UUID>() {
+            @Override
+            public UUID coerce(String input) {
+                return UUID.fromString(input);
+            }
+        }));
     }
 }
