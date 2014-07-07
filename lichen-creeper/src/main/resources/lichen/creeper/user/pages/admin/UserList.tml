@@ -4,7 +4,7 @@
 <creeperform t:type="creeperform" t:id="queryUserForm" title="用户查询" >
 	<div class="input-group">
 	  <div class="input-group-addon" style="width:100px;" >ID：</div>
-	  <input class="form-control" t:type="textfield" t:value="userParams.id" label="ID" />
+	  <input class="form-control" t:type="textfield" t:value="userParams.id" label="ID" translate="string"/>
 	</div>
     <div class="input-group">
 	  <div class="input-group-addon" style="width:100px;" >用户名：</div>

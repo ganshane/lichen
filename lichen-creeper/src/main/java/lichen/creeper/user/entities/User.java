@@ -35,6 +35,7 @@ public class User extends UUIDPrimaryKeySupport {
     @Type(type=CreeperCoreConstants.TYPE_INT_DATE)
     private Date created;
     @Type(type=CreeperCoreConstants.TYPE_INT_DATE)
+    @Column(name="last_access")
     private Date access;
     @Type(type=CreeperCoreConstants.TYPE_INT_DATE)
     private Date login;
