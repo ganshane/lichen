@@ -17,7 +17,7 @@ import lichen.creeper.core.CreeperCoreConstants;
 import lichen.creeper.core.entities.UUIDPrimaryKeySupport;
 
 /**
- * 
+ * 用户信息
  * @author shen
  *
  */
