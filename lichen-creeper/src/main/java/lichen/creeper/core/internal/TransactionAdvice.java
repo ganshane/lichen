@@ -1,6 +1,6 @@
 package lichen.creeper.core.internal;
 
-import lichen.creeper.core.services.CreeperException;
+import lichen.core.services.LichenException;
 import org.apache.tapestry5.ioc.annotations.Local;
 import org.apache.tapestry5.plastic.MethodAdvice;
 import org.apache.tapestry5.plastic.MethodInvocation;
@@ -58,7 +58,7 @@ public class TransactionAdvice implements MethodAdvice{
         } catch (RuntimeException re) {
             throw re;
         }catch (Throwable e){
-            throw CreeperException.wrap(e);
+            throw LichenException.wrap(e);
         }
     }
 }

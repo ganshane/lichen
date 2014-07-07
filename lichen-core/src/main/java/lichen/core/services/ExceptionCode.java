@@ -18,7 +18,7 @@ package lichen.core.services;
  *
  * @author jcai
  */
-public interface ErrorCode {
+public interface ExceptionCode {
     /**
      * 返回错误代码.
      *

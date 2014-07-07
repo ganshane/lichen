@@ -50,26 +50,26 @@ public class LichenException extends RuntimeException {
     //提供额外信息
     private final Map<String, String> _properties = new TreeMap<String, String>();
     //错误代码
-    private ErrorCode _errorCode;
+    private ExceptionCode _exceptionCode;
 
     /**
      * 通过给定的一个错误码来新建一个LichenException.
      *
-     * @param errorCode 错误码
+     * @param exceptionCode 错误码
      */
-    public LichenException(final ErrorCode errorCode) {
-        this._errorCode = errorCode;
+    public LichenException(final ExceptionCode exceptionCode) {
+        this._exceptionCode = exceptionCode;
     }
 
     /**
      * 通过给定的异常消息，以及错误码来构建异常消息.
      *
      * @param message   异常消息
-     * @param errorCode 错误码
+     * @param exceptionCode 错误码
      */
-    public LichenException(final String message, final ErrorCode errorCode) {
+    public LichenException(final String message, final ExceptionCode exceptionCode) {
         super(message);
-        this._errorCode = errorCode;
+        this._exceptionCode = exceptionCode;
     }
 
     /**
@@ -77,13 +77,13 @@ public class LichenException extends RuntimeException {
      *
      * @param message   异常消息
      * @param cause     根异常
-     * @param errorCode 错误码
+     * @param exceptionCode 错误码
      */
     private LichenException(final String message,
                             final Throwable cause,
-                            final ErrorCode errorCode) {
+                            final ExceptionCode exceptionCode) {
         super(message, cause);
-        this._errorCode = errorCode;
+        this._exceptionCode = exceptionCode;
     }
 
     /**
@@ -94,21 +94,21 @@ public class LichenException extends RuntimeException {
      * </p>
      *
      * @param exception 待包装的异常消息类
-     * @param errorCode 错误码
+     * @param exceptionCode 错误码
      * @return 包装后的异常消息
      */
     public static LichenException wrap(final Throwable exception,
-                                       final ErrorCode errorCode) {
+                                       final ExceptionCode exceptionCode) {
         if (exception instanceof LichenException) {
             LichenException se = (LichenException) exception;
-            if (errorCode != null && errorCode != se.getErrorCode()) {
+            if (exceptionCode != null && exceptionCode != se.getErrorCode()) {
                 return new LichenException(exception.getMessage(),
-                        exception, errorCode);
+                        exception, exceptionCode);
             }
             return se;
         } else {
             return new LichenException(exception.getMessage(),
-                    exception, errorCode);
+                    exception, exceptionCode);
         }
     }
 
@@ -117,7 +117,7 @@ public class LichenException extends RuntimeException {
      *
      * @param exception 异常
      * @return 包装后的LichenException
-     * @see #wrap(Throwable, ErrorCode).
+     * @see #wrap(Throwable, ExceptionCode).
      */
     public static LichenException wrap(final Throwable exception) {
         return wrap(exception, null);
@@ -128,8 +128,8 @@ public class LichenException extends RuntimeException {
      *
      * @return 错误码
      */
-    public final ErrorCode getErrorCode() {
-        return _errorCode;
+    public final ExceptionCode getErrorCode() {
+        return _exceptionCode;
     }
 
     /**
@@ -183,9 +183,9 @@ public class LichenException extends RuntimeException {
      */
     public final String toString() {
         StringBuilder sb = new StringBuilder();
-        if (_errorCode != null) {
-            sb.append("LICHEN-").append(_errorCode.getNumber()).append(":");
-            sb.append(_errorCode.toString()).append(" ");
+        if (_exceptionCode != null) {
+            sb.append("LICHEN-").append(_exceptionCode.getNumber()).append(":");
+            sb.append(_exceptionCode.toString()).append(" ");
         } else {
             sb.append("LICHEN-0000 UNKNOWN ");
         }

@@ -18,7 +18,7 @@ package lichen.core.services;
  *
  * @author jcai
  */
-public enum LichenCoreErrorCode implements ErrorCode {
+public enum LichenCoreErrorCode implements ExceptionCode {
     /**
      * 1001 不支持从iterator中删除元素. *
      */

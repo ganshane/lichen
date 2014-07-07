@@ -1,26 +1,18 @@
 package lichen.creeper.core.services.jpa;
 
-import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Properties;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
+import lichen.core.services.LichenException;
 import lichen.core.services.Option;
-
-import org.apache.tapestry5.ioc.MethodAdviceReceiver;
-import org.apache.tapestry5.ioc.ObjectProvider;
-import org.apache.tapestry5.ioc.OrderedConfiguration;
-import org.apache.tapestry5.ioc.ScopeConstants;
-import org.apache.tapestry5.ioc.ServiceBinder;
-import org.apache.tapestry5.ioc.annotations.Contribute;
-import org.apache.tapestry5.ioc.annotations.InjectService;
-import org.apache.tapestry5.ioc.annotations.Local;
-import org.apache.tapestry5.ioc.annotations.Marker;
-import org.apache.tapestry5.ioc.annotations.Match;
-import org.apache.tapestry5.ioc.annotations.Scope;
+import lichen.creeper.core.annotations.CreeperCore;
+import lichen.creeper.core.annotations.CreeperJpa;
+import lichen.creeper.core.config.CreeperCoreConfig;
+import lichen.creeper.core.internal.TransactionAdvice;
+import lichen.creeper.core.internal.jpa.EntityManagerCreatorImpl;
+import lichen.creeper.core.internal.jpa.SmartHibernateJpaVendorAdapter;
+import lichen.creeper.core.internal.jpa.SpringDataDaoProviderImpl;
+import lichen.creeper.core.services.CreeperCoreExceptionCode;
+import lichen.creeper.core.services.CreeperModuleManager;
+import org.apache.tapestry5.ioc.*;
+import org.apache.tapestry5.ioc.annotations.*;
 import org.apache.tapestry5.ioc.services.MasterObjectProvider;
 import org.apache.tapestry5.ioc.services.PerthreadManager;
 import org.apache.tapestry5.ioc.services.ThreadCleanupListener;
@@ -41,16 +33,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 import org.springframework.util.StringUtils;
 
-import lichen.creeper.core.annotations.CreeperCore;
-import lichen.creeper.core.annotations.CreeperJpa;
-import lichen.creeper.core.config.CreeperCoreConfig;
-import lichen.creeper.core.internal.TransactionAdvice;
-import lichen.creeper.core.internal.jpa.EntityManagerCreatorImpl;
-import lichen.creeper.core.internal.jpa.SmartHibernateJpaVendorAdapter;
-import lichen.creeper.core.internal.jpa.SpringDataDaoProviderImpl;
-import lichen.creeper.core.services.CreeperCoreExceptionCode;
-import lichen.creeper.core.services.CreeperException;
-import lichen.creeper.core.services.CreeperModuleManager;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.Properties;
 
 /**
  * lichen.creeper jpa module
@@ -95,8 +83,8 @@ public class CreeperJpaModule {
         try {
             PropertyConfigurator.configure(info);
         } catch (ProxoolException e) {
-            CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_CONFIG_PROXOOL);
-            throw ce;
+            LichenException le = LichenException.wrap(e, CreeperCoreExceptionCode.FAIL_CONFIG_PROXOOL);
+            throw le;
         }
         //new datasource
         return new ProxoolDataSource("creeper");

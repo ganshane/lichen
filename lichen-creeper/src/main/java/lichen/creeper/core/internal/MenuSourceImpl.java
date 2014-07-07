@@ -1,8 +1,8 @@
 package lichen.creeper.core.internal;
 
+import lichen.core.services.LichenException;
 import lichen.creeper.core.models.CreeperMenu;
 import lichen.creeper.core.services.CreeperCoreExceptionCode;
-import lichen.creeper.core.services.CreeperException;
 import lichen.creeper.core.services.MenuSource;
 import org.apache.tapestry5.services.PageRenderLinkSource;
 
@@ -36,7 +36,7 @@ public class MenuSourceImpl implements MenuSource {
             CreeperMenuWrapper menu = new CreeperMenuWrapper(it.next().copy());
             String url = menu.getUrl();
             if (url == null && menu.getPageClass() == null) {
-                throw new CreeperException("url和pageClass不能都为空,"+menu, CreeperCoreExceptionCode.URL_AND_PAGE_CLASS_IS_NULL);
+                throw new LichenException("url和pageClass不能都为空,"+menu, CreeperCoreExceptionCode.URL_AND_PAGE_CLASS_IS_NULL);
             }
             if (url == null && menu.getPageClass() != null) {
                 url = _pageRenderLinkSource.createPageRenderLink(menu.getPageClass()).toRedirectURI();

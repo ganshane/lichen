@@ -1,7 +1,7 @@
 package lichen.creeper.core.internal.shiro;
 
+import lichen.core.services.LichenException;
 import lichen.creeper.core.services.CreeperCoreExceptionCode;
-import lichen.creeper.core.services.CreeperException;
 import org.apache.shiro.authz.UnauthenticatedException;
 import org.apache.shiro.authz.aop.AuthorizingAnnotationMethodInterceptor;
 import org.apache.shiro.subject.Subject;
@@ -51,10 +51,10 @@ abstract class AbstractShiroAnnotationWorker implements ComponentClassTransformW
                     }
                 });
             }catch(UnauthenticatedException ue){
-                throw new CreeperException(ue.getMessage(),CreeperCoreExceptionCode.ACCESS_DENIED);
+                throw new LichenException(ue.getMessage(),CreeperCoreExceptionCode.ACCESS_DENIED);
             } catch (Throwable ex)
             {
-                throw CreeperException.wrap(ex);
+                throw LichenException.wrap(ex);
             }
         }
     };

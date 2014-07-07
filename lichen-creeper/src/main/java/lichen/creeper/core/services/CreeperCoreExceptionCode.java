@@ -1,9 +1,12 @@
 package lichen.creeper.core.services;
 
+import lichen.core.services.ExceptionCode;
+
 /**
  * lichen.creeper core exception code
  * @author jcai
  */
+
 public enum CreeperCoreExceptionCode implements ExceptionCode {
     FAIL_READ_CONFIG_FILE(1001),
     FAIL_CONFIG_PROXOOL(1002),

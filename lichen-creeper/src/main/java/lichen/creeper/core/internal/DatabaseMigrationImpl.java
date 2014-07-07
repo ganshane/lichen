@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.Iterator;
 
+import lichen.core.services.LichenException;
 import lichen.creeper.core.annotations.CreeperCore;
 import lichen.creeper.core.services.CreeperModuleManager;
 import lichen.migration.internal.DatabaseAdapter;
@@ -17,7 +18,6 @@ import org.apache.tapestry5.func.Predicate;
 
 import lichen.creeper.core.config.CreeperCoreConfig;
 import lichen.creeper.core.services.CreeperCoreExceptionCode;
-import lichen.creeper.core.services.CreeperException;
 import lichen.creeper.core.services.db.DatabaseMigration;
 
 import javax.sql.DataSource;
@@ -53,7 +53,7 @@ public class DatabaseMigrationImpl implements DatabaseMigration {
                                     getClassLoader().getResources(pn);
                             return urls.hasMoreElements();
                         } catch (IOException e) {
-                            throw CreeperException.wrap(e);
+                            throw LichenException.wrap(e);
                         }
                     }
                 }).iterator();
@@ -64,9 +64,9 @@ public class DatabaseMigrationImpl implements DatabaseMigration {
                 try {
                     migrator.migrate(MigratorOperation.InstallAllMigrations, packageName, false);
                 } catch (Throwable e) {
-                    CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_MIGRAT_SCRIPT);
-                    ce.set("script_package", packageName);
-                    throw ce;
+                    LichenException le = LichenException.wrap(e, CreeperCoreExceptionCode.FAIL_MIGRAT_SCRIPT);
+                    le.set("script_package", packageName);
+                    throw le;
                 }
             }
         }

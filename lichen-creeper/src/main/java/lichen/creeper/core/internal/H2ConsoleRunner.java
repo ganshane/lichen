@@ -1,6 +1,7 @@
 package lichen.creeper.core.internal;
 
-import lichen.creeper.core.services.CreeperException;
+
+import lichen.core.services.LichenException;
 
 import java.lang.reflect.Method;
 import java.sql.Connection;
@@ -32,7 +33,7 @@ public class H2ConsoleRunner {
             method = clazz.getMethod("openBrowser",String.class);
             method.invoke(null, url);
         } catch (Throwable e) {
-            throw CreeperException.wrap(e);
+            throw LichenException.wrap(e);
         }
          /*
         Server server = Server.createWebServer();

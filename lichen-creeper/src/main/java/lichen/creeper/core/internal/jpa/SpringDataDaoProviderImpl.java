@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.persistence.EntityManager;
 
+import lichen.core.services.LichenException;
 import org.apache.tapestry5.ioc.AnnotationProvider;
 import org.apache.tapestry5.ioc.ObjectLocator;
 import org.apache.tapestry5.ioc.internal.services.ClassNameLocatorImpl;
@@ -18,7 +19,6 @@ import org.springframework.data.jpa.repository.support.JpaRepositoryFactoryBean;
 import org.springframework.data.repository.util.TxUtils;
 
 import lichen.creeper.core.annotations.CreeperJpa;
-import lichen.creeper.core.services.CreeperException;
 import lichen.creeper.core.services.jpa.DaoPackageManager;
 import lichen.creeper.core.services.jpa.SpringDataDaoProvider;
 
@@ -56,7 +56,7 @@ public class SpringDataDaoProviderImpl implements SpringDataDaoProvider {
                     Class<?> clazz = contextClassLoader.loadClass(className);
                     objects.put(clazz,createDaoObject(clazz));
                 } catch (ClassNotFoundException e) {
-                    throw CreeperException.wrap(e);
+                    throw LichenException.wrap(e);
                 }
             }
         }

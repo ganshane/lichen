@@ -1,11 +1,9 @@
 package lichen.creeper.core.internal;
 
-import java.util.Arrays;
-import java.util.Properties;
-
+import lichen.core.services.LichenException;
+import lichen.creeper.core.config.CreeperCoreConfig;
 import lichen.creeper.core.models.CreeperModuleDef;
 import lichen.creeper.core.services.CreeperCoreExceptionCode;
-import lichen.creeper.core.services.CreeperException;
 import lichen.creeper.core.services.CreeperModuleManager;
 import org.junit.Test;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
@@ -14,9 +12,10 @@ import org.logicalcobwebs.proxool.ProxoolFacade;
 import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import lichen.creeper.core.config.CreeperCoreConfig;
 import org.springframework.util.StringUtils;
+
+import java.util.Arrays;
+import java.util.Properties;
 
 /**
  * 
@@ -52,8 +51,8 @@ public class DatabaseMigrationImplTest {
         try {
             PropertyConfigurator.configure(info);
         } catch (ProxoolException e) {
-            CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_CONFIG_PROXOOL);
-            throw ce;
+            LichenException le = LichenException.wrap(e, CreeperCoreExceptionCode.FAIL_CONFIG_PROXOOL);
+            throw le;
         }
         //new datasource
         ProxoolDataSource _dataSource = new ProxoolDataSource("lichen.creeper-migrator");

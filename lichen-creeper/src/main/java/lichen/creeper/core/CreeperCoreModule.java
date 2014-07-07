@@ -1,5 +1,7 @@
 package lichen.creeper.core;
 
+import lichen.core.services.LichenException;
+import lichen.core.services.Option;
 import lichen.creeper.core.annotations.CreeperCore;
 import lichen.creeper.core.config.CreeperCoreConfig;
 import lichen.creeper.core.internal.CreeperModuleManagerImpl;
@@ -8,13 +10,15 @@ import lichen.creeper.core.internal.MenuSourceImpl;
 import lichen.creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
 import lichen.creeper.core.internal.override.CreeperOverrideModule;
 import lichen.creeper.core.models.CreeperMenu;
-import lichen.creeper.core.services.*;
+import lichen.creeper.core.services.CreeperCoreExceptionCode;
+import lichen.creeper.core.services.CreeperModuleManager;
+import lichen.creeper.core.services.MenuSource;
+import lichen.creeper.core.services.XmlLoader;
 import lichen.creeper.core.services.db.DatabaseMigrationModule;
 import lichen.creeper.core.services.jpa.CreeperJpaModule;
 import lichen.creeper.core.services.jpa.CreeperJpaValueEncoderSourceModule;
 import lichen.creeper.core.services.shiro.CreeperShiroModule;
 import lichen.creeper.user.UserModule;
-import lichen.core.services.Option;
 import org.apache.commons.io.FileUtils;
 import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.func.Worker;
@@ -65,7 +69,7 @@ public class CreeperCoreModule {
                     try {
                         H2ConsoleRunner.run(dataSource.getConnection());
                     } catch (SQLException e) {
-                        throw CreeperException.wrap(e);
+                        throw LichenException.wrap(e);
                     }
                 }
             }).start();
@@ -101,9 +105,9 @@ public class CreeperCoreModule {
             FileInputStream content = FileUtils.openInputStream(new File(filePath));
             return XmlLoader.parseXML(CreeperCoreConfig.class,content, Option.some(CreeperCoreModule.class.getResourceAsStream("/lichen/creeper/core/config/CreeperCoreConfig.xsd")));
         } catch (IOException e) {
-            CreeperException ce = CreeperException.wrap(e, CreeperCoreExceptionCode.FAIL_READ_CONFIG_FILE);
-            ce.set("file",filePath);
-            throw ce;
+            LichenException le = LichenException.wrap(e, CreeperCoreExceptionCode.FAIL_READ_CONFIG_FILE);
+            le.set("file",filePath);
+            throw le;
         }
     }
     public RequestExceptionHandler decorateRequestExceptionHandler(
@@ -117,18 +121,18 @@ public class CreeperCoreModule {
     {
         return new RequestExceptionHandler()
         {
-            private CreeperException findCreeperException(Throwable exception){
-                if(exception ==null || exception instanceof CreeperException)
-                    return (CreeperException) exception;
-                return findCreeperException(exception.getCause());
+            private LichenException findLichenException(Throwable exception){
+                if(exception ==null || exception instanceof LichenException)
+                    return (LichenException) exception;
+                return findLichenException(exception.getCause());
             }
             public void handleRequestException(Throwable exception) throws IOException
             {
-                CreeperException creeperException = findCreeperException(exception);
-                if(creeperException != null){
-                    logger.error(creeperException.getMessage(), creeperException);
+                LichenException LichenException = findLichenException(exception);
+                if(LichenException != null){
+                    logger.error(LichenException.getMessage(), LichenException);
                     ExceptionReporter exceptionPage = (ExceptionReporter) componentSource.getPage("ExceptionPage");
-                    exceptionPage.reportException(creeperException);
+                    exceptionPage.reportException(LichenException);
 
                     renderer.renderPageMarkupResponse("ExceptionPage");
                 }else{

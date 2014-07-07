@@ -1,16 +1,6 @@
 package lichen.creeper.core.internal.jpa;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-
-import javax.persistence.EntityManager;
-import javax.persistence.metamodel.EntityType;
-import javax.persistence.metamodel.SingularAttribute;
-
+import lichen.core.services.LichenException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.tapestry5.ValueEncoder;
@@ -20,7 +10,10 @@ import org.apache.tapestry5.ioc.services.TypeCoercer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import lichen.creeper.core.services.CreeperException;
+import javax.persistence.EntityManager;
+import javax.persistence.metamodel.EntityType;
+import javax.persistence.metamodel.SingularAttribute;
+import java.io.*;
 
 /**
  * hibernate映射实体ValueEncoder
@@ -90,7 +83,7 @@ public class JpaEntityValueEncoder<T> implements ValueEncoder<T> {
 				objectOutputStream.writeObject(value);
 	        	serStr.append(Base64.encodeBase64URLSafeString(byteArrayOutputStream.toByteArray()));
 			} catch (IOException e) {
-				throw CreeperException.wrap(e);
+				throw LichenException.wrap(e);
 			} finally {
                 IOUtils.closeQuietly(objectOutputStream);
                 IOUtils.closeQuietly(byteArrayOutputStream);
@@ -122,9 +115,9 @@ public class JpaEntityValueEncoder<T> implements ValueEncoder<T> {
 				objectInputStream = new ObjectInputStream(byteArrayInputStream);
 				return (T) objectInputStream.readObject(); 
 			} catch (IOException e) {
-				throw CreeperException.wrap(e);
+				throw LichenException.wrap(e);
 			} catch (ClassNotFoundException e) {
-				throw CreeperException.wrap(e);
+				throw LichenException.wrap(e);
 			} finally {
                 IOUtils.closeQuietly(objectInputStream);
                 IOUtils.closeQuietly(byteArrayInputStream);

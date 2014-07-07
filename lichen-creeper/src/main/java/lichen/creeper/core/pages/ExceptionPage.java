@@ -1,9 +1,9 @@
 package lichen.creeper.core.pages;
 
+import lichen.core.services.LichenException;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.services.ExceptionReporter;
 
-import lichen.creeper.core.services.CreeperException;
 
 /**
  * 错误异常页面类
@@ -12,10 +12,10 @@ import lichen.creeper.core.services.CreeperException;
 public class ExceptionPage implements ExceptionReporter {
     @SuppressWarnings("unused")
 	@Property
-    private CreeperException exception;
+    private LichenException exception;
 
     @Override
     public void reportException(Throwable exception) {
-        this.exception = (CreeperException) exception;
+        this.exception = (LichenException) exception;
     }
 }

@@ -14,8 +14,9 @@
 package lichen.creeper.core.services;
 
 
-import lichen.creeper.core.CreeperCoreConstants;
+import lichen.core.services.LichenException;
 import lichen.core.services.Option;
+import lichen.creeper.core.CreeperCoreConstants;
 import org.apache.commons.io.IOUtils;
 
 import javax.xml.XMLConstants;
@@ -54,7 +55,7 @@ public final class XmlLoader {
             }
             return clazz.cast(unmarshaller.unmarshal(reader));
         } catch (Throwable e) {
-            throw CreeperException.wrap(e);
+            throw LichenException.wrap(e);
         } finally {
             close(is);
             if (xsd.isDefined()) {
@@ -66,7 +67,7 @@ public final class XmlLoader {
                     ValidationEvent ve = ves[0];
                     ValidationEventLocator vel = ve.getLocator();
 
-                    throw new CreeperException(
+                    throw new LichenException(
                             String.format("line %s column %s :%s",
                             vel.getLineNumber(), vel.getColumnNumber(), ve.getMessage()),CreeperCoreExceptionCode.FAIL_PARSE_XML);
                 }
