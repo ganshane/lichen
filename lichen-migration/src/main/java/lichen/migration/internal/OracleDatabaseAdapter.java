@@ -67,6 +67,8 @@ class OracleDatabaseAdapter extends DatabaseAdapter {
                 return new OracleVarcharColumnDefinition();
             case TimestampType:
                 return new OracleDateColumnDefinition();
+            case VarbinaryType:
+                return new OracleVarbinaryColumnDefinition();
             default:
                 break;
         }
@@ -122,7 +124,16 @@ class OracleDatabaseAdapter extends DatabaseAdapter {
         return sql.toString();
 	}
 }
-
+class OracleVarbinaryColumnDefinition
+        extends DefaultVarbinaryColumnDefinition{
+    protected String sql() {
+        if(getLimitValue() == null){
+            String message = "In Oracle, a RAW column must always specify its size.";
+            throw new IllegalArgumentException(message);
+        }
+        return optionallyAddLimitToDataType("RAW");
+    }
+}
 @ColumnSupportsDefault
 class OracleDateColumnDefinition
         extends ColumnDefinition {
