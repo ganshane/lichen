@@ -22,11 +22,11 @@ public class Migrate_20140620113412_CreateNodeTable implements Migration{
         _helper.createTable("nodes",new TableCallback() {
             @Override
             public void doInTable(TableDefinition t) throws Throwable {
-                t.varchar("id",_options.PrimaryKey(),_options.Limit(32));
+                t.varbinary("id",_options.PrimaryKey(),_options.Limit(16));
                 t.varchar("type",_options.NotNull(),_options.Limit(32));
                 t.varchar("title",_options.NotNull(),_options.Limit(128));
                 t.varchar("last_revision_id",_options.Limit(32));
-                t.varchar("user_id",_options.NotNull(),_options.Limit(32));
+                t.varbinary("user_id",_options.NotNull(),_options.Limit(16));
                 t.integer("created",_options.NotNull());
                 t.integer("changed",_options.NotNull());
                 t.integer("comment",_options.NotNull(),_options.Default("0"));
@@ -47,12 +47,12 @@ public class Migrate_20140620113412_CreateNodeTable implements Migration{
         _helper.createTable("node_revisions",new TableCallback() {
             @Override
             public void doInTable(TableDefinition t) throws Throwable {
-                t.varchar("id",_options.PrimaryKey(),_options.Limit(32));
+                t.varbinary("id",_options.PrimaryKey(),_options.Limit(16));
                 t.varchar("title", _options.NotNull(), _options.Limit(128));
                 t.clob("body",_options.NotNull());
                 t.varchar("log",_options.Limit(255));
-                t.varchar("node_id",_options.Limit(32));
-                t.varchar("user_id",_options.NotNull(),_options.Limit(32));
+                t.varbinary("node_id",_options.Limit(16));
+                t.varbinary("user_id",_options.NotNull(),_options.Limit(16));
                 t.integer("created",_options.NotNull());
             }
         });
