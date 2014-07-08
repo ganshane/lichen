@@ -30,6 +30,7 @@
     <module>lichen-server</module>
     <module>lichen-creeper</module>
     <module>lichen-node</module>
+    <module>lichen-struts</module>
   </modules>
   <scm>
     <url>https://dev.egfit.com/projects/lichen/repository</url>
