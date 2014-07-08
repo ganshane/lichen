@@ -41,7 +41,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.struts</groupId>
-      <artifactId>struts2-plugins</artifactId>
+      <artifactId>struts2-core</artifactId>
       <version>2.3.16.3</version>
       <scope>provided</scope>
     </dependency>
