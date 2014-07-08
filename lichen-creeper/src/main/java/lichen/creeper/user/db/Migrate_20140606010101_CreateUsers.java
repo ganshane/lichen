@@ -30,7 +30,7 @@ public class Migrate_20140606010101_CreateUsers implements Migration {
                 t.varchar("mail", _options.Limit(64));
                 t.clob("data");
                 t.integer("created");
-                t.integer("access");
+                t.integer("last_access");
                 t.integer("login");
                 t.smallint("status", _options.NotNull(), _options.Default("0"));
             }
