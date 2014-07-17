@@ -4,6 +4,9 @@ import java.util.List;
 
 import lichen.creeper.user.entities.Role;
 import lichen.creeper.user.entities.User;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -59,4 +62,12 @@ public interface UserService {
      * @return
      */
 	public List<User> findAll(User user);
+	
+	/**
+	 * 分页查询
+	 * @param user
+	 * @param pageable
+	 * @return
+	 */
+	public Page<User> findAll(User user,Pageable pageable);
 }

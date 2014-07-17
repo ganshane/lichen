@@ -20,6 +20,7 @@
 	  <button type="reset" class="btn btn-default">重置</button>
 	</div>
 </creeperform>
+<t:pagination page="users" t:context="userParams"/>
 <table width="100%" border="1" cellspacing="0" cellpadding="0" class="table">
   <tr>
     <th>id</th>

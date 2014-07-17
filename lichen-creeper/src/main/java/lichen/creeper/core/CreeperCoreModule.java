@@ -32,6 +32,7 @@ import org.apache.tapestry5.ioc.services.CoercionTuple;
 import org.apache.tapestry5.ioc.services.TypeCoercer;
 import org.apache.tapestry5.services.*;
 import org.slf4j.Logger;
+import org.springframework.data.domain.Page;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -165,5 +166,10 @@ public class CreeperCoreModule {
                 return UUID.fromString(input);
             }
         }));
+        configuration.add(CoercionTuple.create(Page.class, Iterable.class, new Coercion<Page,Iterable>(){
+			@Override
+			public Iterable coerce(Page input) {
+				return input.getContent();
+			}}));
     }
 }

@@ -13,6 +13,8 @@ import javax.persistence.criteria.Root;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.subject.Subject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.mysema.query.types.ExpressionUtils;
@@ -20,6 +22,7 @@ import com.mysema.query.types.ExpressionUtils;
 import lichen.creeper.user.dao.RoleDao;
 import lichen.creeper.user.dao.UserDao;
 import lichen.creeper.user.entities.QRole;
+import lichen.creeper.user.entities.QUser;
 import lichen.creeper.user.entities.Role;
 import lichen.creeper.user.entities.User;
 import lichen.creeper.user.services.UserSavedListener;
@@ -92,10 +95,24 @@ public class UserServiceImpl implements UserService{
 		}
 		return null;
 	}
-
+	
+	@Override
+	public Page<User> findAll(User user,Pageable pageable){
+		if(null != user){
+			QUser u = QUser.user;
+			Collection<com.mysema.query.types.Predicate> list = new ArrayList<com.mysema.query.types.Predicate>();
+			if(null != user.getName()){list.add(u.name.eq(user.getName()));}
+			if(null != user.getMail()){list.add(u.mail.eq(user.getMail()));}
+			
+			Page<User> result = _userDao.findAll(ExpressionUtils.allOf(list), pageable);
+			return result;
+		}
+		return null;
+	}
+	
 	@Override
 	public List<User> findAll(final User user) {
-		if(null != user){
+		if(null != user)
 			return _userDao.findAll(new Specification<User>() {
 				@Override
 				public Predicate toPredicate(Root<User> root,
@@ -108,7 +125,6 @@ public class UserServiceImpl implements UserService{
 					return cb.and(list.toArray(p));
 				}
 	        });
-		}
 		return null;
 	}
 
