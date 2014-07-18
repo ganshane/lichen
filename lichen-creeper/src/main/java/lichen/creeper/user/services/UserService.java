@@ -56,18 +56,19 @@ public interface UserService {
      */
     public Iterable<Role> findAllRole(Role role);
     
-    /**
-     * 根据user里封装的参数，参数符合条件的所有记录。
-     * @param user
-     * @return
-     */
-	public List<User> findAll(User user);
-	
 	/**
-	 * 分页查询
+	 * 分页查询用户信息
 	 * @param user
 	 * @param pageable
 	 * @return
 	 */
 	public Page<User> findAll(User user,Pageable pageable);
+	
+	/**
+	 * 分页查询角色信息
+	 * @param roleParams
+	 * @param pageable
+	 * @return
+	 */
+	public Page<Role> findAll(Role roleParams, Pageable pageable);
 }

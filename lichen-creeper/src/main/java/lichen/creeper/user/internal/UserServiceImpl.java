@@ -2,22 +2,8 @@ package lichen.creeper.user.internal;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.inject.Inject;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authc.credential.PasswordService;
-import org.apache.shiro.subject.Subject;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-
-import com.mysema.query.types.ExpressionUtils;
 
 import lichen.creeper.user.dao.RoleDao;
 import lichen.creeper.user.dao.UserDao;
@@ -27,6 +13,14 @@ import lichen.creeper.user.entities.Role;
 import lichen.creeper.user.entities.User;
 import lichen.creeper.user.services.UserSavedListener;
 import lichen.creeper.user.services.UserService;
+
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authc.credential.PasswordService;
+import org.apache.shiro.subject.Subject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import com.mysema.query.types.ExpressionUtils;
 
 /**
  * 用户注册的实现类
@@ -111,26 +105,20 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	@Override
-	public List<User> findAll(final User user) {
-		if(null != user)
-			return _userDao.findAll(new Specification<User>() {
-				@Override
-				public Predicate toPredicate(Root<User> root,
-						CriteriaQuery<?> query, CriteriaBuilder cb) {
-					List<Predicate> list = new ArrayList<Predicate>();
-					if(null != user.getId()){list.add(cb.equal(root.get("id"),user.getId()));}
-					if(null != user.getName()){list.add(cb.equal(root.get("name"),user.getName()));}
-					if(null != user.getPass()){list.add(cb.equal(root.get("pass"),user.getPass()));}
-					Predicate[] p = new Predicate[list.size()];   
-					return cb.and(list.toArray(p));
-				}
-	        });
-		return null;
-	}
-
-	@Override
 	public void saveOrUpdate(User user) {
 		_userDao.save(user);
         userSavedListener.afterSaved(user);
+	}
+
+	@Override
+	public Page<Role> findAll(Role role, Pageable pageable) {
+		if(null != role){
+			QRole r = QRole.role;
+			Collection<com.mysema.query.types.Predicate> list = new ArrayList<com.mysema.query.types.Predicate>();
+			if(null != role.getId()){list.add(r.id.eq(role.getId()));}
+			if(null != role.getName()){list.add(r.name.eq(role.getName()));}
+			return _roleDao.findAll(ExpressionUtils.allOf(list),pageable);
+		}
+		return null;
 	}
 }

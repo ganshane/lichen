@@ -13,7 +13,7 @@
 	</div>
 </creeperform>
 
-
+<t:pagination page="roles" t:context="roleParams"/>
 <table width="100%" border="1" cellspacing="0" cellpadding="0" class="table">
   <tr>
     <th>id</th>
@@ -26,7 +26,7 @@
     <td>
     	<a t:type="pagelink" t:page="user/admin/Authorize" t:context="role" >授权</a>&nbsp;
     	&nbsp;
-    	<a t:type="eventlink" t:id="del" t:event="del" t:context="[role,roleParams]">删除</a>
+    	<t:deleteentitylink entity="role">删除</t:deleteentitylink>
     </td>
   </tr>
 </table>

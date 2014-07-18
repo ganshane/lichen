@@ -34,7 +34,7 @@ public class Pagination<T> {
 	//当前选中页码
 	private int selectedPage;
 	
-	private int pageSize = 3;
+	private int pageSize = 1;
 	
 	@Inject
     private ComponentResources resources;
@@ -50,42 +50,64 @@ public class Pagination<T> {
 	}
 	
 	private void writeLi(MarkupWriter writer){
+		//当前显示页
+		int curPage = page.getNumber()+1;
+		//总页数
+		int pageCount = page.getTotalPages();
+		//页码开始页
+		int begin = curPage <= 5 ? 1 : curPage-5;
+		//页码结束页
+		int end = begin+9 > pageCount ? pageCount : begin+9;
 		//上一页
-		if(0 != page.getNumber()){
+		int prepage = curPage - 1;
+		//下一页
+		int nextpage = curPage + 1;
+		
+		//上一页逻辑
+		if(curPage!=1){
 			writer.element("li");
+			Object[] precontext = context == null
+	        ? new Object[] { prepage }
+	        : updateArray(context,prepage);
+			writeLink(writer,precontext,"<<");
 		}else{
 			writer.element("li","class","disabled");
+			writeLink(writer,null,"<<");
 		}
-		writer.element("a");
-		writer.write("<<");
 		writer.end();
-		writer.end();
-		//页码
-		for(int i=0;i<page.getTotalPages();i++){
-			if(i==page.getNumber()){
+		//页码逻辑
+		for(int i=begin;i<=end;i++){
+			if(i==curPage){
 				writer.element("li","class","active");
 			}else{
 				writer.element("li");
 			}
 			Object[] newcontext = context == null
-            ? new Object[] { i+1 }
-            : updateArray(context,i+1);
-			Link link = resources.createEventLink("pageaction", newcontext);
-			writer.element("a",
-                    "href", link );
-			writer.write(String.valueOf(i+1));
-			writer.end();
+            ? new Object[] { i }
+            : updateArray(context,i);
+            writeLink(writer,newcontext,String.valueOf(i));
 			writer.end();
 		}
-		//下一页
-		if(page.getTotalPages() != page.getNumber()+1){
+		//下一页逻辑
+		if(curPage != pageCount){
 			writer.element("li");
+			Object[] nextcontext = context == null
+	        ? new Object[] { nextpage }
+	        : updateArray(context,nextpage);
+			writeLink(writer,nextcontext,">>");
 		}else{
 			writer.element("li","class","disabled");
+			writeLink(writer,null,">>");
 		}
-		writer.element("a");
-		writer.write(">>");
 		writer.end();
+	}
+	
+	private void writeLink(MarkupWriter writer,Object[] context, String text){
+		Link link = resources.createEventLink("pageaction", context);
+		//如果context参数为空，就禁用a链接，由于没有disabled属性，把href设置为#即可。
+		writer.element("a",
+				"href", null != context ? link : "#" );
+		writer.write(text);
 		writer.end();
 	}
 	
