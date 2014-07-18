@@ -6,6 +6,7 @@ import lichen.creeper.core.annotations.CreeperCore;
 import lichen.creeper.core.config.CreeperCoreConfig;
 import lichen.creeper.core.internal.CreeperModuleManagerImpl;
 import lichen.creeper.core.internal.H2ConsoleRunner;
+import lichen.creeper.core.internal.InitializeObjectWorker;
 import lichen.creeper.core.internal.MenuSourceImpl;
 import lichen.creeper.core.internal.jpa.OpenEntityManagerInViewFilter;
 import lichen.creeper.core.internal.override.CreeperOverrideModule;
@@ -31,6 +32,7 @@ import org.apache.tapestry5.ioc.services.Coercion;
 import org.apache.tapestry5.ioc.services.CoercionTuple;
 import org.apache.tapestry5.ioc.services.TypeCoercer;
 import org.apache.tapestry5.services.*;
+import org.apache.tapestry5.services.transform.ComponentClassTransformWorker2;
 import org.slf4j.Logger;
 import org.springframework.data.domain.Page;
 
@@ -171,5 +173,10 @@ public class CreeperCoreModule {
 			public Iterable coerce(Page input) {
 				return input.getContent();
 			}}));
+    }
+    
+    @Contribute(ComponentClassTransformWorker2.class)
+    public static void provideComponentClassTransformWorkers(OrderedConfiguration<ComponentClassTransformWorker2> configuration){
+    	configuration.addInstance("InitializeObject", InitializeObjectWorker.class);
     }
 }
