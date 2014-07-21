@@ -3,12 +3,10 @@ package lichen.creeper.user.internal;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import javax.inject.Inject;
-
+import lichen.creeper.core.services.CreeperObjectExample;
 import lichen.creeper.user.dao.RoleDao;
 import lichen.creeper.user.dao.UserDao;
 import lichen.creeper.user.entities.QRole;
-import lichen.creeper.user.entities.QUser;
 import lichen.creeper.user.entities.Role;
 import lichen.creeper.user.entities.User;
 import lichen.creeper.user.services.UserSavedListener;
@@ -17,8 +15,10 @@ import lichen.creeper.user.services.UserService;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.subject.Subject;
+import org.apache.tapestry5.ioc.annotations.Inject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import com.mysema.query.types.ExpressionUtils;
 
@@ -41,6 +41,9 @@ public class UserServiceImpl implements UserService{
     private Subject _subject;
     @Inject
     private UserSavedListener userSavedListener;
+    @Inject
+    private CreeperObjectExample creeperObjectExample;
+    
     @Override
     public void register(User user) {
         //加密密码
@@ -93,13 +96,8 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public Page<User> findAll(User user,Pageable pageable){
 		if(null != user){
-			QUser u = QUser.user;
-			Collection<com.mysema.query.types.Predicate> list = new ArrayList<com.mysema.query.types.Predicate>();
-			if(null != user.getName()){list.add(u.name.eq(user.getName()));}
-			if(null != user.getMail()){list.add(u.mail.eq(user.getMail()));}
-			
-			Page<User> result = _userDao.findAll(ExpressionUtils.allOf(list), pageable);
-			return result;
+			Specification<User> spec = creeperObjectExample.createExample(user);
+			return _userDao.findAll(spec, pageable);
 		}
 		return null;
 	}

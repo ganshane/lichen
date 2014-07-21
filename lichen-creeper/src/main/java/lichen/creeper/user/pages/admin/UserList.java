@@ -1,7 +1,9 @@
 package lichen.creeper.user.pages.admin;
 
+import lichen.creeper.core.annotations.Initialize;
 import lichen.creeper.core.components.Pagination;
 import lichen.creeper.user.entities.User;
+import lichen.creeper.user.pages.BasePage;
 import lichen.creeper.user.services.UserService;
 
 import org.apache.tapestry5.annotations.BeginRender;
@@ -12,13 +14,14 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public class UserList{
+public class UserList extends BasePage{
 	
 	@SuppressWarnings("unused")
 	@Property
 	private User user;
 	
 	@Property
+	@Initialize
 	private User userParams;
 	
 	@Inject

@@ -89,7 +89,7 @@ public class Pagination<T> {
 			writer.end();
 		}
 		//下一页逻辑
-		if(curPage != pageCount){
+		if(curPage != pageCount && pageCount>1){
 			writer.element("li");
 			Object[] nextcontext = context == null
 	        ? new Object[] { nextpage }
