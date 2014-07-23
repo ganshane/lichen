@@ -1,6 +1,10 @@
 package lichen.creeper.core.internal;
 
+import static com.google.common.base.Throwables.propagate;
+
 import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +14,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.metamodel.Attribute;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.SingularAttribute;
 
@@ -46,6 +51,7 @@ public class CreeperObjectExampleImpl implements CreeperObjectExample {
 						Set<?> attributes = entity.getDeclaredSingularAttributes();
 						for(Object att : attributes){
 							SingularAttribute<?, ?> attr = (SingularAttribute<?, ?>) att;
+							Member mm = attr.getJavaMember();
 				            Field field = null;
 							try {
 								field = exampleEntity.getClass().getDeclaredField(attr.getName());
@@ -74,6 +80,18 @@ public class CreeperObjectExampleImpl implements CreeperObjectExample {
 				return null;
 			}};
 	}
+	
+	public static <T> Object getValue(T example, Attribute<? super T, ?> attr) {
+        try {
+            if (attr.getJavaMember() instanceof Method) {
+                return ((Method) attr.getJavaMember()).invoke(example);
+            } else {
+                return ((Field) attr.getJavaMember()).get(example);
+            }
+        } catch (Exception e) {
+            throw propagate(e);
+        }
+    }
 
 
 }

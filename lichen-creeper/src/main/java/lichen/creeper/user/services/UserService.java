@@ -1,7 +1,5 @@
 package lichen.creeper.user.services;
 
-import java.util.List;
-
 import lichen.creeper.user.entities.Role;
 import lichen.creeper.user.entities.User;
 
