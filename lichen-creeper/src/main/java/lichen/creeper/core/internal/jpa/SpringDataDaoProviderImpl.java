@@ -55,9 +55,10 @@ public class SpringDataDaoProviderImpl implements SpringDataDaoProvider {
                     logger.debug("dao object:{}",className);
                     Class<?> clazz = contextClassLoader.loadClass(className);
                     objects.put(clazz,createDaoObject(clazz));
-                } catch (ClassNotFoundException e) {
+                } catch (Throwable e) {
+                	logger.error("create dao object error !!! : {}", className, e);
                     throw LichenException.wrap(e);
-                }
+                } 
             }
         }
     }
