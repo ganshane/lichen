@@ -20,7 +20,7 @@ public class Layout {
     @SuppressWarnings("unused")
 	@Property
     @Parameter(defaultPrefix = BindingConstants.LITERAL)
-    private String title;
+    private String title = "Creeper应用程序框架";
     @Inject
     private MenuSource menuSource;
     @SuppressWarnings("unused")

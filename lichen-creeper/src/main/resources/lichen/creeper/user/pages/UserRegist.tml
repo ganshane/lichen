@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">     
 <html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"> 
-<t:layout>
+<t:layout title="云搜索智能检索平台">
 <creeperform t:type="creeperform" t:id="registUserForm" title="用户注册" >
 	<div class="input-group">
 	  <div class="input-group-addon" style="width:100px;" >用户名：</div>
