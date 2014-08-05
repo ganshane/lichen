@@ -1,16 +1,25 @@
 package lichen.creeper.core.components;
 
+import java.util.List;
+
+import javax.inject.Inject;
+
 import lichen.creeper.core.models.CreeperMenu;
 import lichen.creeper.core.services.MenuSource;
+import lichen.creeper.user.services.UserService;
+
 import org.apache.shiro.subject.Subject;
 import org.apache.tapestry5.Asset;
 import org.apache.tapestry5.BindingConstants;
-import org.apache.tapestry5.annotations.*;
+import org.apache.tapestry5.annotations.Cached;
+import org.apache.tapestry5.annotations.Environmental;
+import org.apache.tapestry5.annotations.Import;
+import org.apache.tapestry5.annotations.OnEvent;
+import org.apache.tapestry5.annotations.Parameter;
+import org.apache.tapestry5.annotations.Path;
+import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.springframework.util.StringUtils;
-
-import javax.inject.Inject;
-import java.util.List;
 
 @Import(stylesheet = {
         "classpath:lichen/creeper/core/assets/bootstrap/css/bootstrap3.1.1.min.css",
@@ -39,8 +48,12 @@ public class Layout {
 	@Property
     @Inject @Path("classpath:lichen/creeper/core/assets/respond.min.js")
     private Asset respond;
+    
+    @org.apache.tapestry5.ioc.annotations.Inject
+    private UserService userService;
 
     @Cached
+    
     public String getMenu(){
         CreeperMenu menu = menuSource.buildCreeperMenu();
         StringBuilder sb = new StringBuilder(100);
@@ -73,4 +86,9 @@ public class Layout {
             	sb.append("</li>");
         }
     }
+    
+	@OnEvent(value="logout")
+	public void logout(){
+		userService.logout();
+	}
 }

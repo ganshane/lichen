@@ -4,6 +4,8 @@ import java.util.*;
 
 import javax.inject.Inject;
 
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Property;
@@ -20,6 +22,8 @@ import lichen.creeper.user.services.UserService;
  * @author shen
  *
  */
+@RequiresUser
+@RequiresRoles(value = { "aaa" })
 public class UserManager {
 	
 	@Property

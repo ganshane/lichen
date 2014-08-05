@@ -73,7 +73,8 @@ public class UserServiceImpl implements UserService{
     @Override
     public void logout() {
         //TODO 保存用户相关信息
-        _subject.logout();
+    	if(null != _subject.getPrincipal())
+    		_subject.logout();
     }
 
 	@Override

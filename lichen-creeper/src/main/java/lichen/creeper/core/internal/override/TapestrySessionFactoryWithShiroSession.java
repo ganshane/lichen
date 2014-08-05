@@ -57,6 +57,8 @@ public class TapestrySessionFactoryWithShiroSession implements TapestrySessionFa
         @Override
         public List<String> getAttributeNames(String prefix) {
             List<String> result = CollectionFactory.newList();
+            if(_shiroSession == null)
+            	return result;
 
             Iterator<Object> e = _shiroSession.getAttributeKeys().iterator();
             while (e.hasNext())

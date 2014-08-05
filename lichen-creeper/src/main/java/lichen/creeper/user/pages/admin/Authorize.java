@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.apache.tapestry5.EventConstants;
 import org.apache.tapestry5.annotations.Cached;
 import org.apache.tapestry5.annotations.OnEvent;
@@ -26,6 +27,7 @@ import lichen.creeper.user.services.UserService;
  * @author shen
  *
  */
+@RequiresUser
 public class Authorize {
 	
 	@Property

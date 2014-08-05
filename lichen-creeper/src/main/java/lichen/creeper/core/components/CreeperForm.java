@@ -18,7 +18,7 @@ public class CreeperForm {
 	@Parameter(required=true, defaultPrefix = BindingConstants.LITERAL)
 	private String title;
 	
-	@Component(id="creeperForm")    
+	@Component(id="creeperForm")
 	private Form form;
 	
 	public Form getInnerForm(){

@@ -15,6 +15,7 @@ import org.apache.tapestry5.services.transform.TransformationSupport;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.util.List;
 
 /**
  * @author jcai
@@ -65,6 +66,13 @@ abstract class AbstractShiroAnnotationWorker implements ComponentClassTransformW
 
     @Override
     public void transform(PlasticClass plasticClass, TransformationSupport support, MutableComponentModel model) {
+    	if(plasticClass.hasAnnotation(getAnnotationClass()) && plasticClass.getClassName().contains("pages")){
+    		List<PlasticMethod> methods = plasticClass.getMethods();
+    		for(PlasticMethod method : methods){
+    			method.addAdvice(advice);
+    		}
+    	}
+    		
         for (PlasticMethod method : plasticClass.getMethodsWithAnnotation(getAnnotationClass()))
         {
             method.addAdvice(advice);

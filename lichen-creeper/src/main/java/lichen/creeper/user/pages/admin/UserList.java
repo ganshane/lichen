@@ -6,6 +6,7 @@ import lichen.creeper.user.entities.User;
 import lichen.creeper.user.pages.BasePage;
 import lichen.creeper.user.services.UserService;
 
+import org.apache.shiro.authz.annotation.RequiresUser;
 import org.apache.tapestry5.annotations.BeginRender;
 import org.apache.tapestry5.annotations.Cached;
 import org.apache.tapestry5.annotations.InjectComponent;
@@ -14,6 +15,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+@RequiresUser
 public class UserList extends BasePage{
 	
 	@SuppressWarnings("unused")

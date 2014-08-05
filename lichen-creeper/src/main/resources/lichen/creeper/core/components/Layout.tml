@@ -12,6 +12,7 @@
 <div class="page-header">
     <h1>${title}</h1>
   <div>${subject.principal}</div>
+  <t:eventlink t:event="logout" >logout</t:eventlink>
 </div>
 <div class="container" style="margin-left: 0px;">
   <div class="row">
