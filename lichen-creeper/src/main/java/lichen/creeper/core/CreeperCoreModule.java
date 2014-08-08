@@ -152,7 +152,7 @@ public class CreeperCoreModule {
     }
     @Contribute(MenuSource.class)
     public static void provideMenu(Configuration<CreeperMenu> configuration){
-        configuration.add(new CreeperMenu("admin", "管理", "/admin", 1, CreeperMenu.MENU_VIRTUAL));
+        configuration.add(CreeperMenu.createCreeperMenu("admin", "/admin").title("管理").order(1).type(CreeperMenu.MENU_VIRTUAL).authentication(true));
     }
     @Contribute(TypeCoercer.class)
     public static void provideTypeCoercer(Configuration<CoercionTuple> configuration){

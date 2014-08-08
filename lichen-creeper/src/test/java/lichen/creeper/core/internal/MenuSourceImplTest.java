@@ -16,11 +16,11 @@ public class MenuSourceImplTest {
     @Test
     public void testBuildTree(){
         List<CreeperMenu> coll= new ArrayList<CreeperMenu>();
-        coll.add(new CreeperMenu("a.b.c","/a/b/c",1));
-        coll.add(new CreeperMenu("c.b.d","/c/b/d",2));
-        coll.add(new CreeperMenu("c.b.e","/c/b/e",8));
-        coll.add(new CreeperMenu("a.b","/a/b",3));
-        coll.add(new CreeperMenu("d.b.c","/d/b/c",1));
+//        coll.add(new CreeperMenu("a.b.c","/a/b/c",1));
+//        coll.add(new CreeperMenu("c.b.d","/c/b/d",2));
+//        coll.add(new CreeperMenu("c.b.e","/c/b/e",8));
+//        coll.add(new CreeperMenu("a.b","/a/b",3));
+//        coll.add(new CreeperMenu("d.b.c","/d/b/c",1));
 
 
         MenuSourceImpl menuSource = new MenuSourceImpl(coll,null);

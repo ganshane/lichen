@@ -4,6 +4,9 @@ import lichen.core.services.LichenException;
 import lichen.creeper.core.models.CreeperMenu;
 import lichen.creeper.core.services.CreeperCoreExceptionCode;
 import lichen.creeper.core.services.MenuSource;
+
+import org.apache.shiro.subject.Subject;
+import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.PageRenderLinkSource;
 
 import java.util.*;
@@ -19,7 +22,25 @@ public class MenuSourceImpl implements MenuSource {
         _coll = Collections.unmodifiableCollection(coll);
         _pageRenderLinkSource = pageRenderLinkSource;
     }
-
+    
+    @Inject
+    private Subject _subject;
+    
+    /**
+     * 检查权限
+     * @param menu
+     * @return true,有权限，false，无权限
+     */
+    private boolean checkPermissons(CreeperMenu menu){
+    	//权限验证
+    	if(null != menu.getPermissions() && !_subject.isPermittedAll(menu.getPermissions()))
+    		return false;
+    	//登录权限
+    	if(menu.isAuthentication() && !_subject.isAuthenticated())
+    		return false;
+		return true;
+    }
+    
     @Override
     public CreeperMenu buildCreeperMenu() {
         //进行排序
@@ -33,28 +54,30 @@ public class MenuSourceImpl implements MenuSource {
 
         Iterator<CreeperMenu> it = _coll.iterator();
         while (it.hasNext()) {
-            CreeperMenuWrapper menu = new CreeperMenuWrapper(it.next().copy());
-            String url = menu.getUrl();
-            if (url == null && menu.getPageClass() == null) {
-                throw new LichenException("url和pageClass不能都为空,"+menu, CreeperCoreExceptionCode.URL_AND_PAGE_CLASS_IS_NULL);
-            }
-            if (url == null && menu.getPageClass() != null) {
-                url = _pageRenderLinkSource.createPageRenderLink(menu.getPageClass()).toRedirectURI();
-                menu.setUrl(url);
-            }
-            String[] parents = findParents(url);
-            //构建父类菜单
-            CreeperMenuWrapper parentMenu = getOrFillParentMenu(root, parents, 0);
-            
-            //如果已经存在临时的节点菜单，则需要拷贝子节点信息，避免子节点信息丢失
-            CreeperMenuWrapper tmpWrapper = parentMenu.children.get(url);
-            if(tmpWrapper != null)
-            	menu.children = tmpWrapper.children;
-            
-            parentMenu.children.put(url, menu);
+        	CreeperMenu cmenu = it.next();
+        	//检查权限
+        	if(checkPermissons(cmenu)){
+        		CreeperMenuWrapper menu = new CreeperMenuWrapper(cmenu.copy());
+                String url = menu.getUrl();
+                if (url == null && menu.getPageClass() == null) {
+                    throw new LichenException("url和pageClass不能都为空,"+menu, CreeperCoreExceptionCode.URL_AND_PAGE_CLASS_IS_NULL);
+                }
+                if (url == null && menu.getPageClass() != null) {
+                    url = _pageRenderLinkSource.createPageRenderLink(menu.getPageClass()).toRedirectURI();
+                    menu.setUrl(url);
+                }
+                String[] parents = findParents(url);
+                //构建父类菜单
+                CreeperMenuWrapper parentMenu = getOrFillParentMenu(root, parents, 0);
+                
+                //如果已经存在临时的节点菜单，则需要拷贝子节点信息，避免子节点信息丢失
+                CreeperMenuWrapper tmpWrapper = parentMenu.children.get(url);
+                if(tmpWrapper != null)
+                	menu.children = tmpWrapper.children;
+                
+                parentMenu.children.put(url, menu);
+        	}
         }
-
-
         return root.build();
     }
     private CreeperMenuWrapper getOrFillParentMenu(CreeperMenuWrapper menu,String[] parents,int seq){

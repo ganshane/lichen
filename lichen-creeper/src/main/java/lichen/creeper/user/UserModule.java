@@ -34,14 +34,13 @@ public class UserModule {
 	
 	@Contribute(MenuSource.class)
     public static void provideMenu(Configuration<CreeperMenu> configuration,PageRenderLinkSource pageRenderLinkSource){
-		configuration.add(new CreeperMenu("user","用户","/user",1, CreeperMenu.MENU_VIRTUAL));
-		configuration.add(new CreeperMenu("user.regist","注册",UserRegist.class,1));
-		configuration.add(new CreeperMenu("user.login","登录",UserLogin.class,2));
-		
-//		configuration.add(new CreeperMenu("user.role","用户管理","/admin/role",1, CreeperMenu.MENU_VIRTUAL));
-		configuration.add(new CreeperMenu("user.list","查询用户",UserList.class,1));
-		configuration.add(new CreeperMenu("user.role.form","添加角色",RoleForm.class,2)); //  /admin/user/roleform
-		configuration.add(new CreeperMenu("user.role.list","查询角色",RoleList.class,3));
+		configuration.add(CreeperMenu.createCreeperMenu("user", "/user").title("用户").order(1).type(CreeperMenu.MENU_VIRTUAL));
+		configuration.add(CreeperMenu.createCreeperMenu("user.regist", UserRegist.class).title("注册").order(1));
+		configuration.add(CreeperMenu.createCreeperMenu("user.login", UserLogin.class).title("登录").order(2));
+		configuration.add(CreeperMenu.createCreeperMenu("user.role", "/admin/role").title("用户管理").order(1).type(CreeperMenu.MENU_VIRTUAL).authentication(true));
+		configuration.add(CreeperMenu.createCreeperMenu("user.list", UserList.class).title("查询用户").order(1).authentication(true));
+		configuration.add(CreeperMenu.createCreeperMenu("user.role.form", RoleForm.class).title("添加角色").order(2).authentication(true));
+		configuration.add(CreeperMenu.createCreeperMenu("user.role.list", RoleList.class).title("查询角色").order(3).authentication(true));
     }
 
     @Contribute(value = CreeperModuleManager.class)

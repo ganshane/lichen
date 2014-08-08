@@ -1,6 +1,7 @@
 package lichen.creeper.core.models;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * lichen.creeper menu
@@ -47,33 +48,108 @@ public class CreeperMenu implements Comparable<CreeperMenu>{
     private int type=MENU_NORMAL_ITEM;
     //菜单排序
     private int order = 0;
+    //登录认证,默认false
+    private boolean authentication = false;
+    //菜单所需权限
+    private String[] permissions;
     //父菜单
     private CreeperMenu parent;
     //子菜单
     private List<CreeperMenu> children = new ArrayList<CreeperMenu>() ;
+    
+	public CreeperMenu(){}
+    
+    public CreeperMenu(String name,String url){
+    	this.name = name;
+    	this.url = url;
+    }
+    
+    public CreeperMenu(String name,Class<?> pageClass){
+    	this.name = name;
+    	this.pageClass = pageClass;
+    }
+    
+    /**
+     * 创建CreeperMenu
+     * @param name
+     * @param url
+     * @return
+     */
+    public static CreeperMenu createCreeperMenu(String name,String url){
+    	CreeperMenu menu = new CreeperMenu(name,url);
+    	return menu;
+    }
+    
+    /**
+     * 创建CreeperMenu
+     * @param name
+     * @param clazz
+     * @return
+     */
+    public static CreeperMenu createCreeperMenu(String name, Class<?> clazz) {
+    	CreeperMenu menu = new CreeperMenu(name,clazz);
+    	return menu;
+	}
+    
+    /**
+     * 设置标题
+     * @param title
+     * @return
+     */
+    public CreeperMenu title(String title){
+    	this.title = title;
+    	return this;
+    }
+    
+    /**
+     * 设置排序
+     * @param order
+     * @return
+     */
+    public CreeperMenu order(int order){
+    	this.order = order;
+    	return this;
+    }
+    
+    /**
+     * 设置菜单类型
+     * @param type
+     * @return
+     */
+    public CreeperMenu type(int type){
+    	this.type = type;
+    	return this;
+    }
+    
+    /**
+     * 设置是否需登录
+     * @param authentication
+     * @return
+     */
+    public CreeperMenu authentication(boolean authentication){
+    	this.authentication = authentication;
+    	return this;
+    }
+    
+    /**
+     * 设置权限
+     * @param permissions
+     * @return
+     */
+    public CreeperMenu permissions(String[] permissions){
+    	setPermissions(permissions);
+    	return this;
+    }
+    
+    public boolean isAuthentication() {
+		return authentication;
+	}
+    
+	public void setAuthentication(boolean authentication) {
+		this.authentication = authentication;
+	}
 
-    public CreeperMenu(){}
-    public CreeperMenu(String name,String url,int order){
-        this.name = name;
-        this.url = url;
-        this.order = order;
-    }
-    public CreeperMenu(String name,String title,String url,int order){
-        this(name,url,order);
-        this.title = title;
-    }
-    public CreeperMenu(String name,String title,Class<?> pageClass,int order){
-        this.name = name;
-        this.pageClass = pageClass;
-        this.order = order;
-        this.title = title;
-    }
-    public CreeperMenu(String name,String title,String url,int order,int type){
-        this(name,url,order);
-        this.title = title;
-        this.type = type;
-    }
-    public String getName() {
+	public String getName() {
         return name;
     }
 
@@ -120,8 +196,14 @@ public class CreeperMenu implements Comparable<CreeperMenu>{
     public void setOrder(int order) {
         this.order = order;
     }
-
-    public CreeperMenu getParent() {
+    
+    public String[] getPermissions() {
+		return permissions;
+	}
+	public void setPermissions(String[] permissions) {
+		this.permissions = permissions;
+	}
+	public CreeperMenu getParent() {
         return parent;
     }
 
@@ -175,4 +257,5 @@ public class CreeperMenu implements Comparable<CreeperMenu>{
     public void setPageClass(Class<?> pageClass) {
         this.pageClass = pageClass;
     }
+	
 }
