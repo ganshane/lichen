@@ -23,7 +23,14 @@ import org.springframework.util.StringUtils;
 
 @Import(stylesheet = {
         "classpath:lichen/creeper/core/assets/bootstrap/css/bootstrap3.1.1.min.css",
-        "classpath:lichen/creeper/core/components/Layout.css"})
+        "classpath:lichen/creeper/core/components/Layout.css",
+        "classpath:lichen/creeper/core/assets/fontawesome/css/font-awesome.min.css",
+        "classpath:lichen/creeper/core/assets/fontawesome/css/font-awesome-ie7.min.css",
+        "classpath:lichen/creeper/core/assets/css/ace.min.css",
+        "classpath:lichen/creeper/core/assets/css/ace-rtl.min.css",
+        "classpath:lichen/creeper/core/assets/css/ace-skins.min.css"
+//        "classpath:lichen/creeper/core/assets/css/ace-ie.min.css"
+        })
 public class Layout {
     /** The page title, for the <title> element and the <h1> element. */
     @SuppressWarnings("unused")
@@ -48,6 +55,11 @@ public class Layout {
 	@Property
     @Inject @Path("classpath:lichen/creeper/core/assets/respond.min.js")
     private Asset respond;
+    
+    @SuppressWarnings("unused")
+	@Property
+    @Inject @Path("classpath:lichen/creeper/core/assets/js/ace-extra.min.js")
+    private Asset aceextra;
     
     @org.apache.tapestry5.ioc.annotations.Inject
     private UserService userService;
@@ -90,5 +102,13 @@ public class Layout {
 	@OnEvent(value="logout")
 	public void logout(){
 		userService.logout();
+	}
+	
+	/**
+	 * 是否已登录
+	 * @return
+	 */
+	public boolean getHasLogin(){
+		return subject.isAuthenticated();
 	}
 }

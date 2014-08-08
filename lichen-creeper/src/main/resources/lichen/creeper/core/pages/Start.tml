@@ -1,5 +1,5 @@
 <html t:type="layout"
-      t:title="hello"
+      t:title="云搜索智能检索平台"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"
       xmlns:p="tapestry:parameter">
 <div class="box">
