@@ -56,10 +56,10 @@ public class Layout {
     @Inject @Path("classpath:lichen/creeper/core/assets/respond.min.js")
     private Asset respond;
     
-    @SuppressWarnings("unused")
-	@Property
-    @Inject @Path("classpath:lichen/creeper/core/assets/js/ace-extra.min.js")
-    private Asset aceextra;
+//    @SuppressWarnings("unused")
+//	@Property
+//    @Inject @Path("classpath:lichen/creeper/core/assets/js/ace-extra.min.js")
+//    private Asset aceextra;
     
     @org.apache.tapestry5.ioc.annotations.Inject
     private UserService userService;
