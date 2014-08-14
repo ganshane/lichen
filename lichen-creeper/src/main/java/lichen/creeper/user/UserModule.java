@@ -2,24 +2,23 @@ package lichen.creeper.user;
 
 import java.util.List;
 
-import org.apache.tapestry5.ioc.Configuration;
-import org.apache.tapestry5.ioc.ServiceBinder;
-import org.apache.tapestry5.ioc.annotations.Contribute;
-import org.apache.tapestry5.ioc.services.ChainBuilder;
-import org.apache.tapestry5.services.PageRenderLinkSource;
-
 import lichen.creeper.core.models.CreeperMenu;
 import lichen.creeper.core.models.CreeperModuleDef;
 import lichen.creeper.core.services.CreeperModuleManager;
 import lichen.creeper.core.services.MenuSource;
 import lichen.creeper.user.internal.UserServiceImpl;
-import lichen.creeper.user.pages.UserLogin;
 import lichen.creeper.user.pages.UserRegist;
 import lichen.creeper.user.pages.admin.RoleForm;
 import lichen.creeper.user.pages.admin.RoleList;
 import lichen.creeper.user.pages.admin.UserList;
 import lichen.creeper.user.services.UserSavedListener;
 import lichen.creeper.user.services.UserService;
+
+import org.apache.tapestry5.ioc.Configuration;
+import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.annotations.Contribute;
+import org.apache.tapestry5.ioc.services.ChainBuilder;
+import org.apache.tapestry5.services.PageRenderLinkSource;
 
 /**
  * 用户模块
@@ -36,7 +35,6 @@ public class UserModule {
     public static void provideMenu(Configuration<CreeperMenu> configuration,PageRenderLinkSource pageRenderLinkSource){
 		configuration.add(CreeperMenu.createCreeperMenu("user", "/user").title("用户").order(1).type(CreeperMenu.MENU_VIRTUAL));
 		configuration.add(CreeperMenu.createCreeperMenu("user.regist", UserRegist.class).title("注册").order(1));
-		configuration.add(CreeperMenu.createCreeperMenu("user.login", UserLogin.class).title("登录").order(2));
 		configuration.add(CreeperMenu.createCreeperMenu("user.role", "/admin/role").title("用户管理").order(1).type(CreeperMenu.MENU_VIRTUAL).authentication(true));
 		configuration.add(CreeperMenu.createCreeperMenu("user.list", UserList.class).title("查询用户").order(1).authentication(true));
 		configuration.add(CreeperMenu.createCreeperMenu("user.role.form", RoleForm.class).title("添加角色").order(2).authentication(true));
