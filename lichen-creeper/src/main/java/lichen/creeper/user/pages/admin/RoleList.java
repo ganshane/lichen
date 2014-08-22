@@ -21,7 +21,7 @@ import org.springframework.data.domain.Pageable;
  *
  */
 @RequiresUser
-@RequiresRoles(value = { "aaa" })
+//@RequiresRoles(value = { "aaa" })
 public class RoleList {
 	
 	@SuppressWarnings("unused")
