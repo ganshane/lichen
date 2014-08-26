@@ -7,10 +7,4 @@ package lichen.creeper.core.services.db;
  */
 public interface DatabaseMigration {
 	
-	/**
-	 * 执行安装脚本
-	 * @return
-	 */
-	public void dbSetup();
-	
 }

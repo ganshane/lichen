@@ -38,10 +38,11 @@ public class DatabaseMigrationImpl implements DatabaseMigration {
         DatabaseVendor vendor = DatabaseVendor.forDriver(creeperCoreConfig.db.driverClassName);
         DatabaseAdapter databaseAdapter = DatabaseAdapter.forVendor(vendor, Option.some(creeperCoreConfig.db.username));
         migrator = new Migrator(_dataSource, databaseAdapter);
+
+        dbSetup();
 	}
 
-	@Override
-	public void dbSetup() {
+	private void dbSetup() {
         Iterator<String> itor = _creeperModuleManager.flowModuleSubPackageWithSuffix(lichen.core.services.Option.some("db")).
                 filter(new Predicate<String>() {
                     @Override

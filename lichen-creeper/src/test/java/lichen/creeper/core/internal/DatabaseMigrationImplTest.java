@@ -58,7 +58,6 @@ public class DatabaseMigrationImplTest {
         ProxoolDataSource _dataSource = new ProxoolDataSource("lichen.creeper-migrator");
         
         DatabaseMigrationImpl dbservice = new DatabaseMigrationImpl(manager, creeperCoreConfig,_dataSource);
-        dbservice.dbSetup();
         ProxoolFacade.removeConnectionPool("lichen.creeper-migrator");
     }
 }

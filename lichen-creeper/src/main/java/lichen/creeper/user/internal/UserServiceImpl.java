@@ -1,8 +1,7 @@
 package lichen.creeper.user.internal;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
+import com.mysema.query.types.ExpressionUtils;
+import lichen.core.services.LichenException;
 import lichen.creeper.core.services.CreeperObjectExample;
 import lichen.creeper.user.dao.RoleDao;
 import lichen.creeper.user.dao.UserDao;
@@ -11,7 +10,9 @@ import lichen.creeper.user.entities.Role;
 import lichen.creeper.user.entities.User;
 import lichen.creeper.user.services.UserSavedListener;
 import lichen.creeper.user.services.UserService;
-
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.subject.Subject;
@@ -20,7 +21,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
-import com.mysema.query.types.ExpressionUtils;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * 用户注册的实现类
@@ -58,16 +60,15 @@ public class UserServiceImpl implements UserService{
         UsernamePasswordToken token = new UsernamePasswordToken(name, password);
         token.setRememberMe(true);
         //TODO catch exception to show message
-//        try{
+        try{
         	_subject.login(token);
-//        }catch(UnknownAccountException e){
-//        	//user do not exist
-//        }catch(IncorrectCredentialsException e){
-//        	//invalid password
-//        }catch( AuthenticationException e){
-//        	throw CreeperException.wrap(e);
-//        }
-        //TODO 保存用户相关信息
+        }catch(UnknownAccountException e){
+            throw LichenException.wrap(e);
+        }catch(IncorrectCredentialsException e){
+            throw LichenException.wrap(e);
+        }catch( AuthenticationException e){
+        	throw LichenException.wrap(e);
+        }
     }
 
     @Override
