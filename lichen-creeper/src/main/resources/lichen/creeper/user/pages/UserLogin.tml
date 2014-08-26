@@ -2,9 +2,6 @@
 <html xmlns:t="http://tapestry.apache.org/schema/tapestry_5_1_0.xsd"> 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    
-    <link rel="stylesheet" href="${asset:classpath:lichen/creeper/core/assets/bootstrap/css/bootstrap3.1.1.min.css}"  />
-	<link rel="stylesheet" href="${asset:classpath:lichen/creeper/core/assets/fontawesome/css/font-awesome.min.css}" />
 	<link rel="stylesheet" href="${asset:classpath:lichen/creeper/core/assets/css/ace.min.css}" />
 	<link rel="stylesheet" href="${asset:classpath:lichen/creeper/core/assets/css/ace-rtl.min.css}" />
 </head>

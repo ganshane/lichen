@@ -7,8 +7,6 @@
     <title>${title}</title>
     <t:ifiejavascript test="lt IE 9" js="prop:html5shiv"/>
     <t:ifiejavascript test="lt IE 9" js="prop:respond"/>
-    <script src="${asset:classpath:lichen/creeper/core/assets/js/jquery-2.0.3.min.js}"></script>
-    <script src="${asset:classpath:lichen/creeper/core/assets/js/bootstrap.min.js}"></script>
 </head>
 <body>
 <!-- 标题栏 -->

@@ -22,7 +22,6 @@ import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.springframework.util.StringUtils;
 
 @Import(stylesheet = {
-        "classpath:lichen/creeper/core/assets/bootstrap/css/bootstrap3.1.1.min.css",
         "classpath:lichen/creeper/core/components/Layout.css",
         "classpath:lichen/creeper/core/assets/fontawesome/css/font-awesome.min.css",
         "classpath:lichen/creeper/core/assets/fontawesome/css/font-awesome-ie7.min.css",
