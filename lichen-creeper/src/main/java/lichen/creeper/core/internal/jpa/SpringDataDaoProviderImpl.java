@@ -10,6 +10,7 @@ import lichen.core.services.LichenException;
 import org.apache.tapestry5.ioc.AnnotationProvider;
 import org.apache.tapestry5.ioc.ObjectLocator;
 import org.apache.tapestry5.ioc.internal.services.ClassNameLocatorImpl;
+import org.apache.tapestry5.ioc.internal.services.ClasspathScannerImpl;
 import org.apache.tapestry5.ioc.internal.services.ClasspathURLConverterImpl;
 import org.apache.tapestry5.ioc.services.ClassNameLocator;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class SpringDataDaoProviderImpl implements SpringDataDaoProvider {
 
     @Override
     public void setupDaoObject(){
-        ClassNameLocator classNameLocator = new ClassNameLocatorImpl(new ClasspathURLConverterImpl());
+        ClassNameLocator classNameLocator = new ClassNameLocatorImpl(new ClasspathScannerImpl(new ClasspathURLConverterImpl()));
         String[] packages = _daoPackageManager.getPackages();
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
         for(String pkg: packages){

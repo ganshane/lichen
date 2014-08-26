@@ -81,7 +81,7 @@ public class CreeperCoreModule {
 
 	@SuppressWarnings("deprecation")
 	public static void contributeApplicationDefaults(MappedConfiguration<String, String> configuration){
-		configuration.add(SymbolConstants.SUPPRESS_REDIRECT_FROM_ACTION_REQUESTS, "true");
+		//configuration.add(SymbolConstants.SUPPRESS_REDIRECT_FROM_ACTION_REQUESTS, "true");
         configuration.add(SymbolConstants.SECURE_ENABLED,"false");
 	}
     
