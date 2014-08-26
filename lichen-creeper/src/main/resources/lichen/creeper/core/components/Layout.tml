@@ -24,6 +24,7 @@
 		</div>
 		<div class="navbar-header pull-right" role="navigation">
 			<ul class="nav ace-nav">
+				<!--
 				<li class="grey">
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-tasks"></i>&nbsp;<span class="badge badge-grey">4</span></a>
 					<ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
@@ -50,8 +51,9 @@
 						</li>
 					</ul>
 				</li>
+				-->
+				<!-- a中间不加任何文字的话，a的line-height属性虽然设置了值，但是会导致撑不开，影响css效果。 
 				<li class="purple">
-					<!-- a中间不加任何文字的话，a的line-height属性虽然设置了值，但是会导致撑不开，影响css效果。 -->
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-bell-alt icon-animated-bell"></i>&nbsp;<span class="badge badge-important">8</span></a>
 					<ul class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close">
 						<li class="dropdown-header">
@@ -77,6 +79,8 @@
 						</li>
 					</ul>
 				</li>
+				-->
+				<!--
 				<li class="green">
 					<a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="icon-envelope icon-animated-vertical"></i>&nbsp;<span class="badge badge-success">5</span></a>
 					<ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret dropdown-close">
@@ -107,6 +111,7 @@
 						</li>
 					</ul>
 				</li>
+				-->
 				<t:if test="${hasLogin}">
 					<li class="light-blue">
 						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
@@ -199,6 +204,7 @@
 					</li>
 					<li class="active">控制台</li>
 				</ul>
+				<!--
 				<div class="nav-search" id="nav-search">
 					<form class="form-search">
 						<span class="input-icon">
@@ -207,6 +213,7 @@
 						</span>
 					</form>
 				</div>
+				-->
 			</div>
 			<t:body/>
 		</div>

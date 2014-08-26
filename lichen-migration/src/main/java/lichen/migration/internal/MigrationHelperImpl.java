@@ -320,8 +320,9 @@ class MigrationHelperImpl implements MigrationHelper {
 
 	@Override
 	public void executeSQL(String... sql) throws Throwable {
-		// TODO Auto-generated method stub
-		
+		for(String subSql : sql){
+			execute(subSql);
+		}
 	}
 
 	@Override

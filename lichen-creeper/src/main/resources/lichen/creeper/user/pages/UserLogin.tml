@@ -70,16 +70,16 @@
 													<div class="space-4"></div>
 												</fieldset>
 											</form>
-
+											<!--
 											<div class="social-or-login center">
 												<span class="bigger-110">使用关联账号登陆</span>
 											</div>
-
 											<div class="social-login center">
 												<a class="btn btn-primary">&nbsp;<i class="icon-apple"></i>&nbsp;</a>
 												<a class="btn btn-info">&nbsp;<i class="icon-weibo"></i>&nbsp;</a>
 												<a class="btn btn-danger">&nbsp;<i class="icon-google-plus"></i>&nbsp;</a>
 											</div>
+											-->
 										</div><!-- /widget-main -->
 
 										<div class="toolbar clearfix">
