@@ -8,6 +8,7 @@ import org.apache.tapestry5.annotations.BeginRender;
 import org.apache.tapestry5.annotations.OnEvent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.StreamPageContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -126,9 +127,12 @@ public class Pagination<T> {
 
 	
 	@OnEvent(value="pageaction")
-	void onPageAction(EventContext context){
+	Object onPageAction(EventContext context){
 		selectedPage = context.get(Integer.class, 0);
-		this.eventContext = context;
+		eventContext = context;
+		Class<?> pageClass = resources.getPage().getClass();
+		//StreamPageContent起标识的作用，表示目标页不是重定向跳转，不会放入页面池清空参数，所以上两行赋值才会生效。
+		return new StreamPageContent(pageClass);
 	}
 	
 	/**

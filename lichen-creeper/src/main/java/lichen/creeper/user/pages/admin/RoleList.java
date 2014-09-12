@@ -5,7 +5,6 @@ import lichen.creeper.core.components.Pagination;
 import lichen.creeper.user.entities.Role;
 import lichen.creeper.user.services.UserService;
 
-import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.authz.annotation.RequiresUser;
 import org.apache.tapestry5.annotations.BeginRender;
 import org.apache.tapestry5.annotations.Cached;
