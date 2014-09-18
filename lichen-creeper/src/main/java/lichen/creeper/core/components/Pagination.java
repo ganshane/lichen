@@ -129,8 +129,12 @@ public class Pagination<T> {
 	@OnEvent(value="pageaction")
 	Object onPageAction(EventContext context){
 		selectedPage = context.get(Integer.class, 0);
-		eventContext = context;
 		Class<?> pageClass = resources.getPage().getClass();
+		int count = context.getCount();
+		Object[] params = new Object[count-1];
+		for(int i=0;i<count-1;i++){
+			params[i] = context.get(String.class, i+1);
+		}
 		//StreamPageContent起标识的作用，表示目标页不是重定向跳转，不会放入页面池清空参数，所以上两行赋值才会生效。
 		return new StreamPageContent(pageClass);
 	}
@@ -142,6 +146,7 @@ public class Pagination<T> {
 	 * @param index
 	 * @return
 	 */
+	@Deprecated
 	public <T> T getRequestParameter(Class<T> clazz,int index){
 		if(eventContext == null || index>= eventContext.getCount())
 			return null;

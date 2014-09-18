@@ -20,7 +20,6 @@ import org.springframework.data.domain.Pageable;
  *
  */
 @RequiresUser
-//@RequiresRoles(value = { "aaa" })
 public class RoleList {
 	
 	@SuppressWarnings("unused")
@@ -45,11 +44,6 @@ public class RoleList {
 	
 	@BeginRender
 	void setupParameter(){
-		//优先从参数开始读取查询对象
-		Role tmp =  pagination.getRequestParameter(Role.class, 1);
-		if(tmp != null)
-			roleParams = tmp;
-
 //		不能删，删了直接点报错，worker到底拦截哪里
 		//参数为空，则进行构造
 		if(roleParams == null)
