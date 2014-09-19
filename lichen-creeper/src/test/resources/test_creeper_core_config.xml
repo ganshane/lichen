@@ -1,4 +1,5 @@
 <creeper_core>
+  <log_file>${server.home}/log/creeper.log</log_file>
   <db>
     <driver_class>org.h2.Driver</driver_class>
     <user_name>sa</user_name>

@@ -23,6 +23,7 @@
   </xs:complexType>
   <xs:complexType name="creeperCoreType">
     <xs:sequence>
+      <xs:element type="xs:string" name="log_file" minOccurs="1" maxOccurs="1"/>
       <xs:element type="dbType" name="db" minOccurs="1" maxOccurs="1"/>
       <xs:element type="jpaType" name="jpa" minOccurs="0" maxOccurs="1"/>
     </xs:sequence>

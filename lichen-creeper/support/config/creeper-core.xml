@@ -1,0 +1,13 @@
+<creeper_core>
+  <log_file>${server.home}/log/creeper.log</log_file>
+  <db>
+    <driver_class>oracle.jdbc.driver.OracleDriver</driver_class>
+    <user_name>creeper</user_name>
+    <password>creeper</password>
+    <url>jdbc:oracle:thin:@10.1.7.79:1521:tjkf</url>
+  </db>
+  <jpa>
+    <!-- <property name="hibernate.hbm2ddl.auto" value="create"/> -->
+    <property name="hibernate.show_sql" value="true"/>
+  </jpa>
+</creeper_core>

@@ -13,6 +13,11 @@ import java.util.List;
  */
 @XmlRootElement(name="creeper_core")
 public class CreeperCoreConfig {
+	
+	//日志路径
+	@XmlElement(name="log_file")
+	public String log_file;
+	
     public static class Database{
         /**
          * 数据库驱动类.
