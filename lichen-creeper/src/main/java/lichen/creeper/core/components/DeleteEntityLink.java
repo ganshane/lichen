@@ -1,9 +1,10 @@
 package lichen.creeper.core.components;
 
-import javax.persistence.EntityManager;
-
 import lichen.core.services.LichenException;
+import lichen.creeper.core.services.EntityManagerService;
+import lichen.creeper.user.UserConstants;
 
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.EventContext;
 import org.apache.tapestry5.Link;
@@ -20,7 +21,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 public class DeleteEntityLink extends AbstractComponentEventLink{
 	
 	@Inject
-	private EntityManager entityManager;
+	private EntityManagerService _entityManagerService;
 	
 	@Inject
     private ComponentResources resources;
@@ -30,6 +31,7 @@ public class DeleteEntityLink extends AbstractComponentEventLink{
 	private Object entity;
 	
 	@OnEvent(value="delEntity")
+	@RequiresPermissions(value = { UserConstants.PERMISSION_USER_DROPUSER ,UserConstants.PERMISSION_USER_DROPROLE })
 	void onPageAction(EventContext context){
 		Class<?> clazz = null;
 		try {
@@ -39,7 +41,7 @@ public class DeleteEntityLink extends AbstractComponentEventLink{
 		}
 		//根据实体对象类，转换为相应的实体对象。
 		Object obj = context.get(clazz, 0);
-		entityManager.remove(obj);
+		_entityManagerService.remove(obj);
 	}
 	
 	@Override

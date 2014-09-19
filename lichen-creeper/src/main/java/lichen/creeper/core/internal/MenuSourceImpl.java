@@ -32,13 +32,14 @@ public class MenuSourceImpl implements MenuSource {
      * @return true,有权限，false，无权限
      */
     private boolean checkPermissons(CreeperMenu menu){
-    	//权限验证
-    	if(null != menu.getPermissions() && !_subject.isPermittedAll(menu.getPermissions()))
-    		return false;
-    	//登录权限
-    	if(menu.isAuthentication() && !_subject.isAuthenticated())
-    		return false;
-		return true;
+    	if(null != menu.getPermissions()){
+    		if(_subject.isPermittedAll(menu.getPermissions()) && menu.isAuthentication())
+    			return true;
+    	}else{
+    		if(menu.isAuthentication() && _subject.isAuthenticated())
+    			return true;
+    	}
+    	return false;
     }
     
     @Override

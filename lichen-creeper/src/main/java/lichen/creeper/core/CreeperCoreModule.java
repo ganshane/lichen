@@ -1,10 +1,19 @@
 package lichen.creeper.core;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.UUID;
+
+import javax.sql.DataSource;
+
 import lichen.core.services.LichenException;
 import lichen.core.services.Option;
 import lichen.creeper.core.annotations.CreeperCore;
 import lichen.creeper.core.config.CreeperCoreConfig;
 import lichen.creeper.core.internal.CreeperModuleManagerImpl;
+import lichen.creeper.core.internal.EntityManagerServiceImpl;
 import lichen.creeper.core.internal.H2ConsoleRunner;
 import lichen.creeper.core.internal.InitializeObjectWorker;
 import lichen.creeper.core.internal.MenuSourceImpl;
@@ -13,6 +22,7 @@ import lichen.creeper.core.internal.override.CreeperOverrideModule;
 import lichen.creeper.core.models.CreeperMenu;
 import lichen.creeper.core.services.CreeperCoreExceptionCode;
 import lichen.creeper.core.services.CreeperModuleManager;
+import lichen.creeper.core.services.EntityManagerService;
 import lichen.creeper.core.services.MenuSource;
 import lichen.creeper.core.services.XmlLoader;
 import lichen.creeper.core.services.db.DatabaseMigrationModule;
@@ -20,6 +30,7 @@ import lichen.creeper.core.services.jpa.CreeperJpaModule;
 import lichen.creeper.core.services.jpa.CreeperJpaValueEncoderSourceModule;
 import lichen.creeper.core.services.shiro.CreeperShiroModule;
 import lichen.creeper.user.UserModule;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.func.Worker;
@@ -27,25 +38,29 @@ import org.apache.tapestry5.ioc.Configuration;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
-import org.apache.tapestry5.ioc.annotations.*;
+import org.apache.tapestry5.ioc.annotations.Contribute;
+import org.apache.tapestry5.ioc.annotations.Marker;
+import org.apache.tapestry5.ioc.annotations.Startup;
+import org.apache.tapestry5.ioc.annotations.SubModule;
+import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.apache.tapestry5.ioc.services.Coercion;
 import org.apache.tapestry5.ioc.services.CoercionTuple;
 import org.apache.tapestry5.ioc.services.TypeCoercer;
-import org.apache.tapestry5.services.*;
+import org.apache.tapestry5.services.ComponentSource;
+import org.apache.tapestry5.services.ExceptionReporter;
+import org.apache.tapestry5.services.LibraryMapping;
+import org.apache.tapestry5.services.RequestExceptionHandler;
+import org.apache.tapestry5.services.RequestFilter;
+import org.apache.tapestry5.services.RequestHandler;
+import org.apache.tapestry5.services.ResponseRenderer;
 import org.apache.tapestry5.services.transform.ComponentClassTransformWorker2;
 import org.slf4j.Logger;
 import org.springframework.data.domain.Page;
 
-import javax.sql.DataSource;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.UUID;
-
 /**
  * Creeper的核心入口类
  */
+@SuppressWarnings("deprecation")
 @SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class,
         CreeperShiroModule.class,UserModule.class,
         CreeperOverrideModule.class, CreeperJpaValueEncoderSourceModule.class
@@ -55,6 +70,7 @@ public class CreeperCoreModule {
 	public static void bind(ServiceBinder binder){
         binder.bind(MenuSource.class, MenuSourceImpl.class).withMarker(CreeperCore.class);
         binder.bind(CreeperModuleManager.class, CreeperModuleManagerImpl.class).withMarker(CreeperCore.class);
+        binder.bind(EntityManagerService.class, EntityManagerServiceImpl.class);
     }
 
     /**

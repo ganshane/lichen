@@ -66,6 +66,7 @@ abstract class AbstractShiroAnnotationWorker implements ComponentClassTransformW
 
     @Override
     public void transform(PlasticClass plasticClass, TransformationSupport support, MutableComponentModel model) {
+    	//实现在page类上加权限注解的拦截功能。component不包含在内。
     	if(plasticClass.hasAnnotation(getAnnotationClass()) && plasticClass.getClassName().contains("pages")){
     		List<PlasticMethod> methods = plasticClass.getMethods();
     		for(PlasticMethod method : methods){

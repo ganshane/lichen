@@ -1,21 +1,27 @@
 package lichen.creeper.user.pages.admin;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.authz.annotation.RequiresUser;
-import org.apache.tapestry5.EventConstants;
-import org.apache.tapestry5.annotations.OnEvent;
-import org.apache.tapestry5.annotations.Property;
-import org.apache.tapestry5.services.Request;
-
+import lichen.creeper.user.UserConstants;
 import lichen.creeper.user.dao.RoleDao;
 import lichen.creeper.user.dao.UserDao;
 import lichen.creeper.user.entities.Role;
 import lichen.creeper.user.entities.User;
 import lichen.creeper.user.services.UserService;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresUser;
+import org.apache.tapestry5.EventConstants;
+import org.apache.tapestry5.annotations.OnEvent;
+import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.services.Request;
 
 /**
  * 用户管理操作页面
@@ -23,7 +29,7 @@ import lichen.creeper.user.services.UserService;
  *
  */
 @RequiresUser
-@RequiresRoles(value = { "aaa" })
+@RequiresPermissions(value = { UserConstants.PERMISSION_USER_EDITUSER })
 public class UserManager {
 	
 	@Property

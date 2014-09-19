@@ -32,15 +32,16 @@ public class UserModule {
 	
 	@Contribute(MenuSource.class)
     public static void provideMenu(Configuration<CreeperMenu> configuration,PageRenderLinkSource pageRenderLinkSource){
-		configuration.add(CreeperMenu.createCreeperMenu("user.list", UserList.class).title("查询用户").order(1).authentication(true));
-		configuration.add(CreeperMenu.createCreeperMenu("user.role.form", RoleForm.class).title("添加角色").order(2).authentication(true));
-		configuration.add(CreeperMenu.createCreeperMenu("user.role.list", RoleList.class).title("查询角色").order(3).authentication(true));
+		configuration.add(CreeperMenu.createCreeperMenu("user.list", UserList.class).title("查询用户").order(1).authentication(true).permissions(new String[]{UserConstants.PERMISSION_USER_QUERYUSER}));
+		configuration.add(CreeperMenu.createCreeperMenu("user.role.form", RoleForm.class).title("添加角色").order(2).authentication(true).permissions(new String[]{UserConstants.PERMISSION_USER_ADDROLE}));
+		configuration.add(CreeperMenu.createCreeperMenu("user.role.list", RoleList.class).title("查询角色").order(3).authentication(true).permissions(new String[]{UserConstants.PERMISSION_USER_QUERYROLE}));
     }
 
     @Contribute(value = CreeperModuleManager.class)
     public static void provideModule(Configuration<CreeperModuleDef> configuration){
         CreeperModuleDef def = CreeperModuleDef.create("用户","lichen.creeper.user");
-        def.addPermissions("删除用户","编辑用户");
+        def.addPermissions(UserConstants.PERMISSION_USER_ADDROLE,UserConstants.PERMISSION_USER_DROPROLE,UserConstants.PERMISSION_USER_EDITROLE,UserConstants.PERMISSION_USER_QUERYROLE,
+        		UserConstants.PERMISSION_USER_DROPUSER,UserConstants.PERMISSION_USER_EDITUSER,UserConstants.PERMISSION_USER_QUERYUSER);
     	configuration.add(def);
     }
     public static UserSavedListener buildUserSavedListener(List<UserSavedListener> configuration,ChainBuilder chainBuilder){
