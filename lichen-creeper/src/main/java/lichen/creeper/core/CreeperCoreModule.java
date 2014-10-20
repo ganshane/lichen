@@ -39,9 +39,9 @@ import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
+import org.apache.tapestry5.ioc.annotations.ImportModule;
 import org.apache.tapestry5.ioc.annotations.Marker;
 import org.apache.tapestry5.ioc.annotations.Startup;
-import org.apache.tapestry5.ioc.annotations.SubModule;
 import org.apache.tapestry5.ioc.annotations.Symbol;
 import org.apache.tapestry5.ioc.services.Coercion;
 import org.apache.tapestry5.ioc.services.CoercionTuple;
@@ -60,8 +60,7 @@ import org.springframework.data.domain.Page;
 /**
  * Creeper的核心入口类
  */
-@SuppressWarnings("deprecation")
-@SubModule({DatabaseMigrationModule.class,CreeperJpaModule.class,
+@ImportModule({DatabaseMigrationModule.class,CreeperJpaModule.class,
         CreeperShiroModule.class,UserModule.class,
         CreeperOverrideModule.class, CreeperJpaValueEncoderSourceModule.class
 })
@@ -95,7 +94,6 @@ public class CreeperCoreModule {
         }
     }
 
-	@SuppressWarnings("deprecation")
 	public static void contributeApplicationDefaults(MappedConfiguration<String, String> configuration){
 		//configuration.add(SymbolConstants.SUPPRESS_REDIRECT_FROM_ACTION_REQUESTS, "true");
         configuration.add(SymbolConstants.SECURE_ENABLED,"false");
