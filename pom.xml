@@ -523,18 +523,6 @@
       <id>website</id>
       <url>scp://jcai@egfit-s01/opt/app/sites/lichen/</url>
     </site>
-    <snapshotRepository>
-      <id>sonatype-nexus-snapshots</id>
-      <name>Sonatype Nexus Snapshots</name>
-      <url>${sonatypeOssDistMgmtSnapshotsUrl}</url>
-    </snapshotRepository>
-    <repository>
-      <id>sonatype-nexus-staging</id>
-      <name>Nexus Release Repository</name>
-      <url>
-        https://oss.sonatype.org/service/local/staging/deploy/maven2/
-      </url>
-    </repository>
   </distributionManagement>
   <properties>
     <update-release-info>false</update-release-info>
@@ -545,8 +533,5 @@
     <spring-release-version>3.2.9.RELEASE</spring-release-version>
     <spring-data-jpa-version>1.6.0.RELEASE</spring-data-jpa-version>
     <jetty-release-version>7.6.9.v20130131</jetty-release-version>
-    <sonatypeOssDistMgmtSnapshotsUrl>
-      https://oss.sonatype.org/content/repositories/snapshots/
-    </sonatypeOssDistMgmtSnapshotsUrl>
   </properties>
 </project>
