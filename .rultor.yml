@@ -5,5 +5,4 @@ release:
   script: |
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "release ${tag}"
-    mvn test
 
