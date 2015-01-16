@@ -523,6 +523,20 @@
       <id>website</id>
       <url>scp://jcai@egfit-s01/opt/app/sites/lichen/</url>
     </site>
+    <snapshotRepository>
+      <id>sonatype-snapshots</id>
+      <name>Sonatype Nexus snapshot repository</name>
+      <url>
+        https://oss.sonatype.org/content/repositories/snapshots
+      </url>
+    </snapshotRepository>
+    <repository>
+      <id>sonatype-releases</id>
+      <name>Sonatype Nexus release repository</name>
+      <url>
+        https://oss.sonatype.org/service/local/staging/deploy/maven2
+      </url>
+    </repository>
   </distributionManagement>
   <properties>
     <update-release-info>false</update-release-info>
