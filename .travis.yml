@@ -1,5 +1,5 @@
 language: java
-script: mvn -P deploy -Dgpg.passphrase=$GPG_PASS -Dgpg.keyname=$GPG_KEYID -Dgpg.secretKeyring=support/gpg/gpg.sec
+script: mvn -P deploy -Dgpg.passphrase=$GPG_PASS -Dgpg.keyname=$GPG_KEYID -Dgpg.secretKeyring=$(pwd)/support/gpg/gpg.sec
   clean deploy  --settings support/settings.xml
 branches: all
 env:
