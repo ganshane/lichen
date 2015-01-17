@@ -328,7 +328,7 @@ public final class WordUtil {
         }
 
         if (plform != null) { //映射里面已经得到
-            System.out.println(plform);
+            ;
         } else if (tmp.endsWith("is")) {
             //Rule #5: For words that end in -is, change the -is to -es to make the plural form
             plform = replaceLast(tmp, "is", "es");
@@ -446,6 +446,7 @@ public final class WordUtil {
         }
 
         if (sgform != null) {
+            ;
         } else if (tmp.endsWith("ices")) {
             sgform = replaceLast(tmp, "ices", "ix");
         } else if (tmp.endsWith("i")) {
