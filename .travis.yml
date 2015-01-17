@@ -5,3 +5,4 @@ matrix:
     include:
         - jdk: openjdk7
 after_success: mvn deploy  --settings support/settings.xml
+branches: all
