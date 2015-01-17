@@ -323,9 +323,11 @@ public final class WordUtil {
 
         String tmp = word.toLowerCase();
         plform = SINGLE_2PLURALS.get(tmp);
+        System.out.println("tmp :"+tmp+" ---> plform :"+plform);
         if (plform == null && (PLURALS.contains(tmp) || SINGLES.contains(tmp) || PLURAL_2SINGLES.containsKey(tmp))) {
             plform = tmp;
         }
+        System.out.println("tmp :"+tmp+" ---> plform :"+plform);
 
         if (plform == null) { //映射里面已经得到
             if (tmp.endsWith("is")) {
