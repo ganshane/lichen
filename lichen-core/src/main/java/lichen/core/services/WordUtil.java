@@ -33,18 +33,6 @@ import java.util.*;
  */
 public final class WordUtil {
 
-    //单数到复数的映射
-    private static final Map<String, String> RESOLVED_SINGLE_2_PLURALS =
-            new HashMap<String, String>();
-    //已经处理过的复数
-    private static final List<String> RESOLVED_PLURALS =
-            new ArrayList<String>();
-    //复数到单数的映射
-    private static final Map<String, String> RESOLVED_PLURAL_2_SINGLES =
-            new HashMap<String, String>();
-    private static final List<String> RESOLVED_SINGLES =
-            new ArrayList<String>();
-
     public static final Map<String, String> SINGLE_2PLURALS =
             new HashMap<String, String>();
     public static final List<String> PLURALS =
@@ -299,6 +287,20 @@ public final class WordUtil {
         }
     }
 
+    //单数到复数的映射
+    private static final Map<String, String> RESOLVED_SINGLE_2_PLURALS =
+            new HashMap<String, String>();
+    //已经处理过的复数
+    private static final List<String> RESOLVED_PLURALS =
+            new ArrayList<String>();
+    //复数到单数的映射
+    private static final Map<String, String> RESOLVED_PLURAL_2_SINGLES =
+            new HashMap<String, String>();
+    private static final List<String> RESOLVED_SINGLES =
+            new ArrayList<String>();
+    private static String A2Z = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static String a2z = "abcdefghijklmnopqrstuvwxyz";
+
     /**
      * 把给定的单词转换为复数.
      *
@@ -326,6 +328,7 @@ public final class WordUtil {
         }
 
         if (plform != null) { //映射里面已经得到
+            System.out.println(plform);
         } else if (tmp.endsWith("is")) {
             //Rule #5: For words that end in -is, change the -is to -es to make the plural form
             plform = replaceLast(tmp, "is", "es");
@@ -420,7 +423,6 @@ public final class WordUtil {
 
         return plform;
     }
-
 
     /**
      * 从复数变换为单数
@@ -641,9 +643,6 @@ public final class WordUtil {
         }
         return sb.toString();
     }
-
-    private static String A2Z = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static String a2z = "abcdefghijklmnopqrstuvwxyz";
 
     private static boolean isInA2Z(char c) {
         return (A2Z.indexOf(c) != -1) ? true : false;
