@@ -302,7 +302,7 @@ public class WordUtil {
         if (plform == null && (resolvedPlurals.contains(word) || resolvedPlural2Singles.containsKey(word))) {
             plform = word;
         }
-        System.out.println("====> \n word:"+word+" -> plform:"+plform);
+        System.out.println("====> \n word:"+word+" -> plform:"+plform+" resolved:"+resolvedSingle2Plurals);
         if (plform != null) {
             return plform;
         }
