@@ -328,6 +328,7 @@ public final class WordUtil {
         }
 
         if (plform != null) { //映射里面已经得到
+            //此行不能删除，否则可能导致编译器忽略此行
             ;
         } else if (tmp.endsWith("is")) {
             //Rule #5: For words that end in -is, change the -is to -es to make the plural form
@@ -446,6 +447,7 @@ public final class WordUtil {
         }
 
         if (sgform != null) {
+            //此行不能删除，否则可能导致编译器忽略此行
             ;
         } else if (tmp.endsWith("ices")) {
             sgform = replaceLast(tmp, "ices", "ix");
