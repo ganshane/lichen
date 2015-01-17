@@ -302,8 +302,8 @@ public class WordUtil {
         if (plform == null && (resolvedPlurals.contains(word) || resolvedPlural2Singles.containsKey(word))) {
             plform = word;
         }
+        System.out.println("====> \n word:"+word+" -> plform:"+plform);
         if (plform != null) {
-            System.out.println("word:"+word+" -> plform:"+plform);
             return plform;
         }
 
