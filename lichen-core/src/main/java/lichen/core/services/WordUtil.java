@@ -302,13 +302,18 @@ public class WordUtil {
         if (plform == null && (resolvedPlurals.contains(word) || resolvedPlural2Singles.containsKey(word))) {
             plform = word;
         }
-        if (plform != null) return plform;
+        if (plform != null) {
+            System.out.println("word:"+word+" -> plform:"+plform);
+            return plform;
+        }
 
         String tmp = word.toLowerCase();
         plform = single2plurals.get(tmp);
+        System.out.println("tmp:"+tmp+" -> plform:"+plform);
         if (plform == null && (plurals.contains(tmp) || singles.contains(tmp) || plural2singles.containsKey(tmp))) {
             plform = tmp;
         }
+        System.out.println("tmp:"+tmp+" -> plform:"+plform);
 
         if (plform != null) {
             ;
