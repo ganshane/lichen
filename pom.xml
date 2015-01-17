@@ -22,7 +22,6 @@
   <version>dev-SNAPSHOT</version>
   <name>Lichen Framework</name>
   <description>Lichen是一个基于Java技术的应用框架,非技术框架，提高生产力为第一目标.</description>
-  <!--
   <modules>
     <module>lichen-core</module>
     <module>lichen-ws</module>
@@ -33,7 +32,6 @@
     <module>lichen-node</module>
     <module>lichen-struts</module>
   </modules>
-  -->
   <scm>
     <url>https://dev.egfit.com/projects/lichen/repository</url>
     <connection>scm:git:https://dev.egfit.com/git/lichen.git</connection>
