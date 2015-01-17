@@ -490,7 +490,7 @@
       </build>
       <properties>
         <gpg.defaultKeyring>false</gpg.defaultKeyring>
-        <gpg.homedir>${basedir}/support/gpg</gpg.homedir>
+        <gpg.homedir>${session.executionRootDirectory}/support/gpg</gpg.homedir>
         <gpg.publicKeyring>pubring.gpg</gpg.publicKeyring>
         <gpg.secretKeyring>secring.gpg</gpg.secretKeyring>
       </properties>
