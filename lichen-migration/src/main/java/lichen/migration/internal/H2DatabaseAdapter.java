@@ -33,7 +33,7 @@ class H2TimestampColumnDefinition extends ColumnDefinition {
 class H2VarbinaryColumnDefinition extends ColumnDefinition {
     @Override
     protected String sql() {
-        return "CLOB";
+        return "BINARY";
     }
 }
 

@@ -16,6 +16,7 @@ import org.apache.tapestry5.ioc.annotations.Marker;
 import org.hibernate.cfg.Environment;
 import org.junit.After;
 import org.junit.Before;
+import org.logicalcobwebs.proxool.ProxoolException;
 import org.logicalcobwebs.proxool.ProxoolFacade;
 import org.springframework.orm.jpa.EntityManagerFactoryUtils;
 import org.springframework.orm.jpa.EntityManagerHolder;
@@ -53,13 +54,14 @@ public abstract class BaseEntityTestCase {
         TransactionSynchronizationManager.bindResource(entityManagerFactory, emHolder);
     }
     @After
-    public void teardown(){
+    public void teardown() throws ProxoolException {
         EntityManagerFactory emf = registry.getService(EntityManagerFactory.class);
         EntityManagerHolder emHolder = (EntityManagerHolder)
                 TransactionSynchronizationManager.unbindResource(emf);
         EntityManagerFactoryUtils.closeEntityManager(emHolder.getEntityManager());
 
         registry.shutdown();
+        ProxoolFacade.removeConnectionPool("creeper");
         ProxoolFacade.shutdown();
         ThreadContext.remove("lichen.creeper.modules");
     }
