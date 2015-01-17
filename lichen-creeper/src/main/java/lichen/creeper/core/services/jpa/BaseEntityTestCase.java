@@ -63,7 +63,6 @@ public abstract class BaseEntityTestCase {
         registry.shutdown();
         ProxoolFacade.removeConnectionPool("creeper");
         ProxoolFacade.shutdown();
-        ProxoolFacade.shutdown();
         ThreadContext.remove("lichen.creeper.modules");
     }
     public static class TestDatabaseModule{
