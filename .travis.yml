@@ -9,3 +9,4 @@ env:
 before_install:
 - openssl aes-256-cbc -K $encrypted_25ee08ab284d_key -iv $encrypted_25ee08ab284d_iv
   -in support/gpg/gpg.sec.enc -out support/gpg/gpg.sec -d
+- ls $(pwd)/support/gpg
