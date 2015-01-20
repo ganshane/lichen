@@ -14,6 +14,7 @@
 package lichen.migration.internal;
 
 import lichen.migration.model.ColumnOption;
+import lichen.migration.model.Comment;
 import lichen.migration.model.SqlType;
 import lichen.migration.model.TableDefinition;
 
@@ -26,6 +27,7 @@ import java.util.List;
  */
 class TableDefinitionImpl implements TableDefinition {
     private List<ColumnDefinition> _columnDefinitions = new ArrayList<ColumnDefinition>();
+    private List<String> _commentsSql = new ArrayList<String>();
     private DatabaseAdapter _adapter;
     private String _tableName;
 
@@ -59,11 +61,22 @@ class TableDefinitionImpl implements TableDefinition {
 
     public final TableDefinition column(String name, SqlType columnType,
                                         ColumnOption... options) {
+        Comment comment = null;
+        List<ColumnOption> colOptions = new ArrayList<ColumnOption>();
+        for (ColumnOption option : options) {
+            if (option instanceof Comment) {
+                comment = (Comment) option;
+            } else {
+                colOptions.add(option);
+            }
+        }
         ColumnDefinition columnDefinition = _adapter.newColumnDefinition(_tableName,
                 name,
                 columnType,
-                options);
+                colOptions.toArray(new ColumnOption[colOptions.size()]));
         _columnDefinitions.add(columnDefinition);
+        if (comment != null)
+            _commentsSql.add(_adapter.commentColumnSql(_tableName, name, comment));
         return this;
     }
 
@@ -111,5 +124,9 @@ class TableDefinitionImpl implements TableDefinition {
     public final TableDefinition varchar(String name,
                                          ColumnOption... options) {
         return column(name, SqlType.VarcharType, options);
+    }
+
+    public List<String> getCommentsSql() {
+        return _commentsSql;
     }
 }

@@ -198,6 +198,10 @@ class MigrationHelperImpl implements MigrationHelper {
                 LOGGER.error("unknow option {} for table {}", option, tableName);
             }
         }
+        List<String> commentsSql = tableDefinition.getCommentsSql();
+        for (String c : commentsSql)
+            execute(c);
+
     }
 
     public final void addColumn(String tableName,
