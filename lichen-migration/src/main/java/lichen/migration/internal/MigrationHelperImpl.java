@@ -13,24 +13,18 @@
 // limitations under the License.
 package lichen.migration.internal;
 
+import lichen.migration.model.*;
+import lichen.migration.services.MigrationHelper;
+import lichen.migration.services.TableCallback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-
-import lichen.migration.model.ColumnOption;
-import lichen.migration.model.Comment;
-import lichen.migration.model.IndexOption;
-import lichen.migration.model.Name;
-import lichen.migration.model.SequenceOption;
-import lichen.migration.model.SqlType;
-import lichen.migration.model.TableOption;
-import lichen.migration.services.MigrationHelper;
-import lichen.migration.services.Options;
-import lichen.migration.services.TableCallback;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 数据库升级抽象类.
@@ -52,6 +46,27 @@ class MigrationHelperImpl implements MigrationHelper {
      * users of this migration framework.
      */
     private Option<Connection> _rawConnectionOpt = Option.none();
+    /**
+     * The connection to the database that is used for the migration.
+     * This connection also logs all operations performed on it.
+     * <p/>
+     * This is set using property style dependency injection instead of
+     * constructor style injection, which makes for cleaner code for the
+     * users of this migration framework.
+     */
+    private Option<Connection> _connectionOpt = Option.none();
+    /**
+     * The database adapter that will be used for the migration.
+     * <p/>
+     * This is set using property style dependency injection instead of
+     * constructor style injection, which makes for cleaner code for the
+     * users of this migration framework.
+     */
+    private Option<DatabaseAdapter> _adapterOpt = Option.none();
+
+    protected static Logger getLogger() {
+        return LOGGER;
+    }
 
     /**
      * Get the raw connection to the database the migration can use for
@@ -68,16 +83,6 @@ class MigrationHelperImpl implements MigrationHelper {
     }
 
     /**
-     * The connection to the database that is used for the migration.
-     * This connection also logs all operations performed on it.
-     * <p/>
-     * This is set using property style dependency injection instead of
-     * constructor style injection, which makes for cleaner code for the
-     * users of this migration framework.
-     */
-    private Option<Connection> _connectionOpt = Option.none();
-
-    /**
      * Get the connection to the database the migration can use for any
      * custom work.  This connection logs all operations performed on
      * it.  The MigrationHelper subclass must be careful with this connection
@@ -87,15 +92,6 @@ class MigrationHelperImpl implements MigrationHelper {
     public Connection connection() {
         return _connectionOpt.get();
     }
-
-    /**
-     * The database adapter that will be used for the migration.
-     * <p/>
-     * This is set using property style dependency injection instead of
-     * constructor style injection, which makes for cleaner code for the
-     * users of this migration framework.
-     */
-    private Option<DatabaseAdapter> _adapterOpt = Option.none();
 
     /**
      * The database adapter that will be used for the migration.
@@ -110,7 +106,6 @@ class MigrationHelperImpl implements MigrationHelper {
     public DatabaseVendor databaseVendor() {
         return adapter().getDatabaseVendor();
     }
-
 
     /**
      * This value is true if the database implicitly adds an index on
@@ -139,7 +134,7 @@ class MigrationHelperImpl implements MigrationHelper {
     public final void execute(final String sql) throws Throwable {
         ResourceUtils.autoClosingStatement(connection().createStatement(), new Function1<Statement, Void>() {
             public Void apply(Statement parameter) throws Throwable {
-            	System.out.println("sql = "+sql);
+                System.out.println("sql = " + sql);
                 LOGGER.debug("execute sql:{}", sql);
                 parameter.execute(sql);
                 return null;
@@ -195,24 +190,45 @@ class MigrationHelperImpl implements MigrationHelper {
 
         String sql = "CREATE TABLE " + adapter().quoteTableName(tableName) + " (" + tableDefinition.toSql() + ')';
         execute(sql);
+
+        for (TableOption option : options) {
+            if (option instanceof Comment) {
+                this.commentTable(tableName, (Comment) option);
+            } else {
+                LOGGER.error("unknow option {} for table {}", option, tableName);
+            }
+        }
     }
 
     public final void addColumn(String tableName,
                                 String columnName,
                                 SqlType columnType,
                                 ColumnOption... options) throws Throwable {
+        Comment comment = null;
+        List<ColumnOption> colOptions = new ArrayList<ColumnOption>();
+        for (ColumnOption option : options) {
+            if (option instanceof Comment) {
+                comment = (Comment) option;
+            } else {
+                colOptions.add(option);
+            }
+        }
         TableDefinitionImpl tableDefinition = new TableDefinitionImpl(adapter(), tableName);
 
-        tableDefinition.column(columnName, columnType, options);
+        tableDefinition.column(columnName, columnType, colOptions.toArray(new ColumnOption[colOptions.size()]));
         String sql = "ALTER TABLE " + adapter().quoteTableName(tableName) + " ADD " + tableDefinition.toSql();
         execute(sql);
+
+        if (comment != null)
+            this.commentColumn(tableName, columnName, comment);
     }
-    
+
     @Override
-	public void commentTable(String tableName, Comment comment)
-			throws Throwable {
-    	execute(adapter().commentTableSql(tableName, comment));
-	}
+    public void commentTable(String tableName, Comment comment)
+            throws Throwable {
+        execute(adapter().commentTableSql(tableName, comment));
+    }
+
     @Override
     public void commentTable(String tableName, final String comment)
             throws Throwable {
@@ -224,11 +240,11 @@ class MigrationHelperImpl implements MigrationHelper {
         }));
     }
 
-	@Override
-	public void commentColumn(String tableName, String columnName,
-			Comment comment) throws Throwable {
-		execute(adapter().commentColumnSql(tableName, columnName, comment));
-	}
+    @Override
+    public void commentColumn(String tableName, String columnName,
+                              Comment comment) throws Throwable {
+        execute(adapter().commentColumnSql(tableName, columnName, comment));
+    }
 
     @Override
     public void commentColumn(String tableName, String columnName,
@@ -240,14 +256,27 @@ class MigrationHelperImpl implements MigrationHelper {
             }
         }));
     }
+
     public final void alterColumn(String tableName,
                                   String columnName,
                                   SqlType columnType,
                                   ColumnOption... options) throws Throwable {
+        Comment comment = null;
+        List<ColumnOption> colOptions = new ArrayList<ColumnOption>();
+        for (ColumnOption option : options) {
+            if (option instanceof Comment) {
+                comment = (Comment) option;
+            } else {
+                colOptions.add(option);
+            }
+        }
         execute(adapter().alterColumnSql(tableName,
                 columnName,
                 columnType,
-                options));
+                colOptions.toArray(new ColumnOption[colOptions.size()])));
+
+        if (comment != null)
+            commentColumn(tableName, columnName, comment);
     }
 
     public final void removeColumn(String tableName,
@@ -287,6 +316,7 @@ class MigrationHelperImpl implements MigrationHelper {
 
     /**
      * setter和getter方法.
+     *
      * @return
      */
 
@@ -312,10 +342,6 @@ class MigrationHelperImpl implements MigrationHelper {
 
     protected void setAdapterOpt(Option<DatabaseAdapter> adapterOpt) {
         this._adapterOpt = adapterOpt;
-    }
-
-    protected static Logger getLogger() {
-        return LOGGER;
     }
 
 	@Override
