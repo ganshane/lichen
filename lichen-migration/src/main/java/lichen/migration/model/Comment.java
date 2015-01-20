@@ -14,10 +14,10 @@
 package lichen.migration.model;
 
 /**
- * 列注释
+ * 列或者表的注释
  * @author jcai
  */
-public interface Comment {
+public interface Comment extends TableOption, ColumnOption {
     /**
      * 得到列注释.
      * @return 列的注释
