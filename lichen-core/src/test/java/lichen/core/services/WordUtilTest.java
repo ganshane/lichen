@@ -320,7 +320,7 @@ public class WordUtilTest {
     	word = "chiefs"; expect = "chief"; result = WordUtil.singularize(word);
     	assertEquals(expect, result);
     	
-    	word = "dwarves"; expect = "dwarf"; result = WordUtil.singularize(word);
+    	word = "dwarfs"; expect = "dwarf"; result = WordUtil.singularize(word);
     	assertEquals(expect, result);
     	
     	word = "halves"; expect = "half"; result = WordUtil.singularize(word);

@@ -21,3 +21,4 @@ support/data
 support/config/*.xml
 */.checkstyle
 *log4j.properties
+support/gpg/gpg.sec

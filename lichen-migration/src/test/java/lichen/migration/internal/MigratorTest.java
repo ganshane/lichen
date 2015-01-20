@@ -13,10 +13,6 @@
 // limitations under the License.
 package lichen.migration.internal;
 
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,25 +21,15 @@ import org.logicalcobwebs.proxool.ProxoolException;
 import org.logicalcobwebs.proxool.ProxoolFacade;
 import org.logicalcobwebs.proxool.configuration.PropertyConfigurator;
 
+import javax.sql.DataSource;
+import java.util.Properties;
+
 /**
  * migrator test.
  * @author jcai
  */
 public class MigratorTest {
     private static Migrator migrator;
-
-    @Test
-    public void testMigrate() throws Throwable {
-        migrator.migrate(MigratorOperation.InstallAllMigrations, "lichen.migration.testdb", false);
-//        migrator.migrate(MigratorOperation.RemoveAllMigrations, "lichen.migration.testdb", false);
-    }
-
-    //创建视图测试用例
-//    @Test
-//    public void testMigrateIndex() throws Throwable {
-//        migrator.migrate(MigratorOperation.InstallAllMigrations, "lichen.migration.testdb.index", false);
-//        migrator.migrate(MigratorOperation.RemoveAllMigrations, "lichen.migration.testdb.index", false);
-//    }
 
     @BeforeClass
     public static void setup() throws ProxoolException {
@@ -58,7 +44,7 @@ public class MigratorTest {
         info.setProperty("jdbc-x.user", "sa");
         info.setProperty("jdbc-x.proxool.driver-class", "org.h2.Driver");
         info.setProperty("jdbc-x.proxool.driver-url", "jdbc:h2:mem:testdb");
-        
+
 //      info.setProperty("jdbc-x.user", "monad");
 //      info.setProperty("jdbc-x.password", "monad");
 //      info.setProperty("jdbc-x.proxool.driver-class", "oracle.jdbc.driver.OracleDriver");
@@ -74,8 +60,22 @@ public class MigratorTest {
 
         migrator = new Migrator(dataSource, databaseAdapter);
     }
+
+    //创建视图测试用例
+//    @Test
+//    public void testMigrateIndex() throws Throwable {
+//        migrator.migrate(MigratorOperation.InstallAllMigrations, "lichen.migration.testdb.index", false);
+//        migrator.migrate(MigratorOperation.RemoveAllMigrations, "lichen.migration.testdb.index", false);
+//    }
+
     @AfterClass
     public static void shutdown() {
         ProxoolFacade.shutdown();
+    }
+
+    @Test
+    public void testMigrate() throws Throwable {
+        migrator.migrate(MigratorOperation.InstallAllMigrations, "lichen.migration.testdb", false);
+        migrator.migrate(MigratorOperation.RemoveAllMigrations, "lichen.migration.testdb", false);
     }
 }

@@ -13,14 +13,14 @@
 // limitations under the License.
 package lichen.migration.testdb;
 
-import javax.inject.Inject;
-
 import lichen.migration.model.SqlType;
 import lichen.migration.model.TableDefinition;
 import lichen.migration.services.Migration;
 import lichen.migration.services.MigrationHelper;
 import lichen.migration.services.Options;
 import lichen.migration.services.TableCallback;
+
+import javax.inject.Inject;
 
 /**
  * @author jcai
@@ -50,9 +50,9 @@ public class Migrate_20130722093444_CreateTable implements Migration {
 //                t.varbinary("vb");
                 t.varchar("vc", _options.Limit(size), _options.Default("'asdf'"));
             }
-        });
+        }, _options.Comment("测试表"));
 
-        _helper.addColumn("test_table", "test_col", SqlType.VarcharType, _options.NotNull());
+        _helper.addColumn("test_table", "test_col", SqlType.VarcharType, _options.NotNull(), _options.Comment("测试列"));
         
         _helper.commentTable("test_table", _options.Comment("AAAa啊啊"));
         _helper.commentColumn("test_table", "vc", _options.Comment("列1"));
