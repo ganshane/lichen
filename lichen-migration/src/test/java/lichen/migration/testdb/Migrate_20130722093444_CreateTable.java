@@ -37,7 +37,7 @@ public class Migrate_20130722093444_CreateTable implements Migration {
         _helper.createTable("test_table", new TableCallback() {
             @Override
             public void doInTable(TableDefinition t) throws Throwable {
-                t.bigint("bigint");
+                t.bigint("bigint", _options.Comment("主键"));
                 t.blob("blob");
                 t.clob("xp");
 //                t.bool("bool");
