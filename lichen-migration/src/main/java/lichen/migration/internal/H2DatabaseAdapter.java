@@ -21,6 +21,14 @@ import lichen.migration.model.SqlType;
  * @author jcai
  */
 @ColumnSupportsDefault
+@ColumnSupportsAutoIncrement
+class H2IntegerColumnDefinition extends ColumnDefinition {
+    protected String sql() {
+        return "INTEGER";
+    }
+}
+
+@ColumnSupportsDefault
 class H2TimestampColumnDefinition extends ColumnDefinition {
     // H2 does not take a limit specifier for TIMESTAMP types.
     @Override
@@ -72,7 +80,7 @@ class H2DatabaseAdapter extends DatabaseAdapter {
             case DecimalType:
                 return new DefaultDecimalColumnDefinition();
             case IntegerType:
-                return new DefaultIntegerColumnDefinition();
+                return new H2IntegerColumnDefinition();
             case TimestampType:
                 return new H2TimestampColumnDefinition();
             case SmallintType:
