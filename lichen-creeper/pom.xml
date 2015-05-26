@@ -23,7 +23,7 @@
   <parent>
     <groupId>com.ganshane.lichen</groupId>
     <artifactId>lichen-project</artifactId>
-    <version>0.5.9</version>
+    <version>0.5.10.2</version>
   </parent>
   <dependencies>
     <dependency>

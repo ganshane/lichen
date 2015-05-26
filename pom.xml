@@ -19,7 +19,7 @@
   <groupId>com.ganshane.lichen</groupId>
   <artifactId>lichen-project</artifactId>
   <packaging>pom</packaging>
-  <version>0.5.9</version>
+  <version>0.5.10.2</version>
   <name>Lichen Framework</name>
   <description>Lichen是一个基于Java技术的应用框架,非技术框架，提高生产力为第一目标.</description>
   <modules>
