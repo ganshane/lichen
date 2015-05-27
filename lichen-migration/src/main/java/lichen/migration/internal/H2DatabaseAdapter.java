@@ -24,7 +24,10 @@ import lichen.migration.model.SqlType;
 @ColumnSupportsAutoIncrement
 class H2IntegerColumnDefinition extends ColumnDefinition {
     protected String sql() {
-        return "INTEGER";
+        if (isAutoIncrement())
+            return " INTEGER AUTO_INCREMENT";
+        else
+            return "INTEGER";
     }
 }
 
